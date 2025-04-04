@@ -23,10 +23,10 @@
         <ul class="collapse" id="contractsMenu">
           <li class="nav-item">
             <a class="nav-link" id="contractsLink" href="contracts.php"><i class="fa fa-file-text-o p-2" aria-hidden="true"></i>
-            Contracts</a>
+            Active Contracts</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
+            <a class="nav-link" href="expired_contracts.php"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
             Expired Contracts</a>
           </li>
           <li class="nav-item">

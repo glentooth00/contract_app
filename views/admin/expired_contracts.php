@@ -27,7 +27,7 @@ $contract_filter = isset($_GET['contract_type_filter']) ? $_GET['contract_type_f
 $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
 
 // Fetch filtered contracts with pagination
-$contracts = $savedContracts->getOldContractsWithPagination($start, $contractsPerPage, $contract_filter, $search_query);
+$contracts = $savedContracts->getOldContractsWithPaginationExpired($start, $contractsPerPage, $contract_filter, $search_query);
 
 // Get total number of contracts for pagination
 $totalContracts = $savedContracts->getTotalContracts($contract_filter, $search_query);
@@ -52,7 +52,7 @@ include_once '../../views/layouts/includes/header.php';
     <div class="mainContent" style="margin:auto;margin-top:0;">
         <!-- Content that will be shown after loading -->
         <div class="mt-3" id="content">
-            <h2>Active Contracts</h2>
+            <h2>Expired Contracts</h2>
             <hr>
 
 <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-left: 1%;">
@@ -83,81 +83,81 @@ include_once '../../views/layouts/includes/header.php';
 
         <div class="container mt-3">
         <table class="table table-striped table-hover border p-3">
-            <thead>
-                <tr>
-                    <th>Contract Name</th>
-                    <th>Type</th>
-                    <th style="text-align: center !important;">Status</th>
-                    <th style="text-align: center !important;">Start</th>
-                    <th style="text-align: center !important;"></th>
-                    <th style="text-align: center !important;">End</th>
-                    <th style="text-align: center !important;">File</th>
-                    <th style="text-align: center !important;">Action</th>
-                </tr>
-            </thead>
-            <tbody class="table-striped p-2">
-                <?php 
-                if (!empty($contracts)) {
-                    foreach ($contracts as $contract) { ?>
-                    <tr>
-                            <td><?= htmlspecialchars($contract['contract_name']) ?></td>
-                            <td><?= htmlspecialchars($contract['contract_type']) ?></td>
-                            <td style="text-align: center !important;">
+    <thead>
+        <tr>
+            <th>Contract Name</th>
+            <th>Type</th>
+            <th style="text-align: center !important;">Status</th>
+            <th style="text-align: center !important;">Start</th>
+            <th style="text-align: center !important;"></th>
+            <th style="text-align: center !important;">End</th>
+            <th style="text-align: center !important;">File</th>
+            <th style="text-align: center !important;">Action</th>
+        </tr>
+    </thead>
+    <tbody class="table-striped p-2">
+        <?php 
+        if (!empty($contracts)) {
+            foreach ($contracts as $contract) { ?>
+               <tr>
+                    <td><?= htmlspecialchars($contract['contract_name']) ?></td>
+                    <td><?= htmlspecialchars($contract['contract_type']) ?></td>
+                    <td style="text-align: center !important;">
 
-                                <span class="badge p-2 glow-text "  style="background: #3CCF4E;width:8em;"><?= htmlspecialchars($contract['contract_status']) ?></span>
-                                
-                            </td>
-                            <td style="text-align: center !important;"><span class="badge text-muted"><?= date("M-d-Y", strtotime($contract['contract_start'])) ?></span></td>
-                            <td><hr></td>
-                            <td style="text-align: center !important;"><span class="badge text-muted"><?= date("M-d-Y", strtotime($contract['contract_end'])) ?></span></td>
-                            <td style="text-align: center !important;">
-            <?php if (!empty($contract['contract_file'])): ?>
-                <!-- Trigger the modal with this button -->
-                <button class="btn btn-primary badge p-2" data-bs-toggle="modal" data-bs-target="#fileModal<?= $contract['id'] ?>" style="text-align: center !important;">
-                    View file
-                </button>
+                        <span class="badge p-2" style="background: #FF9B17;width:8em;"><?= htmlspecialchars($contract['contract_status']) ?></span>
+                        
+                    </td>
+                    <td style="text-align: center !important;"><span class="badge text-muted"><?= date("M-d-Y", strtotime($contract['contract_start'])) ?></span></td>
+                    <td><hr></td>
+                    <td style="text-align: center !important;"><span class="badge text-muted"><?= date("M-d-Y", strtotime($contract['contract_end'])) ?></span></td>
+                    <td style="text-align: center !important;">
+    <?php if (!empty($contract['contract_file'])): ?>
+        <!-- Trigger the modal with this button -->
+        <button class="btn btn-primary badge p-2" data-bs-toggle="modal" data-bs-target="#fileModal<?= $contract['id'] ?>" style="text-align: center !important;">
+            View file
+        </button>
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="fileModal<?= $contract['id'] ?>" tabindex="-1" aria-labelledby="fileModalLabel<?= $contract['id'] ?>" aria-hidden="true">
-                            <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="fileModalLabel<?= $contract['id'] ?>"><?= $contract['contract_name'] ?> - <?= $contract['contract_type'] ?></h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" style="padding: 0; overflow-y: auto;">
-                                        <!-- Display the contract file inside the modal -->
-                                        <iframe src="<?= htmlspecialchars("../../" . $contract['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    </div>
-                                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="fileModal<?= $contract['id'] ?>" tabindex="-1" aria-labelledby="fileModalLabel<?= $contract['id'] ?>" aria-hidden="true">
+                    <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="fileModalLabel<?= $contract['id'] ?>"><?= $contract['contract_name'] ?> - <?= $contract['contract_type'] ?></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                        </div>  
-                        <?php else: ?>
-                            No file
-                        <?php endif; ?>
-                        </td>
-                            <td style="text-align: center !important;">
-                                <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
-                                <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                </a>
-                            </td>
-                        </tr>
-                    <?php }
-                    } else { ?>
-                        <tr>
-                            <td colspan="7" class="text-center">No contracts found.</td>
-                        </tr>
-                    <?php } ?>
-            </tbody>
-        </table>
+                            <div class="modal-body" style="padding: 0; overflow-y: auto;">
+                                <!-- Display the contract file inside the modal -->
+                                <iframe src="<?= htmlspecialchars("../../" . $contract['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <?php else: ?>
+                    No file
+                <?php endif; ?>
+                </td>
+                    <td style="text-align: center !important;">
+                        <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
+                        <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
+                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            <?php }
+        } else { ?>
+            <tr>
+                <td colspan="7" class="text-center">No contracts found.</td>
+            </tr>
+        <?php } ?>
+    </tbody>
+</table>
 
-            <!-- Pagination links -->
-            <?php if ($totalContracts >= 10): ?>
-                            <!-- Pagination links -->
+<!-- Pagination links -->
+<?php if ($totalContracts >= 10): ?>
+                <!-- Pagination links -->
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
                         <?php 
@@ -374,14 +374,6 @@ include_once '../../views/layouts/includes/header.php';
     }
     thead th {
         text-align: left;
-    }
-    .glow-text {
-        background-color: #3CCF4E;
-        box-shadow: 0 0 15px #23ff3e, 0 0 30px #f3f4f3;
-        border-radius: 10px;
-        padding: 10px 20px;
-        color: white;
-        font-weight: bold;
     }
 
 </style>
