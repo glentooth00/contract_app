@@ -1,4 +1,6 @@
-<?php 
+<!-- 
+ backup codes
+ <?php 
 
 use App\Controllers\ContractController;
 session_start();
@@ -34,6 +36,36 @@ $totalContracts = $savedContracts->getTotalContracts($contract_filter, $search_q
 
 
 include_once '../../views/layouts/includes/header.php'; 
+?> 
+--> 
+
+<?php
+
+use App\Controllers\ContractController;
+session_start();
+
+require_once __DIR__ . '/../../vendor/autoload.php'; // corrected path
+
+$page_title = 'Manage Contracts';
+
+define('CONTRACTS_PER_PAGE', 10);
+
+$contractController = new ContractController();
+
+$page = isset($_GET['page']) ? max((int)$_GET['page'], 1) : 1;
+
+$start = ($page - 1) * CONTRACTS_PER_PAGE;
+
+$contract_filter = $_GET['contract_type_filter'] ?? null;
+$search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
+
+
+$contracts = $contractController->getOldContractsWithPagination($start, CONTRACTS_PER_PAGE, $contract_filter, $search_query);
+
+$totalContracts = $contractController->getTotalContracts($contract_filter, $search_query);
+$totalPages = ceil($totalContracts / CONTRACTS_PER_PAGE);
+
+include_once '../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
