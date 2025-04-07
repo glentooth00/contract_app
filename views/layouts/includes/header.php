@@ -27,6 +27,23 @@
         padding: 0;
         height: 100%;
     }
+    /* Flex container for the layout */
+    .pageContent {
+        display: flex;
+        min-height: 100vh; /* Ensure it takes full viewport height */
+    }
+    /* Main content styles */
+    .mainContent {
+        background-color: #FFF;
+        width: 100%; /* Main content takes up remaining space */
+        padding: 20px;
+    }
+
+    /* Header styles */
+    .headerDiv {
+        background-color: #FBFBFB;
+        padding: 20px;
+    }
 </style>
 
 </head>

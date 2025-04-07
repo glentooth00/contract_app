@@ -25,7 +25,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Save contract details
         if ($contractController->saveContract($contractData)) {
-           
             
             $_SESSION['notification'] = [
                 'message' => 'Contract successfully saved!',

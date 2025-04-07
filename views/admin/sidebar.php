@@ -36,9 +36,30 @@
         </ul>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="#"><i class="fa fa-users p-2" aria-hidden="true"></i>Users</a>
-      </li>
+        <?php 
+          use App\Controllers\UserController;
+
+          if (isset($_SESSION['data']['id'])) {
+              $id = $_SESSION['data']['id'];
+
+              $getUser = new UserController();
+              $logged_user = $getUser->getUserRolebyId($id); // returns string like 'admin'
+        
+        ?>
+
+              <?php if ($logged_user == 'Admin'): ?>
+                    <li class="nav-item">
+                      <a class="nav-link" href="users.php">
+                          <i class="fa fa-users p-2" aria-hidden="true"></i>Users
+                        </a>
+                    </li>              
+              <?php  endif; ?>
+
+        <?php
+          } else {
+              // echo "User session not found.";
+          }
+        ?>
 
        <!-- Settings Dropdown -->
        <li class="nav-item">
@@ -50,6 +71,31 @@
             <a class="nav-link" href="#"><i class="fa fa-globe p-2" aria-hidden="true"></i>
             General</a>
           </li>
+
+          <?php 
+
+          if (isset($_SESSION['data']['id'])) {
+              $id = $_SESSION['data']['id'];
+
+              $getUser = new UserController();
+              $logged_user = $getUser->getUserRolebyId($id); // returns string like 'admin'
+        
+        ?>
+
+              <?php if ($logged_user == 'Admin'): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="department.php"><i class="fa fa-building-o p-2" aria-hidden="true"></i>
+                  Departments</a>
+                </li>              
+              <?php  endif; ?>
+
+        <?php
+          } else {
+              // echo "User session not found.";
+          }
+        ?>
+
+          
           <li class="nav-item">
             <a class="nav-link" href="#"><i class="fa fa-user-secret p-2  " aria-hidden="true"></i>
             </i>Privacy</a>

@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $test =  $_SESSION['data'];
 
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -29,7 +30,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $_SESSION['is_logged_in'];
 
-            header('location:views/admin/dashboard.php');
+                $test =  $_SESSION['data'];
+
+                $get_id = $_SESSION['data'];
+
+                $userId = $get_id['id'];
+
+                $encoded =  base64_encode( $userId);
+
+
+
+                // echo $id = $get_id;
+
+                header('location:views/admin/dashboard.php?user='. $encoded);
 
 
         } else {

@@ -6,6 +6,10 @@ session_start();
 
 require_once __DIR__ . '../../../vendor/autoload.php';
 
+$get_id = $_SESSION['data'];
+
+$id = $get_id['id']; // Output: 1
+
 $savedContracts = new ContractController();
 
 $page_title = 'Dashboard';
@@ -63,7 +67,9 @@ include_once '../../views/layouts/includes/header.php';
         <div id="content" class="mt-3">
             <h2>Contracts Overview</h2>
             <hr>
-            <div class="d-flex align-items-center gap-3 flex-wrap">
+
+            <span class="text-sm badge"style="color:#AAB99A;">NOTE: Search by Contract type and Contract Name.</span>
+            <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-top:4px;">
             <form method="GET" action="dashboard.php">
                 <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
                     <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
@@ -76,7 +82,7 @@ include_once '../../views/layouts/includes/header.php';
             </form>
 
             <form method="GET" action="dashboard.php" class="input-group" style="width: 250px;">
-                <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract">
+                <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract Name">
                 <button class="btn bg-dark text-white" type="submit">
                     <i class="fa fa-search"></i>
                 </button>
@@ -87,66 +93,67 @@ include_once '../../views/layouts/includes/header.php';
                 <thead>
                     <tr>
                         <th>Contract Name</th>
-                        <th>Contract Type</th>
-                        <th>Contract Start</th>
-                        <th>Contract End</th>
+                        <th style="text-align: center !important;">Contract Type</th>
+                        <th style="text-align: center !important;">Contract Start</th>
+                        <th style="text-align: center !important;">Contract End</th>
                         <th style="text-align: center;">Days Remaining</th>
                     </tr>
                 </thead>
                 <tbody>
-                <?php if (empty($contracts)) : ?>
-                    <tr>
-                        <td colspan="5" class="text-center">No contracts available</td>
-                    </tr>
-                <?php else : ?>
-                    <?php foreach ($contracts as $contract) : ?>
+                    <?php if (empty($contracts)) : ?>
                         <tr>
-                            <td><?= isset($contract['contract_name']) ? htmlspecialchars($contract['contract_name']) : 'N/A' ?></td>
-                            <td><?= isset($contract['contract_type']) ? htmlspecialchars($contract['contract_type']) : 'N/A' ?></td>
-                            <td style="text-align: center !important;">
-                                <span class="badge text-muted"><?= isset($contract['contract_start']) ? date("M-d-Y", strtotime($contract['contract_start'])) : 'N/A' ?></span>
-                            </td>
-                            <td style="text-align: center !important;">
-                                <span class="badge text-muted"><?= isset($contract['contract_end']) ? date("M-d-Y", strtotime($contract['contract_end'])) : 'N/A' ?></span>
-                            </td>
-                            <td style="text-align: center !important;">
-                                <?php
-                                if (isset($contract['contract_end'])) {
-                                    $contract_end = strtotime($contract['contract_end']);
-                                    $current_date = time();  // Get the current timestamp
-                                    $days_left = ceil(($contract_end - $current_date) / (60 * 60 * 24)); // Calculate the number of days left
-                                } else {
-                                    $days_left = 0; // Default to 0 if contract end date is not set
-                                }
-                                ?>
-                                
-                                <?php if ($days_left <= 5 && $days_left > 0) { ?>
-                                    <span class='badge p-2 font-monospace border border-danger fw-semibold' style="background-color:#A62C2C;width:14em;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
-                                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-                                        </svg> 
-                                        <?= $days_left ?> days left
-                                    </span>
-                                <?php } elseif ($days_left <= 0) { 
-                                    // When contract is expired
-                                    $_SESSION['contract_status'] = $contract_status = 'Expired';
-                                    $_SESSION['contract_id'] = $contract_id = $contract['id']; // Check if contract ID is set
-                                ?>
-                                <!-- <?= $contract_id ;?> -->
-                                    <span class='badge border-danger p-2  font-monospace fw-semibold' style="background-color:#FF9B17;width:14em;">Expired</span>
-                                 
-                                <?php } else { ?>
-                                    <span class='badge p-2 border border-success font-monospace fw-semibold' style="background-color:#146356;width:14em;">
-                                        <?= $days_left ?> days until expiry
-                                    </span>
-                                <?php } ?>
-                            </td>
+                            <td colspan="5" class="text-center">No contracts available</td>
                         </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                    <?php else : ?>
+                        <?php foreach ($contracts as $contract) : ?>
+                            <tr>
+                                <td><?= isset($contract['contract_name']) ? htmlspecialchars($contract['contract_name']) : 'N/A' ?></td>
+                                <td style="text-align: center !important;"><?= isset($contract['contract_type']) ? htmlspecialchars($contract['contract_type']) : 'N/A' ?></td>
+                                <td style="text-align: center !important;">
+                                    <span class="badge text-muted"><?= isset($contract['contract_start']) ? date("M-d-Y", strtotime($contract['contract_start'])) : 'N/A' ?></span>
+                                </td>
+                                <td style="text-align: center !important;">
+                                    <span class="badge text-muted"><?= isset($contract['contract_end']) ? date("M-d-Y", strtotime($contract['contract_end'])) : 'N/A' ?></span>
+                                </td>
+                                <td style="text-align: center !important;">
+                                    <?php
+                                    if (isset($contract['contract_end'])) {
+                                        $contract_end = strtotime($contract['contract_end']);
+                                        $current_date = time();
+                                        $days_left = ceil(($contract_end - $current_date) / (60 * 60 * 24));
+                                    } else {
+                                        $days_left = 0; 
+                                    }
+                                    ?>
 
+                                    <?php if ($days_left <= 5 && $days_left > 0) { ?>
+                                        <!-- Contracts expiring within 5 days -->
+                                        <span class='badge p-2 font-monospace border border-danger fw-semibold' style="font-size:15px;background-color:#E52020;width:14em;">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                                                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                                                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                                            </svg> 
+                                            <?= $days_left ?> days left
+                                        </span>
+                                    <?php } elseif ($days_left <= 0) { 
+                                        // Expired contracts
+                                        $_SESSION['contract_status'] = 'Expired';
+                                        $_SESSION['contract_id'] = $contract['id'];
+                                    ?>
+                                        <span class='badge border-danger p-2 font-monospace fw-semibold' style="font-size:15px;background-color:#FF9B17;width:14em;">Expired</span>
+                                    <?php } else { ?>
+                                        <!-- Contracts with more than 5 days left -->
+                                        <span class='badge p-2 border font-monospace fw-semibold' style="font-size:15px;background-color:#04a12b;width:14em;">
+                                            <?= $days_left ?> days until expiry
+                                        </span>
+                                    <?php } ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
+
+
             </table>
 
             <?php if ($totalContracts >= 10): ?>

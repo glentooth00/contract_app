@@ -9,33 +9,35 @@ use App\Controllers\CrudController;
 class UserController {
     private $db;
 
+    private $table = "users";
+
     public function __construct() {
         $this->db = Database::connect();
     }
 
-    public function getUsers() {
-        $table = "users"; // Change to your table
+    // public function getUsers() {
+    //     $table = "users"; // Change to your table
 
-        if ($this->db instanceof PDO) {
-            try {
-                $stmt = $this->db->query("SELECT * FROM $table");
-                return $stmt->fetchAll(PDO::FETCH_ASSOC);
-            } catch (\PDOException $e) {
-                return "SQL Server Query failed: " . $e->getMessage();
-            }
-        } elseif ($this->db instanceof mysqli) {
-            $query = "SELECT * FROM $table";
-            $result = $this->db->query($query);
+    //     if ($this->db instanceof PDO) {
+    //         try {
+    //             $stmt = $this->db->query("SELECT * FROM $table");
+    //             return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    //         } catch (\PDOException $e) {
+    //             return "SQL Server Query failed: " . $e->getMessage();
+    //         }
+    //     } elseif ($this->db instanceof mysqli) {
+    //         $query = "SELECT * FROM $table";
+    //         $result = $this->db->query($query);
 
-            if ($result) {
-                return $result->fetch_all(MYSQLI_ASSOC);
-            } else {
-                return "MySQL Query failed: " . $this->db->error;
-            }
-        } else {
-            return "No valid database connection.";
-        }
-    }
+    //         if ($result) {
+    //             return $result->fetch_all(MYSQLI_ASSOC);
+    //         } else {
+    //             return "MySQL Query failed: " . $this->db->error;
+    //         }
+    //     } else {
+    //         return "No valid database connection.";
+    //     }
+    // }
 
     public function authenticate($data){
 
@@ -64,4 +66,38 @@ class UserController {
         }
 
     }
+
+    public function getAllUsers(){
+
+        $sql ="SELECT * FROM users";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
+
+
+    public function getUserRolebyId($id) {
+        $sql = "SELECT user_role FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+    
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        return $result ? $result['user_role'] : null;
+    }
+
+    public function deleteUser($id){
+
+        $sql = "DELETE FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return;
+    }
+    
+    
+
 }
