@@ -56,6 +56,11 @@ $page_title  = 'Login';
 
                 </div>
             </form>
+
+            <div class="mt-3 forgotPassword p-1">
+                <a href="#">Forgot password?</a>
+            </div>
+           
         </div>
     </div>
 </body>
@@ -68,6 +73,13 @@ $page_title  = 'Login';
     }
     .password{
         margin-top: -6%;
+    }
+    .forgotPassword{
+        margin-top: 4%;
+        font-size: 15px;
+    }
+    .forgotPassword a{
+        text-decoration: none;
     }
 </style>
 <script>
