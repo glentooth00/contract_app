@@ -13,14 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $deleteUser = new UserController();
     $delete = $deleteUser->deleteUser($id);
 
-    if ($delete) {
-
         // Optionally handle failure
         $_SESSION['notification'] = [
-            'message' => 'Failed to delete user.',
+            'message' => 'User deleted successfully.',
             'type' => 'success'
         ];
-    }
 
     // Redirect back to the users page after deletion
     header('Location: ../users.php');

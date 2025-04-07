@@ -1,50 +1,10 @@
-<!-- 
- backup codes
- <?php 
-
-use App\Controllers\ContractController;
-session_start();
-
-require_once __DIR__ . '../../../vendor/autoload.php';
-
-$savedContracts = new ContractController();
-
-$page_title = 'Manage Contracts';
-
-$contractsPerPage = 10; // Number of contracts per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Get the current page number from the URL, default to 1
-
-// Calculate the starting contract index for the current page
-$start = ($page - 1) * $contractsPerPage;
-
-$savedContracts = new ContractController();
-// $contracts = $savedContracts->getContractsWithPagination($start, $contractsPerPage); // Modify this method to fetch contracts with pagination
-
-// Get the total number of contracts for pagination
-$totalContracts = $savedContracts->getTotalContracts();
-$totalPages = ceil($totalContracts / $contractsPerPage);
-
-// Get filters
-$contract_filter = isset($_GET['contract_type_filter']) ? $_GET['contract_type_filter'] : null;
-$search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
-
-// Fetch filtered contracts with pagination
-$contracts = $savedContracts->getOldContractsWithPagination($start, $contractsPerPage, $contract_filter, $search_query);
-
-// Get total number of contracts for pagination
-$totalContracts = $savedContracts->getTotalContracts($contract_filter, $search_query);
-
-
-include_once '../../views/layouts/includes/header.php'; 
-?> 
---> 
-
 <?php
 
-use App\Controllers\ContractController;
 session_start();
 
 require_once __DIR__ . '/../../vendor/autoload.php'; // corrected path
+
+use App\Controllers\ContractController;
 
 $page_title = 'Manage Contracts';
 

@@ -77,13 +77,16 @@ include_once '../../views/layouts/includes/header.php';
         <?php foreach ($results as $result) { ?>
             <tr>
                 <td style="text-align: center !important;">
-                <?php if($result['gender'] == 'Male'): ?>
-                    <img src="../../public/images/male.png" width="90px;">
-                <?php elseif($result['gender'] == 'Female'): ?>
-                    <img src="../../public/images/female.png" width="90px;">
+
+                <?php if ($result['gender'] === 'Male' || $result['gender'] === 'Female'): ?>
+                    <img src="../../admin/user_image/<?= $result['user_image'] ?>" width="90px;" style="border-radius:50px;">
+                <?php elseif (!empty($result['user_image'])): ?>
+                    <img src="../../admin/user_image/<?= $result['user_image'] ?>" width="90px;" style="border-radius:50px;">
                 <?php else: ?>
-                    <!-- <img src="../../public/images/other.png" width="90px;"> -->
+                    <img src="../../public/images/male.png" width="90px;">
                 <?php endif; ?>
+
+
                 </td>
                 <td style="text-align: center !important;"><?= $result['firstname'] ?> <?= $result['middlename'] ?> <?= $result['lastname'] ?></td>
                 <td style="text-align: center !important;"><?= $result['user_role'] ?> </td>
@@ -230,7 +233,9 @@ include_once '../../views/layouts/includes/header.php';
             <div class="p-2">
                 <div class="mb-3">
                     <label class="badge text-muted">User image  <span class="text-danger">*</span></label>
-                    <input type="file" name="user_image" class="form-control">
+                   
+                    <input type="file" name="user_image" class="form-control" required>
+                    <span class="badge" style="color:#4C585B;">(suggested image size : 216 x 234 pixels)</span>
 
                 </div>
                 <div class="d-flex gap-2">
@@ -248,14 +253,28 @@ include_once '../../views/layouts/includes/header.php';
                 </div>
                 </div>
                 <div class="mb-3">
+                    <label class="badge text-muted">Gender<span class="text-danger">*</span></label>
+                        <select class="form-select form-select-md mb-3" name="gender" aria-label=".form-select-lg example">
+                            <option selected hidden>Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                </div>
+                <hr>
+                <div class="col-md-12 gap-2 d-flex">
+                <div class="mb-3 col-md-6">
                     <label class="badge text-muted">Department<span class="text-danger">*</span></label>
                         <select class="form-select form-select-md mb-3" name="user_role" aria-label=".form-select-lg example">
                             <option selected hidden>Select Department</option>
-                            <option value="User">User</option>
-                            <option value="Admin">Admin</option>
+                            <?php 
+                                $getDept = (new DepartmentController)->getAllDepartments();
+                            ?>
+                            <?php foreach($getDept as $dept): ?>
+                                <option value="<?= $dept['department_name'] ?>"><?= $dept['department_name'] ?></option>
+                            <?php endforeach; ?>
                         </select>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 col-md-6">
                     <label class="badge text-muted">Role  <span class="text-danger">*</span></label>
                         <select class="form-select form-select-md mb-3" name="user_role" aria-label=".form-select-lg example">
                             <option selected hidden>Select user role</option>
@@ -263,13 +282,15 @@ include_once '../../views/layouts/includes/header.php';
                             <option value="Admin">Admin</option>
                         </select>
                 </div>
+                </div>
+               
                 <div class="mb-3">
                     <label class="badge text-muted">Username  <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="middlename" id="floatingInput" placeholder="Username" required> 
+                    <input type="text" class="form-control" name="username" id="floatingInput" placeholder="Username" required> 
                 </div>
                 <div class="mb-3">
                     <label class="badge text-muted">Password  <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="middlename" id="floatingInput" placeholder="Password" required> 
+                    <input type="text" class="form-control" name="password" id="floatingInput" placeholder="Password" required> 
                 </div>
             </div>
         </div>
