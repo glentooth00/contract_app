@@ -169,36 +169,49 @@ class ContractController {
 
 
     public function getOldContractsWithPagination($start, $limit, $filter = null, $search = null) {
-        $start = max(0, (int)$start);
-        $limit = max(1, (int)$limit);
+        $start = max(0, (int)$start);  // Ensure start is non-negative
+        $limit = max(1, (int)$limit);  // Ensure limit is at least 1
     
-        $sql = "SELECT * FROM contracts WHERE contract_status = :status";
-        $params = ['status' => 'Active'];
-    
+        // Base query for active contracts, using LIKE for text comparison
+        $sql = "SELECT * FROM contracts WHERE contract_status LIKE 'Active'";  // Using LIKE for compatibility with TEXT
+        
+        // Apply filter if present
         if ($filter) {
             $sql .= " AND contract_type = :filter";
-            $params['filter'] = $filter;
         }
-    
+        
+        // Apply search if present
         if ($search) {
             $sql .= " AND contract_name LIKE :search";
-            $params['search'] = "%$search%";
         }
-    
+        
+        // Order by created_at to get the oldest contract first, and add pagination using OFFSET-FETCH
         $sql .= " ORDER BY created_at ASC OFFSET :start ROWS FETCH NEXT :limit ROWS ONLY";
-        $params['start'] = $start;
-        $params['limit'] = $limit;
-    
+        
+        // Prepare and execute the statement
         $stmt = $this->db->prepare($sql);
-    
-        foreach ($params as $key => $value) {
-            $paramType = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
-            $stmt->bindValue(":$key", $value, $paramType);
+        
+        // Bind parameters if needed
+        if ($filter) {
+            $stmt->bindParam(':filter', $filter, PDO::PARAM_STR);
         }
-    
+        
+        if ($search) {
+            $searchTerm = "%$search%";
+            $stmt->bindParam(':search', $searchTerm, PDO::PARAM_STR);
+        }
+        
+        // Bind pagination parameters
+        $stmt->bindParam(':start', $start, PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        
+        // Execute query
         $stmt->execute();
+        
+        // Return the result as an associative array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
     public function getOldContractsWithPaginationExpired($start, $limit, $filter = null, $search = null) {
         $start = max(0, (int)$start);  // Ensure start is non-negative
