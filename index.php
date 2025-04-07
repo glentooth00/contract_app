@@ -36,7 +36,12 @@ $page_title  = 'Login';
                 </div>
                 <div class="password col-12">
                     <label class="badge text-muted">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="Enter password" required>
+                    <input type="password" id="password" class="form-control mb-1" name="password" placeholder="Enter password" required>
+                    
+                    <div class="mt-2" style="margin-left:1%;">
+                        <input type="checkbox" class="form-check-input mt-1" onclick="checkPassword()"><span class="badge text-muted"> Show password</span>
+                    </div>
+                    
                     <p class="notifMsg p-1">
                         <?php if (isset($_SESSION['password'])): ?>
                             <?= $_SESSION['password']; ?>
@@ -65,3 +70,14 @@ $page_title  = 'Login';
         margin-top: -6%;
     }
 </style>
+<script>
+    function checkPassword(){
+        var x = document.getElementById("password");
+
+        if(x.type === "password"){
+            x.type = "text";
+        }else{
+            x.type = "password";
+        }
+    }
+</script>
