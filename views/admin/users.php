@@ -88,16 +88,52 @@ include_once '../../views/layouts/includes/header.php';
 
 
                 </td>
-                <td style="text-align: center !important;"><?= $result['firstname'] ?> <?= $result['middlename'] ?> <?= $result['lastname'] ?></td>
-                <td style="text-align: center !important;"><?= $result['user_role'] ?> </td>
-                <td style="text-align: center !important;">
-                    <?php if(isset($result['department'])){ ?>
-                        <?= $result['department'] ?>
-                    <?php }else { ?> 
-                        <span class="badge text-muted">no department assigned</span>
-                    <?php } ?>
+                <td style="text-align: center !important;padding:40px;">
+                    <span class="mt-3"> <?= $result['firstname'] ?> <?= $result['middlename'] ?> <?= $result['lastname'] ?></span>
                 </td>
-                <td  style="text-align: center !important;width:20em;">
+                <td style="text-align: center !important;padding:40px;"><?= $result['user_role'] ?> </td>
+                <td style="text-align: center !important;padding:40px;">
+
+                    <?php if(isset($result['department'])){ ?>
+
+                            <?php switch( $result['department'] ) { case 'IT': ?>
+
+                                    <span class="badge p-2" style="background-color: #0d6efd;"><?= $result['department'] ?></span>
+                                
+                                <?php break; case 'ISD-HRAD': ?>
+
+                                    <span class="badge p-2" style="background-color: #3F7D58;"><?= $result['department'] ?></span>
+                                
+                                <?php break; case 'CITETD': ?>
+
+                                    <span class="badge p-2" style="background-color: #FFB433;"><?= $result['department'] ?></span>
+                                
+                                <?php break; case 'IASD': ?>
+                                    
+                                    <span class="badge p-2" style="background-color: #EB5B00;"><?= $result['department'] ?></span>
+                                
+                                <?php break;case 'ISD-MSD': ?>
+
+                                    <span class="badge p-2" style="background-color: #6A9C89;"><?= $result['department'] ?></span>
+                                
+                                <?php break; case 'BAC':  ?>
+
+                                    <span class="badge p-2" style="background-color: #3B6790;"><?= $result['department'] ?></span>
+                                
+                                <?php break;  case '': ?>
+                                
+                                <?php default: ?>
+                                    <span class="badge text-muted">no department assigned</span>
+                            <?php } ?>
+                        
+                    <?php }else { ?>
+
+                        <span class="badge text-muted">no department assigned</span>
+                    
+                        <?php } ?>
+
+                </td>
+                <td  style="text-align: center !important;padding:40px;">
                     <div class="d-flex gap-2" style="margin-left:5em;">
                         <button class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i> View</button>
                         
@@ -264,7 +300,7 @@ include_once '../../views/layouts/includes/header.php';
                 <div class="col-md-12 gap-2 d-flex">
                 <div class="mb-3 col-md-6">
                     <label class="badge text-muted">Department<span class="text-danger">*</span></label>
-                        <select class="form-select form-select-md mb-3" name="user_role" aria-label=".form-select-lg example">
+                        <select class="form-select form-select-md mb-3" name="department" aria-label=".form-select-lg example">
                             <option selected hidden>Select Department</option>
                             <?php 
                                 $getDept = (new DepartmentController)->getAllDepartments();

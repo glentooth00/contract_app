@@ -8,7 +8,9 @@ require_once __DIR__ . '../../../vendor/autoload.php';
 
 $get_id = $_SESSION['data'];
 
-$id = $get_id['id']; // Output: 1
+$id = $get_id['id'];
+
+$_SESSION['department'] = $get_id['department'];
 
 $savedContracts = new ContractController();
 
@@ -21,12 +23,13 @@ $start = ($page - 1) * $contractsPerPage;
 // Get filters
 $contract_filter = isset($_GET['contract_type_filter']) ? $_GET['contract_type_filter'] : null;
 $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
+$status_filter = isset($_GET['contract_status_filter']) ? $_GET['contract_status_filter'] : null; // ✅ ADDED
 
 // Fetch filtered contracts with pagination
-$contracts = $savedContracts->getOldContractsWithPaginationAll($start, $contractsPerPage, $contract_filter, $search_query);
+$contracts = $savedContracts->getOldContractsWithPaginationAll($start, $contractsPerPage, $contract_filter, $search_query, $status_filter);
 
 // Get total number of contracts for pagination
-$totalContracts = $savedContracts->getTotalContracts($contract_filter, $search_query);
+$totalContracts = $savedContracts->getTotalContracts($contract_filter, $status_filter, $search_query);
 
 // Check if the total contracts are less than 10, adjust contracts per page
 if ($totalContracts <= 10) {
@@ -64,22 +67,31 @@ include_once '../../views/layouts/includes/header.php';
 
     <div class="mainContent">
         <!-- Content that will be shown after loading -->
-        <div id="content" class="mt-3">
+        <div id="content" class="mt-2">
             <h2>Contracts Overview</h2>
             <hr>
 
             <span class="text-sm badge"style="color:#AAB99A;">NOTE: Search by Contract type and Contract Name.</span>
             <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-top:4px;">
-            <form method="GET" action="dashboard.php">
-                <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
-                    <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
-                    <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
-                    <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction Contract</option>
-                    <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing Agreement</option>
-                    <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement</option>
-                    <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement</option>
-                </select>
-            </form>
+            <div>
+                <form method="GET" action="dashboard.php" class="d-flex align-items-center">
+                    <select class="form-select w-auto me-2" name="contract_type_filter" onchange="this.form.submit()">
+                        <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
+                        <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
+                        <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction Contract</option>
+                        <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing Agreement</option>
+                        <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement</option>
+                        <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement</option>
+                    </select>
+
+                    <select class="form-select w-auto" name="contract_status_filter" onchange="this.form.submit()">
+                        <option value="" <?= isset($_GET['contract_status_filter']) && $_GET['contract_status_filter'] == "" ? "selected" : "" ?>>All Status</option>
+                        <option value="Expired" <?= isset($_GET['contract_status_filter']) && $_GET['contract_status_filter'] == "Expired" ? "selected" : "" ?>>Expired</option>
+                        <option value="Active" <?= isset($_GET['contract_status_filter']) && $_GET['contract_status_filter'] == "Active" ? "selected" : "" ?>>Active</option>
+                    </select>
+                </form>
+            </div>
+
 
             <form method="GET" action="dashboard.php" class="input-group" style="width: 250px;">
                 <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract Name">
@@ -89,7 +101,7 @@ include_once '../../views/layouts/includes/header.php';
             </form>
         </div>
 
-            <table class="table table-striped border p-2 mt-3">
+            <table class="table table-striped border p-2 mt-1">
                 <thead>
                     <tr>
                         <th>Contract Name</th>

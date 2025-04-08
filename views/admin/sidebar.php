@@ -89,6 +89,13 @@
                 </li>              
               <?php  endif; ?>
 
+              <?php if ($logged_user == 'Admin'): ?>
+                <li class="nav-item">
+                  <a class="nav-link" href="contract_types.php"><i class="fa fa-file-text-o p-2" aria-hidden="true"></i>
+                  Contract Types</a>
+                </li>              
+              <?php  endif; ?>
+
         <?php
           } else {
               // echo "User session not found.";
