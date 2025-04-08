@@ -71,11 +71,10 @@ include_once '../layouts/includes/header.php';
     <tbody>
         <?php foreach ($departments as $department) { ?>
             <tr>
-               
                 <td style="text-align: center !important;"><?= $department['department_name'] ?></td>
                 <td class="d-flex justify-content-center gap-2 w-100">
-                    <button class="btn btn-success">View</button>
-                    <a href="departments/delete_department.php?id=<?= $department['id']  ?>" class="btn btn-danger">Delete</a>
+                    <button class="btn btn-success btn-sm">View</button>
+                    <a href="departments/delete_department.php?id=<?= $department['id']  ?>" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         <?php } ?>
