@@ -52,12 +52,14 @@ class UserController {
         if ($user) {
 
             $_SESSION['data'] = $userData = [
+
                 'id' => $user['id'],
                 'username' => $user['username'],
                 'password' => $user['password'],
                 'firstname' => $user['firstname'],
                 'lastname' => $user['lastname'],
                 'middlename' => $user['middlename'],
+                'department' => $user['department'],
             ];
 
         } else {

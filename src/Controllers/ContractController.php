@@ -69,11 +69,42 @@ class ContractController {
     
     
     // Method to get total number of contracts for pagination calculation
-    public function getTotalContracts() {
-        $sql = "SELECT COUNT(*) FROM contracts";
-        $stmt = $this->db->query($sql);
-        return $stmt->fetchColumn(); // Fetch the first column of the result
+    public function getTotalContracts($type = null, $status = null, $search = null) {
+        $sql = "SELECT COUNT(*) FROM contracts WHERE 1=1";
+    
+        if ($type) {
+            $sql .= " AND contract_type = :type";
+        }
+    
+        if ($status) {
+            $sql .= " AND contract_status LIKE :status";
+        }
+    
+        if ($search) {
+            $sql .= " AND contract_name LIKE :search";
+        }
+    
+        $stmt = $this->db->prepare($sql);
+    
+        if ($type) {
+            $stmt->bindParam(':type', $type);
+        }
+    
+        if ($status) {
+            // Use LIKE workaround for TEXT columns
+            $statusLike = $status;
+            $stmt->bindParam(':status', $statusLike);
+        }
+    
+        if ($search) {
+            $searchTerm = "%$search%";
+            $stmt->bindParam(':search', $searchTerm);
+        }
+    
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
     }
+    
 
     // Method to delete a contract by its ID
     public function deleteContract($id) {
@@ -111,7 +142,7 @@ class ContractController {
             $stmt->bindParam(':filter', $filter, PDO::PARAM_STR);
         }
     
-        if ($search) {
+        if ($search) {  
             $searchTerm = "%$search%";
             $stmt->bindParam(':search', $searchTerm, PDO::PARAM_STR);
         }
@@ -123,48 +154,48 @@ class ContractController {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getOldContractsWithPaginationAll($start, $limit, $filter = null, $search = null) {
+    public function getOldContractsWithPaginationAll($start, $limit, $typeFilter = null, $statusFilter = null, $search = null) {
+
         $start = max(0, (int)$start);  // Ensure start is non-negative
         $limit = max(1, (int)$limit);  // Ensure limit is at least 1
     
-        // Build base SQL query with casting contract_status to VARCHAR
         $sql = "SELECT * FROM contracts WHERE 1=1";
-    
-        // Apply filter if present
-        if ($filter) {
-            $sql .= " AND contract_type = :filter";
+
+        if ($typeFilter) {
+            $sql .= " AND contract_type = :typeFilter";
         }
-    
-        // Apply search if present
+        
+        if ($statusFilter) {
+            $sql .= " AND contract_status = :statusFilter";
+        }
+        
         if ($search) {
             $sql .= " AND contract_name LIKE :search";
         }
-    
-        // Order by created_at to get the oldest contract first
+        
         $sql .= " ORDER BY created_at ASC OFFSET :start ROWS FETCH NEXT :limit ROWS ONLY";
-    
-        // Prepare and execute the statement
+        
         $stmt = $this->db->prepare($sql);
-    
-        // Bind parameters if needed
-        if ($filter) {
-            $stmt->bindParam(':filter', $filter, PDO::PARAM_STR);
+        
+        if ($typeFilter) {
+            $stmt->bindParam(':typeFilter', $typeFilter, PDO::PARAM_STR);
         }
-    
+        
+        if ($statusFilter) {
+            $stmt->bindParam(':statusFilter', $statusFilter, PDO::PARAM_STR);
+        }
+        
         if ($search) {
             $searchTerm = "%$search%";
             $stmt->bindParam(':search', $searchTerm, PDO::PARAM_STR);
         }
-    
-        // Bind pagination parameters
+        
         $stmt->bindParam(':start', $start, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-    
-        // Execute query
+        
         $stmt->execute();
-    
-        // Return the result as an associative array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
     }
 
 

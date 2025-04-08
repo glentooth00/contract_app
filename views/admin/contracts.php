@@ -8,6 +8,8 @@ use App\Controllers\ContractController;
 
 $page_title = 'Manage Contracts';
 
+$department =  $_SESSION['department'] ?? null;
+
 define('CONTRACTS_PER_PAGE', 10);
 
 $contractController = new ContractController();
@@ -43,12 +45,12 @@ include_once '../../views/layouts/includes/header.php';
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
         <!-- Content that will be shown after loading -->
-        <div class="mt-3" id="content">
+        <div class="mt-2" id="content">
             <h2>Active Contracts</h2>
             <hr>
 
 <div class="d-flex align-items-center gap-3 flex-wrap mb-1" style="margin-left: 1%;">
-    <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
         Add Contract
     </a>
@@ -75,7 +77,7 @@ include_once '../../views/layouts/includes/header.php';
 <span class="text-sm badge "style="color:#AAB99A;margin-left:.5%">NOTE: Search by Contract type and Contract Name.</span>
 </div>
 
-        <div class="container mt-2">
+        <div class="container mt-1">
         <table class="table table-striped table-hover border p-3">
             <thead>
                 <tr>
@@ -202,81 +204,27 @@ include_once '../../views/layouts/includes/header.php';
                     </ul>
                 </nav>
             <?php endif; ?>
-
-</div>
-
-    </div>
-</div>
-
-
-<!-- Add New Contract Modal --->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Contract</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">
-        <div class="col-md-12 d-flex gap-2 p-3">
-            <div class="col-md-6 p-2">
-                <div class="mb-3">
-                    <label class="badge text-muted">Contract</label>
-                    <input type="file" name="contract_file" class="form-control">
-
-                </div>
-                <div class="mb-3">
-                    <label class="badge text-muted">Starting Date</label>
-                    <input type="date" class="form-control" name="contract_start" id="floatingInput" placeholder="name@example.com">
-                    
-                </div>
-                
-                <div class="mb-3">
-                    <label class="badge text-muted">Contract Type</label>
-                        <select class="form-select form-select-md mb-3" name="contract_type" aria-label=".form-select-lg example">
-                            <option selected hidden>Select contract type</option>
-                            <option value="Employment Contract">Employment Contract</option>
-                            <option value="Construction Contract">Construction Contract</option>
-                            <option value="Licensing Agreement">Licensing Agreement</option>
-                            <option value="Purchase Agreement">Purchase Agreement</option>
-                            <option value="Service Agreement">Service Agreement</option>
-                        </select>
-                </div>
-                
-            </div>
-
-            <div class="col-md-6 p-2">
-                <div class="mb-3">
-                    <label class="badge text-muted">Contract Name</label>
-                    <input type="text" class="form-control" name="contract_name" id="floatingInput" placeholder="">  
-                </div>
-                <div class="mb-3">
-                <label class="badge text-muted">End Date</label>
-                    <input type="date" class="form-control" name="contract_end" id="floatingInput" placeholder="">
-                </div>
-                <!-- <div class="mb-3">
-                    <label class="badge text-muted">Contract Status</label>
-                        <select class="form-select form-select-md mb-3" name="contract_status" aria-label=".form-select-lg example">
-                            <option selected hidden>Select contract type</option>
-                            <option value="Employment Contract">Employment Contract</option>
-                            <option value="Construction Contract">Construction Contract</option>
-                            <option value="Licensing Agreement">Licensing Agreement</option>
-                            <option value="Purchase Agreement">Purchase Agreement</option>
-                            <option value="Service Agreement">Service Agreement</option>
-                        </select>
-                </div> -->
-            </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save Contract</button>
-      </div>
-      </form>
     </div>
-  </div>
 </div>
+</div>
+
+<!-- modals for every user ---->
+
+<?php switch( $department ){
+
+    case "ISD-HRAD" :
+        include_once 'modals/hrad_modal.php';
+    break;
+    case "CITETD" :
+        include_once 'modals/citetd_modal.php';
+    break;
+
+    }
+?>
+
+
+  
 
 <!-- Bootstrap Modal for confirmation -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">

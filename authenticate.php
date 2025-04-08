@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             $_SESSION['is_logged_in'];
 
-                $test =  $_SESSION['data'];
 
                 $get_id = $_SESSION['data'];
 
@@ -38,9 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $encoded =  base64_encode( $userId);
 
-
-
-                // echo $id = $get_id;
 
                 header('location:views/admin/dashboard.php?user='. $encoded);
 
