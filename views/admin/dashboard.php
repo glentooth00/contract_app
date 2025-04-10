@@ -1,6 +1,8 @@
 <?php
 
 use App\Controllers\ContractController;
+use App\Controllers\ContractTypeController;
+use App\Controllers\UserController;
 
 session_start();
 
@@ -10,7 +12,11 @@ $get_id = $_SESSION['data'];
 
 $id = $get_id['id'];
 
-$_SESSION['department'] = $get_id['department'];
+$get_user_department = (new UserController)->getUserDepartmentById($id);
+
+$user_department = $get_user_department['department'];
+
+$department = $_SESSION['department'] = $get_id['department'];
 
 $savedContracts = new ContractController();
 
@@ -49,6 +55,11 @@ if ($totalPages < 1) {
     $totalPages = 1;
 }
 
+$emp_ert = (new ContractTypeController)->getEmploymentErt();
+
+$EmpErt = $emp_ert['contract_ert'];
+
+
 include_once '../../views/layouts/includes/header.php';
 ?>
 
@@ -68,7 +79,53 @@ include_once '../../views/layouts/includes/header.php';
     <div class="mainContent">
         <!-- Content that will be shown after loading -->
         <div id="content" class="mt-2">
-            <h2>Contracts Overview</h2>
+            
+            <div class="d-flex">
+                <h2 class="col-md-10">Contracts Overview</h2>
+                
+                <span class="mt-2 p-1 d-flex">
+                    <!-- <?= $department =  $_SESSION['department'] ?? null; ?> Account -->
+
+                    <?php if(isset($user_department)){ ?>
+
+                        <?php switch( $user_department ) { case 'IT': ?>
+
+                                <span class="badge p-2" style="background-color: #0d6efd;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'ISD-HRAD': ?>
+
+                                <span class="badge p-2" style="background-color: #3F7D58;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'CITETD': ?>
+
+                                <span class="badge p-2" style="background-color: #FFB433;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'IASD': ?>
+                                
+                                <span class="badge p-2" style="background-color: #EB5B00;"><?= $user_department; ?> user</span>
+                            
+                            <?php break;case 'ISD-MSD': ?>
+
+                                <span class="badge p-2" style="background-color: #6A9C89;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'BAC':  ?>
+
+                                <span class="badge p-2" style="background-color: #3B6790;"><?= $user_department; ?> user</span>
+                            
+                            <?php break;  case '': ?>
+                            
+                            <?php default: ?>
+                                <!-- <span class="badge text-muted">no department assigned</span> -->
+                        <?php } ?>
+
+                        <?php }else { ?>
+
+                        <!-- <span class="badge text-muted">no department assigned</span> -->
+
+                        <?php } ?>
+                </span>
+               
+            </div>
             <hr>
 
             <span class="text-sm badge"style="color:#AAB99A;">NOTE: Search by Contract type and Contract Name.</span>
@@ -138,7 +195,8 @@ include_once '../../views/layouts/includes/header.php';
                                     }
                                     ?>
 
-                                    <?php if ($days_left <= 5 && $days_left > 0) { ?>
+                                    <?php if ($days_left <= $EmpErt && $days_left > 0) { ?>
+
                                         <!-- Contracts expiring within 5 days -->
                                         <span class='badge p-2 font-monospace border border-danger fw-semibold' style="font-size:15px;background-color:#E52020;width:14em;">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
@@ -159,6 +217,8 @@ include_once '../../views/layouts/includes/header.php';
                                             <?= $days_left ?> days until expiry
                                         </span>
                                     <?php } ?>
+
+
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -225,7 +285,7 @@ include_once '../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php 
+<!-- <?php 
 
 $contract_status = $_SESSION['contract_status'];
 $contract_id = $_SESSION['contract_id'];
@@ -234,7 +294,7 @@ $contract_id = $_SESSION['contract_id'];
 $update_contract_status = $savedContracts->updateContractStatus($contract_id,$contract_status );
 
 
-?>
+?> -->
 
 <?php include_once '../../views/layouts/includes/footer.php';   ?>
 

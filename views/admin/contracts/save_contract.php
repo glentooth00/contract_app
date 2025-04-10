@@ -21,6 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'contract_end' => $_POST["contract_end"],
             'contract_file' => $filePath,
             'contract_status' => 'Active',
+            'department_assigned' => $_POST["department_assigned"],
+            'uploader_id' => $_POST['uploader_id'],
+            'uploader_department' => $_POST['uploader_department'],
         ];
 
         // Save contract details
