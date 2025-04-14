@@ -20,7 +20,7 @@ $page_title = 'View Contract | '. $getContract['contract_name'];
 
 //-----------------------------------------------------------------------//
 
-
+$department =  $_SESSION['department'] ?? null;
 
 
 
@@ -45,6 +45,27 @@ include_once '../../views/layouts/includes/header.php';
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
         <?= $contract_data ?></h2>
         <hr>
+
+        <?php 
+            $start = new DateTime($getContract['contract_start']);
+            $end = new DateTime($getContract['contract_end']);
+            $today = new DateTime();
+
+            // Calculate remaining days
+            $remainingDays = $today <= $end ? $today->diff($end)->days : 0;
+
+            // Check if the contract has exactly 15 days remaining
+            if ($remainingDays > 0 && $remainingDays <= 15) {
+                echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
+                <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays == 1 ? '' : 's') . '.</span>';
+            } elseif ($remainingDays <= 0) {
+                echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
+                Contract has expired.</p>';
+            }
+            
+        ?>
+
 
         <div class="mt-3 col-md-12 d-flex gap-5">
             
@@ -167,6 +188,10 @@ include_once '../../views/layouts/includes/header.php';
 
             <div class="row col-md-3 mt-4 float-end">
                 <div class="mt-3 float-end" style="margin-left: 90%;">
+
+                <?php if($department != 'ISD-HRAD'): ?>
+                    <!-- hide buttons -->
+                <?php else: ?>
                     <?php 
                     $start = new DateTime($getContract['contract_start']);
                     $end = new DateTime($getContract['contract_end']);
@@ -177,13 +202,27 @@ include_once '../../views/layouts/includes/header.php';
                     ?>
 
                     <?php if ($remainingDays <= 15) {  ?>
-                        <button class="btn btn-primary">Extend</button>
-                        <button class="btn btn-warning">End Contract</button>
+                       <div class="d-flex gap-2">
+                       <button class="btn btn-primary">Extend</button>
+                        <form action="end_contract.php" method="post">
+                            <input type="hidden" class="form-control" name="contract_id" value="<?= $getContract['id'] ?>" >
+                            <button type="submit" class="btn btn-warning">End Contract</button>
+                        </form>
+                       </div>
+                     
+                       
                     <?php } else { ?>
                         <!-- Optionally, you can show something else if the remaining days are more than 15 -->
                     <?php } ?>
+                <?php endif; ?>
+
+                  
                 </div>
+                
             </div>
+
+            
+
         </div>
 
         <div>
@@ -213,7 +252,7 @@ include_once '../../views/layouts/includes/header.php';
                                         <?php if($employement_data['status'] === 'Active' | $employement_data['status']=== 'Expired'): ?>
                                                 <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
                                         <?php else: ?>
-                                            <span class="badge text-muted p-2">no status</span>
+                                            <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
                                         <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">

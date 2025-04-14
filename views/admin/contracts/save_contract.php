@@ -30,20 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Save contract
         $contractSaved = $contractController->saveContract($contractData);
 
-        // Prepare employment history data
-        $employmentData = [
-            'contract_name' => $_POST["contract_name"],
-            'contract_type' => $_POST["contract_type"],
-            'status' => 'Active',
-            'contract_file' => $filePath,
-            'date_start' => $_POST["contract_start"],
-            'date_end' => $_POST["contract_end"],
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
-        ];
 
         // Save employment history
-        $employmentSaved = (new EmploymentContractController)->storeEmploymentRecord($employmentData);
+        $employmentSaved = (new EmploymentContractController)->insertLatestData();
 
         if ($contractSaved && $employmentSaved) {
             $_SESSION['notification'] = [

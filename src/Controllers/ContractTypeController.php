@@ -27,6 +27,12 @@ class ContractTypeController{
         return;
     }
 
+    public function getContractId(){
+
+        
+
+    }
+
 
     public function getContractTypes(){
 

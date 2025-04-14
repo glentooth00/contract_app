@@ -465,5 +465,30 @@ class ContractController {
     }
     
 
+    public function insertLatestData(){
+        
+        $sql = "SELECT TOP 1 * FROM contracts ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $insertLatest = "";
+
+        
+
+        echo $result['id'].'<br>';
+        echo $result['contract_name'].'<br>';
+        echo $result['contract_start'].'<br>';
+        echo $result['contract_end'].'<br>';
+        echo $result['contract_file'].'<br>';
+        echo $created_at =  date('Y-m-d H:i:s').'<br>';
+        echo $updated_at =  date('Y-m-d H:i:s').'<br>';
+       
+
+        return;
+
+    }
+
     
 }

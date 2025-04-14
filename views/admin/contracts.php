@@ -5,7 +5,8 @@ session_start();
 require_once __DIR__ . '/../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
-
+use App\Controllers\ContractTypeController;
+use App\Controllers\EmploymentContractController;
 
 $page_title = 'Manage Contracts';
 
@@ -42,7 +43,14 @@ $contracts = $contractController->getOldContractsWithPagination(
 $totalContracts = $contractController->getTotalContracts($contract_filter, $search_query);
 $totalPages = ceil($totalContracts / CONTRACTS_PER_PAGE);
 
+$getOneLatest = (new EmploymentContractController)->insertLatestData();
 
+if ($getOneLatest) {
+    echo "Contract data inserted successfully.";
+} else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
 
 include_once '../../views/layouts/includes/header.php';
 ?>
