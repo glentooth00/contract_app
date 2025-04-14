@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
 session_start();
@@ -7,6 +8,8 @@ session_start();
 use App\Controllers\ContractController;
 
 require_once __DIR__ . '../../../vendor/autoload.php';
+
+$department =  $_SESSION['department'] ?? null;
 
 //------------------------- GET CONTRACT NAME ---------------------------//
 
@@ -20,9 +23,11 @@ $page_title = 'View Contract | '. $getContract['contract_name'];
 
 //-----------------------------------------------------------------------//
 
-$department =  $_SESSION['department'] ?? null;
+//------------------------- GET Departments ----------------------------//
 
+$departments = ( new DepartmentController )->getAllDepartments();
 
+//-----------------------------------------------------------------------//
 
 
 include_once '../../views/layouts/includes/header.php'; 
@@ -42,6 +47,7 @@ include_once '../../views/layouts/includes/header.php';
     </div>
 
     <div class="mainContent">
+
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
         <?= $contract_data ?></h2>
         <hr>
@@ -51,8 +57,9 @@ include_once '../../views/layouts/includes/header.php';
             $end = new DateTime($getContract['contract_end']);
             $today = new DateTime();
 
-            // Calculate remaining days
-            $remainingDays = $today <= $end ? $today->diff($end)->days : 0;
+            $interval = $today->diff($end);
+            $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+
 
             // Check if the contract is about to expire or already expired
             if ($remainingDays > 0 && $remainingDays <= 15) {
@@ -66,14 +73,31 @@ include_once '../../views/layouts/includes/header.php';
                 </p>';
             }
         ?>
+        
+        <div class="gap-1">
+        <span id="close" style="float: inline-end;display:none;">
+            <!-- <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i> -->
+            <i class="fa fa-times" style="width:30px;" aria-hidden="true"></i>
 
+        </span>
+        <span id="save" style="float: inline-end;display:none;">
+            <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i>
+        </span>
+        <span id="edit" style="float: inline-end;display:inline;">
+            <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;" alt=""></i>
+        </span>
+        </div>
+       
 
         <div class="mt-3 col-md-12 d-flex gap-5">
+
+        
             
-            <div class="row col-md-3" >
+            <div class="row col-md-3">
+            <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['id'];  ?>"  name="contract_name" readonly>
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract Name:</label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['contract_name'];  ?>"  name="contract_name" readonly>
+                    <input type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['contract_name'];  ?>"  name="contract_name" readonly>
                 </div>
             </div>
             <div class="row col-md-2" >
@@ -81,7 +105,7 @@ include_once '../../views/layouts/includes/header.php';
                     <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                         <div class="d-flex">
                             <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                            <input type="date" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_start'];  ?>"  name="contract_start" readonly>
+                            <input type="date"  id="startDate" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_start'];  ?>"  name="contract_start" readonly>
                         </div>
                 </div>
             </div>
@@ -90,7 +114,7 @@ include_once '../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                             <div class="d-flex">
                                 <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                <input type="date" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_end'];  ?>"  name="contract_end" readonly>
+                                <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_end'];  ?>"  name="contract_end" readonly>
                         </div>
                 </div>
             </div>
@@ -99,11 +123,13 @@ include_once '../../views/layouts/includes/header.php';
                     <div class="mt-3">
                         <label class="badge text-muted" <?php 
 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
-                    $today = new DateTime();
+$start = new DateTime($getContract['contract_start']);
+$end = new DateTime($getContract['contract_end']);
+$today = new DateTime();
 
-                    $remainingDays = $today <= $end ? $today->diff($end)->days : 0;
+$interval = $today->diff($end);
+$remainingDays = $interval->invert ? -$interval->days : $interval->days;
+
 
 
                 ?> style="font-size: 15px;">Days Remaining:</label>
@@ -120,34 +146,24 @@ include_once '../../views/layouts/includes/header.php';
             <div class="row col-md-3" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['contract_type'];  ?>"  name="contract_type" readonly>
+                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['contract_type'];  ?>"  name="contract_type" readonly>
                 </div>
             </div>
 
             <div class="row col-md-3" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned'];  ?>"  name="department_assigned" readonly>
-                </div>
+                    <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
+                        <?php foreach ($departments as $department): ?>
+                            <option value="<?= $department['department_name']; ?>" 
+                                <?= ($department['department_name'] == $getContract['department_assigned']) ? 'selected' : ''; ?>>
+                                <?= $department['department_name']; ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <!-- <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned'];  ?>"  name="department_assigned" readonly> -->
+                </div>  
             </div>
-            <!-- <div class="row col-md-2" >
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                        <div class="d-flex">
-                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                            <input type="date" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_start'];  ?>"  name="contract_start" readonly>
-                        </div>
-                </div>
-            </div>
-            <div class="row col-md-2" >
-                <div class="mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                            <div class="d-flex">
-                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                <input type="date" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_end'];  ?>"  name="contract_end" readonly>
-                        </div>
-                </div>
-            </div> -->
             <div class="row col-md-2" >
                 <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Status</label>
@@ -188,39 +204,34 @@ include_once '../../views/layouts/includes/header.php';
             </div>
 
             <div class="row col-md-3 mt-4 float-end">
-                <div class="mt-3 float-end" style="margin-left: 90%;">
+    <div class="mt-3 float-end" style="margin-left: 90%;">
+        <?php 
+         $dept = $_SESSION['department'];
+        ?>
+        <?php if ($dept === 'ISD-HRAD'): ?>
+            <?php
+                $start = new DateTime($getContract['contract_start']);
+                $end = new DateTime($getContract['contract_end']);
+                $today = new DateTime();
 
-                <?php if($department != 'ISD-HRAD'): ?>
-                    <!-- hide buttons -->
-                <?php else: ?>
-                    <?php 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
-                    $today = new DateTime();
+                // Calculate remaining days (positive if end date is in the future)
+                $interval = $today->diff($end);
+                $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+            ?>
 
-                    // Calculate remaining days
-                    $remainingDays = $today <= $end ? $today->diff($end)->days : 0;
-                    ?>
-
-                    <?php if ($remainingDays <= 15) {  ?>
-                       <div class="d-flex gap-2">
-                       <button class="btn btn-primary">Extend</button>
-                        <form action="end_contract.php" method="post">
-                            <input type="hidden" class="form-control" name="contract_id" value="<?= $getContract['id'] ?>" >
-                            <button type="submit" class="btn btn-warning">End Contract</button>
-                        </form>
-                       </div>
-                     
-                       
-                    <?php } else { ?>
-                        <!-- Optionally, you can show something else if the remaining days are more than 15 -->
-                    <?php } ?>
-                <?php endif; ?>
-
-                  
+            <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary">Extend</button>
+                    <form action="end_contract.php" method="post">
+                        <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
+                        <button type="submit" class="btn btn-warning">End Contract</button>
+                    </form>
                 </div>
-                
-            </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
 
             
 
@@ -316,6 +327,48 @@ include_once '../../views/layouts/includes/header.php';
     </div>
 </div>
 
+<!-- popup notification ---->
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+  </symbol>
+  <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+  </symbol>
+  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
+
+
+<?php if (isset($_SESSION['notification'])): ?>
+    <div id="notification" class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show" role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        <!-- Icon -->
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
+            <use xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>"/>
+        </svg>
+        <!-- Message -->
+        <div>
+            <?php echo $_SESSION['notification']['message']; ?>
+        </div>
+        <!-- Close Button -->
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['notification']); // Clear notification after displaying ?>
+    
+    <script>
+        // Automatically fade the notification out after 6 seconds
+        setTimeout(function() {
+            let notification = document.getElementById('notification');
+            if (notification) {
+                notification.classList.remove('show');
+                notification.classList.add('fade');
+                notification.style.transition = 'opacity 1s ease';
+            }
+        }, 7000); // 6 seconds
+    </script>
+<?php endif; ?>
 
 
 
@@ -360,7 +413,15 @@ include_once '../../views/layouts/includes/header.php';
         color: white;
         font-weight: bold;
     }
-
+    #edit:hover{
+        cursor: pointer;
+    }
+    #save:hover{
+        cursor: pointer;
+    }
+    #close:hover{
+        cursor: pointer;
+    }
 </style>
 
 <script>
@@ -383,4 +444,96 @@ include_once '../../views/layouts/includes/header.php';
             showConfirmationModal(contractId);
         }
     });
+
+
+    document.getElementById('edit').addEventListener('click', function () {
+
+    const nameInput = document.getElementById('contractName');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    const deptSelect = document.getElementById('deptSelect');
+
+    const saveBtn = document.getElementById('save');
+    const editBtn = document.getElementById('edit');
+    const closeBtn = document.getElementById('close');
+
+    // Check if fields are currently readonly/disabled
+    const isReadOnly = nameInput.hasAttribute('readonly');
+
+    if (isReadOnly) {
+        // Make all editable
+        nameInput.removeAttribute('readonly');
+        startDate.removeAttribute('readonly');
+        endDate.removeAttribute('readonly');
+        deptSelect.removeAttribute('disabled');
+
+        saveBtn.style.display = 'inline';
+        editBtn.style.display = 'none';
+        closeBtn.style.display = 'inline';
+
+        nameInput.focus();
+    } else {
+        // Set them back to readonly/disabled
+        nameInput.setAttribute('readonly', true);
+        startDate.setAttribute('readonly', true);
+        endDate.setAttribute('readonly', true);
+        deptSelect.setAttribute('disabled', true);
+
+        saveBtn.style.display = 'none';
+       
+    }
+});
+
+    document.getElementById('close').addEventListener('click', function () {
+
+    const nameInput = document.getElementById('contractName');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    const deptSelect = document.getElementById('deptSelect');
+    const saveBtn = document.getElementById('save');
+    const editBtn = document.getElementById('edit');
+    const closeBtn = document.getElementById('close');
+
+    // Check if fields are currently readonly/disabled
+    const isReadOnly = nameInput.hasAttribute('readonly');
+
+        // Set them back to readonly/disabled
+        nameInput.setAttribute('readonly', true);
+        startDate.setAttribute('readonly', true);
+        endDate.setAttribute('readonly', true);
+        deptSelect.setAttribute('disabled', true);
+
+        saveBtn.style.display = 'none';
+        editBtn.style.display = 'inline';
+        closeBtn.style.display = 'none';
+    });
+
+
+    document.getElementById('save').addEventListener('click', function () {
+    const nameInput = document.getElementById('contractName');
+    const startDate = document.getElementById('startDate');
+    const endDate = document.getElementById('endDate');
+    const deptSelect = document.getElementById('deptSelect');
+    const id = document.getElementById('contractId');
+
+    const contractName = encodeURIComponent(nameInput.value);
+    const contractStart = encodeURIComponent(formatDate(startDate.value));
+    const contractEnd = encodeURIComponent(formatDate(endDate.value));
+    const department = encodeURIComponent(deptSelect.value);
+    const contract_id = encodeURIComponent(id.value);
+
+    // Redirect with query parameters
+    window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+});
+
+function formatDate(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+}
+
+
+
+
+
+
 </script>
