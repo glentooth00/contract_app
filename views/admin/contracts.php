@@ -5,10 +5,19 @@ session_start();
 require_once __DIR__ . '/../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
+use App\Controllers\ContractTypeController;
+use App\Controllers\EmploymentContractController;
 
 $page_title = 'Manage Contracts';
 
 $department =  $_SESSION['department'] ?? null;
+
+$getUploader_department = (new ContractController)->getWhereDepartment($department);
+$getDept_assigned = (new ContractController)->getDepartmentAssigned($department);
+    
+$assigned_dept = $getDept_assigned['department_assigned'] ?? '';
+
+$uploader_dept = $getUploader_department['uploader_department'] ?? '';
 
 define('CONTRACTS_PER_PAGE', 10);
 
@@ -22,10 +31,26 @@ $contract_filter = $_GET['contract_type_filter'] ?? null;
 $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
 
 
-$contracts = $contractController->getOldContractsWithPagination($start, CONTRACTS_PER_PAGE, $contract_filter, $search_query);
+$contracts = $contractController->getOldContractsWithPagination(
+    $start, 
+    CONTRACTS_PER_PAGE, // Use the defined constant for limit
+    $assigned_dept, 
+    $uploader_dept, 
+    $contract_filter, // Correct filter variable
+    $search_query     // Correct search variable
+);
 
 $totalContracts = $contractController->getTotalContracts($contract_filter, $search_query);
 $totalPages = ceil($totalContracts / CONTRACTS_PER_PAGE);
+
+$getOneLatest = (new EmploymentContractController)->insertLatestData();
+
+if ($getOneLatest) {
+    echo "Contract data inserted successfully.";
+} else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
 
 include_once '../../views/layouts/includes/header.php';
 ?>
@@ -36,7 +61,6 @@ include_once '../../views/layouts/includes/header.php';
     <span class="sr-only">Loading...</span>
     </div>
 </div>
-    </div>
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
@@ -47,33 +71,76 @@ include_once '../../views/layouts/includes/header.php';
         <!-- Content that will be shown after loading -->
         <div class="mt-2" id="content">
             <h2>Active Contracts</h2>
+            <span class="mt-2 p-1 d-flex">
+                    <!-- <?= $department =  $_SESSION['department'] ?? null; ?> Account -->
+
+                    <?php if(isset($user_department)){ ?>
+
+                        <?php switch( $user_department ) { case 'IT': ?>
+
+                                <span class="badge p-2" style="background-color: #0d6efd;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'ISD-HRAD': ?>
+
+                                <span class="badge p-2" style="background-color: #3F7D58;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'CITETD': ?>
+
+                                <span class="badge p-2" style="background-color: #FFB433;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'IASD': ?>
+                                
+                                <span class="badge p-2" style="background-color: #EB5B00;"><?= $user_department; ?> user</span>
+                            
+                            <?php break;case 'ISD-MSD': ?>
+
+                                <span class="badge p-2" style="background-color: #6A9C89;"><?= $user_department; ?> user</span>
+                            
+                            <?php break; case 'BAC':  ?>
+
+                                <span class="badge p-2" style="background-color: #3B6790;"><?= $user_department; ?> user</span>
+                            
+                            <?php break;  case '': ?>
+                            
+                            <?php default: ?>
+                                <!-- <span class="badge text-muted">no department assigned</span> -->
+                        <?php } ?>
+
+                        <?php }else { ?>
+
+                        <!-- <span class="badge text-muted">no department assigned</span> -->
+
+                        <?php } ?>
+                </span>
             <hr>
 
-<div class="d-flex align-items-center gap-3 flex-wrap mb-1" style="margin-left: 1%;">
-    <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
-        <i class="fa fa-file-text-o" aria-hidden="true"></i>
-        Add Contract
-    </a>
+    <div class="d-flex align-items-center gap-3 flex-wrap mb-1" style="margin-left: 1%;">
+        <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            Add Contract
+        </a>
 
-    
-    <form method="GET" action="contracts.php">
-        <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
-            <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
-            <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
-            <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction Contract</option>
-            <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing Agreement</option>
-            <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement</option>
-            <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement</option>
-        </select>
-    </form>
+        
+        <form method="GET" action="contracts.php">
+            <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
+                <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
+                <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
+                <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction Contract</option>
+                <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing Agreement</option>
+                <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement</option>
+                <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement</option>
+            </select>
+        </form>
 
-    <form method="GET" action="contracts.php" class="input-group" style="width: 250px;">
-        <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract">
-        <button class="btn bg-dark text-white" type="submit">
-            <i class="fa fa-search"></i>
-        </button>
-    </form>
-</div>
+        <form method="GET" action="contracts.php" class="input-group" style="width: 250px;">
+            <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract">
+            <button class="btn bg-dark text-white" type="submit">
+                <i class="fa fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+
 <span class="text-sm badge "style="color:#AAB99A;margin-left:.5%">NOTE: Search by Contract type and Contract Name.</span>
 </div>
 
@@ -91,7 +158,10 @@ include_once '../../views/layouts/includes/header.php';
                     <th style="text-align: center !important;">Action</th>
                 </tr>
             </thead>
-            <tbody class="table-striped p-2">
+
+            <?php if($department === $uploader_dept | $department === $assigned_dept) : ?>
+
+                <tbody class="table-striped p-2">
                 <?php 
                 if (!empty($contracts)) {
                     foreach ($contracts as $contract) { ?>
@@ -136,10 +206,21 @@ include_once '../../views/layouts/includes/header.php';
                         <?php endif; ?>
                         </td>
                             <td style="text-align: center !important;">
-                                <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
-                                <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
-                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                </a>
+
+                            <?php if($department === $uploader_dept): ?>
+                                    
+                                    <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
+                            
+                                    <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
+                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                    </a>
+                            
+                                <?php else: ?>
+                                    <!-- <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
+                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                        </a> -->
+                                        <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     <?php }
@@ -148,7 +229,12 @@ include_once '../../views/layouts/includes/header.php';
                             <td colspan="7" class="text-center">No contracts found.</td>
                         </tr>
                     <?php } ?>
-            </tbody>
+                </tbody>
+
+            <?php endif; ?>
+
+          
+            
         </table>
 
             <!-- Pagination links -->
@@ -207,7 +293,7 @@ include_once '../../views/layouts/includes/header.php';
         </div>
     </div>
 </div>
-</div>
+
 
 <!-- modals for every user ---->
 

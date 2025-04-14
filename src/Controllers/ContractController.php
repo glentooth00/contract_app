@@ -34,8 +34,9 @@ class ContractController {
     
 
     public function saveContract($data) {
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status)";
+        
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned)";
         
         $stmt = $this->db->prepare($query);
 
@@ -45,7 +46,11 @@ class ContractController {
             ':contract_start' => $data['contract_start'],
             ':contract_end' => $data['contract_end'],
             ':contract_file' => $data['contract_file'],
-            ':contract_status' => $data['contract_status']
+            ':contract_status' => $data['contract_status'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+            ':department_assigned' => $data['department_assigned'],
+
         ]);
     }
 
@@ -199,12 +204,23 @@ class ContractController {
     }
 
 
-    public function getOldContractsWithPagination($start, $limit, $filter = null, $search = null) {
+    public function getOldContractsWithPagination($start, $limit, $assigned_dept, $uploader_dept, $filter = null, $search = null)  {
+    
         $start = max(0, (int)$start);  // Ensure start is non-negative
         $limit = max(1, (int)$limit);  // Ensure limit is at least 1
-    
-        // Base query for active contracts, using LIKE for text comparison
+        
+        // Base query for active contracts
         $sql = "SELECT * FROM contracts WHERE contract_status LIKE 'Active'";  // Using LIKE for compatibility with TEXT
+        
+        // Add condition for assigned department (for view permission)
+        if ($assigned_dept) {
+            $sql .= " AND department_assigned = :assigned_dept";
+        }
+        
+        // Add condition for uploader department (for edit permission and creator filter)
+        if ($uploader_dept) {
+            $sql .= " AND uploader_department = :uploader_dept";
+        }
         
         // Apply filter if present
         if ($filter) {
@@ -223,6 +239,14 @@ class ContractController {
         $stmt = $this->db->prepare($sql);
         
         // Bind parameters if needed
+        if ($assigned_dept) {
+            $stmt->bindParam(':assigned_dept', $assigned_dept, PDO::PARAM_STR);
+        }
+        
+        if ($uploader_dept) {
+            $stmt->bindParam(':uploader_dept', $uploader_dept, PDO::PARAM_STR);
+        }
+        
         if ($filter) {
             $stmt->bindParam(':filter', $filter, PDO::PARAM_STR);
         }
@@ -242,6 +266,8 @@ class ContractController {
         // Return the result as an associative array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    
     
     
     public function getOldContractsWithPaginationExpired($start, $limit, $filter = null, $search = null) {
@@ -401,9 +427,68 @@ class ContractController {
 
     }
 
+    public function getWhereDepartment($department){
+        
+        $sql = "SELECT uploader_department FROM contracts WHERE uploader_department = :department";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+
+    }
+
+    public function getDepartmentAssigned($department){
+
+        $sql = "SELECT department_assigned FROM contracts WHERE department_assigned = :department";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+
+    }
+
     
+    public function getContractbyId($id){
+        
+        $sql = "SELECT * FROM contracts WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('id',$id );
+        $stmt->execute();
+        $result =  $stmt->fetch();
+
+        return $result;
+
+    }
     
-    
+
+    public function insertLatestData(){
+        
+        $sql = "SELECT TOP 1 * FROM contracts ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $insertLatest = "";
+
+        
+
+        echo $result['id'].'<br>';
+        echo $result['contract_name'].'<br>';
+        echo $result['contract_start'].'<br>';
+        echo $result['contract_end'].'<br>';
+        echo $result['contract_file'].'<br>';
+        echo $created_at =  date('Y-m-d H:i:s').'<br>';
+        echo $updated_at =  date('Y-m-d H:i:s').'<br>';
+       
+
+        return;
+
+    }
 
     
 }

@@ -157,6 +157,40 @@ class UserController {
             return "Failed to save user.";
         }
     }
+
+    public function getUserByDept($department){
+        
+        $sql = "SELECT id, department FROM users WHERE department = :department";
+        $stmt =  $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public function getUserDepartmentById($id){
+
+        $sql = "SELECT department FROM users WHERE id = :id";
+        $stmt =  $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+
+    }
+    
+    public function getUserById($id){
+
+        $sql = "SELECT * FROM users WHERE id = :id";
+        $stmt =  $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+
+    }
     
 
 }

@@ -27,6 +27,12 @@ class ContractTypeController{
         return;
     }
 
+    public function getContractId(){
+
+        
+
+    }
+
 
     public function getContractTypes(){
 
@@ -48,6 +54,15 @@ class ContractTypeController{
         
 
         return $stmt->execute();
+
+    }
+
+    public function getEmploymentErt(){
+
+        $sql = "SELECT contract_ert FROM contract_types WHERE contract_type = 'Employment Contract'";
+        $stmt = $this->db->query($sql);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
 
     }
 
