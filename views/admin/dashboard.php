@@ -213,8 +213,8 @@ include_once '../../views/layouts/includes/header.php';
 
                                     <?php elseif ($days_left <= 0): ?>
                                         <?php
-                                        $_SESSION['contract_status'] = 'Expired';
-                                        $_SESSION['contract_id'] = $contract['id'];
+                                            $_SESSION['contract_status'] = 'Expired';
+                                            $_SESSION['contract_id'] = $contract['id'];
                                         ?>
                                         <!-- Expired contracts -->
                                         <span class="badge border-danger p-2 font-monospace fw-semibold"

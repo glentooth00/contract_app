@@ -128,7 +128,7 @@ class ContractController {
     public function getContractsWithPagination($start, $limit, $filter = null, $search = null) {
         $start = (int)$start;
         $limit = (int)$limit;
-    
+
         $sql = "SELECT * FROM contracts WHERE 1=1";
     
         if ($filter) {
@@ -412,18 +412,9 @@ class ContractController {
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_id', $contract_id);
         $stmt->bindParam(':contract_status', $contract_status);
-        $test = $stmt->execute();
-
-    // Check if the query was successful
-        // if ($test) {
-        //     echo "Query executed successfully!";
-        //     echo "Rows affected: " . $stmt->rowCount();
-        // } else {
-        //     // Output any error information
-        //     var_dump($stmt->errorInfo());
-        // }
-
-        return;
+        $updateStatus = $stmt->execute();
+        
+        return $updateStatus;
 
     }
 
@@ -489,6 +480,32 @@ class ContractController {
         return;
 
     }
+
+    public function updateContract($data)
+    {
+        $sql = "UPDATE contracts 
+                SET 
+                    contract_name = :contract_name,
+                    contract_start = :contract_start,
+                    contract_end = :contract_end,
+                    department_assigned = :department_assigned,
+                    updated_at = :updated_at 
+                WHERE id = :contract_id";
+    
+        $stmt = $this->db->prepare($sql);
+    
+        $stmt->bindParam(':contract_id', $data['id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['start']);
+        $stmt->bindParam(':contract_end', $data['end']);
+        $stmt->bindParam(':department_assigned', $data['department_assigned']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+    
+        $stmt->execute();
+    
+        return true;
+    }
+    
 
     
 }
