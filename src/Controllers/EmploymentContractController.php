@@ -14,10 +14,10 @@ class EmploymentContractController {
     }
 
 
-    public function getByContractName($contractName) {
-        $sql = "SELECT * FROM employment_history WHERE contract_name = :contract_name";
+    public function getByContractId($id) {
+        $sql = "SELECT * FROM employment_history WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':contract_name', $contractName);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         
         // Fetch the result and return as an array
@@ -92,5 +92,13 @@ class EmploymentContractController {
         
     }
 
+    // public function updateEmployementContractStatus($data){
+
+    //     $sql = "UPDATE employment_history SET status = :status WHERE contract_id = :id";
+    //     $stmt = $this->db->prepare($sql);
+    //     $stmt->bindParam(':status', $data['status']);
+    //     $stmt->bindParam(':id', $data['id']);
+
+    // }
 
 }
