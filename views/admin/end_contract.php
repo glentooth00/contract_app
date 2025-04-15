@@ -12,25 +12,29 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
         'id' => $_POST['contract_id'],
         'status' => 'Employmeny contract ended',
     ];
+
+
     
     $updateExpiredEmploymentContract = (new EmploymentContractController)->udpateExpiredEmploymentContract($updateData);
     
-    if($updateExpiredEmploymentContract) {
+    if($updateExpiredEmploymentContract){
 
-        $_SESSION['notification'] = [
+          $_SESSION['notification'] = [
             'message' => 'Employment contract ended!',
             'type' => 'success'
         ];
 
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+           header("Location: " . $_SERVER['HTTP_REFERER']);
+
+    }else{
+          header("Location: " . $_SERVER['HTTP_REFERER']);
+    }
+
+       header("Location: " . $_SERVER['HTTP_REFERER']);
+
 
     }
 
-    header("Location: " . $_SERVER['HTTP_REFERER']);
-
-}
-
-header("Location: " . $_SERVER['HTTP_REFERER']);
 
 
 

@@ -56,10 +56,10 @@ include_once '../../views/layouts/includes/header.php';
             <hr>
 
 <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-left: 1%;">
-    <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <!-- <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="fa fa-plus p-1" aria-hidden="true"></i>
         Add Contract
-    </a>
+    </a> -->
 
     <form method="GET" action="contracts.php">
         <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">

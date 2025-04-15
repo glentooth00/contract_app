@@ -23,22 +23,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($username == $test['username']) {
 
-        echo 'username is the same';
+        // echo 'username is the same';
 
 
         if ($password == $test['password']) {
 
-            $_SESSION['is_logged_in'];
+            // $_SESSION['is_logged_in'];
 
 
-                $get_id = $_SESSION['data'];
+                $get_data = $_SESSION['data'];
 
-                $userId = $get_id['id'];
+                $department = $get_data['department'];
 
-                $encoded =  base64_encode( $userId);
+                $userId = $get_data['id'];
+
+                switch($department){
+
+                    case 'ISD-MSD':
+                        $_SESSION['department'] =  $department;
+                        header('location:views/admin/isdmsd/index.php');
+                        break;
+
+                    case 'CITETD':
+                        $_SESSION['department'] =  $department;
+                        header('location:views/admin/contracts.php');
+                        break;   
+                        
+                    case 'ISD-HRAD':
+                        $_SESSION['department'] =  $department;
+                        header('location:views/admin/contracts.php');
+                        break;
+                }
+
+                // $encoded =  base64_encode( $userId);
 
 
-                header('location:views/admin/dashboard.php?user='. $encoded);
+                // header('location:views/admin/dashboard.php?user='. $encoded);
 
 
         } else {

@@ -15,7 +15,7 @@ class EmploymentContractController {
 
 
     public function getByContractId($id) {
-        $sql = "SELECT * FROM employment_history WHERE contract_id = :id";
+        $sql = "SELECT * FROM employment_history WHERE contract_id = :id ORDER BY created_at ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -84,21 +84,101 @@ class EmploymentContractController {
     
     public function udpateExpiredEmploymentContract($data){
 
-        $sql = "UPDATE employment_history SET status = :status WHERE id = :id";
+        $sql = "UPDATE employment_history SET status = :status WHERE contract_id = :contract_id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':status', $data['status']);
-        $stmt->bindParam(':id', $data['id']);
+        $stmt->bindParam(':contract_id', $data['id']);
         return $stmt->execute();
         
     }
 
-    // public function updateEmployementContractStatus($data){
+    // public function insertLastupdatedData(){
 
-    //     $sql = "UPDATE employment_history SET status = :status WHERE contract_id = :id";
+
+
+    //     $sql = "SELECT TOP 1 * FROM contracts ORDER BY updated_at DESC";
     //     $stmt = $this->db->prepare($sql);
-    //     $stmt->bindParam(':status', $data['status']);
-    //     $stmt->bindParam(':id', $data['id']);
+    //     $stmt->execute();
+    
+    //     $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    //     if (!$result) {
+    //         return false;
+    //     }
+
+    //     $contract_id = $result['id'];
+
+    //      // ✅ Check if this contract is already in employment_history
+    //      $checkSql = "SELECT COUNT(*) FROM employment_history WHERE contract_id = :contract_id";
+    //      $checkStmt = $this->db->prepare($checkSql);
+    //      $checkStmt->bindParam(':contract_id', $contract_id);
+    //      $checkStmt->execute();
+    //      $exists = $checkStmt->fetchColumn();
+     
+    //      if ($exists > 0) {
+    //          // Already exists, don't insert again
+    //          return false;
+    //      }
+
+    //       // Prepare data
+    //     $contract_name = $result['contract_name'];
+    //     $contract_type = $result['contract_type'];
+    //     $date_start = $result['contract_start'];
+    //     $date_end = $result['contract_end'];
+    //     $contract_file = $result['contract_file'];
+    //     $status = 'Active';
+    //     $created_at = date('Y-m-d H:i:s');
+    //     $updated_at = date('Y-m-d H:i:s');
+    
+    //     $insertLatest = "INSERT INTO employment_history (
+    //         status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at
+    //     ) VALUES (
+    //         :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at
+    //     )";
+    
+    //     $stmt = $this->db->prepare($insertLatest);
+    
+    //     $stmt->bindParam(':status', $status);
+    //     $stmt->bindParam(':contract_type', $contract_type);
+    //     $stmt->bindParam(':date_start', $date_start);
+    //     $stmt->bindParam(':date_end', $date_end);
+    //     $stmt->bindParam(':contract_name', $contract_name);
+    //     $stmt->bindParam(':contract_file', $contract_file);
+    //     $stmt->bindParam(':contract_id', $contract_id);
+    //     $stmt->bindParam(':created_at', $created_at);
+    //     $stmt->bindParam(':updated_at', $updated_at);
+    
+    //     return $stmt->execute();
 
     // }
+
+
+
+    public function insertLastupdatedData($data) {
+    
+        $insertLatest = "INSERT INTO employment_history (
+                 status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at
+             ) VALUES (
+                 :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at
+             )";
+            
+                $stmt = $this->db->prepare($insertLatest);
+            
+                $stmt->bindParam(':status', $data['contract_status']);
+                $stmt->bindParam(':contract_type',  $data['contract_type']);
+                $stmt->bindParam(':date_start',  $data['contract_start']);
+                $stmt->bindParam(':date_end', $data['contract_end']);
+                $stmt->bindParam(':contract_name',  $data['contract_name']);
+                $stmt->bindParam(':contract_file',  $data['contract_file']);
+                $stmt->bindParam(':contract_id', $data['contract_id']);
+                $stmt->bindParam(':created_at', $data['created_at']);
+                $stmt->bindParam(':updated_at',  $data['updated_at']);
+            
+                return $stmt->execute();
+
+    }
+
+    
+    
 
 }

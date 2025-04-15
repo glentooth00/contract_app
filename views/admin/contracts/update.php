@@ -21,6 +21,8 @@ $updateContract = (new ContractController)->updateContract($latestData);
 
 // Optional redirect back to previous page
 if ($updateContract) {
+
+    
     
     $_SESSION['notification'] = [
         'message' => 'Employment contract updated!',

@@ -1,7 +1,7 @@
 <nav class="sideBAr">
 <div class="logo bg-white mb-3 p-0 text-center col-md-12 d-flex align-items-center">
     <div class="col-md-5 p-2">
-      <img src="../../public/images/logo.png" alt="Logo" class="img-fluid">
+      <!-- <img src="../../public/images/logo.png" alt="Logo" class="img-fluid"> -->
     </div>
     <div class="col-md-5 ms-3 p-2">
      <h6>Contract Monitoring App</h6>
@@ -35,6 +35,31 @@
           </li>
         </ul>
       </li>
+
+      <?php if( $department == 'ISD-MSD'): ?>
+           <!-- Contracts Dropdown -->
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="rentalsDropdown">
+        <i class="fa fa-file-text-o p-2" aria-hidden="true"></i>
+        </i>Rentals
+        </a>
+        <ul class="collapse" id="rentalsMenu">
+          <li class="nav-item">
+            <a class="nav-link" id="contractsLink" href="temp_connection.php"><i class="fa fa-lightbulb-o p-2" aria-hidden="true"></i>
+            Temporary Connection</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="expired_contracts.php"><i class="fa fa-bolt p-2" aria-hidden="true"></i>
+            Transformer Contract</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="#"><i class="fa fa-file-archive-o p-2" aria-hidden="true"></i>
+            Archived Contracts</a>
+          </li> -->
+        </ul>
+      </li>
+      <?php endif; ?>
+     
 
         <?php 
           use App\Controllers\UserController;
@@ -112,7 +137,7 @@
             Notifications</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="logout.php"><i class="fa fa-sign-out fa-flip-horizontal p-2" aria-hidden="true"></i>
+            <a class="nav-link" href="../logout.php"><i class="fa fa-sign-out fa-flip-horizontal p-2" aria-hidden="true"></i>
             Logout</a>
           </li>
         </ul>
@@ -129,7 +154,7 @@
 
 <style>
   .sideBar {
-    width: 22%;
+    width: 23%;
     padding: 20px;
     height: 110vh;
     box-sizing: border-box;
@@ -193,6 +218,13 @@
     $('#settingsDropdown').on('click', function(event) {
       event.preventDefault(); 
       var submenu = $('#settingsMenu');
+      submenu.stop(true, true).slideToggle(300);
+    });
+
+     // JavaScript to toggle the collapse with a smooth slide effect for Settings
+     $('#rentalsDropdown').on('click', function(event) {
+      event.preventDefault(); 
+      var submenu = $('#rentalsMenu');
       submenu.stop(true, true).slideToggle(300);
     });
   });

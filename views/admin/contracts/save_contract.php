@@ -42,7 +42,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             header('Location: ../contracts.php');
             exit;
         } else {
-            echo "<p>Error saving contract or employment history.</p>";
+            if (!$contractSaved) {
+                echo "<p>❌ Error: Contract not saved.</p>";
+            }
+        
+            if (!$employmentSaved) {
+                echo "<p>❌ Error: Employment history not saved.</p>";
+            }
         }
 
     } else {
