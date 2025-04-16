@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         
                     case 'ISD-HRAD':
                         $_SESSION['department'] =  $department;
-                        header('location:views/admin/contracts.php');
+                        header('location:views/admin/isdhrad/contracts.php');
                         break;
                 }
 

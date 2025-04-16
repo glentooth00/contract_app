@@ -1,7 +1,7 @@
 <nav class="sideBAr">
 <div class="logo bg-white mb-3 p-0 text-center col-md-12 d-flex align-items-center">
     <div class="col-md-5 p-2">
-      <!-- <img src="../../public/images/logo.png" alt="Logo" class="img-fluid"> -->
+      <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid">
     </div>
     <div class="col-md-5 ms-3 p-2">
      <h6>Contract Monitoring App</h6>

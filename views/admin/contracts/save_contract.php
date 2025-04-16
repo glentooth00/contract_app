@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'message' => 'Contract successfully saved!',
                 'type' => 'success'
             ];
-            header('Location: ../contracts.php');
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit;
         } else {
             if (!$contractSaved) {
@@ -55,3 +55,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p>Error uploading file.</p>";
     }
 }
+header("Location: " . $_SERVER['HTTP_REFERER']);

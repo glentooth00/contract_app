@@ -19,10 +19,11 @@ $contractController = new ContractController();
         'message' => 'Contract deleted successfully',
     ];
     
-    header('Location: ../contracts.php');
+    header("Location: " . $_SERVER['HTTP_REFERER']);
 
  }else{
     echo 'data id is missing';
  }
+ header("Location: " . $_SERVER['HTTP_REFERER']);
 
     // echo $deleteId = $_GET['id'];

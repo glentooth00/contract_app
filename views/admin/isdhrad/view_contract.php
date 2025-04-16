@@ -7,7 +7,7 @@ session_start();
 
 use App\Controllers\ContractController;
 
-require_once __DIR__ . '../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department =  $_SESSION['department'] ?? null;
 
@@ -39,7 +39,7 @@ $departments = ( new DepartmentController )->getAllDepartments();
 //     // echo "No contract data available to insert.";
 // }
 
-include_once '../../views/layouts/includes/header.php'; 
+include_once '../../../views/layouts/includes/header.php'; 
 
 ?>
 
@@ -52,7 +52,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-        <?php include_once 'sidebar.php'; ?>
+        <?php include_once '../sidebar.php'; ?>
     </div>
 
     <div class="mainContent">
@@ -478,9 +478,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
 
 
-<?php 
-    include_once '../../views/layouts/includes/footer.php';
-?>
+<?php include_once '../../../views/layouts/includes/footer.php';   ?>
 
 <style>
 .pageContent {
@@ -631,7 +629,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
     const contract_id = encodeURIComponent(id.value);
 
     // Redirect with query parameters
-    window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+    window.location.href = `../contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
 });
 
 function formatDate(dateString) {

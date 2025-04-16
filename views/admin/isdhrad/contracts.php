@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once __DIR__ . '/../../vendor/autoload.php'; // corrected path
+require_once __DIR__ . '../../../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
@@ -63,7 +63,7 @@ if ($getOneLatest) {
 
 // var_dump($getLastUpdated);
 
-include_once '../../views/layouts/includes/header.php';
+include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -75,7 +75,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -311,10 +311,10 @@ include_once '../../views/layouts/includes/header.php';
 <?php switch( $department ){
 
     case "ISD-HRAD" :
-        include_once 'modals/hrad_modal.php';
+        include_once '../modals/hrad_modal.php';
     break;
     case "CITETD" :
-        include_once 'modals/citetd_modal.php';
+        include_once '../modals/citetd_modal.php';
     break;
 
     }
@@ -391,7 +391,7 @@ include_once '../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
-<?php include_once '../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../../views/layouts/includes/footer.php';   ?>
 
 <style>
     /* Flex container for the layout */
@@ -452,7 +452,7 @@ function showConfirmationModal(contractId) {
     var confirmBtn = document.getElementById("confirmDelete");
 
     // Set the href for the confirmDelete link with the contractId
-    confirmBtn.href = "contracts/delete.php?id=" + contractId;
+    confirmBtn.href = "../contracts/delete.php?id=" + contractId;
 
     // Show the modal
     modal.show();
