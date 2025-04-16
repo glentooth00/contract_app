@@ -7,7 +7,7 @@ session_start();
 
 use App\Controllers\ContractController;
 
-require_once __DIR__ . '../../../../vendor/autoload.php';
+require_once __DIR__ . '../../../vendor/autoload.php';
 
 $department =  $_SESSION['department'] ?? null;
 
@@ -29,17 +29,7 @@ $departments = ( new DepartmentController )->getAllDepartments();
 
 //-----------------------------------------------------------------------//
 
-
-// $getLastUpdated = (new EmploymentContractController )->insertLastupdatedData();
-
-// if ($getLastUpdated) {
-//     echo "Contract data inserted successfully.";
-// } else {
-//     // Optional: echo nothing or a silent message
-//     // echo "No contract data available to insert.";
-// }
-
-include_once '../../../views/layouts/includes/header.php'; 
+include_once '../../views/layouts/includes/header.php';
 
 ?>
 
@@ -52,7 +42,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-        <?php include_once '../sidebar.php'; ?>
+        <?php include_once 'sidebar.php'; ?>
     </div>
 
     <div class="mainContent">
@@ -69,14 +59,15 @@ include_once '../../../views/layouts/includes/header.php';
             $interval = $today->diff($end);
             $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
+
             // Check if the contract is about to expire or already expired
             if ($remainingDays > 0 && $remainingDays <= 15) {
-                echo '<span class="alert p-2 alert-warning text-danger badge col-md-12" style="font-size:20px;">
+                echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    This contract will be expiring tomorrow. only ' . $remainingDays . ' day left ' . ($remainingDays === 1 ? '' : 's') . '.
+                    This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
                 </span>';
             } elseif ($remainingDays === 0) {
-                echo '<p class="alert alert-danger text-danger p-2 badge col-md-12" style="font-size:20px;">
+                echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
                     Contract has expired.
                 </p>';
             }
@@ -212,128 +203,111 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
             </div>
 
             <div class="row col-md-3 mt-4 float-end">
-                <div class="mt-3 float-end" style="margin-left: 90%;">
-                    <?php 
-                    $dept = $_SESSION['department'];
-                    ?>
-                    <?php if ($dept === 'ISD-HRAD'): ?>
-                        <?php
-                            $start = new DateTime($getContract['contract_start']);
-                            $end = new DateTime($getContract['contract_end']);
-                            $today = new DateTime();
+    <div class="mt-3 float-end" style="margin-left: 90%;">
+        <?php 
+         $dept = $_SESSION['department'];
+        ?>
+        <?php if ($dept === 'ISD-HRAD'): ?>
+            <?php
+                $start = new DateTime($getContract['contract_start']);
+                $end = new DateTime($getContract['contract_end']);
+                $today = new DateTime();
 
-                            // Calculate remaining days (positive if end date is in the future)
-                            $interval = $today->diff($end);
-                            $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-                        ?>
-
-                        <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-primary" 
-
-                                    data-id="<?= $getContract['id'] ?>"
-                                    data-contractname = "<?= $getContract['contract_name'] ?>"
-                                    data-startdate = "<?= $getContract['contract_start'] ?>"
-                                    data-type = "<?= $getContract['contract_type'] ?>"
-                                    data-endDate = "<?= $getContract['contract_end'] ?>"
-                                    data-departmentassigned = "<?= $getContract['department_assigned'] ?>"
-
-                                    data-bs-toggle="modal" data-bs-target="#extendModal">Extend </button>
-                                
-                                
-                                    <form action="end_contract.php" method="post">
-                                    <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
-                                    <button type="submit" class="btn btn-warning">End Contract</button>
-                                </form>
-                            </div>
-                        <?php endif; ?>
-                    <?php endif; ?>
+                // Calculate remaining days (positive if end date is in the future)
+                $interval = $today->diff($end);
+                $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+            ?>
+            
+            <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
+                <div class="d-flex gap-2">
+                <button class="btn btn-primary" 
+                    data-id="<?= $getContract['id'] ?>"
+                    data-contractname="<?= $getContract['contract_name'] ?>"
+                    data-startdate="<?= $getContract['contract_start'] ?>"
+                    data-enddate="<?= $getContract['contract_end'] ?>"
+                    data-departmentassigned="<?= $getContract['department_assigned'] ?>"
+                    data-type="<?= $getContract['contract_type'] ?>"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#extendModal">
+                    Extend
+                </button>
+                    <form action="end_contract.php" method="post">
+                        <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
+                        <button type="submit" class="btn btn-warning">End Contract</button>
+                    </form>
                 </div>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+</div>
+
+
+
+          <!-- Extend Modal -->
+<div class="modal fade" id="extendModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Extend Contract</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <!-- Extend modal -->
-
-            <div class="modal fade" id="extendModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Extend Contract</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-body">
+                <form action="contracts/renew_contract.php" method="POST" enctype="multipart/form-data">
+                <div class="d-flex col-md-12 gap-3 p-4">
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                        <input type="hidden" id="contract_id" name="contract_id" class="form-control">
+                            <label for="contract_name" class="form-label badge text-muted">Contract Name</label>
+                            <input type="text" id="contract_name" name="contract_name" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label for="start_date" class="form-label badge text-muted">Start Date</label>
+                            <input type="date" id="start_date" name="contract_start" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label for="start_date" class="form-label badge text-muted">Contract File</label>
+                            <input type="file" id="start_date" name="contract_file" class="form-control">
+                        </div>
+                      
                     </div>
-                        
-                    <div class="modal-body">
-                        
-                        <form method="post" action="contracts/renew_contract.php" enctype="multipart/form-data">
-                            <div class="col-md-12 d-flex gap-2 p-3">
-                                <div class="col-md-6">
-                                    <input type="hidden" id="contract_id" name="contract_id" class="form-control">
-                                    <div class="mb-2 p-2">
-                                        <label class="badge text-muted" for="contract_name">Contract Name:</label>
-                                        <input type="text" id="contract_name" name="contract_name" class="form-control">
-                                    </div>
-                                    <div class="mb-2 p-2">
-                                        <label class="badge text-muted" for="contract_name">Date start</label>
-                                        <input type="date" id="contract_name" name="contract_start" class="form-control">
-                                    </div>
-                                    <div class="mb-2 p-2">
-                                        <label class="badge text-muted" for="contract_name">Upload Contract</label>
-                                        <input type="file" name="contract_file" class="form-control">
-                                    </div>
-                                </div>
 
-                                <div class="col-md-6">
-                                <div class="mb-2 p-2">
-                                        <label class="badge text-muted" for="contract_name">Department Assigned:</label>
-                                        <select id="department_assigned" name="department_assigned" class="form-select">
-                                            <option value="" hidden>Select Department</option>
-                                            <?php foreach ($departments as $dept): ?>
-                                                <option value="<?= $dept['department_name'] ?>">
-                                                    <?= $dept['department_name'] ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
+                    <div class="col-md-6">
+                        <div class="mb-2">
+                                <label for="department_assigned" class="form-label badge text-muted">Department Assigned</label>
+                                <select id="department_assigned" name="department_assigned" class="form-select">
+                                    <option value="" hidden>Select Department</option>
+                                    <?php foreach ($departments as $dept): ?>
+                                        <option value="<?= $dept['department_name'] ?>">
+                                            <?= $dept['department_name'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
 
-                                        <!-- <input type="text" id="department_assigned" name="department_assigned" class="form-control"> -->
-                                    </div>
-                                    <div class="mb-2 p-2">
-                                        <label class="badge text-muted" for="contract_name">Date End</label>
-                                        <input type="date" id="contract_end" name="contract_end" class="form-control">
-                                    </div>
-                                    <div class="mb-2 p-2">
-                                        <!-- <label class="badge text-muted" for="contract_name">Upload Contract</label> -->
-                                        <input type="hidden" id="contract_type" name="contract_type" class="form-control">
-                                    </div>
-                                </div>
-                                
                             </div>
                       
+                        <div class="mb-2">
+                            <label for="end_date" class="form-label badge text-muted">End Date</label>
+                            <input type="date" id="end_date" name="contract_end" class="form-control">
+                        </div>
+                        <div class="mb-2">
+                            <label for="start_date" class="form-label badge text-muted">Contract Type</label>
+                            <input type="text" id="contract_type" name="contract_type" class="form-control">
+                        </div>
                        
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Renew Contract</button>
-                    </div>
-                    </form>
                     </div>
                 </div>
             </div>
 
-            <script>
-                $('#extendModal').on('show.bs.modal', function (event) {
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                <button type="submit" class="btn btn-success">Renew Contract</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-                    var button = $(event.relatedTarget);
-
-                    var contractId = button.data('id');
-                    var contractName = button.data('contractname');
-                    var departmentAssigned = button.data('departmentassigned');
-                    var contractType = button.data('type');
-
-                    $('#contract_id').val(contractId);
-                    $('#contract_name').val(contractName);
-                    $('#department_assigned').val(departmentAssigned);
-                    $('#contract_type').val(contractType);
-                });
-            </script>
             
 
         </div>
@@ -351,77 +325,75 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                             <th style="text-align: center !important;">Contract File</th>
                             <th style="text-align: center !important;">Date Start</th>
                             <th style="text-align: center !important;">Date End</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <?php 
                     $id = $getContract['id'];
                         $employement_datas = (new EmploymentContractController)->getByContractId($id);
                     ?>
-                    <div style="max-height: 300px; overflow-y: auto;">
-    <table class="table table-bordered">
-        <tbody>
-            <?php if (!empty($employement_datas)): ?>
-                <?php foreach ($employement_datas as $employement_data): ?>
-                    <tr>
-                        <td style="text-align: center !important;">
-                            <?php if ($employement_data['status'] === 'Active' || $employement_data['status'] === 'Expired'): ?>
-                                <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
-                            <?php else: ?>
-                                <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
-                            <?php endif; ?>
-                        </td>
-                        <td style="text-align: center !important;">
-                            <?php if (!empty($employement_data['contract_file'])): ?>
-                                <button class="btn btn-primary badge p-2" data-bs-toggle="modal" data-bs-target="#fileModal<?= $employement_data['id'] ?>">
-                                    View file
-                                </button>
-                                <div class="modal fade" id="fileModal<?= $employement_data['id'] ?>" tabindex="-1" aria-labelledby="fileModalLabel<?= $employement_data['id'] ?>" aria-hidden="true">
-                                    <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="fileModalLabel<?= $employement_data['id'] ?>"><?= $employement_data['contract_name'] ?> - <?= $employement_data['contract_type'] ?></h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body" style="padding: 0; overflow-y: auto;">
-                                                <iframe src="<?= htmlspecialchars("../../" . $employement_data['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                No file
-                            <?php endif; ?>
-                        </td>
-                        <td style="text-align: center !important;">
-                            <span class="badge text-dark">
-                                <?= date_format(new DateTime($employement_data['date_start']), "M-d-Y"); ?>
-                            </span>
-                        </td>
-                        <td style="text-align: center !important;">
-                            <span class="badge text-dark">
-                                <?= date_format(new DateTime($employement_data['date_end']), "M-d-Y"); ?>
-                            </span>
-                        </td>
-                        <td>
-                            <div class="d-flex gap-2">
-                                <span id="editEmpHis" class="clickable">
-                                    <i class="fa fa-pencil-square-o p-2" aria-hidden="true"></i>
-                                </span>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr><td colspan="5">No contract data found.</td></tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
-</div>
+                    <tbody class="">
+                        <?php if (!empty($employement_datas)): ?>
+                            <?php foreach ($employement_datas as $employement_data): ?>
+                                <tr>
+                                    <td style="text-align: center !important;">
+                                        <!-- <?= $employement_data['status']; ?> -->
+                                        <?php if($employement_data['status'] === 'Active' | $employement_data['status']=== 'Expired'): ?>
+                                                <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="text-align: center !important;">
+                                        
 
+                                <?php if (!empty($employement_data['contract_file'])): ?>
+                                    <!-- Trigger the modal with this button -->
+                                    <button class="btn btn-primary badge p-2" data-bs-toggle="modal" data-bs-target="#fileModal<?= $employement_data['id'] ?>" style="text-align: center !important;">
+                                        View file
+                                    </button>
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="fileModal<?= $employement_data['id'] ?>" tabindex="-1" aria-labelledby="fileModalLabel<?= $employement_data['id'] ?>" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="fileModalLabel<?= $employement_data['id'] ?>"><?= $employement_data['contract_name'] ?> - <?= $employement_data['contract_type'] ?></h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body" style="padding: 0; overflow-y: auto;">
+                                                            <!-- Display the contract file inside the modal -->
+                                                            <iframe src="<?= htmlspecialchars("../../" . $employement_data['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>  
+                                            <?php else: ?>
+                                                No file
+                                            <?php endif; ?>
+                                    </td>
+                                    <td style="text-align: center !important;">
+                                        <?php
+                                            $datestart = new DateTime($employement_data['date_start']);
+                                        ?>
+                                      
+                                        <span class="badge text-dark">  <?= date_format($datestart, "M-d-Y"); ?></span>
+                                    </td>
+
+                                    <td style="text-align: center !important;">
+                                        <?php
+                                            $dateend = new DateTime($employement_data['date_end']);
+                                        ?>
+                                          <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr><td colspan="4">No contract data found.</td></tr>
+                        <?php endif; ?>
+                    </tbody>
 
                 </table>
             </div>
@@ -478,7 +450,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
 
 
-<?php include_once '../../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../views/layouts/includes/footer.php';   ?>
 
 <style>
 .pageContent {
@@ -524,10 +496,6 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
     #close:hover{
         cursor: pointer;
     }
-    .clickable {
-    cursor: pointer;
-}
-
 </style>
 
 <script>
@@ -616,6 +584,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
 
     document.getElementById('save').addEventListener('click', function () {
+
     const nameInput = document.getElementById('contractName');
     const startDate = document.getElementById('startDate');
     const endDate = document.getElementById('endDate');
@@ -629,7 +598,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
     const contract_id = encodeURIComponent(id.value);
 
     // Redirect with query parameters
-    window.location.href = `../contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+    window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
 });
 
 function formatDate(dateString) {
@@ -638,6 +607,24 @@ function formatDate(dateString) {
 }
 
 
+
+$('#extendModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+
+        var contractId = button.data('id');
+        var contractName = button.data('contractname');
+        var startDate = button.data('startdate');
+        var endDate = button.data('enddate');
+        var departmentAssigned = button.data('departmentassigned');
+        var contractType = button.data('type');
+
+        $('#contract_id').val(contractId);
+        $('#contract_name').val(contractName);
+        $('#start_date').val(startDate);
+        $('#end_date').val(endDate);
+        $('#department_assigned').val(departmentAssigned);
+        $('#contract_type').val(contractType);
+    });
 
 
 

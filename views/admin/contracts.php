@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once __DIR__ . '../../../../vendor/autoload.php'; // corrected path
+require_once __DIR__ . '../../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
@@ -13,7 +13,7 @@ $page_title = 'Manage Contracts';
 $department =  $_SESSION['department'] ?? null;
 
 $getUploader_department = (new ContractController)->getWhereDepartment($department);
-$getDept_assigned = (new ContractController)->getDepartmentAssigned(department: $department);
+$getDept_assigned = (new ContractController)->getDepartmentAssigned($department);
     
 $assigned_dept = $getDept_assigned['department_assigned'] ?? '';
 
@@ -52,18 +52,7 @@ if ($getOneLatest) {
     // echo "No contract data available to insert.";
 }
 
-// $getLastUpdated = (new EmploymentContractController )->insertLastupdatedData();
-
-// if ($getLastUpdated) {
-//     echo "Contract data inserted successfully.";
-// } else {
-//     // Optional: echo nothing or a silent message
-//     // echo "No contract data available to insert.";
-// }
-
-// var_dump($getLastUpdated);
-
-include_once '../../../views/layouts/includes/header.php';
+include_once '../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -75,7 +64,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once '../sidebar.php'; ?>
+       <?php include_once 'sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -313,15 +302,12 @@ include_once '../../../views/layouts/includes/header.php';
     case "ISD-HRAD" :
         include_once 'modals/hrad_modal.php';
     break;
-    
     case "CITETD" :
         include_once 'modals/citetd_modal.php';
     break;
-
     case "ISD-MSD" :
-        include_once '../modals/isd_msd.php';
+        include_once 'modals/isdmsd_modal.php';
     break;
-
     }
 ?>
 
@@ -396,7 +382,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
-<?php include_once '../../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../views/layouts/includes/footer.php';   ?>
 
 <style>
     /* Flex container for the layout */

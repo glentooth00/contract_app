@@ -112,7 +112,8 @@ class ContractController {
     
 
     // Method to delete a contract by its ID
-    public function deleteContract($id) {
+     // Method to delete a contract by its ID
+     public function deleteContract($id) {
         // Step 1: Get the contract file name first
         $getFileSql = "SELECT contract_file FROM contracts WHERE id = :id";
         $getFileStmt = $this->db->prepare($getFileSql);
@@ -138,7 +139,6 @@ class ContractController {
     
         return $stmt->execute();
     }
-    
 
     public function getContractsWithPagination($start, $limit, $filter = null, $search = null) {
         $start = (int)$start;
@@ -520,6 +520,7 @@ class ContractController {
     
         return true;
     }
+    
 
     public function renewContract($data) {
 
@@ -549,8 +550,6 @@ class ContractController {
     
         return true;
     }
-    
-    
 
     
 }

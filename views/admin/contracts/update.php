@@ -17,12 +17,10 @@ $latestData = [
 ];
 
 // Call the controller method to perform update
-$updateContract = (new ContractController)->updateContract($latestData);
+$updateContract = (new ContractController)->updateContract($latestData) ?? false;
 
 // Optional redirect back to previous page
 if ($updateContract) {
-
-    
     
     $_SESSION['notification'] = [
         'message' => 'Employment contract updated!',

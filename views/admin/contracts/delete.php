@@ -5,25 +5,24 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 
-// Create an instance of ContractController
-$contractController = new ContractController();
-
  if(isset($_GET['id'])){
 
     $id = $_GET['id']; // Make sure this is just an integer ID
-    $contractController = new ContractController();
-    $contractController->deleteContract($id);
 
-    $_SESSION['notification'] = [
-        'type' => 'success',
-        'message' => 'Contract deleted successfully',
-    ];
+    ( new ContractController )->deleteContract($id);
+
+   $_SESSION['notification'] = [
+      'type' => 'success',
+      'message' => 'Contract deleted successfully',
+      'title' => 'Contract Deletion',
+      'icon' => 'check-circle',
+   ];
     
-    header("Location: " . $_SERVER['HTTP_REFERER']);
+    header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
 
  }else{
     echo 'data id is missing';
  }
- header("Location: " . $_SERVER['HTTP_REFERER']);
+ header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
 
     // echo $deleteId = $_GET['id'];
