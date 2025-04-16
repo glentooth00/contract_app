@@ -304,13 +304,14 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                                             $datestart = new DateTime($employement_data['date_start']);
                                         ?>
                                       
-                                        <span class="badge text-dark">  <?= $datestart->format('M-m-Y') ?></span>
+                                        <span class="badge text-dark">  <?= date_format($datestart, "M-d-Y"); ?></span>
                                     </td>
+
                                     <td style="text-align: center !important;">
                                         <?php
                                             $dateend = new DateTime($employement_data['date_end']);
                                         ?>
-                                          <span class="badge text-dark">  <?= $dateend->format('M-m-Y') ?></span>
+                                          <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
