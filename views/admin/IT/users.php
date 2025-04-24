@@ -408,7 +408,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
-<?php include_once '../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../../views/layouts/includes/footer.php';   ?>
 
 <style>
     /* Flex container for the layout */

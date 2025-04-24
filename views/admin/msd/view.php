@@ -2,6 +2,7 @@
 
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
+use App\Controllers\TempLightingController;
 use App\Controllers\UserController;
 session_start();
 
@@ -15,11 +16,14 @@ $department =  $_SESSION['department'] ?? null;
 
 $contract_id = $_GET['contract_id'];
 
-$getContract = (new ContractController)->getContractbyId($contract_id);
 
-$contract_data = $getContract['contract_name'];
+// $contract_data = $getContract['contract_name'];
 
-$page_title = 'View Contract | '. $getContract['contract_name'];
+$tempLight = ( new TempLightingController )->get($contract_id);
+
+
+
+// $page_title = 'View Contract | '. $getContract['contract_name'];
 
 //-----------------------------------------------------------------------//
 
@@ -48,12 +52,12 @@ include_once '../../../views/layouts/includes/header.php';
     <div class="mainContent">
 
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-        <?= $contract_data ?></h2>
+        <?= $tempLight['contract_name'] ?></h2>
         <hr>
 
         <?php 
-            $start = new DateTime($getContract['contract_start']);
-            $end = new DateTime($getContract['contract_end']);
+            $start = new DateTime($tempLight['contract_start']);
+            $end = new DateTime($tempLight['contract_end']);
             $today = new DateTime();
 
             $interval = $today->diff($end);
@@ -93,27 +97,34 @@ include_once '../../../views/layouts/includes/header.php';
         
             
             <div class="row col-md-3">
-            <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['id'];  ?>"  name="contract_name" readonly>
+            <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5" value="<?= $tempLight['id'];  ?>"  name="contract_name" readonly>
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract Name:</label>
-                    <input type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['contract_name'];  ?>"  name="contract_name" readonly>
+                    <input type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5" value="<?= $tempLight['contract_name'];  ?>"  name="contract_name" readonly>
                 </div>
             </div>
             <div class="row col-md-2" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <?php
+                        $formattedDate = date('Y-m-d', strtotime($tempLight['contract_start']));
+                        ?>
                         <div class="d-flex">
                             <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                            <input type="date"  id="startDate" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_start'];  ?>"  name="contract_start" readonly>
+                            <input type="date" id="startDate" class="form-control pl-5" value="<?= $formattedDate ?>" name="contract_start" readonly>
                         </div>
+
                 </div>
             </div>
             <div class="row col-md-2" >
                 <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                        <?php
+                        $formattedDateend = date('Y-m-d', strtotime($tempLight['contract_end']));
+                        ?>
                             <div class="d-flex">
                                 <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5" value="<?= $getContract['contract_end'];  ?>"  name="contract_end" readonly>
+                                <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5" value="<?= $formattedDateend ?>"  name="contract_end" readonly>
                         </div>
                 </div>
             </div>
@@ -122,8 +133,8 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="mt-3">
                         <label class="badge text-muted" <?php 
 
-$start = new DateTime($getContract['contract_start']);
-$end = new DateTime($getContract['contract_end']);
+$start = new DateTime($tempLight['contract_start']);
+$end = new DateTime($tempLight['contract_end']);
 $today = new DateTime();
 
 $interval = $today->diff($end);
@@ -145,7 +156,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
             <div class="row col-md-3" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['contract_type'];  ?>"  name="contract_type" readonly>
+                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5" value="<?=$tempLight['contract_type'];  ?>"  name="contract_type" readonly>
                 </div>
             </div>
 
@@ -155,7 +166,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                     <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
                         <?php foreach ($departments as $department): ?>
                             <option value="<?= $department['department_name']; ?>" 
-                                <?= ($department['department_name'] == $getContract['department_assigned']) ? 'selected' : ''; ?>>
+                                <?= ($department['department_name'] ==$tempLight['department_assigned']) ? 'selected' : ''; ?>>
                                 <?= $department['department_name']; ?>
                             </option>
                         <?php endforeach; ?>
@@ -167,12 +178,12 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                 <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Status</label>
                             <div class="d-flex">
-                                <?php if(!$getContract['contract_status'] === 'Active' | $getContract['contract_status'] === 'Expired'): ?>
+                                <?php if(!$tempLight['status'] === 'Active' | $tempLight['status'] === 'Expired'): ?>
                                     <i class="fa fa-ban p-2" style="color:#BF3131;font-size: 20px;" aria-hidden="true"></i>
-                                    <span class="alert p-1 alert-warning border-danger text-danger text-center"  style="width: 7em;"><?= $getContract['contract_status'];  ?></span>
+                                    <span class="alert p-1 alert-warning border-danger text-danger text-center"  style="width: 7em;"><?= $tempLight['status'];  ?></span>
                                 <?php else: ?>
                                     <i class="fa fa-check p-2" style="color:green;font-size: 20px;" aria-hidden="true"></i>
-                                    <span class="alert p-1 alert-success border-success text-success text-center"  style="width: 7em;"><?= $getContract['contract_status'];  ?></span>
+                                    <span class="alert p-1 alert-success border-success text-success text-center"  style="width: 7em;"><?= $tempLight['status'];  ?></span>
                                 <?php endif; ?>
                         </div>
                 </div>
@@ -185,13 +196,13 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
             <div class="row col-md-3" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Implementing Dept:</label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['uploader_department'];  ?>"  name="contract_type" readonly>
+                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $tempLight['uploader_dept'];  ?>"  name="contract_type" readonly>
                 </div>
             </div>
 
             <?php 
 
-                $getUser = (new UserController)->getUserById( $getContract['uploader_id']);
+                $getUser = (new UserController)->getUserById( $tempLight['uploader_id']);
 
             ?>
 
@@ -209,8 +220,8 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
         ?>
         <?php if ($dept === 'ISD-HRAD'): ?>
             <?php
-                $start = new DateTime($getContract['contract_start']);
-                $end = new DateTime($getContract['contract_end']);
+                $start = new DateTime($tempLight['contract_start']);
+                $end = new DateTime($tempLight['contract_end']);
                 $today = new DateTime();
 
                 // Calculate remaining days (positive if end date is in the future)
@@ -221,18 +232,18 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
             <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
                 <div class="d-flex gap-2">
                 <button class="btn btn-primary" 
-                    data-id="<?= $getContract['id'] ?>"
-                    data-contractname="<?= $getContract['contract_name'] ?>"
-                    data-startdate="<?= $getContract['contract_start'] ?>"
-                    data-enddate="<?= $getContract['contract_end'] ?>"
-                    data-departmentassigned="<?= $getContract['department_assigned'] ?>"
-                    data-type="<?= $getContract['contract_type'] ?>"
+                    data-id="<?= $tempLight['id'] ?>"
+                    data-contractname="<?= $tempLight['contract_name'] ?>"
+                    data-startdate="<?= $tempLight['contract_start'] ?>"
+                    data-enddate="<?= $tempLight['contract_end'] ?>"
+                    data-departmentassigned="<?= $tempLight['department_assigned'] ?>"
+                    data-type="<?= $tempLight['contract_type'] ?>"
                     data-bs-toggle="modal" 
                     data-bs-target="#extendModal">
                     Extend
                 </button>
                     <form action="contracts/end_contract.php" method="post">
-                        <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
+                        <input type="hidden" name="contract_id" value="<?= $tempLight['id'] ?>">
                         <button type="submit" class="btn btn-warning">End Contract</button>
                     </form>
                 </div>
