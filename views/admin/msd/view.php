@@ -23,7 +23,7 @@ $tempLight = ( new TempLightingController )->get($contract_id);
 
 
 
-// $page_title = 'View Contract | '. $getContract['contract_name'];
+$page_title = 'View Contract | '. $tempLight['contract_name'];
 
 //-----------------------------------------------------------------------//
 

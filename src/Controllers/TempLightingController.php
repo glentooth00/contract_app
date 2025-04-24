@@ -3,14 +3,18 @@
 namespace App\Controllers;
 
 use App\Config\Database;
+use App\Models\Temp_Lighting;
 use PDO;
 
 class TempLightingController{
 
-    private $db;
+    protected $db;
+
+    protected $model;
 
     public function __construct(){
         $this->db = Database::connect();
+        $this->model = new Temp_Lighting($this->db);
     }
 
     public function get($id){
@@ -23,8 +27,12 @@ class TempLightingController{
 
        return $stmt->fetch(PDO::FETCH_ASSOC);
 
+    }
 
 
+    public function destroy($id){
+        $delete = $this->model->Delete($id);
+        return;
     }
 
 }

@@ -12,3 +12,6 @@ define('CITETD', 'CITETD');
 define('BAC', 'BAC');
 define('ISD-MSD', 'ISD-MSD');
 define('IASD', 'IASD');
+
+//models
+define('temp_lighting', 'temp_lighting');

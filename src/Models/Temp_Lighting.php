@@ -9,10 +9,10 @@ class Temp_Lighting {
 
     protected $table;
 
-    public function __construct(PDO $db, $table){
+    public function __construct(PDO $db){
 
         $this->db = $db;
-        $this->table = $table;
+        $this->table = 'temp_lighting';
 
     }
 
@@ -24,6 +24,17 @@ class Temp_Lighting {
         
     }
 
-    
+
+    public function Delete($id){
+      
+        $sql = "DELETE FROM {$this->table} WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([ 'id' =>$id]);
+
+        return $stmt->rowCount() > 0; 
+
+    }
+
+
 
 }

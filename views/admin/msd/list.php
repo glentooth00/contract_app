@@ -242,7 +242,7 @@ include_once '../../../views/layouts/includes/header.php';
                             <a href="view.php?contract_id=<?= $contractId ?>" class="btn btn-success badge p-2">
                                     <i class="fa fa-eye" aria-hidden="true"></i> View
                                 </a>
-                                <a id="delete" data-id="<?= $contractId ?>" class="btn btn-danger badge p-2">
+                                <a href="contracts/delete.php?id=<?= $contractId ?>" id="delete" data-id="<?= $contractId ?>" class="btn btn-danger badge p-2">
                                     <i class="fa fa-trash" aria-hidden="true"></i> Delete
                                 </a>
                             
