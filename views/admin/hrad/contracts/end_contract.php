@@ -2,7 +2,7 @@
 
 use App\Controllers\EmploymentContractController;
 
-require_once __DIR__ . '../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 session_start();
 
@@ -24,7 +24,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         header("Location: " . $_SERVER['HTTP_REFERER']);
 
-    }
+        }else{
+
+            $_SESSION['notification'] = [
+                'message' => 'Something went wrong!',
+                'type' => 'success'
+            ];
+
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        }
 
     header("Location: " . $_SERVER['HTTP_REFERER']);
 

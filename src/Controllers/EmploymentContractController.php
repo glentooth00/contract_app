@@ -92,13 +92,30 @@ class EmploymentContractController {
         
     }
 
-    // public function updateEmployementContractStatus($data){
+    public function insertLastupdatedData($data) {
+    
+        $insertLatest = "INSERT INTO employment_history (
+                 status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at
+             ) VALUES (
+                 :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at
+             )";
+            
+                $stmt = $this->db->prepare($insertLatest);
+            
+                $stmt->bindParam(':status', $data['contract_status']);
+                $stmt->bindParam(':contract_type',  $data['contract_type']);
+                $stmt->bindParam(':date_start',  $data['contract_start']);
+                $stmt->bindParam(':date_end', $data['contract_end']);
+                $stmt->bindParam(':contract_name',  $data['contract_name']);
+                $stmt->bindParam(':contract_file',  $data['contract_file']);
+                $stmt->bindParam(':contract_id', $data['contract_id']);
+                $stmt->bindParam(':created_at', $data['created_at']);
+                $stmt->bindParam(':updated_at',  $data['updated_at']);
+            
+                return $stmt->execute();
 
-    //     $sql = "UPDATE employment_history SET status = :status WHERE contract_id = :id";
-    //     $stmt = $this->db->prepare($sql);
-    //     $stmt->bindParam(':status', $data['status']);
-    //     $stmt->bindParam(':id', $data['id']);
+    }
 
-    // }
+
 
 }

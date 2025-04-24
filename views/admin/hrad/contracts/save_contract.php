@@ -5,13 +5,14 @@ use App\Controllers\ContractController;
 
 session_start();
 
-require_once __DIR__ . '../../../../vendor/autoload.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 $contractController = new ContractController();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
     // Upload the file
-    $filePath = $contractController->uploadFile($_FILES["contract_file"]);
+    $filePath = $contractController->uploadFile($_FILES["contract_file"] ?? null);
 
     if ($filePath) {
         // Prepare contract data
@@ -39,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'message' => 'Contract successfully saved!',
                 'type' => 'success'
             ];
-            header('Location: ../contracts.php');
+            header("Location: " . $_SERVER['HTTP_REFERER']);
             exit;
         } else {
             echo "<p>Error saving contract or employment history.</p>";
@@ -49,3 +50,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<p>Error uploading file.</p>";
     }
 }
+header("Location: " . $_SERVER['HTTP_REFERER']);

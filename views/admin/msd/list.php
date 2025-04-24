@@ -2,8 +2,8 @@
 
 session_start();
 
-require_once __DIR__ . '../../../src/Config/constants.php';
-require_once __DIR__ . '../../../vendor/autoload.php'; // corrected path
+require_once __DIR__ . '../../../../src/Config/constants.php';
+require_once __DIR__ . '../../../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
@@ -13,14 +13,18 @@ $page_title = 'Manage Contracts';
 
 $department =  $_SESSION['department'] ?? null;
 
+
 $userid = $_SESSION['id'];
 
-$getUploader_department = (new ContractController)->getWhereDepartment($department);
+$getUploader_department = (new ContractController)->getWhereDepartmentInTempLightning($department);
 $getDept_assigned = (new ContractController)->getDepartmentAssigned($department);
+
+
     
 $assigned_dept = $getDept_assigned['department_assigned'] ?? '';
-
-$uploader_dept = $getUploader_department['uploader_department'] ?? '';
+// echo 'Assigned dept is ' .$assigned_dept. '</br>';
+$uploader_dept = $getUploader_department['uploader_dept'] ?? '';
+// echo 'uploader dept is ' . $uploader_dept. '</br>';;
 
 define('CONTRACTS_PER_PAGE', 10);
 
@@ -34,14 +38,9 @@ $contract_filter = $_GET['contract_type_filter'] ?? null;
 $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
 
 
-$contracts = $contractController->getOldContractsWithPagination(
-    $start, 
-    CONTRACTS_PER_PAGE, // Use the defined constant for limit
-    $assigned_dept, 
-    $uploader_dept, 
-    $contract_filter, // Correct filter variable
-    $search_query     // Correct search variable
-);
+$contracts = ( new ContractController )->getAllContractsByDept( $department );
+
+// var_dump($contracts);
 
 $totalContracts = $contractController->getTotalContracts($contract_filter, $search_query);
 $totalPages = ceil($totalContracts / CONTRACTS_PER_PAGE);
@@ -55,7 +54,7 @@ if ($getOneLatest) {
     // echo "No contract data available to insert.";
 }
 
-include_once '../../views/layouts/includes/header.php';
+include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -67,7 +66,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -162,79 +161,104 @@ include_once '../../views/layouts/includes/header.php';
                 </tr>
             </thead>
 
-            <?php if($department === $uploader_dept | $department === $assigned_dept) : ?>
-
+            <?php if ($department === $uploader_dept || $department === $assigned_dept): ?>
                 <tbody class="table-striped p-2">
-                <?php 
-                if (!empty($contracts)) {
-                    foreach ($contracts as $contract) { ?>
-                    <tr>
-                            <td><?= htmlspecialchars($contract['contract_name']) ?></td>
-                            <td><?= htmlspecialchars($contract['contract_type']) ?></td>
-                            <td style="text-align: center !important;">
+            <?php 
+            if (!empty($contracts)) {
+                foreach ($contracts as $contract) {
+                    // Identify source
+                    $source = isset($contract['department_assigned']) ? 'contracts' : 'temp_lighting';
 
-                                <span class="badge p-2 glow-text "  style="background: #3CCF4E;width:8em;"><?= htmlspecialchars($contract['contract_status']) ?></span>
-                                
-                            </td>
-                            <td style="text-align: center !important;"><span class="badge text-muted"><?= date("M-d-Y", strtotime($contract['contract_start'])) ?></span></td>
-                            <td><hr></td>
-                            <td style="text-align: center !important;"><span class="badge text-muted"><?= date("M-d-Y", strtotime($contract['contract_end'])) ?></span></td>
-                            <td style="text-align: center !important;">
-            <?php if (!empty($contract['contract_file'])): ?>
-                <!-- Trigger the modal with this button -->
-                <button class="btn btn-primary badge p-2" data-bs-toggle="modal" data-bs-target="#fileModal<?= $contract['id'] ?>" style="text-align: center !important;">
-                    View file
-                </button>
+                    $contractId = htmlspecialchars($contract['id']);
+                    $contractName = htmlspecialchars($contract['contract_name'] ?? 'N/A');
+                    $contractType = htmlspecialchars($contract['contract_type'] ?? 'N/A');
+                    $contractStatus = htmlspecialchars($contract['contract_status'] ?? $contract['status']  ?? 'N/A');
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="fileModal<?= $contract['id'] ?>" tabindex="-1" aria-labelledby="fileModalLabel<?= $contract['id'] ?>" aria-hidden="true">
-                            <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="fileModalLabel<?= $contract['id'] ?>"><?= $contract['contract_name'] ?> - <?= $contract['contract_type'] ?></h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" style="padding: 0; overflow-y: auto;">
-                                        <!-- Display the contract file inside the modal -->
-                                        <iframe src="<?= htmlspecialchars("../../" . $contract['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    $contractStart = isset($contract['contract_start']) ? date("M-d-Y", strtotime($contract['contract_start'])) : 'N/A';
+                    $contractEnd = isset($contract['contract_end']) ? date("M-d-Y", strtotime($contract['contract_end'])) : 'N/A';
+                    $contractFile = !empty($contract['contract_file']) ? htmlspecialchars("../../../" . $contract['contract_file']) : null;
+
+                    $isUploader = ($department === ($contract['department_assigned'] ?? $contract['uploader_dept']));
+            ?>
+                <tr>
+                    <td><?= $contractName ?></td>
+                    <td><?= $contractType ?></td>
+                    <td class="text-center">
+                        <span class="badge p-2 glow-text" style="background: #3CCF4E; width: 8em;"><?= $contractStatus ?></span>
+                    </td>
+                    <td class="text-center"><span class="badge text-muted"><?= $contractStart ?></span></td>
+                    <td><hr></td>
+                    <td class="text-center"><span class="badge text-muted"><?= $contractEnd ?></span></td>
+                    <td class="text-center">
+                        <?php if ($contractFile): ?>
+
+                            <button class="btn btn-primary badge p-2" data-bs-toggle="modal" data-bs-target="#fileModal<?= $contractId ?>">
+                                View file
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="fileModal<?= $contractId ?>" tabindex="-1" aria-labelledby="fileModalLabel<?= $contractId ?>" aria-hidden="true">
+                                <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="fileModalLabel<?= $contractId ?>"><?= $contractName ?> - <?= $contractType ?></h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body" style="padding: 0; overflow-y: auto;">
+                                            <iframe src="<?= $contractFile ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>  
                         <?php else: ?>
                             No file
                         <?php endif; ?>
-                        </td>
-                            <td style="text-align: center !important;">
+                    </td>
+                    <td class="text-center">
+                        <?php if ($source === 'contracts' && $isUploader): ?>
 
-                            <?php if($department === $uploader_dept): ?>
+                            <?php if(!$department === 'ISD-MSD'): ?>
                                     
-                                    <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
-                            
-                                    <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
-                                        <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                    </a>
-                            
-                                <?php else: ?>
-                                    <!-- <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
-                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                        </a> -->
-                                        <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
-                                <?php endif; ?>
-                            </td>
-                        </tr>
-                    <?php }
-                    } else { ?>
-                        <tr>
-                            <td colspan="7" class="text-center">No contracts found.</td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
+                                <a href="view.php?contract_id=<?= $contractId ?>" class="btn btn-success badge p-2">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> View
+                                </a>
+                                <a id="delete" data-id="<?= $contractId ?>" class="btn btn-danger badge p-2">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                </a>
+                               
+                            <?php else: ?>
 
+                                <a href="view.php?contract_id=<?= $contractId ?>" class="btn btn-success badge p-2">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> View
+                                </a>
+
+                            <?php endif; ?>
+
+                        <?php else: ?>
+
+                            <a href="view.php?contract_id=<?= $contractId ?>" class="btn btn-success badge p-2">
+                                    <i class="fa fa-eye" aria-hidden="true"></i> View
+                                </a>
+                                <a id="delete" data-id="<?= $contractId ?>" class="btn btn-danger badge p-2">
+                                    <i class="fa fa-trash" aria-hidden="true"></i> Delete
+                                </a>
+                            
+                        <?php endif; ?>
+                    </td>
+                </tr>
+            <?php 
+                }
+            } else { ?>
+                <tr>
+                    <td colspan="8" class="text-center">No contracts found.</td>
+                </tr>
+            <?php } ?>
+                </tbody>
             <?php endif; ?>
+
 
           
             
@@ -304,13 +328,13 @@ include_once '../../views/layouts/includes/header.php';
 <?php switch( $department ){
 
     case "ISD-HRAD" :
-        include_once 'modals/hrad_modal.php';
+        include_once '../modals/hrad_modal.php';
     break;
     case "CITETD" :
-        include_once 'modals/citetd_modal.php';
+        include_once '../modals/citetd_modal.php';
     break;
     case "ISD-MSD" :
-        include_once 'modals/isdmsd_modal.php';
+        include_once '../modals/isdmsd_modal.php';
     break;
     }
 ?>
@@ -386,7 +410,7 @@ include_once '../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
-<?php include_once '../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../../views/layouts/includes/footer.php';   ?>
 
 <style>
     /* Flex container for the layout */

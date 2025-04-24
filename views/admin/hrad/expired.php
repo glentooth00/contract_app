@@ -3,7 +3,7 @@
 use App\Controllers\ContractController;
 session_start();
 
-require_once __DIR__ . '../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $savedContracts = new ContractController();
 
@@ -33,7 +33,7 @@ $contracts = $savedContracts->getOldContractsWithPaginationExpired($start, $cont
 $totalContracts = $savedContracts->getTotalContracts($contract_filter, $search_query);
 
 
-include_once '../../views/layouts/includes/header.php'; 
+include_once '../../../views/layouts/includes/header.php'; 
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -46,7 +46,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -56,10 +56,10 @@ include_once '../../views/layouts/includes/header.php';
             <hr>
 
 <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-left: 1%;">
-    <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <!-- <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
         <i class="fa fa-plus p-1" aria-hidden="true"></i>
         Add Contract
-    </a>
+    </a> -->
 
     <form method="GET" action="contracts.php">
         <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">

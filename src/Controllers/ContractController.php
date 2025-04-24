@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Config\Database;
 use PDO;
 use App\Controllers\CrudController;
+use App\Models\Contract;
 
 class ContractController {
 
@@ -112,17 +113,32 @@ class ContractController {
     
 
     // Method to delete a contract by its ID
-    public function deleteContract($id) {
+     // Method to delete a contract by its ID
+     public function deleteContract($id) {
+        // Step 1: Get the contract file name first
+        $getFileSql = "SELECT contract_file FROM contracts WHERE id = :id";
+        $getFileStmt = $this->db->prepare($getFileSql);
+        $getFileStmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $getFileStmt->execute();
+        $contract = $getFileStmt->fetch(PDO::FETCH_ASSOC);
     
+        if ($contract && !empty($contract['contract_file'])) {
+            // Step 2: Define the upload directory
+            $uploadDir = __DIR__ . "/../../admin/uploads/";
+    
+            // Step 3: Construct full path and delete the file
+            $filePath = $uploadDir . basename($contract['contract_file']);
+            if (file_exists($filePath)) {
+                unlink($filePath); // 🧹 Deletes the file
+            }
+        }
+    
+        // Step 4: Delete the database record
         $sql = "DELETE FROM contracts WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     
-        if ($stmt->execute()) {
-            return true;
-        }
-    
-        return false;
+        return $stmt->execute();
     }
 
     public function getContractsWithPagination($start, $limit, $filter = null, $search = null) {
@@ -507,5 +523,145 @@ class ContractController {
     }
     
 
+    public function renewContract($data) {
+
+        $sql = "UPDATE contracts
+                SET
+                    contract_name = :contract_name,
+                    contract_start = :contract_start,
+                    contract_end = :contract_end,
+                    department_assigned = :department_assigned,
+                    contract_file = :contract_file,
+                    contract_status = :contract_status,
+                    updated_at = :updated_at
+                WHERE id = :contract_id";
     
+        $stmt = $this->db->prepare($sql);
+    
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':department_assigned', $data['department_assigned']);
+        $stmt->bindParam(':contract_file', $data['contract_file']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+    
+        $stmt->execute();
+    
+        return true;
+    }
+
+    public function createTempLightingContract($data){
+    
+
+        $sql = "INSERT INTO temp_lighting 
+                    (TC_no, 
+                    contract_start, 
+                    contract_end, 
+                    party_of_second_part, 
+                    uploader, 
+                    uploader_id, 
+                    uploader_dept,
+                    created_at,
+                    updated_at,
+                    status,
+                    contract_file,
+                    contract_type,
+                    contract_name) 
+                VALUES 
+                    (:TC_no, 
+                    :contract_start, 
+                    :contract_end, 
+                    :party_of_second_part, 
+                    :uploader, 
+                    :uploader_id, 
+                    :uploader_dept,
+                    :created_at,
+                    :updated_at,
+                    :status,
+                    :contract_file,
+                    :contract_type,
+                    :contract_name) ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':TC_no', $data['TC_no']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
+        $stmt->bindParam(':uploader', $data['uploader']);
+        $stmt->bindParam(':uploader_id', $data['uploader_id']);
+        $stmt->bindParam(':uploader_dept', $data['uploader_dept']);
+        $stmt->bindParam(':created_at', $data['created_at']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':status', $data['status']);
+        $stmt->bindParam(':contract_file', $data['contract_file']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+
+        $stmt->execute();
+
+        return;
+
+
+    }
+
+    public function uploadRentalFile($file) {
+        $uploadDir = __DIR__ . "/../../admin/rentals/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $fileName = basename($file["name"]);
+        $targetFile = $uploadDir . $fileName;
+
+        if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+            return "admin/rentals/" . $fileName; 
+        }
+
+        return false;
+    }
+
+    public function storeTransFormerRental(){
+
+        echo 'TRANSFORMER RENTAL FUNCTION';
+
+    }
+
+    public function getWhereDepartmentInTempLightning($department){
+        
+        $sql = "SELECT uploader_dept FROM temp_lighting WHERE uploader_dept = :department";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+
+    }
+
+
+    public function getAllContractsByDept($department)
+    {
+        // Get contracts where department_assigned matches
+        $sql1 = "SELECT * FROM contracts WHERE department_assigned = ?";
+        $stmt1 = $this->db->prepare($sql1);
+        $stmt1->execute([$department]);
+        $contracts = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Get contracts from temp_lighting where uploader_dept matches
+        $sql2 = "SELECT * FROM temp_lighting WHERE uploader_dept = ?";
+        $stmt2 = $this->db->prepare($sql2);
+        $stmt2->execute([$department]);
+        $tempContracts = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Merge both sets of results
+        return array_merge($contracts, $tempContracts);
+    }
+    
+    
+    
+
+
 }
