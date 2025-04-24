@@ -33,12 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $get_id = $_SESSION['data'];
 
-                $userId = $get_id['id'];
-
-                $encoded =  base64_encode( $userId);
+               $_SESSION['id'] = $get_id['id'] ?? null;
 
 
-                header('location:views/admin/dashboard.php?user='. $encoded);
+                header('location:views/admin/dashboard.php?');
 
 
         } else {

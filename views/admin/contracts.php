@@ -2,6 +2,7 @@
 
 session_start();
 
+require_once __DIR__ . '../../../src/Config/constants.php';
 require_once __DIR__ . '../../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
@@ -11,6 +12,8 @@ use App\Controllers\EmploymentContractController;
 $page_title = 'Manage Contracts';
 
 $department =  $_SESSION['department'] ?? null;
+
+$userid = $_SESSION['id'];
 
 $getUploader_department = (new ContractController)->getWhereDepartment($department);
 $getDept_assigned = (new ContractController)->getDepartmentAssigned($department);
@@ -295,6 +298,7 @@ include_once '../../views/layouts/includes/header.php';
 </div>
 
 
+
 <!-- modals for every user ---->
 
 <?php switch( $department ){
@@ -448,5 +452,7 @@ function showConfirmationModal(contractId) {
     // Show the modal
     modal.show();
 }
+
+
 
 </script>

@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Config\Database;
 use PDO;
 use App\Controllers\CrudController;
+use App\Models\Contract;
 
 class ContractController {
 
@@ -551,5 +552,60 @@ class ContractController {
         return true;
     }
 
+    public function createTempLightingContract($data){
     
+
+        $sql = "INSERT INTO temp_lighting 
+                    (TC_no, 
+                    contract_start, 
+                    contract_end, 
+                    party_of_second_part, 
+                    uploader, 
+                    uploader_id, 
+                    uploader_dept,
+                    created_at,
+                    updated_at,
+                    status) 
+                VALUES 
+                    (:TC_no, 
+                    :contract_start, 
+                    :contract_end, 
+                    :party_of_second_part, 
+                    :uploader, 
+                    :uploader_id, 
+                    :uploader_dept,
+                    :created_at,
+                    :updated_at,
+                    :status) ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':TC_no', $data['TC_no']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
+        $stmt->bindParam(':uploader', $data['uploader']);
+        $stmt->bindParam(':uploader_id', $data['uploader_id']);
+        $stmt->bindParam(':uploader_dept', $data['uploader_dept']);
+        $stmt->bindParam(':created_at', $data['created_at']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':status', $data['status']);
+
+        $stmt->execute();
+
+        return;
+
+
+    }
+
+
+    public function selectAllTempLighting(){
+
+        $getAll = ( new Contract )->getAll('temp_lighting');
+
+        var_dump($getAll);
+
+    }
+
+
 }
