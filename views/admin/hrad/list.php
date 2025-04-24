@@ -2,8 +2,8 @@
 
 session_start();
 
-require_once __DIR__ . '../../../src/Config/constants.php';
-require_once __DIR__ . '../../../vendor/autoload.php'; // corrected path
+require_once __DIR__ . '../../../../src/Config/constants.php';
+require_once __DIR__ . '../../../../vendor/autoload.php'; // corrected path
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
@@ -55,7 +55,7 @@ if ($getOneLatest) {
     // echo "No contract data available to insert.";
 }
 
-include_once '../../views/layouts/includes/header.php';
+include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -67,7 +67,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -196,7 +196,7 @@ include_once '../../views/layouts/includes/header.php';
                                     </div>
                                     <div class="modal-body" style="padding: 0; overflow-y: auto;">
                                         <!-- Display the contract file inside the modal -->
-                                        <iframe src="<?= htmlspecialchars("../../" . $contract['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                                        <iframe src="<?= htmlspecialchars("../../../" . $contract['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -212,7 +212,7 @@ include_once '../../views/layouts/includes/header.php';
 
                             <?php if($department === $uploader_dept): ?>
                                     
-                                    <a href="view_contract.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
+                                    <a href="view.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2" ><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
                             
                                     <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2" >
                                         <i class="fa fa-trash" aria-hidden="true"></i> Delete
@@ -304,7 +304,7 @@ include_once '../../views/layouts/includes/header.php';
 <?php switch( $department ){
 
     case "ISD-HRAD" :
-        include_once 'modals/hrad_modal.php';
+        include_once '../modals/hrad_modal.php';
     break;
     case "CITETD" :
         include_once 'modals/citetd_modal.php';
@@ -386,7 +386,7 @@ include_once '../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
-<?php include_once '../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../../views/layouts/includes/footer.php';   ?>
 
 <style>
     /* Flex container for the layout */

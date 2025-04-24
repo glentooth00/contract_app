@@ -18,7 +18,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="contracts/temp_lighting.php" method="post" enctype="multipart/form-data">
+            <form action="contracts/rentals.php" method="post" enctype="multipart/form-data">
                 <div class="col-md-12 d-flex gap-2 p-3">
                     <div class="col-md-12 p-2">
                         <div class="mb-3 col-md-5">
@@ -43,23 +43,60 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                        
                         <!-- Transformer Rental Form -->
                         <div id="form-transformer-rental" class="contract-form-section" style="display:none;">
-                            <p class="text-muted">Transformer Rental form fields go here...</p>
+                        <hr>
+                        <input type="hidden" class="form-control" name="contract_type" value="<?= TRANS_RENT ?>" readonly>
+                           <div class="col-md-12 d-flex p-2 row">
+                                <div class="col-md-3">
+                                    <label class="badge text-muted" for="">Date of Contract Creation</label>
+                                </div>
+                           </div>
                             <!-- Add your form inputs here -->
                         </div>
+
+
+<!----------------------------------------------------  DIVISION BETWEEM CONTRACTS ------------------------------------------------------------------------------->
+
 
                         <!-- Temporary Lighting Contract Form -->
                         <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12" style="display:none;">
                             <hr>
-                            <input type="hidden" class="form-control" name="contract_type" value="Temporary Lighting Contract" readonly>
+                            
+                            
+                            <input type="hidden" class="form-control" name="contract_type" value="<?= TEMP_LIGHTING ?>" readonly>
                             <div class="col-md-12 d-block gap-2">
                                 <div class="col-md-12 d-flex gap-2 row">
-                                    <div class="col-md-3 p-2">
+                                    <div class="col-md-5 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Contract Name</lable>
+                                            <input type="text" class="form-control" name="contract_name"  required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 p-2">
                                         <div>
                                             <lable class="badge text-muted">TC No.</lable>
                                             <input type="text" class="form-control" name="TC_no"  required>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 p-2">
+                                    <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <div class="d-flex">
+                                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                                <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                    <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="col-md-12 d-flex gap-2 row">
+                                   
+                                    <div class="col-md-5 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date Start</lable>
                                             <div class="d-flex">
@@ -68,7 +105,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 p-2">
+                                    <div class="col-md-5 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
                                             <div class="d-flex">
@@ -85,12 +122,17 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                     </div> -->
                                 </div>
-
-                                <div class="col-md-12 d-flex gap-2 row">
+                                <div class="col-md-12 d-flex gap-4 row">
                                     <div class="col-md-5 p-2">
                                         <div>
                                             <lable class="badge text-muted">Party of Second Party</lable>
                                             <input type="text" class="form-control" name="party_of_second_part"  required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Contract file</lable>
+                                            <input type="file" class="form-control" name="contract_file" style="width: 16.7em;"  required>
                                         </div>
                                     </div>
                                     <div class="col-md-4 p-2">

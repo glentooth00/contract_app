@@ -4,7 +4,7 @@ use App\Controllers\ContractController;
 
 session_start();
 
-require_once __DIR__ . '../../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 // Prepare the latest contract data (make sure keys match what your method expects)
 $latestData = [

@@ -1,7 +1,7 @@
 <nav class="sideBAr">
 <div class="logo bg-white mb-3 p-0 text-center col-md-12 d-flex align-items-center">
     <div class="col-md-5 p-2">
-      <img src="../../public/images/logo.png" alt="Logo" class="img-fluid">
+      <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid">
     </div>
     <div class="col-md-5 ms-3 p-2">
      <h6>Contract Monitoring App</h6>
@@ -12,7 +12,7 @@
   <ul class="nav flex-column">
     <div class="mt-1">
       <li class="nav-item">
-        <a class="nav-link" id="dashboardLink" href="dashboard.php"><i class="fa fa-tachometer p-2" aria-hidden="true"></i>Dashboard</a>
+        <a class="nav-link" id="dashboardLink" href="index.php"><i class="fa fa-tachometer p-2" aria-hidden="true"></i>Dashboard</a>
       </li>
 
       <!-- Contracts Dropdown -->
@@ -22,11 +22,11 @@
         </a>
         <ul class="collapse" id="contractsMenu">
           <li class="nav-item">
-            <a class="nav-link" id="contractsLink" href="contracts.php"><i class="fa fa-file-text-o p-2" aria-hidden="true"></i>
+            <a class="nav-link" id="contractsLink" href="list.php"><i class="fa fa-file-text-o p-2" aria-hidden="true"></i>
             Active Contracts</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="expired_contracts.php"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
+            <a class="nav-link" href="expired.php"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
             Expired Contracts</a>
           </li>
           <li class="nav-item">
@@ -112,7 +112,7 @@
             Notifications</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="logout.php"><i class="fa fa-sign-out fa-flip-horizontal p-2" aria-hidden="true"></i>
+            <a class="nav-link" href="../logout.php"><i class="fa fa-sign-out fa-flip-horizontal p-2" aria-hidden="true"></i>
             Logout</a>
           </li>
         </ul>

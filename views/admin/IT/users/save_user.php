@@ -1,6 +1,6 @@
 <?php
 // Include the necessary UserController if it's not autoloaded
-require_once __DIR__ . "../../../../vendor/autoload.php"; // Update the path accordingly
+require_once __DIR__ . "../../../../../vendor/autoload.php"; // Update the path accordingly
 session_start();
 
 $userController = new App\Controllers\UserController();

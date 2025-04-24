@@ -7,7 +7,7 @@ session_start();
 
 use App\Controllers\ContractController;
 
-require_once __DIR__ . '../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department =  $_SESSION['department'] ?? null;
 
@@ -29,7 +29,7 @@ $departments = ( new DepartmentController )->getAllDepartments();
 
 //-----------------------------------------------------------------------//
 
-include_once '../../views/layouts/includes/header.php';
+include_once '../../../views/layouts/includes/header.php';
 
 ?>
 
@@ -42,7 +42,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-        <?php include_once 'sidebar.php'; ?>
+        <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent">
@@ -231,7 +231,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                     data-bs-target="#extendModal">
                     Extend
                 </button>
-                    <form action="end_contract.php" method="post">
+                    <form action="contracts/end_contract.php" method="post">
                         <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
                         <button type="submit" class="btn btn-warning">End Contract</button>
                     </form>
@@ -362,7 +362,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                                                         </div>
                                                         <div class="modal-body" style="padding: 0; overflow-y: auto;">
                                                             <!-- Display the contract file inside the modal -->
-                                                            <iframe src="<?= htmlspecialchars("../../" . $employement_data['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                                                            <iframe src="<?= htmlspecialchars("../../../" . $employement_data['contract_file']) ?>" width="100%" style="height: 80vh;" frameborder="0"></iframe>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -450,7 +450,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
 
 
-<?php include_once '../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../../views/layouts/includes/footer.php';   ?>
 
 <style>
 .pageContent {

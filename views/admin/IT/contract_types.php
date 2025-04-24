@@ -1,16 +1,17 @@
 <?php 
 
+use App\Controllers\ContractTypeController;
 use App\Controllers\DepartmentController;
 session_start();
 
-require_once '../../vendor/autoload.php';
+require_once '../../../vendor/autoload.php';
 
 $page_title = 'Departments';
 
-$fetchDepts = new DepartmentController();
-$departments = $fetchDepts->getAllDepartments();
+$contractTypes = (new ContractTypeController)->getContractTypes();
 
-include_once '../layouts/includes/header.php';
+
+include_once '../../layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -22,7 +23,7 @@ include_once '../layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -33,8 +34,8 @@ include_once '../layouts/includes/header.php';
 
 <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-left: 1%;">
     <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#departmentModal">
-        <i class="fa fa-building-o" aria-hidden="true"></i>
-        Add Department
+    <i class="fa fa-plus" aria-hidden="true"></i> 
+        Add Contact Type
     </a>
 
     <!-- <form method="GET" action="contracts.php">
@@ -61,20 +62,118 @@ include_once '../layouts/includes/header.php';
 <table class="table table-striped table-hover border p-3">
     <thead>
         <tr>
-            <th style="text-align: center !important;">Deprtment </th>
-            <!-- <th style="text-align: center !important;">Name</th>
-            <th style="text-align: center !important;">Role</th>
-            <th style="text-align: center !important;">Department</th> -->
+            <th style="text-align: center !important;">Contract Type</th>
+            <th style="text-align: center !important;">Contract Duration</th>
+            <th style="text-align: center !important;">Expiry Reminder Threshold</th>
             <th style="text-align: center !important;">Action</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($departments as $department) { ?>
+        <?php foreach ($contractTypes as $contractType) { ?>
             <tr>
-                <td style="text-align: center !important;"><?= $department['department_name'] ?></td>
+                <td style="text-align: center !important;">
+
+                <?php if(isset($contractType['contract_type'])){ ?>
+
+                        <?php switch( $contractType['contract_type'] ) { case 'Employment Contract': ?>
+
+                                <span class="badge p-2" style="background-color: #1B56FD;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break; case 'Power Suppliers Contract (LONG TERM)': ?>
+
+                                <span class="badge p-2" style="background-color: #F7374F;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break; case 'Power Suppliers Contract (SHORT TERM)': ?>
+
+                                <span class="badge p-2" style="background-color: #183B4E;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break; case 'Goods Contract': ?>
+                                
+                                <span class="badge p-2" style="background-color: #EC5228;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break;case 'Service and Consultancy Contract': ?>
+
+                                <span class="badge p-2" style="background-color: #0D4715;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break; case 'Infrastructure Contract':  ?>
+
+                                <span class="badge p-2" style="background-color: #FFB200;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break;  case 'Transformer Rental': ?>
+
+                                <span class="badge p-2" style="background-color: #118B50;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break;  case 'Rental Contract': ?>
+
+                                <span class="badge p-2" style="background-color: #003161;"><?= $contractType['contract_type'] ?></span>
+                            
+                            <?php break;  case 'Temporary Lighting Contract': ?>
+
+                                <span class="badge p-2" style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
+                            
+                                <?php default: ?>
+                                <!-- <span class="badge text-muted">no department assigned</span> -->
+                        <?php } ?>
+
+                        <?php }else { ?>
+
+                            <span class="badge text-muted">no department assigned</span>
+
+                        <?php } ?>
+
+                </td>
+                <td style="text-align: center !important;">
+
+                    <?php if($contractType['contract_type'] === 'Power Suppliers Contract (LONG TERM)' | $contractType['contract_type'] === 'Power Suppliers Contract (SHORT TERM)' ) : ?>
+                    
+                        <?php if(!empty($contractType['contract_duration'])) : ?>
+
+                            <?= $contractType['contract_duration'] ?> yrs
+
+                        <?php else: ?>
+
+                            --
+
+                        <?php endif; ?>
+                        
+                    <?php else: ?>
+
+                        <?php if($contractType['contract_type'] === 'Goods Contract' | $contractType['contract_type'] === 'Service and Consultancy Contract' |
+                                 $contractType['contract_type'] === 'Infrastructure Contract'  | $contractType['contract_type'] === 'Transformer Rental' | 
+                                 $contractType['contract_type'] === 'Rental Contract' | $contractType['contract_type'] === 'Temporary Lighting Contract'): ?>
+
+                            <?php if(!empty($contractType['contract_duration'])) : ?>
+
+                                <?= $contractType['contract_duration'] ?> Days
+
+                            <?php else: ?>
+
+                            <?php endif; ?>
+                            
+                        <?php else: ?>
+
+                            --
+
+                        <?php endif; ?>
+
+                    <?php endif; ?>
+                   
+                </td>
+                <td style="text-align: center !important;">
+                    <!-- <?= $contractType['contract_ert'] ?> Days -->
+
+                    <?php if(empty($contractType['contract_ert'])): ?>
+                            --
+                    <?php else: ?>
+                        <?= $contractType['contract_ert'] ?> Days
+                    <?php endif; ?>
+
+                        
+
+                </td>
                 <td class="d-flex justify-content-center gap-2 w-100">
-                    <button class="btn btn-success btn-sm">View</button>
-                    <a href="departments/delete_department.php?id=<?= $department['id']  ?>" class="btn btn-danger btn-sm">Delete</a>
+                    <button class="btn btn-primary btn-sm">Update</button>
+                    <a href="contract_types/delete_contract_type.php?id=<?= $contractType['id']  ?>" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         <?php } ?>
@@ -184,27 +283,39 @@ include_once '../layouts/includes/header.php';
 
 
 <?php 
-    include_once '../layouts/includes/footer.php';
+    include_once '../../layouts/includes/footer.php';
 ?>
 
 <!-- Add New Contract Modal --->
 <div class="modal fade" id="departmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add Department</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add Contract Type</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="departments/save_department.php" method="post" enctype="multipart/form-data">
-            <div class="p-2">
-                <label class="badge text-muted mb-1" style="margin-left: -1%;">Department Name:<span class="text-danger">*</span></label>
-                <input class="form-control" name="department_name" required>
+        <form action="contract_types/save_contract_type.php" method="post" enctype="multipart/form-data">
+        <span class="badge text-muted">ERT - Expiry Reminder Threshhold</span>
+            <div class="col-md-12 d-flex gap-3 p-3" style="margin-left:-3%;">
+                <div class="p-2 col-md-6">
+                    <label class="badge text-muted mb-1" style="margin-left: -1%;">Contract type: <span class="text-danger"> *</span></label>
+                    <input class="form-control" name="contract_type" required>
+                </div>
+                <div class="p-2 col-md-3 float-start">
+                    <label class="badge text-muted mb-1" style="margin-left: -1%;">Contract Duration: <span class="text-danger"> *</span></label>
+                    <input type="number" class="form-control" name="contract_duration">
+                </div>
+                <div class="p-2 col-md-3 float-start">
+                    <label class="badge text-muted mb-1" style="margin-left: -1%;">Contract ERT: <span class="text-danger"> *</span></label>
+                    <input type="number" class="form-control" name="contract_ert">
+                </div>
             </div>
+            
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Add Department</button>
+        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Add Contract Type</button>
       </div>
       </form>
     </div>
@@ -218,3 +329,10 @@ include_once '../layouts/includes/header.php';
         document.getElementById("content").style.display = "block"; // Show the page content
     };
 </script>
+<style>
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+</style>

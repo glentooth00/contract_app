@@ -565,7 +565,10 @@ class ContractController {
                     uploader_dept,
                     created_at,
                     updated_at,
-                    status) 
+                    status,
+                    contract_file,
+                    contract_type,
+                    contract_name) 
                 VALUES 
                     (:TC_no, 
                     :contract_start, 
@@ -576,7 +579,10 @@ class ContractController {
                     :uploader_dept,
                     :created_at,
                     :updated_at,
-                    :status) ";
+                    :status,
+                    :contract_file,
+                    :contract_type,
+                    :contract_name) ";
 
         $stmt = $this->db->prepare($sql);
 
@@ -590,6 +596,9 @@ class ContractController {
         $stmt->bindParam(':created_at', $data['created_at']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam(':status', $data['status']);
+        $stmt->bindParam(':contract_file', $data['contract_file']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
 
         $stmt->execute();
 
@@ -598,14 +607,61 @@ class ContractController {
 
     }
 
+    public function uploadRentalFile($file) {
+        $uploadDir = __DIR__ . "/../../admin/rentals/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
 
-    public function selectAllTempLighting(){
+        $fileName = basename($file["name"]);
+        $targetFile = $uploadDir . $fileName;
 
-        $getAll = ( new Contract )->getAll('temp_lighting');
+        if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+            return "admin/rentals/" . $fileName; 
+        }
 
-        var_dump($getAll);
+        return false;
+    }
+
+    public function storeTransFormerRental(){
+
+        echo 'TRANSFORMER RENTAL FUNCTION';
 
     }
+
+    public function getWhereDepartmentInTempLightning($department){
+        
+        $sql = "SELECT uploader_dept FROM temp_lighting WHERE uploader_dept = :department";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+
+    }
+
+
+    public function getAllContractsByDept($department)
+    {
+        // Get contracts where department_assigned matches
+        $sql1 = "SELECT * FROM contracts WHERE department_assigned = ?";
+        $stmt1 = $this->db->prepare($sql1);
+        $stmt1->execute([$department]);
+        $contracts = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Get contracts from temp_lighting where uploader_dept matches
+        $sql2 = "SELECT * FROM temp_lighting WHERE uploader_dept = ?";
+        $stmt2 = $this->db->prepare($sql2);
+        $stmt2->execute([$department]);
+        $tempContracts = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+    
+        // Merge both sets of results
+        return array_merge($contracts, $tempContracts);
+    }
+    
+    
+    
 
 
 }

@@ -3,7 +3,7 @@
 use App\Controllers\ContractController;
 session_start();
 
-require_once __DIR__ . '../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $savedContracts = new ContractController();
 
@@ -33,7 +33,7 @@ $contracts = $savedContracts->getOldContractsWithPaginationExpired($start, $cont
 $totalContracts = $savedContracts->getTotalContracts($contract_filter, $search_query);
 
 
-include_once '../../views/layouts/includes/header.php'; 
+include_once '../../../views/layouts/includes/header.php'; 
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -46,7 +46,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
