@@ -16,14 +16,25 @@ $department =  $_SESSION['department'] ?? null;
 
 $contract_id = $_GET['contract_id'];
 
+$uploader = $_GET['uploader'] ?? NULL;
+
+if( $uploader === 'ISD-HRAD'){
+    $tempLight =  (new ContractController)->getContractbyId($contract_id);
+}else{
+     $tempLight = ( new TempLightingController )->get($contract_id);
+}
 
 // $contract_data = $getContract['contract_name'];
 
-$tempLight = ( new TempLightingController )->get($contract_id);
+// if(){
+
+// }
+
+// $tempLight = ( new TempLightingController )->get($contract_id);
 
 
 
-$page_title = 'View Contract | '. $tempLight['contract_name'];
+$page_title = 'View Contract | '. $tempLight['contract_name'] ?? NULL;
 
 //-----------------------------------------------------------------------//
 
@@ -130,15 +141,15 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <div class="row col-md-2" >
                 
-                    <div class="mt-3">
-                        <label class="badge text-muted" <?php 
+            <div class="mt-3">
+                <label class="badge text-muted" <?php 
 
-$start = new DateTime($tempLight['contract_start']);
-$end = new DateTime($tempLight['contract_end']);
-$today = new DateTime();
+                $start = new DateTime($tempLight['contract_start']);
+                $end = new DateTime($tempLight['contract_end']);
+                $today = new DateTime();
 
-$interval = $today->diff($end);
-$remainingDays = $interval->invert ? -$interval->days : $interval->days;
+                $interval = $today->diff($end);
+                $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
 
 
@@ -160,7 +171,9 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                 </div>
             </div>
 
-            <div class="row col-md-3" >
+            <?php if( $uploader === 'ISD-HRAD' ): ?>
+            
+                <div class="row col-md-3" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
                     <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
@@ -171,20 +184,40 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                             </option>
                         <?php endforeach; ?>
                     </select>
-                    <!-- <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned'];  ?>"  name="department_assigned" readonly> -->
                 </div>  
             </div>
+
+            <?php endif; ?>
+
             <div class="row col-md-2" >
                 <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Status</label>
                             <div class="d-flex">
-                                <?php if(!$tempLight['status'] === 'Active' | $tempLight['status'] === 'Expired'): ?>
+
+                                <?php if ( $uploader === 'ISD-HRAD' ) : ?>
+                                    
+                                    <?php if(!$tempLight['contract_status'] === 'Active' | $tempLight['contract_status'] === 'Expired'): ?>
+                                    <i class="fa fa-ban p-2" style="color:#BF3131;font-size: 20px;" aria-hidden="true"></i>
+                                    <span class="alert p-1 alert-warning border-danger text-danger text-center"  style="width: 7em;"><?= $tempLight['contract_status'];  ?></span>
+                                    <?php else: ?>
+                                        <i class="fa fa-check p-2" style="color:green;font-size: 20px;" aria-hidden="true"></i>
+                                        <span class="alert p-1 alert-success border-success text-success text-center"  style="width: 7em;"><?= $tempLight['contract_status'];  ?></span>
+                                    <?php endif; ?>
+
+                                <?php else : ?>
+
+                                    <?php if(!$tempLight['status'] === 'Active' | $tempLight['status'] === 'Expired'): ?>
                                     <i class="fa fa-ban p-2" style="color:#BF3131;font-size: 20px;" aria-hidden="true"></i>
                                     <span class="alert p-1 alert-warning border-danger text-danger text-center"  style="width: 7em;"><?= $tempLight['status'];  ?></span>
-                                <?php else: ?>
-                                    <i class="fa fa-check p-2" style="color:green;font-size: 20px;" aria-hidden="true"></i>
-                                    <span class="alert p-1 alert-success border-success text-success text-center"  style="width: 7em;"><?= $tempLight['status'];  ?></span>
+                                    <?php else: ?>
+                                        <i class="fa fa-check p-2" style="color:green;font-size: 20px;" aria-hidden="true"></i>
+                                        <span class="alert p-1 alert-success border-success text-success text-center"  style="width: 7em;"><?= $tempLight['status'];  ?></span>
+                                    <?php endif; ?>
+
                                 <?php endif; ?>
+
+
+                               
                         </div>
                 </div>
             </div>
@@ -325,7 +358,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
         <div>
             <div class="mt-5">
-                <h4>Employment History</h4>
+                <h4>Rental History</h4>
             </div>
             <hr class="">
             <div class="">
@@ -339,15 +372,15 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                         </tr>
                     </thead>
                     <?php 
-                    $id = $getContract['id'];
-                        $employement_datas = (new EmploymentContractController)->getByContractId($id);
+                    // $id = $getContract['id'];
+                    //     $employement_datas = (new EmploymentContractController)->getByContractId($id);
                     ?>
                     <tbody class="">
                         <?php if (!empty($employement_datas)): ?>
                             <?php foreach ($employement_datas as $employement_data): ?>
                                 <tr>
                                     <td style="text-align: center !important;">
-                                        <!-- <?= $employement_data['status']; ?> -->
+                                    
                                         <?php if($employement_data['status'] === 'Active' | $employement_data['status']=== 'Expired'): ?>
                                                 <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
                                         <?php else: ?>

@@ -231,7 +231,7 @@ $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                     data-bs-target="#extendModal">
                     Extend
                 </button>
-                    <form action="contracts/end_contract.php" method="post">
+                    <form action="end_contract.php" method="post">
                         <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
                         <button type="submit" class="btn btn-warning">End Contract</button>
                     </form>

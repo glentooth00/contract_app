@@ -180,6 +180,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                     $isUploader = ($department === ($contract['department_assigned'] ?? $contract['uploader_dept']));
             ?>
+            
                 <tr>
                     <td><?= $contractName ?></td>
                     <td><?= $contractType ?></td>
@@ -231,7 +232,7 @@ include_once '../../../views/layouts/includes/header.php';
                                
                             <?php else: ?>
 
-                                <a href="view.php?contract_id=<?= $contractId ?>" class="btn btn-success badge p-2">
+                                <a href="view.php?contract_id=<?= $contractId ?>&uploader=<?= htmlspecialchars($contract['uploader_department'] ?? '') ?>" class="btn btn-success badge p-2">
                                     <i class="fa fa-eye" aria-hidden="true"></i> View
                                 </a>
 
