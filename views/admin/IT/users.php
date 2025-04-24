@@ -4,7 +4,7 @@ use App\Controllers\DepartmentController;
 use App\Controllers\UserController;
 session_start();
 
-require_once __DIR__ . '../../../vendor/autoload.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
 
 $page_title = 'Manage Users';
@@ -14,7 +14,7 @@ $results = $getUser->getAllUsers();
 
 // $getDepartments = (new DepartmentController)->getAllDepartments();
 
-include_once '../../views/layouts/includes/header.php'; 
+include_once '../../../views/layouts/includes/header.php'; 
 ?>
 
 <!-- Loading Spinner - Initially visible -->
@@ -27,7 +27,7 @@ include_once '../../views/layouts/includes/header.php';
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
-       <?php include_once 'sidebar.php'; ?>
+       <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
     <div class="mainContent" style="margin:auto;margin-top:0;">
@@ -79,11 +79,11 @@ include_once '../../views/layouts/includes/header.php';
                 <td style="text-align: center !important;">
 
                 <?php if ($result['gender'] === 'Male' || $result['gender'] === 'Female'): ?>
-                    <img src="../../admin/user_image/<?= $result['user_image'] ?>" width="90px;" style="border-radius:50px;">
+                    <img src="../../../admin/user_image/<?= $result['user_image'] ?>" width="90px;" style="border-radius:50px;">
                 <?php elseif (!empty($result['user_image'])): ?>
-                    <img src="../../admin/user_image/<?= $result['user_image'] ?>" width="90px;" style="border-radius:50px;">
+                    <img src="../../../admin/user_image/<?= $result['user_image'] ?>" width="90px;" style="border-radius:50px;">
                 <?php else: ?>
-                    <img src="../../public/images/male.png" width="90px;">
+                    <img src="../../../public/images/male.png" width="90px;">
                 <?php endif; ?>
 
 

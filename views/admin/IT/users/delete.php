@@ -3,7 +3,7 @@
 use App\Controllers\UserController;
 session_start(); // Ensure the session is started
 
-require_once '../../../vendor/autoload.php';
+require_once '../../../../vendor/autoload.php';
 
 $id = $_POST['id'];
 

@@ -3,17 +3,17 @@
 use App\Controllers\DepartmentController;
 session_start();
 
-include_once '../../../vendor/autoload.php';
+include_once '../../../../vendor/autoload.php';
 
-$id = $_GET['id'];
+// $_POST['department_name'];
 
 if($_REQUEST['POST'] = 'POST'){
 
-    $Dept = new DepartmentController();
-    $deleteDepartment = $Dept->deleteDept($id);
+    $addDept = new DepartmentController();
+    $addDepartment = $addDept->addDepartment($_POST['department_name']);
 
     $_SESSION['notification'] = [
-        'message' => 'Department Deleted successfully!',
+        'message' => 'Department Added successfully!',
         'type' => 'success'
     ];
 
