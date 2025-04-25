@@ -117,9 +117,14 @@ include_once '../../../views/layouts/includes/header.php';
             <hr>
 
     <div class="d-flex align-items-center gap-3 flex-wrap mb-1" style="margin-left: 1%;">
-        <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
+        <a class="btn text-white p-2 fw-bold" data-mdb-ripple-init style="width:15%;padding-right:10px;font-size:13px;background-color:#0118D8" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#TempLightModal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Add Contract
+            Temporary Lighting Contract
+        </a>
+
+        <a class="btn text-white p-2 fw-bold" data-mdb-ripple-init style="width:15%;padding-right:10px;font-size:13px;background-color:#3F7D58" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#TransRentModal">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+           Transformer Rental Contract
         </a>
 
         
@@ -336,6 +341,7 @@ include_once '../../../views/layouts/includes/header.php';
     break;
     case "ISD-MSD" :
         include_once '../modals/isdmsd_modal.php';
+        include_once '../modals/transformer_rental.php';
     break;
     }
 ?>
