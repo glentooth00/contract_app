@@ -39,7 +39,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             if(  $saveContract ) {
 
                 $_SESSION['notification'] = [
-                    'message' => 'Contract successfully saved!',
+                    'message' => 'Temporary Lighting contact successfully saved!',
                     'type' => 'success'
                 ];
 

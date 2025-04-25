@@ -22,10 +22,10 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                 <div class="col-md-12 d-flex gap-2 p-3">
                     <div class="col-md-12 p-2">
                         <!-- Temporary Lighting Contract Form -->
-                        <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12">
+                        <div id="form-temporary-lighting-contract" class="contract-form-section ">
                             <input type="hidden" class="form-control" name="contract_type" value="<?= TEMP_LIGHTING ?>" readonly>
                             <div class="col-md-12 d-block gap-2">
-                                <div class="col-md-12 d-flex gap-2 row">
+                                <div class="col-md-12 d-flex gap-2">
                                     <div class="col-md-5 p-2">
                                         <div>
                                             <lable class="badge text-muted">Contract Name</lable>
@@ -39,7 +39,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 d-flex gap-2 row">
+                                <div class="col-md-12 d-flex gap-2">
                                    
                                     <div class="col-md-5 p-2">
                                         <div>
@@ -67,7 +67,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                     </div> -->
                                 </div>
-                                <div class="col-md-12 d-flex gap-4 row">
+                                <div class="col-md-12 d-flex gap-4">
                                     <div class="col-md-5 p-2">
                                         <div>
                                             <lable class="badge text-muted">Party of Second Party</lable>
@@ -80,7 +80,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                             <input type="file" class="form-control" name="contract_file" style="width: 16.7em;"  required>
                                         </div>
                                     </div>
-                                    <div class="col-md-4 p-2">
+                                    <div class="">
                                         <div>
                                             <?php 
                                                 $userid;

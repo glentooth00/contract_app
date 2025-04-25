@@ -128,7 +128,7 @@ include_once '../../../views/layouts/includes/header.php';
         </a>
 
         
-        <form method="GET" action="contracts.php">
+        <form method="GET" action="list.php">
             <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
                 <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
                 <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
@@ -139,7 +139,7 @@ include_once '../../../views/layouts/includes/header.php';
             </select>
         </form>
 
-        <form method="GET" action="contracts.php" class="input-group" style="width: 250px;">
+        <form method="GET" action="list.php" class="input-group" style="width: 250px;">
             <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract">
             <button class="btn bg-dark text-white" type="submit">
                 <i class="fa fa-search"></i>
@@ -180,7 +180,11 @@ include_once '../../../views/layouts/includes/header.php';
                     $contractStatus = htmlspecialchars($contract['contract_status'] ?? $contract['status']  ?? 'N/A');
 
                     $contractStart = isset($contract['contract_start']) ? date("M-d-Y", strtotime($contract['contract_start'])) : 'N/A';
+                    $rentStart = isset($contract['rent_start']) ? date("M-d-Y", strtotime($contract['rent_start'])) : 'N/A';
+                    
                     $contractEnd = isset($contract['contract_end']) ? date("M-d-Y", strtotime($contract['contract_end'])) : 'N/A';
+                    $rentEnd = isset($contract['rent_end']) ? date("M-d-Y", strtotime($contract['rent_end'])) : 'N/A';
+
                     $contractFile = !empty($contract['contract_file']) ? htmlspecialchars("../../../" . $contract['contract_file']) : null;
 
                     $isUploader = ($department === ($contract['department_assigned'] ?? $contract['uploader_dept']));
@@ -188,13 +192,51 @@ include_once '../../../views/layouts/includes/header.php';
             
                 <tr>
                     <td><?= $contractName ?></td>
-                    <td><?= $contractType ?></td>
+                    <td>
+                        <?php
+                        switch ($contractType) {
+                            case "Employment Contract":
+                                echo '<span class="p-2 badge text-white" style="font-size:13px;background-color:#F7374F;width: 15em;">Employment Contract</span>';
+                                break;
+
+                            case "Temporary Lighting Contract":
+                                echo '<span class="p-2 badge text-white" style="background-color:#0118D8; font-size:13px;">Temporary Lighting Contract</span>';
+                                break;
+
+                            case "Transformer Rental Contract":
+                                echo '<span class="p-2 badge text-white" style="background-color:#3F7D58; font-size:13px;">Transformer Rental Contract</span>';
+                                break;
+
+                            default:
+                                echo '<p>Unknown contract type.</p>';
+                                break;
+                        }
+                        ?>
+                    </td>
                     <td class="text-center">
                         <span class="badge p-2 glow-text" style="background: #3CCF4E; width: 8em;"><?= $contractStatus ?></span>
                     </td>
-                    <td class="text-center"><span class="badge text-muted"><?= $contractStart ?></span></td>
+                    <td class="text-center"><span class="badge text-muted">
+
+                        <?php if ($contractStart !== 'N/A') : ?>
+                            <?= $contractStart ?>
+                        <?php elseif ($rentStart !== 'N/A') : ?>
+                            <?= $rentStart ?>
+                        <?php else : ?>
+                            N/A
+                        <?php endif; ?>
+
+                    </span></td>
                     <td><hr></td>
-                    <td class="text-center"><span class="badge text-muted"><?= $contractEnd ?></span></td>
+                    <td class="text-center"><span class="badge text-muted">
+                        <?php if ($contractEnd !== 'N/A') : ?>
+                            <?= $contractEnd ?>
+                        <?php elseif ($rentEnd !== 'N/A') : ?>
+                            <?= $rentEnd ?>
+                        <?php else : ?>
+                            N/A
+                        <?php endif; ?>
+                    </span></td>
                     <td class="text-center">
                         <?php if ($contractFile): ?>
 
@@ -245,7 +287,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <?php else: ?>
 
-                            <a href="view.php?contract_id=<?= $contractId ?>" class="btn btn-success badge p-2">
+                            <a href="check.php?contract_id=<?= $contractId ?>&type=<?= $contractType ?>" class="btn btn-success badge p-2">
                                     <i class="fa fa-eye" aria-hidden="true"></i> View
                                 </a>
                                 <a href="contracts/delete.php?id=<?= $contractId ?>" id="delete" data-id="<?= $contractId ?>" class="btn btn-danger badge p-2">

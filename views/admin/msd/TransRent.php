@@ -1,61 +1,23 @@
-<?php
-
-use App\Controllers\DepartmentController;
-use App\Controllers\EmploymentContractController;
-use App\Controllers\TempLightingController;
-use App\Controllers\TransformerRentalController;
-use App\Controllers\UserController;
+<?php 
 session_start();
 
-use App\Controllers\ContractController;
-
-require_once __DIR__ . '../../../../vendor/autoload.php';
+use App\Controllers\TransformerRentalController;
+use App\Controllers\UserController;
 
 $department =  $_SESSION['department'] ?? null;
+$contract_id = $_GET['id'];
 
-//------------------------- GET CONTRACT NAME ---------------------------//
+include_once __DIR__ .'../../../../src/Config/constants.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
-$contract_id = $_GET['contract_id'];
+$tempLight = ( new TransformerRentalController )->getTransRentById($contract_id);
 
-$uploader = $_GET['uploader'] ?? NULL;
-
-if( $uploader === 'ISD-HRAD'){
-    $tempLight =  (new ContractController)->getContractbyId($contract_id);
-}else{
-     $tempLight = ( new TempLightingController )->get($contract_id);
-     $tempLight = ( new TransformerRentalController )->getTransRentById($contract_id);
-}
-
-// $contract_data = $getContract['contract_name'];
-
-// if(){
-
-// }
-
-// $tempLight = ( new TempLightingController )->get($contract_id);
-
-
+$uploader = $tempLight ['uploader'] ?? NULL;
 
 $page_title = 'View Contract | '. $tempLight['contract_name'] ?? NULL;
 
-//-----------------------------------------------------------------------//
-
-//------------------------- GET Departments ----------------------------//
-
-$departments = ( new DepartmentController )->getAllDepartments();
-
-//-----------------------------------------------------------------------//
-
 include_once '../../../views/layouts/includes/header.php';
-
 ?>
-
-<!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center" style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-    <span class="sr-only">Loading...</span>
-    </div>
-</div> -->
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
@@ -79,7 +41,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
             // Check if the contract is about to expire or already expired
-            if ($remainingDays > 0 && $remainingDays <= 15) {
+            if ($remainingDays > 0 && $remainingDays <= 3) {
                 echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
@@ -236,7 +198,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-3" >
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Implementing Dept:</label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $tempLight['uploader_department'] ?>"  name="contract_type" readonly>
+                    <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $tempLight['uploader_dept'];  ?>"  name="contract_type" readonly>
                 </div>
             </div>
 
@@ -258,7 +220,7 @@ include_once '../../../views/layouts/includes/header.php';
         <?php 
          $dept = $_SESSION['department'];
         ?>
-        <?php if ($dept === 'ISD-HRAD'): ?>
+        <?php if ($dept === 'ISD-MSD'): ?>
             <?php
                 $startDate = !empty($tempLight['contract_start']) ? $tempLight['contract_start'] : $tempLight['rent_start'];
                 $endDate = !empty($tempLight['contract_end']) ? $tempLight['contract_end'] : $tempLight['rent_end'];
@@ -269,19 +231,19 @@ include_once '../../../views/layouts/includes/header.php';
                 $remainingDays = $interval->invert ? -$interval->days : $interval->days;
             ?>
             
-            <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
+            <?php if ($remainingDays <= 3 && $remainingDays >= 0): ?>
                 <div class="d-flex gap-2">
-                <button class="btn btn-primary" 
-                    data-id="<?= $tempLight['id'] ?>"
-                    data-contractname="<?= $tempLight['contract_name'] ?>"
-                    data-startdate="<?= $startDate ?>"
-                    data-enddate="<?= $endDate ?>"
-                    data-departmentassigned="<?= $tempLight['department_assigned'] ?>"
-                    data-type="<?= $tempLight['contract_type'] ?>"
-                    data-bs-toggle="modal" 
-                    data-bs-target="#extendModal">
-                    Extend
-                </button>
+                    <button class="btn btn-primary" 
+                        data-id="<?= $tempLight['id'] ?>"
+                        data-contractname="<?= $tempLight['contract_name'] ?>"
+                        data-startdate="<?= $startDate ?>"
+                        data-enddate="<?= $endDate ?>"
+                       
+                        data-type="<?= $tempLight['contract_type'] ?>"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#extendModal">
+                        Extend
+                    </button>
                     <form action="contracts/end_contract.php" method="post">
                         <input type="hidden" name="contract_id" value="<?= $tempLight['id'] ?>">
                         <button type="submit" class="btn btn-warning">End Contract</button>
@@ -499,9 +461,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
 
-
-
-<?php include_once '../../../views/layouts/includes/footer.php';   ?>
+<?php include_once '../../../views/layouts/includes/footer.php';?>
 
 <style>
 .pageContent {

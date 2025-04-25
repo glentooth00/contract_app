@@ -655,9 +655,15 @@ class ContractController {
         $stmt2 = $this->db->prepare($sql2);
         $stmt2->execute([$department]);
         $tempContracts = $stmt2->fetchAll(PDO::FETCH_ASSOC);
+
+          // Get contracts from temp_lighting where uploader_dept matches
+          $sql3 = "SELECT * FROM transformer_rental WHERE uploader_dept = ?";
+          $stmt3 = $this->db->prepare($sql3);
+          $stmt3->execute([$department]);
+          $transRentContracts = $stmt3->fetchAll(PDO::FETCH_ASSOC);
     
         // Merge both sets of results
-        return array_merge($contracts, $tempContracts);
+        return array_merge($contracts, $tempContracts , $transRentContracts );
     }
     
     
