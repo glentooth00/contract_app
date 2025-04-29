@@ -717,18 +717,44 @@ class ContractController
 
 
 
-    public function getContractsByMSDDepartment($department)
+    // public function getContractsByMSDDepartment($department)
+    // {
+    //     $sql = "SELECT * FROM contracts 
+    //             WHERE uploader_department = 'ISD-MSD'
+    //                OR department_assigned = :department";
+
+    //     $stmt = $this->db->prepare($sql);
+    //     $stmt->bindParam(':department', $department, PDO::PARAM_STR);
+    //     $stmt->execute();
+    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // }
+
+    public function getContractsByMSDDepartment($department, $searchQuery = null)
     {
-        $sql = "SELECT * FROM contracts 
+        // Assuming you're using PDO for database connection
+        $query = "SELECT * FROM contracts 
                 WHERE uploader_department = 'ISD-MSD'
                    OR department_assigned = :department";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':department', $department, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        // If there's a search query, modify the query to include the search filter
+        if ($searchQuery) {
+            $query .= " AND contract_name LIKE :search_query";
+        }
 
+        $stmt = $this->db->prepare($query);
+
+        // Bind parameters
+        $stmt->bindParam(':department', $department);
+
+        // If there's a search query, bind it
+        if ($searchQuery) {
+            $searchTerm = "%" . $searchQuery . "%";
+            $stmt->bindParam(':search_query', $searchTerm);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 
 
 

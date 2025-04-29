@@ -1,4 +1,6 @@
 <?php
+
+use App\Controllers\ContractHistoryController;
 session_start();
 
 use App\Controllers\DepartmentController;
@@ -6,6 +8,7 @@ use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
 use App\Controllers\ContractController;
 
+require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $type = $_SESSION['TEMP_LIGHTING'];
@@ -102,49 +105,69 @@ include_once '../../../views/layouts/includes/header.php';
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly>
                 </div>
             </div>
-            <pre>
-<?php
-var_dump($getContract['rent_start']);
-var_dump($getContract['rent_end']);
-?>
-</pre>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Rent Start date:</label>
-                    <div class="d-flex">
-                        <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= isset($getContract['rent_start']) ? substr($getContract['rent_start'], 0, 10) : ''; ?>"
-                            name="contract_start" readonly>
+            <?php if ($getContract['contract_type'] == TEMP_LIGHTING) : ?>
+                <!-- Specific block for TEMP_LIGHTING contract type -->
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Contract Start date:</label>
+                        <div class="d-flex">
+                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <input type="date" id="startDate" class="form-control pl-5"
+                                value="<?= isset($getContract['contract_start']) ? substr($getContract['contract_start'], 0, 10) : ''; ?>"
+                                name="contract_start" readonly>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Rent End date:</label>
-                    <div class="d-flex">
-                        <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= isset($getContract['rent_end']) ? substr($getContract['rent_end'], 0, 10) : ''; ?>"
-                            name="contract_end" readonly>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Contract End date:</label>
+                        <div class="d-flex">
+                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <input type="date" id="endDate" class="form-control pl-5"
+                                value="<?= isset($getContract['contract_end']) ? substr($getContract['contract_end'], 0, 10) : ''; ?>"
+                                name="contract_end" readonly>
+                        </div>
                     </div>
                 </div>
-            </div>
+            <?php else : ?>
+                <!-- Block for other contract types, if needed -->
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Rent Start date:</label>
+                        <div class="d-flex">
+                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <input type="date" id="startDate" class="form-control pl-5"
+                                value="<?= isset($getContract['rent_start']) ? substr($getContract['rent_start'], 0, 10) : ''; ?>"
+                                name="contract_start" readonly>
+                                
+                        </div>
+                    </div>
+                </div>
 
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Rent End date:</label>
+                        <div class="d-flex">
+                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <input type="date" id="endDate" class="form-control pl-5"
+                                value="<?= isset($getContract['rent_end']) ? substr($getContract['rent_end'], 0, 10) : ''; ?>"
+                                name="contract_end" readonly>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
-
-
-
+                <!-- <?= $getContract['contract_type'] ?> -->
 
             <div class="row col-md-2">
 
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
-                    $start = new DateTime($getContract['rent_start']);
-                    $end = new DateTime($getContract['rent_end']);
+                    $start = new DateTime($getContract['rent_start'] ?? '');
+                    $end = new DateTime($getContract['rent_end'] ?? '');
                     $today = new DateTime();
 
                     $interval = $today->diff($end);
@@ -235,20 +258,20 @@ var_dump($getContract['rent_end']);
                     <?php
                     $dept = $_SESSION['department'];
                     ?>
-                    <?php if ($dept === 'ISD-HRAD'): ?>
-                        <?php
-                        $start = new DateTime($getContract['rent_start']);
-                        $end = new DateTime($getContract['rent_end']);
-                        $today = new DateTime();
+                    <?php if ($_SESSION['department'] === 'ISD-MSD'): ?>
 
-                        // Calculate remaining days (positive if end date is in the future)
-                        $interval = $today->diff($end);
-                        $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+                        <?php
+                            // Determine which end date to use
+                            $endDate = !empty($getContract['rent_end']) ? new DateTime($getContract['rent_end']) : new DateTime($getContract['contract_end']);
+                            $today = new DateTime();
+
+                            $remainingDays = $today->diff($endDate)->days;
+                            $isExpired = $endDate < $today;
                         ?>
 
-                        <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
+                        <?php if (!$isExpired && $remainingDays <= 3): ?>
                             <div class="d-flex gap-2">
-                                <button class="btn btn-primary" data-id="<?= $getContract['id'] ?>"
+                                <!-- <button class="btn btn-primary" data-id="<?= $getContract['id'] ?>"
                                     data-contractname="<?= $getContract['contract_name'] ?>"
                                     data-startdate="<?= $getContract['contract_start'] ?>"
                                     data-enddate="<?= $getContract['contract_end'] ?>"
@@ -256,14 +279,18 @@ var_dump($getContract['rent_end']);
                                     data-type="<?= $getContract['contract_type'] ?>" data-bs-toggle="modal"
                                     data-bs-target="#extendModal">
                                     Extend
-                                </button>
+                                </button> -->
+
                                 <form action="contracts/end_contract.php" method="post">
                                     <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
                                     <button type="submit" class="btn btn-warning">End Contract</button>
                                 </form>
                             </div>
                         <?php endif; ?>
+
                     <?php endif; ?>
+
+                    
                 </div>
             </div>
 
@@ -352,34 +379,37 @@ var_dump($getContract['rent_end']);
 
         <div>
             <div class="mt-5">
-                <h4>Employment History</h4>
+                <h4>Contract History</h4>
             </div>
             <hr class="">
             <div class="">
                 <table class="table table-stripped table-hover">
                     <thead>
                         <tr>
-                            <th style="text-align: center !important;">Status</th>
-                            <th style="text-align: center !important;">Contract File</th>
-                            <th style="text-align: center !important;">Date Start</th>
-                            <th style="text-align: center !important;">Date End</th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Contract File</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th>
                         </tr>
                     </thead>
                     <?php
                     $id = $getContract['id'];
-                    $employement_datas = (new EmploymentContractController)->getByContractId($id);
+                    $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
                     ?>
                     <tbody class="">
-                        <?php if (!empty($employement_datas)): ?>
-                            <?php foreach ($employement_datas as $employement_data): ?>
+                        <?php if (!empty($contractHist_datas)): ?>
+                            <?php foreach ($contractHist_datas as $employement_data): ?>
                                 <tr>
                                     <td style="text-align: center !important;">
-                                        <!-- <?= $employement_data['status']; ?> -->
-                                        <?php if ($employement_data['status'] === 'Active' | $employement_data['status'] === 'Expired'): ?>
-                                            <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
-                                        <?php else: ?>
-                                            <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
-                                        <?php endif; ?>
+                                        
+                                    <?php if ($employement_data['status'] == 'Active'): ?>
+                                        <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
+                                    <?php elseif ($employement_data['status'] == 'Expired'): ?>
+                                        <span class="badge bg-danger p-2">Rental Contract Ended</span>
+                                    <?php else: ?>
+                                        <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
+                                    <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">
 
@@ -437,6 +467,19 @@ var_dump($getContract['rent_end']);
                                         ?>
                                         <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
                                     </td>
+                                    <td style="text-align: center !important;">
+                                        <!-- Delete button with icon -->
+                                        <button class="btn btn-danger btn-sm" title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                        
+                                        <!-- Edit button with icon -->
+                                        <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal" data-bs-target="#editModal">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </button>
+                                    </td>
+
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>

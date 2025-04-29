@@ -1,5 +1,7 @@
 <?php
 
+use App\Controllers\ContractHistoryController;
+
 session_start();
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -17,11 +19,14 @@ $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'];
 
 $contracts = (new ContractController)->getContractsByMSDDepartment($department);
+
+
+
 // var_dump($contracts);
 
 $getDept_assigned = (new ContractController)->getDepartmentAssigned($department);
 
-$uploader = $getDept_assigned['uploader_department'];
+$uploader = $getDept_assigned['uploader_department'] ?? '';
 
 $assigned_department = $getDept_assigned['department_assigned'] ?? '';
 // Correct the line below, remove the extra '$$' before $contracts
@@ -40,7 +45,7 @@ $start = ($page - 1) * CONTRACTS_PER_PAGE;
 $contract_filter = $_GET['contract_type_filter'] ?? null;
 $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
 
-
+$contractTypes = (new ContractTypeController)->getContractTypes();
 // $contracts = (new ContractController)->getAllContractsByDept($department);
 
 // var_dump($contracts);
@@ -48,7 +53,7 @@ $search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : nul
 $totalContracts = $contractController->getTotalContracts($contract_filter, $search_query);
 $totalPages = ceil($totalContracts / CONTRACTS_PER_PAGE);
 
-$getOneLatest = (new EmploymentContractController)->insertLatestData();
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
 
 if ($getOneLatest) {
     echo "Contract data inserted successfully.";
@@ -144,23 +149,22 @@ include_once '../../../views/layouts/includes/header.php';
                     Transformer Rental Contract
                 </a>
 
-                <form method="GET" action="contracts.php">
+                <form method="GET" action="list.php">
                     <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
                         <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
-                        <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment
-                            Contract</option>
-                        <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction
-                            Contract</option>
-                        <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing
-                            Agreement</option>
-                        <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement
-                        </option>
-                        <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement
-                        </option>
+                        <?php
+                        $selectedType = $_GET['contract_type_filter'] ?? '';
+                        foreach ($contractTypes as $type) {
+                            $typeName = htmlspecialchars($type['contract_type']);
+                            $selected = ($selectedType === $typeName) ? 'selected' : '';
+                            echo "<option value=\"$typeName\" $selected>$typeName</option>";
+                        }
+                        ?>
                     </select>
                 </form>
 
-                <form method="GET" action="contracts.php" class="input-group" style="width: 250px;">
+
+                <form method="GET" action="list.php" class="input-group" style="width: 250px;">
                     <input type="text" class="form-control" name="search_query"
                         value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>"
                         placeholder="Search Contract">
@@ -168,6 +172,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <i class="fa fa-search"></i>
                     </button>
                 </form>
+
             </div>
 
 
@@ -190,36 +195,64 @@ include_once '../../../views/layouts/includes/header.php';
                         <th style="text-align: center !important;">Action</th>
                     </tr>
                 </thead>
+                <?php
+                // Assuming you have the $contracts array from your database or other source
+                $filteredContracts = $contracts;
+
+                // Check if a contract type filter is applied
+                if (!empty($_GET['contract_type_filter'])) {
+                    $filteredContracts = array_filter($contracts, function ($contract) {
+                        return $contract['contract_type'] === $_GET['contract_type_filter'];
+                    });
+                }
+                ?>
+
+                <!-- <form method="GET" action="list.php">
+                    <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
+                        <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
+                        <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment
+                            Contract</option>
+                        <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction
+                            Contract</option>
+                        <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing
+                            Agreement</option>
+                        <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement
+                        </option>
+                        <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement
+                        </option>
+                    </select>
+                </form> -->
+
                 <tbody>
-                    <?php if (!empty($contracts)): ?>
-                        <?php foreach ($contracts as $contract): ?>
+                    <?php if (!empty($filteredContracts)): ?>
+                        <?php foreach ($filteredContracts as $contract): ?>
                             <tr>
-                                <td style="text-align: center !important;"><?= htmlspecialchars($contract['contract_name']) ?>
+                                <td style="text-align: center !important;">
+                                    <?= htmlspecialchars($contract['contract_name']) ?>
                                 </td>
                                 <td style="text-align: center !important;">
-
-                                    <?php if ($contract['contract_type'] == TRANS_RENT || $contract['contract_type'] == TEMP_LIGHTING): ?>
-
-                                        <?php if ($contract['contract_type'] == TEMP_LIGHTING): ?>
-                                            <span class="p-2 text-white badge" style="background-color:#03A791;border-radius:5px;">
-                                                <?= htmlspecialchars($contract['contract_type']) ?></span>
-                                        <?php else: ?>
-                                            <span class="p-2 text-white badge" style="background-color:#003092;border-radius:5px;">
-                                                <?= htmlspecialchars($contract['contract_type']) ?></span>
-                                        <?php endif; ?>
-
-                                    <?php else: ?>
-                                        <span class="p-2 text-white badge" style="background-color:#FAB12F;border-radius:5px;">
-                                            <?= htmlspecialchars($contract['contract_type']) ?></span>
-                                    <?php endif; ?>
+                                    <?php
+                                    $contractTypeBadgeColor = "#FAB12F"; // Default color
+                                    if ($contract['contract_type'] == TRANS_RENT || $contract['contract_type'] == TEMP_LIGHTING) {
+                                        $contractTypeBadgeColor = ($contract['contract_type'] == TEMP_LIGHTING) ? "#03A791" : "#003092";
+                                    }
+                                    ?>
+                                    <span class="p-2 text-white badge"
+                                        style="background-color: <?= $contractTypeBadgeColor ?>; border-radius:5px;">
+                                        <?= htmlspecialchars($contract['contract_type']) ?>
+                                    </span>
+                                </td>
+                                <td style="text-align: center !important;">
+                                    <?= htmlspecialchars($contract['contract_status']) ?>
+                                </td>
+                                <td style="text-align: center !important;">
+                                    <?= htmlspecialchars($contract['contract_start']) ?>
+                                </td>
+                                <td>
 
                                 </td>
-                                <td style="text-align: center !important;"><?= htmlspecialchars($contract['contract_status']) ?>
-                                </td>
-                                <td style="text-align: center !important;"><?= htmlspecialchars($contract['contract_start']) ?>
-                                </td>
-                                <td style="text-align: center !important;"></td>
-                                <td style="text-align: center !important;"><?= htmlspecialchars($contract['contract_end']) ?>
+                                <td style="text-align: center !important;">
+                                    <?= htmlspecialchars($contract['contract_end']) ?>
                                 </td>
                                 <td style="text-align: center !important;">
                                     <?php if (!empty($contract['contract_file'])): ?>
@@ -237,7 +270,8 @@ include_once '../../../views/layouts/includes/header.php';
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="fileModalLabel<?= $contract['id'] ?>">
-                                                            <?= $contract['contract_name'] ?> - <?= $contract['contract_type'] ?>
+                                                            <?= $contract['contract_name'] ?> -
+                                                            <?= $contract['contract_type'] ?>
                                                         </h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
@@ -260,37 +294,30 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?php endif; ?>
                                 </td>
                                 <td style="text-align: center !important;">
-                                    <!-- <?= $contract['contract_type'] ?> -->
                                     <?php if ($contract['contract_type'] == EMP_CON): ?>
-
                                         <a href="view.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2"><i
-                                                class="fa fa-eye" aria-hidden="true"></i> VIew</a>
-
-                                        <!-- <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2">
-                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                        </a> -->
-
+                                                class="fa fa-eye" aria-hidden="true"></i>
+                                            View</a>
                                     <?php else: ?>
-
                                         <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                                            class="btn btn-success badge p-2"><i class="fa fa-eye" aria-hidden="true"></i> VIew</a>
+                                            class="btn btn-success badge p-2"><i class="fa fa-eye" aria-hidden="true"></i>
+                                            View</a>
                                         <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2">
                                             <i class="fa fa-trash" aria-hidden="true"></i> Delete
                                         </a>
-
-
                                     <?php endif; ?>
-
-
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="text-center">No contracts found.</td>
+                            <td colspan="7" class="text-center">No contracts found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
+            </table>
+
+
 
 
 
@@ -299,11 +326,26 @@ include_once '../../../views/layouts/includes/header.php';
             </table>
 
             <!-- Pagination links -->
-            <?php if ($totalContracts >= 10): ?>
+            <?php
+            // Set your pagination parameters
+            $perPage = 10; // Contracts per page
+            $totalContracts = 100; // Example, replace with actual count from the database
+            
+            // Calculate the total number of pages
+            $totalPages = ceil($totalContracts / $perPage);
+
+            // Get the current page, default to 1 if not set
+            $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+            $page = max(1, min($page, $totalPages)); // Ensure the page is within valid bounds
+            
+            ?>
+
+            <?php if ($totalContracts >= $perPage): ?>
                 <!-- Pagination links -->
                 <nav aria-label="Page navigation">
                     <ul class="pagination justify-content-center">
                         <?php
+                        // Set up the query parameters
                         $queryParams = $_GET;
                         $queryParams['page'] = 1;
                         $firstPageUrl = '?' . http_build_query($queryParams);
@@ -318,31 +360,36 @@ include_once '../../../views/layouts/includes/header.php';
                         $lastPageUrl = '?' . http_build_query($queryParams);
                         ?>
 
+                        <!-- First Page Link -->
                         <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
                             <a class="page-link" href="<?= $firstPageUrl ?>" aria-label="First">
                                 <span aria-hidden="true">&laquo;&laquo;</span>
                             </a>
                         </li>
+
+                        <!-- Previous Page Link -->
                         <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
                             <a class="page-link" href="<?= $prevPageUrl ?>" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
 
-                        <?php for ($i = 1; $i <= $totalPages; $i++):
-                            $queryParams['page'] = $i;
-                            $pageUrl = '?' . http_build_query($queryParams);
-                            ?>
+                        <!-- Page Number Links -->
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <?php $queryParams['page'] = $i; ?>
                             <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                <a class="page-link" href="<?= $pageUrl ?>"><?= $i ?></a>
+                                <a class="page-link" href="?<?= http_build_query($queryParams) ?>"><?= $i ?></a>
                             </li>
                         <?php endfor; ?>
 
+                        <!-- Next Page Link -->
                         <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
                             <a class="page-link" href="<?= $nextPageUrl ?>" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
+
+                        <!-- Last Page Link -->
                         <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
                             <a class="page-link" href="<?= $lastPageUrl ?>" aria-label="Last">
                                 <span aria-hidden="true">&raquo;&raquo;</span>
@@ -351,6 +398,7 @@ include_once '../../../views/layouts/includes/header.php';
                     </ul>
                 </nav>
             <?php endif; ?>
+
         </div>
     </div>
 </div>
