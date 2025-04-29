@@ -6,12 +6,14 @@ use App\Config\Database;
 use PDO;
 use mysqli;
 use App\Controllers\CrudController;
-class UserController {
+class UserController
+{
     private $db;
 
     private $table = "users";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = Database::connect();
     }
 
@@ -39,11 +41,12 @@ class UserController {
     //     }
     // }
 
-    public function authenticate($data){
+    public function authenticate($data)
+    {
 
         $stmt = $this->db->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
-        $stmt->bindValue(':username',$data['username'],PDO::PARAM_STR);
-        $stmt->bindValue(':password',$data['password'],PDO::PARAM_STR);
+        $stmt->bindValue(':username', $data['username'], PDO::PARAM_STR);
+        $stmt->bindValue(':password', $data['password'], PDO::PARAM_STR);
         $stmt->execute();
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -69,9 +72,10 @@ class UserController {
 
     }
 
-    public function getAllUsers(){
+    public function getAllUsers()
+    {
 
-        $sql ="SELECT * FROM users";
+        $sql = "SELECT * FROM users";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -79,18 +83,20 @@ class UserController {
     }
 
 
-    public function getUserRolebyId($id) {
+    public function getUserRolebyId($id)
+    {
         $sql = "SELECT user_role FROM users WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-    
+
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
         return $result ? $result['user_role'] : null;
     }
 
-    public function deleteUser($id){
+    public function deleteUser($id)
+    {
 
         $sql = "DELETE FROM users WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -99,24 +105,25 @@ class UserController {
 
         return;
     }
-    
-    public function storeUser($data) {
+
+    public function storeUser($data)
+    {
         // Check if the image is uploaded
         if (isset($_FILES['user_image'])) {
             $user_image = $_FILES['user_image'];
-            
+
             // Check if the file was uploaded without errors
             if ($user_image['error'] == 0) {
                 // Define the target directory
                 $uploadDir = realpath(__DIR__ . "/../../admin/user_image/");
-                
+
                 if (!$uploadDir) {
                     return "The target directory does not exist.";
                 }
 
                 // Generate a unique name for the file to prevent overwriting
                 $imageName = uniqid() . "_" . basename($user_image['name']);
-                
+
                 // Define the target file path
                 $targetFilePath = $uploadDir . DIRECTORY_SEPARATOR . $imageName;
 
@@ -132,8 +139,6 @@ class UserController {
             }
         }
 
-<<<<<<< Updated upstream
-=======
         // Hash the password before saving to the database
         // if (isset($data['password'])) {
         //     $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
@@ -141,14 +146,13 @@ class UserController {
         //     return "Password is required.";
         // }
 
->>>>>>> Stashed changes
         // Prepare SQL to insert user data (with or without image)
         $sql = "INSERT INTO $this->table (firstname, middlename, lastname, user_role, department, gender, user_image, username, password)
                 VALUES (:firstname, :middlename, :lastname, :user_role, :department, :gender, :user_image, :username, :password)";
-        
+
         // Prepare the statement
         $stmt = $this->db->prepare($sql);
-        
+
         // Bind the parameters
         $stmt->bindParam(':firstname', $data['firstname'], PDO::PARAM_STR);
         $stmt->bindParam(':middlename', $data['middlename'], PDO::PARAM_STR);
@@ -168,10 +172,11 @@ class UserController {
         }
     }
 
-    public function getUserByDept($department){
-        
+    public function getUserByDept($department)
+    {
+
         $sql = "SELECT id, department FROM users WHERE department = :department";
-        $stmt =  $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':department', $department, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -179,10 +184,11 @@ class UserController {
         return $result;
     }
 
-    public function getUserDepartmentById($id){
+    public function getUserDepartmentById($id)
+    {
 
         $sql = "SELECT department FROM users WHERE id = :id";
-        $stmt =  $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -190,17 +196,18 @@ class UserController {
         return $result;
 
     }
-    
-    public function getUserById($id){
+
+    public function getUserById($id)
+    {
 
         $sql = "SELECT * FROM users WHERE id = :id";
-        $stmt =  $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;
 
     }
-    
+
 
 }

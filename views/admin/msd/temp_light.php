@@ -1,19 +1,18 @@
 <?php
+session_start();
 
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
-session_start();
-
 use App\Controllers\ContractController;
 
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
-$department = $_SESSION['department'] ?? null;
+$type = $_SESSION['TEMP_LIGHTING'];
 
 //------------------------- GET CONTRACT NAME ---------------------------//
 
-$contract_id = $_GET['contract_id'];
+$contract_id = $_SESSION['contract_id'];
 
 $getContract = (new ContractController)->getContractbyId($contract_id);
 
@@ -23,22 +22,9 @@ $page_title = 'View Contract | ' . $getContract['contract_name'];
 
 //-----------------------------------------------------------------------//
 
-//------------------------- GET Departments ----------------------------//
-
-$departments = (new DepartmentController)->getAllDepartments();
-
-//-----------------------------------------------------------------------//
 
 include_once '../../../views/layouts/includes/header.php';
-
 ?>
-
-<!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center" style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-        <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-    <span class="sr-only">Loading...</span>
-    </div>
-</div> -->
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
@@ -53,26 +39,40 @@ include_once '../../../views/layouts/includes/header.php';
         <hr>
 
         <?php
-        $start = new DateTime($getContract['contract_start']);
-        $end = new DateTime($getContract['contract_end']);
+        // Check if the rent_start and rent_end are not null before creating DateTime objects
+        if (!empty($getContract['rent_start'])) {
+            $start = new DateTime($getContract['rent_start']);
+        } else {
+            $start = null; // Set to null if the rent_start is empty
+        }
+
+        if (!empty($getContract['rent_end'])) {
+            $end = new DateTime($getContract['rent_end']);
+        } else {
+            $end = null; // Set to null if the rent_end is empty
+        }
+
         $today = new DateTime();
 
-        $interval = $today->diff($end);
-        $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+        if ($end !== null) {
+            $interval = $today->diff($end);
+            $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
-
-        // Check if the contract is about to expire or already expired
-        if ($remainingDays > 0 && $remainingDays <= 15) {
-            echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
-                    <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                    This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
-                </span>';
-        } elseif ($remainingDays === 0) {
-            echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
-                    Contract has expired.
-                </p>';
+            // Check if the contract is about to expire or already expired
+            if ($remainingDays > 0 && $remainingDays <= 3) {
+                echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
+        </span>';
+            } elseif ($remainingDays === 0) {
+                echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
+            Contract has expired.
+        </p>';
+            }
         }
         ?>
+
+
 
         <div class="gap-1">
             <span id="close" style="float: inline-end;display:none;">
@@ -102,33 +102,49 @@ include_once '../../../views/layouts/includes/header.php';
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly>
                 </div>
             </div>
+            <pre>
+<?php
+var_dump($getContract['rent_start']);
+var_dump($getContract['rent_end']);
+?>
+</pre>
+
             <div class="row col-md-2">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Rent Start date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
                         <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+                            value="<?= isset($getContract['rent_start']) ? substr($getContract['rent_start'], 0, 10) : ''; ?>"
+                            name="contract_start" readonly>
                     </div>
                 </div>
             </div>
+
             <div class="row col-md-2">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Rent End date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
                         <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_end']; ?>" name="contract_end" readonly>
+                            value="<?= isset($getContract['rent_end']) ? substr($getContract['rent_end'], 0, 10) : ''; ?>"
+                            name="contract_end" readonly>
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
             <div class="row col-md-2">
 
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
+                    $start = new DateTime($getContract['rent_start']);
+                    $end = new DateTime($getContract['rent_end']);
                     $today = new DateTime();
 
                     $interval = $today->diff($end);
@@ -136,7 +152,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
 
-                    ?> style="font-size: 15px;">Days Remaining:</label>
+                    ?>    style="font-size: 15px;">Days Remaining:</label>
                     <div class="d-flex">
                         <input type="text" style="margin-left:7px;" class="form-control"
                             value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
@@ -221,8 +237,8 @@ include_once '../../../views/layouts/includes/header.php';
                     ?>
                     <?php if ($dept === 'ISD-HRAD'): ?>
                         <?php
-                        $start = new DateTime($getContract['contract_start']);
-                        $end = new DateTime($getContract['contract_end']);
+                        $start = new DateTime($getContract['rent_start']);
+                        $end = new DateTime($getContract['rent_end']);
                         $today = new DateTime();
 
                         // Calculate remaining days (positive if end date is in the future)
@@ -488,12 +504,7 @@ include_once '../../../views/layouts/includes/header.php';
     </script>
 <?php endif; ?>
 
-
-
-
-
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
-
 <style>
     .pageContent {
         display: flex;
