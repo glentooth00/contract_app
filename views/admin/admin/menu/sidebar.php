@@ -47,7 +47,6 @@
         
         ?>
 
-<<<<<<< Updated upstream
               <?php if ($logged_user == 'Admin'): ?>
                     <li class="nav-item">
                       <a class="nav-link" href="users.php">
@@ -55,22 +54,6 @@
                         </a>
                     </li>              
               <?php  endif; ?>
-=======
-        <?php
-        // Detect current script directory
-        $currentDir = basename(dirname($_SERVER['PHP_SELF']));
-        $usersLink = ($currentDir == 'IT') ? 'users.php' : 'IT/users.php';
-        ?>
-
-        <?php if ($logged_user == 'Admin'): ?>
-          <li class="nav-item">
-            <a class="nav-link" href="<?php echo $usersLink; ?>">
-              <i class="fa fa-users p-2" aria-hidden="true"></i>Users
-            </a>
-          </li>
-        <?php endif; ?>
->>>>>>> Stashed changes
-
 
         <?php
           } else {

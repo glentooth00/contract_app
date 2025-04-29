@@ -16,7 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'password' => $_POST['password'],
     ]);
 
+<<<<<<< Updated upstream
     $test =  $_SESSION['data'];
+=======
+    $test = $_SESSION['data'];
+>>>>>>> Stashed changes
 
 
     $username = $_POST['username'];
@@ -32,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['is_logged_in'];
 
 
+<<<<<<< Updated upstream
                 $get_id = $_SESSION['data'];
 
                 $_SESSION['id'] = $get_id['id'] ?? null;
@@ -55,6 +60,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
                 // header('location:views/admin/dashboard.php?');
+=======
+            $get_id = $_SESSION['data'];
+
+            $_SESSION['id'] = $get_id['id'] ?? null;
+
+            $department = $_SESSION['data'];
+
+            switch ($department['department']) {
+
+                case "IT":
+                    header("location:views/admin/IT/index.php");
+                    break;
+
+                case "ISD-HRAD":
+                    header("location:views/admin/hrad/index.php");
+                    break;
+
+                case "ISD-MSD":
+                    header("location:views/admin/msd/index.php");
+                    break;
+            }
+
+
+            // header('location:views/admin/dashboard.php?');s
+>>>>>>> Stashed changes
 
 
         } else {

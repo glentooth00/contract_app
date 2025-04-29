@@ -10,16 +10,15 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
 ?>
 <!-- ISD-MSD MODAL -->
-<div class="modal fade" id="<?= $department ?>Modal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="transformerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Temporary Lighting Contract</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Transformer Rental Contract</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="contracts/rentals.php" method="post" enctype="multipart/form-data">
+                <form action="contracts/trans_rent.php" method="post" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-12 p-2">
                             <!-- <div class="mb-3 col-md-5">
@@ -64,11 +63,13 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                             <!-- Temporary Lighting Contract Form -->
                             <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12">
                                 <input type="hidden" class="form-control" name="contract_type"
-                                    value="<?= TEMP_LIGHTING ?>" readonly>
+                                    value="<?= TRANS_RENT ?>" readonly>
                                 <div class="col-md-12 d-block gap-2">
                                     <div class="col-md-12 d-flex gap-2 row">
                                         <div class="col-md-5 p-2">
                                             <div>
+                                                <input type="hidden" class="form-control" name="uploader_department"
+                                                    value="<?= $department ?>" required>
                                                 <lable class="badge text-muted">Contract Name</lable>
                                                 <input type="text" class="form-control" name="contract_name" required>
                                             </div>
@@ -76,9 +77,15 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         <div class="col-md-5 p-2">
                                             <div>
                                                 <lable class="badge text-muted">TC No.</lable>
-                                                <input type="text" class="form-control" name="TC_no" required>
+                                                <input type="text" class="form-control" name="tc_no" required>
                                             </div>
                                         </div>
+                                        <!-- <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Contract</lable>
+                                                <input type="text" class="form-control" name="TC_no" required>
+                                            </div>
+                                        </div> -->
                                         <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
@@ -100,26 +107,27 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                                         <div class="col-md-5 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Date Start</lable>
+                                                <lable class="badge text-muted">Rent Start</lable>
                                                 <div class="d-flex">
                                                     <i class="fa fa-calendar p-2" style="font-size: 20px;"
                                                         aria-hidden="true"></i>
-                                                    <input type="date" id="date_start" class="form-control"
-                                                        name="contract_start" required>
+                                                    <input type="date" id="rent_start" class="form-control"
+                                                        name="rent_start" required>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-5 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Date End</lable>
+                                                <lable class="badge text-muted">Rent End</lable>
                                                 <div class="d-flex">
                                                     <i class="fa fa-calendar p-2" style="font-size: 20px;"
                                                         aria-hidden="true"></i>
-                                                    <input type="date" id="date_end" class="form-control"
-                                                        name="contract_end" required>
+                                                    <input type="date" id="rent_end" class="form-control"
+                                                        name="rent_end" required>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
@@ -129,13 +137,13 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                     </div> -->
                                     </div>
                                     <div class="col-md-12 d-flex gap-4 row">
-                                        <div class="col-md-5 p-2">
+                                        <!-- <div class="col-md-5 p-2">
                                             <div>
                                                 <lable class="badge text-muted">Party of Second Part</lable>
                                                 <input type="text" class="form-control" name="party_of_second_part"
                                                     required>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-md-5 p-2">
                                             <div>
                                                 <lable class="badge text-muted">Contract file</lable>
@@ -204,7 +212,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
         contractSelect.addEventListener("change", toggleFormSection);
     });
 
-    document.getElementById('date_start').addEventListener('change', function () {
+    document.getElementById('rent_start').addEventListener('change', function () {
         const startDate = new Date(this.value);
         if (!isNaN(startDate)) {
             startDate.setDate(startDate.getDate() + 90);
@@ -212,7 +220,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
             const month = String(startDate.getMonth() + 1).padStart(2, '0');
             const day = String(startDate.getDate()).padStart(2, '0');
             const formattedDate = `${year}-${month}-${day}`;
-            document.getElementById('date_end').value = formattedDate;
+            document.getElementById('rent_end').value = formattedDate;
         }
     });
 </script>

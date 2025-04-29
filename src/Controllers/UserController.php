@@ -132,6 +132,16 @@ class UserController {
             }
         }
 
+<<<<<<< Updated upstream
+=======
+        // Hash the password before saving to the database
+        // if (isset($data['password'])) {
+        //     $data['password'] = password_hash($data['password'], PASSWORD_BCRYPT);
+        // } else {
+        //     return "Password is required.";
+        // }
+
+>>>>>>> Stashed changes
         // Prepare SQL to insert user data (with or without image)
         $sql = "INSERT INTO $this->table (firstname, middlename, lastname, user_role, department, gender, user_image, username, password)
                 VALUES (:firstname, :middlename, :lastname, :user_role, :department, :gender, :user_image, :username, :password)";
