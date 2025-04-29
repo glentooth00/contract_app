@@ -11,7 +11,7 @@ use App\Controllers\ContractController;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
-$type = $_SESSION['TEMP_LIGHTING'];
+// $type = $_SESSION['TEMP_LIGHTING'];
 
 //------------------------- GET CONTRACT NAME ---------------------------//
 
@@ -267,6 +267,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                             $remainingDays = $today->diff($endDate)->days;
                             $isExpired = $endDate < $today;
+
                         ?>
 
                         <?php if (!$isExpired && $remainingDays <= 3): ?>

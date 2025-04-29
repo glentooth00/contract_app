@@ -731,30 +731,31 @@ class ContractController
 
     public function getContractsByMSDDepartment($department, $searchQuery = null)
     {
-        // Assuming you're using PDO for database connection
+        // Base query with proper grouping of OR and AND
         $query = "SELECT * FROM contracts 
-                WHERE uploader_department = 'ISD-MSD'
-                   OR department_assigned = :department";
+                  WHERE (uploader_department = 'ISD-MSD' OR department_assigned = :department)";
 
-        // If there's a search query, modify the query to include the search filter
+        // If there's a search query, add filter for contract_name
         if ($searchQuery) {
             $query .= " AND contract_name LIKE :search_query";
         }
 
         $stmt = $this->db->prepare($query);
 
-        // Bind parameters
+        // Bind department
         $stmt->bindParam(':department', $department);
 
-        // If there's a search query, bind it
+        // Bind search term if provided
         if ($searchQuery) {
-            $searchTerm = "%" . $searchQuery . "%";
+            $searchTerm = '%' . $searchQuery . '%';
             $stmt->bindParam(':search_query', $searchTerm);
         }
 
         $stmt->execute();
+
         return $stmt->fetchAll();
     }
+
 
 
 

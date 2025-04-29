@@ -17,8 +17,10 @@ $department = $_SESSION['department'] ?? null;
 
 
 $userid = $_SESSION['id'];
+$searchQuery = isset($_GET['search_query']) ? trim($_GET['search_query']) : '';
 
-$contracts = (new ContractController)->getContractsByMSDDepartment($department);
+
+$contracts = (new ContractController)->getContractsByMSDDepartment($department, $searchQuery);
 
 
 
@@ -206,22 +208,6 @@ include_once '../../../views/layouts/includes/header.php';
                     });
                 }
                 ?>
-
-                <!-- <form method="GET" action="list.php">
-                    <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
-                        <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
-                        <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment
-                            Contract</option>
-                        <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction
-                            Contract</option>
-                        <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing
-                            Agreement</option>
-                        <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement
-                        </option>
-                        <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement
-                        </option>
-                    </select>
-                </form> -->
 
                 <tbody>
                     <?php if (!empty($filteredContracts)): ?>
