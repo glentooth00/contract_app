@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ContractController;
 use App\Controllers\ContractHistoryController;
 use App\Controllers\EmploymentContractController;
 
@@ -19,6 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $updateExpiredEmploymentContract = (new ContractHistoryController)->udpateExpiredRentalContract($updateData);
 
     if ($updateExpiredEmploymentContract) {
+
+        echo $id = $updateData['id'];
+
+        $setExpire = (new ContractController)->setExpired($id);
 
         $_SESSION['notification'] = [
             'message' => 'Employment contract ended!',
