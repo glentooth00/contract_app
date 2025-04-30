@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use App\Controllers\ContractTypeController;
 use App\Controllers\DepartmentController;
@@ -10,74 +10,76 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
 ?>
 <!-- ISD-MSD MODAL -->
-<div class="modal fade" id="<?= $department ?>Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="<?= $department ?>Modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">ISD-MSD Contracts</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="contracts/rentals.php" method="post" enctype="multipart/form-data">
-                <div class="col-md-12 d-flex gap-2 p-3">
-                    <div class="col-md-12 p-2">
-                        <div class="mb-3 col-md-5">
-                            <label class="badge text-muted">Contract type</label>
-                            <select name="contract_type" class="form-select" id="contract_type">
-                                <?php 
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Temporary Lighting Contract</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="contracts/rentals.php" method="post" enctype="multipart/form-data">
+                    <div class="col-md-12 d-flex gap-2 p-3">
+                        <div class="col-md-12 p-2">
+                            <!-- <div class="mb-3 col-md-5">
+                                <label class="badge text-muted">Contract type</label>
+                                <select name="contract_type" class="form-select" id="contract_type">
+                                    <?php
                                     $contract_types = (new ContractTypeController)->getContractTypes();
-                                ?>
-                                <?php if($department == 'ISD-MSD'): ?>
-                                    <option hidden>Select Contract type</option>
-                                    <?php foreach($contract_types as $contract_type): ?>
-                                        <?php if(in_array($contract_type['contract_type'], ['Transformer Rental', 'Temporary Lighting Contract'])): ?>
-                                            
-                                            <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
-                                        <?php endif; ?>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <option disabled>No contract available</option>
-                                <?php endif; ?>
-                            </select>
-                        </div>
-                       
-                        <!-- Transformer Rental Form -->
-                        <div id="form-transformer-rental" class="contract-form-section" style="display:none;">
-                        <hr>
-                        <input type="hidden" class="form-control" name="contract_type" value="<?= TRANS_RENT ?>" readonly>
-                           <div class="col-md-12 d-flex p-2 row">
-                                <div class="col-md-3">
-                                    <label class="badge text-muted" for="">Date of Contract Creation</label>
-                                </div>
-                           </div>
+                                    ?>
+                                    <?php if ($department == 'ISD-MSD'): ?>
+                                        <option hidden>Select Contract type</option>
+                                        <?php foreach ($contract_types as $contract_type): ?>
+                                            <?php if (in_array($contract_type['contract_type'], ['Transformer Rental', 'Temporary Lighting Contract'])): ?>
+
+                                                <option value="<?= $contract_type['contract_type'] ?>">
+                                                    <?= $contract_type['contract_type'] ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <option disabled>No contract available</option>
+                                    <?php endif; ?>
+                                </select>
+                            </div> -->
+
+                            <!-- Transformer Rental Form -->
+                            <!-- <div id="form-transformer-rental" class="contract-form-section" style="display:none;">
+                                <hr>
+                                <input type="hidden" class="form-control" name="contract_type" value="<?= TRANS_RENT ?>"
+                                    readonly>
+                                <div class="col-md-12 d-flex p-2 row">
+                                    <div class="col-md-3">
+                                        <label class="badge text-muted" for="">Date of Contract Creation</label>
+                                    </div>
+                                </div> -->
                             <!-- Add your form inputs here -->
-                        </div>
+                            <!-- </div> -->
 
 
-<!----------------------------------------------------  DIVISION BETWEEM CONTRACTS ------------------------------------------------------------------------------->
+                            <!----------------------------------------------------  DIVISION BETWEEM CONTRACTS ------------------------------------------------------------------------------->
 
 
-                        <!-- Temporary Lighting Contract Form -->
-                        <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12" style="display:none;">
-                            <hr>
-                            
-                            
-                            <input type="hidden" class="form-control" name="contract_type" value="<?= TEMP_LIGHTING ?>" readonly>
-                            <div class="col-md-12 d-block gap-2">
-                                <div class="col-md-12 d-flex gap-2 row">
-                                    <div class="col-md-5 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Contract Name</lable>
-                                            <input type="text" class="form-control" name="contract_name"  required>
+                            <!-- Temporary Lighting Contract Form -->
+                            <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12">
+                                <input type="hidden" class="form-control" name="contract_type"
+                                    value="<?= TEMP_LIGHTING ?>" readonly>
+                                <div class="col-md-12 d-block gap-2">
+                                    <div class="col-md-12 d-flex gap-2 row">
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Contract Name</lable>
+                                                <input type="text" class="form-control" name="contract_name" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-5 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">TC No.</lable>
-                                            <input type="text" class="form-control" name="TC_no"  required>
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">TC No.</lable>
+                                                <input type="text" class="form-control" name="TC_no" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- <div class="col-md-4 p-2">
+                                        <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
                                             <div class="d-flex">
@@ -86,85 +88,95 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                             </div>
                                         </div>
                                     </div> -->
-                                    <!-- <div class="col-md-4 p-2">
+                                        <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
                                             <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
                                             <input type="date" id="date_end" class="form-control" name="contract_end" required>
                                         </div>
                                     </div> -->
-                                </div>
-                                <div class="col-md-12 d-flex gap-2 row">
-                                   
-                                    <div class="col-md-5 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date Start</lable>
-                                            <div class="d-flex">
-                                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                                <input type="date" id="date_start" class="form-control" name="contract_start" required>
+                                    </div>
+                                    <div class="col-md-12 d-flex gap-2 row">
+
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Date Start</lable>
+                                                <div class="d-flex">
+                                                    <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                        aria-hidden="true"></i>
+                                                    <input type="date" id="date_start" class="form-control"
+                                                        name="contract_start" required>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-5 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <div class="d-flex">
-                                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                                <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Date End</lable>
+                                                <div class="d-flex">
+                                                    <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                        aria-hidden="true"></i>
+                                                    <input type="date" id="date_end" class="form-control"
+                                                        name="contract_end" required>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <!-- <div class="col-md-4 p-2">
+                                        <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
                                             <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
                                             <input type="date" id="date_end" class="form-control" name="contract_end" required>
                                         </div>
                                     </div> -->
-                                </div>
-                                <div class="col-md-12 d-flex gap-4 row">
-                                    <div class="col-md-5 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Party of Second Party</lable>
-                                            <input type="text" class="form-control" name="party_of_second_part"  required>
-                                        </div>
                                     </div>
-                                    <div class="col-md-5 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Contract file</lable>
-                                            <input type="file" class="form-control" name="contract_file" style="width: 16.7em;"  required>
+                                    <div class="col-md-12 d-flex gap-4 row">
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Party of Second Part</lable>
+                                                <input type="text" class="form-control" name="party_of_second_part"
+                                                    required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-4 p-2">
-                                        <div>
-                                            <?php 
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Contract file</lable>
+                                                <input type="file" class="form-control" name="contract_file"
+                                                    style="width: 16.7em;" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 p-2">
+                                            <div>
+                                                <?php
                                                 $userid;
-                                                $getUser = ( new UserController )->getUserById($userid);
+                                                $getUser = (new UserController)->getUserById($userid);
 
                                                 // var_dump($getUser['firstname']);
-                                            ?>
-                                            <input type="hidden" id="date_start" class="form-control" name="uploader_id" value="<?=  $userid ?>" >
-                                            <input type="hidden" id="date_start" class="form-control" name="uploader" value="<?=  $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>" >
-                                            <input type="hidden" id="date_start" class="form-control" name="uploader_dept" value="<?= $department ?>" required>
+                                                ?>
+                                                <input type="hidden" id="date_start" class="form-control"
+                                                    name="uploader_id" value="<?= $userid ?>">
+                                                <input type="hidden" id="date_start" class="form-control"
+                                                    name="uploader"
+                                                    value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
+                                                <input type="hidden" id="date_start" class="form-control"
+                                                    name="uploader_dept" value="<?= $department ?>" required>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <!-- <div class="col-md-4 p-2">
+                                        <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
                                             <input type="date" id="date_end" class="form-control" name="contract_end" required>
                                         </div>
                                     </div> -->
+                                    </div>
+
                                 </div>
-                                
                             </div>
                         </div>
                     </div>
-                </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save Contract</button>
-        </div>
-        </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save Contract</button>
+            </div>
+            </form>
         </div>
     </div>
 </div>

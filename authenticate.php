@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'password' => $_POST['password'],
     ]);
 
-    $test =  $_SESSION['data'];
+    $test = $_SESSION['data'];
 
 
     $username = $_POST['username'];
@@ -32,29 +32,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['is_logged_in'];
 
 
-                $get_id = $_SESSION['data'];
+            $get_id = $_SESSION['data'];
 
-                $_SESSION['id'] = $get_id['id'] ?? null;
+            $_SESSION['id'] = $get_id['id'] ?? null;
 
-                $department = $_SESSION['data'];
+            $department = $_SESSION['data'];
 
-                switch ( $department['department'] ) {
-                    
-                    case "IT":
-                        header("location:views/admin/IT/index.php");
-                            break;
-                    
-                    case "ISD-HRAD":
-                        header("location:views/admin/hrad/index.php");
-                            break;
-                    
-                    case "ISD-MSD":
-                        header("location:views/admin/msd/index.php");
-                            break;
-                }
+            switch ($department['department']) {
+
+                case "IT":
+                    header("location:views/admin/IT/index.php");
+                    break;
+
+                case "ISD-HRAD":
+                    header("location:views/admin/hrad/index.php");
+                    break;
+
+                case "ISD-MSD":
+                    header("location:views/admin/msd/index.php");
+                    break;
+            }
 
 
-                // header('location:views/admin/dashboard.php?');
+            // header('location:views/admin/dashboard.php?');s
 
 
         } else {

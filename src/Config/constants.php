@@ -6,7 +6,7 @@ define('TRANS_RENT', 'Transformer Rental Contract');
 define('EMP_CON', 'Employment Contract');
 
 //Departments
-define('IT','IT');
+define('IT', 'IT');
 define('ISD-HRAD', 'ISD-HRAD');
 define('CITETD', 'CITETD');
 define('BAC', 'BAC');
