@@ -41,6 +41,21 @@ include_once '../../../views/layouts/includes/header.php';
             <?= $contract_data ?></h2>
         <hr>
 
+        <?php if ( $getContract['contract_status'] == 'Expired' ) : ?>
+
+            <div class="alert alert-danger text-center" role="alert">
+            <span class="display-4 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                </svg>
+                Contract has expired...</span>
+        </div>
+        
+        <?php endif; ?>
+        
+
+
         <?php
         // Check if the rent_start and rent_end are not null before creating DateTime objects
         if (!empty($getContract['rent_start'])) {
@@ -62,16 +77,20 @@ include_once '../../../views/layouts/includes/header.php';
             $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
             // Check if the contract is about to expire or already expired
-            if ($remainingDays > 0 && $remainingDays <= 3) {
-                echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
-            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-            This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
-        </span>';
-            } elseif ($remainingDays === 0) {
-                echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
-            Contract has expired.
-        </p>';
+            if ($getContract['contract_status'] !== 'Expired') {
+                if ($remainingDays > 0 && $remainingDays <= 3) {
+                    echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
+                        </span>';
+                } elseif ($remainingDays === 0) {
+                    echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+                            This contract has expired.
+                        </span>';
+                }
             }
+            
         }
         ?>
 
@@ -131,6 +150,34 @@ include_once '../../../views/layouts/includes/header.php';
                         </div>
                     </div>
                 </div>
+                <?php elseif( $getContract['contract_type'] == TRANS_RENT ) : ?>
+
+                    <!-- Block for other contract types, if needed -->
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Rent Start date:</label>
+                        <div class="d-flex">
+                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <input type="date" id="startDate" class="form-control pl-5"
+                                value="<?= isset($getContract['rent_start']) ? substr($getContract['rent_start'], 0, 10) : ''; ?>"
+                                name="contract_start" readonly>
+                                
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Rent End date:</label>
+                        <div class="d-flex">
+                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <input type="date" id="endDate" class="form-control pl-5"
+                                value="<?= isset($getContract['rent_end']) ? substr($getContract['rent_end'], 0, 10) : ''; ?>"
+                                name="contract_end" readonly>
+                        </div>
+                    </div>
+                </div>
+
             <?php else : ?>
                 <!-- Block for other contract types, if needed -->
                 <div class="row col-md-2">
@@ -196,6 +243,8 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
 
             <div class="row col-md-3">
+
+            <?php if ($getContract['department_assigned'] ) : ?>
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
                     <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
@@ -208,6 +257,10 @@ include_once '../../../views/layouts/includes/header.php';
                     </select>
                     <!-- <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned']; ?>"  name="department_assigned" readonly> -->
                 </div>
+            <?php endif; ?>
+
+                
+
             </div>
             <div class="row col-md-2">
                 <div class="mt-3">
@@ -269,8 +322,7 @@ include_once '../../../views/layouts/includes/header.php';
                             $isExpired = $endDate < $today;
 
                         ?>
-
-                        <?php if (!$isExpired && $remainingDays <= 3): ?>
+                        <?php if (!$isExpired && $remainingDays <= 3 && $getContract['contract_status'] === 'Active'): ?>
                             <div class="d-flex gap-2">
                                 <!-- <button class="btn btn-primary" data-id="<?= $getContract['id'] ?>"
                                     data-contractname="<?= $getContract['contract_name'] ?>"

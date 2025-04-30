@@ -729,32 +729,85 @@ class ContractController
     //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
     // }
 
-    public function getContractsByMSDDepartment($department, $searchQuery = null)
+    public function getContractsByMSDDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
     {
-        // Base query with proper grouping of OR and AND
-        $query = "SELECT * FROM contracts 
-                  WHERE (uploader_department = 'ISD-MSD' OR department_assigned = :department)";
+        $offset = ($currentPage - 1) * $perPage;
 
-        // If there's a search query, add filter for contract_name
+        $query = "SELECT * FROM contracts 
+              WHERE (uploader_department = 'ISD-MSD' OR department_assigned = :department)";
+
         if ($searchQuery) {
             $query .= " AND contract_name LIKE :search_query";
         }
 
-        $stmt = $this->db->prepare($query);
+        if ($contractTypeFilter) {
+            $query .= " AND contract_type = :contract_type";
+        }
 
-        // Bind department
+        $query .= " ORDER BY contract_name
+                OFFSET :offset ROWS
+                FETCH NEXT :perPage ROWS ONLY";
+
+        $stmt = $this->db->prepare($query);
         $stmt->bindParam(':department', $department);
 
-        // Bind search term if provided
         if ($searchQuery) {
             $searchTerm = '%' . $searchQuery . '%';
             $stmt->bindParam(':search_query', $searchTerm);
         }
 
-        $stmt->execute();
+        if ($contractTypeFilter) {
+            $stmt->bindParam(':contract_type', $contractTypeFilter);
+        }
 
+        $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+
+        $stmt->execute();
         return $stmt->fetchAll();
     }
+
+
+    public function getTotalContractsCount($department, $searchQuery = null, $contractTypeFilter = null)
+    {
+        $query = "SELECT COUNT(*) FROM contracts 
+              WHERE (uploader_department = 'ISD-MSD' OR department_assigned = :department)";
+
+        if ($searchQuery) {
+            $query .= " AND contract_name LIKE :search_query";
+        }
+
+        if ($contractTypeFilter) {
+            $query .= " AND contract_type = :contract_type";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':department', $department);
+
+        if ($searchQuery) {
+            $searchTerm = '%' . $searchQuery . '%';
+            $stmt->bindParam(':search_query', $searchTerm);
+        }
+
+        if ($contractTypeFilter) {
+            $stmt->bindParam(':contract_type', $contractTypeFilter);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+    public function setExpired($id)
+    {
+        $sql = "UPDATE contracts SET contract_status = 'Expired' WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        return;
+    }
+
+
 
 
 

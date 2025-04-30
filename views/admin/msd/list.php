@@ -17,15 +17,33 @@ $department = $_SESSION['department'] ?? null;
 
 
 $userid = $_SESSION['id'];
-$searchQuery = isset($_GET['search_query']) ? trim($_GET['search_query']) : '';
 
 
-$contracts = (new ContractController)->getContractsByMSDDepartment($department, $searchQuery);
+//------------------------------------- for pagination ------------------------------------------------//
+// Get GET parameters
+$searchQuery = $_GET['search_query'] ?? '';
+$contractTypeFilter = $_GET['contract_type_filter'] ?? '';
+$currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+$perPage = 10; // Number of items per page
+
+// Parameters for pagination
+$department = 'ISD-MSD'; // Example department
+
+// Get the contracts for the current page
+$contracts = (new ContractController)->getContractsByMSDDepartment($department, $searchQuery, $perPage, $currentPage, $contractTypeFilter);
+$totalContracts = (new ContractController)->getTotalContractsCount($department, $searchQuery, $contractTypeFilter);
 
 
+//------------------------------------- for pagination ------------------------------------------------//
 
-// var_dump($contracts);
 
+//------------------------Filtering--------------------------------------------//
+if (!empty($contractTypeFilter)) {
+    $contracts = array_filter($contracts, function ($contract) use ($contractTypeFilter) {
+        return $contract['contract_type'] === $contractTypeFilter;
+    });
+}
+//------------------------Filtering--------------------------------------------//
 $getDept_assigned = (new ContractController)->getDepartmentAssigned($department);
 
 $uploader = $getDept_assigned['uploader_department'] ?? '';
@@ -58,7 +76,7 @@ $totalPages = ceil($totalContracts / CONTRACTS_PER_PAGE);
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 
 if ($getOneLatest) {
-    echo "Contract data inserted successfully.";
+    // echo "Contract data inserted successfully.";
 } else {
     // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
@@ -187,83 +205,65 @@ include_once '../../../views/layouts/includes/header.php';
             <table class="table table-striped table-hover border p-3">
                 <thead>
                     <tr>
-                        <th style="text-align: center !important;">Contract Name</th>
-                        <th style="text-align: center !important;">Type</th>
-                        <th style="text-align: center !important;">Status</th>
-                        <th style="text-align: center !important;">Start</th>
-                        <th style="text-align: center !important;"></th>
-                        <th style="text-align: center !important;">End</th>
-                        <th style="text-align: center !important;">File</th>
-                        <th style="text-align: center !important;">Action</th>
+                        <th style="text-align: center;">Contract Name</th>
+                        <th style="text-align: center;">Type</th>
+                        <th style="text-align: center;">Status</th>
+                        <th style="text-align: center;">Start</th>
+                        <th></th>
+                        <th style="text-align: center;">End</th>
+                        <th style="text-align: center;">File</th>
+                        <th style="text-align: center;">Action</th>
                     </tr>
                 </thead>
-                <?php
-                // Assuming you have the $contracts array from your database or other source
-                $filteredContracts = $contracts;
-
-                // Check if a contract type filter is applied
-                if (!empty($_GET['contract_type_filter'])) {
-                    $filteredContracts = array_filter($contracts, function ($contract) {
-                        return $contract['contract_type'] === $_GET['contract_type_filter'];
-                    });
-                }
-                ?>
-
                 <tbody>
-                    <?php if (!empty($filteredContracts)): ?>
-                        <?php foreach ($filteredContracts as $contract): ?>
+                    <?php if (!empty($contracts)): ?>
+                        <?php foreach ($contracts as $contract): ?>
                             <tr>
-                                <td style="text-align: center !important;">
-                                    <?= htmlspecialchars($contract['contract_name']) ?>
-                                </td>
-                                <td style="text-align: center !important;">
+                                <td style="text-align: center;"><?= htmlspecialchars($contract['contract_name']) ?></td>
+                                <td style="text-align: center;">
                                     <?php
-                                    $contractTypeBadgeColor = "#FAB12F"; // Default color
+                                    $badgeColor = "#FAB12F";
                                     if ($contract['contract_type'] == TRANS_RENT || $contract['contract_type'] == TEMP_LIGHTING) {
-                                        $contractTypeBadgeColor = ($contract['contract_type'] == TEMP_LIGHTING) ? "#03A791" : "#003092";
+                                        $badgeColor = ($contract['contract_type'] == TEMP_LIGHTING) ? "#03A791" : "#003092";
                                     }
                                     ?>
                                     <span class="p-2 text-white badge"
-                                        style="background-color: <?= $contractTypeBadgeColor ?>; border-radius:5px;">
+                                        style="background-color: <?= $badgeColor ?>; border-radius:5px;">
                                         <?= htmlspecialchars($contract['contract_type']) ?>
                                     </span>
                                 </td>
-                                <td style="text-align: center !important;">
-                                    <?= htmlspecialchars($contract['contract_status']) ?>
-                                </td>
-                                <td style="text-align: center !important;">
-                                    <?= htmlspecialchars($contract['contract_start']) ?>
-                                </td>
-                                <td>
+                                <td style="text-align: center;">
+
+                                    <?php if ($contract['contract_status'] == 'Active'): ?>
+                                        <span class="badge text-white bg-success">
+                                            <?= htmlspecialchars($contract['contract_status']) ?></span>
+                                    <?php else: ?>
+                                        <span class="badge text-white  bg-danger">
+                                            <?= htmlspecialchars($contract['contract_status']) ?></span>
+                                    <?php endif; ?>
 
                                 </td>
-                                <td style="text-align: center !important;">
-                                    <?= htmlspecialchars($contract['contract_end']) ?>
-                                </td>
-                                <td style="text-align: center !important;">
+                                <td style="text-align: center;"><?= htmlspecialchars($contract['contract_start']) ?></td>
+                                <td></td>
+                                <td style="text-align: center;"><?= htmlspecialchars($contract['contract_end']) ?></td>
+                                <td style="text-align: center;">
                                     <?php if (!empty($contract['contract_file'])): ?>
-                                        <!-- Trigger the modal with this button -->
                                         <button class="btn btn-primary badge p-2" data-bs-toggle="modal"
-                                            data-bs-target="#fileModal<?= $contract['id'] ?>"
-                                            style="text-align: center !important;">
-                                            View file
-                                        </button>
-
-                                        <!-- Modal -->
+                                            data-bs-target="#fileModal<?= $contract['id'] ?>">View file</button>
+                                        <!-- File Modal -->
                                         <div class="modal fade" id="fileModal<?= $contract['id'] ?>" tabindex="-1"
                                             aria-labelledby="fileModalLabel<?= $contract['id'] ?>" aria-hidden="true">
                                             <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="fileModalLabel<?= $contract['id'] ?>">
-                                                            <?= $contract['contract_name'] ?> -
-                                                            <?= $contract['contract_type'] ?>
+                                                            <?= htmlspecialchars($contract['contract_name']) ?> -
+                                                            <?= htmlspecialchars($contract['contract_type']) ?>
                                                         </h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body" style="padding: 0; overflow-y: auto;">
-                                                        <!-- Display the contract file inside the modal -->
                                                         <iframe
                                                             src="<?= htmlspecialchars("../../../" . $contract['contract_file']) ?>"
                                                             width="100%" style="height: 80vh;" frameborder="0"></iframe>
@@ -279,108 +279,59 @@ include_once '../../../views/layouts/includes/header.php';
                                         No file
                                     <?php endif; ?>
                                 </td>
-                                <td style="text-align: center !important;">
+                                <td style="text-align: center;">
                                     <?php if ($contract['contract_type'] == EMP_CON): ?>
                                         <a href="view.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2"><i
-                                                class="fa fa-eye" aria-hidden="true"></i>
-                                            View</a>
+                                                class="fa fa-eye" aria-hidden="true"></i> View</a>
                                     <?php else: ?>
                                         <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                                            class="btn btn-success badge p-2"><i class="fa fa-eye" aria-hidden="true"></i>
-                                            View</a>
-                                        <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2">
-                                            <i class="fa fa-trash" aria-hidden="true"></i> Delete
-                                        </a>
+                                            class="btn btn-success badge p-2"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
+                                        <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2"><i
+                                                class="fa fa-trash" aria-hidden="true"></i> Delete</a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="text-center">No contracts found.</td>
+                            <td colspan="8" class="text-center">No contracts found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
 
-
-
-
-
-
-
-            </table>
-
-            <!-- Pagination links -->
             <?php
-            // Set your pagination parameters
-            $perPage = 10; // Contracts per page
-            $totalContracts = 100; // Example, replace with actual count from the database
-            
-            // Calculate the total number of pages
             $totalPages = ceil($totalContracts / $perPage);
-
-            // Get the current page, default to 1 if not set
-            $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-            $page = max(1, min($page, $totalPages)); // Ensure the page is within valid bounds
-            
+            $baseUrl = strtok($_SERVER["REQUEST_URI"], '?'); // Get current page without query
+            $queryParams = $_GET;
             ?>
 
-            <?php if ($totalContracts >= $perPage): ?>
-                <!-- Pagination links -->
+            <?php if ($totalPages > 1): ?>
                 <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <?php
-                        // Set up the query parameters
-                        $queryParams = $_GET;
-                        $queryParams['page'] = 1;
-                        $firstPageUrl = '?' . http_build_query($queryParams);
+                    <ul class="pagination justify-content-center mt-3">
+                        <!-- Previous button -->
+                        <?php if ($currentPage > 1): ?>
+                            <?php $queryParams['page'] = $currentPage - 1; ?>
+                            <li class="page-item">
+                                <a class="page-link" href="<?= $baseUrl . '?' . http_build_query($queryParams) ?>">Previous</a>
+                            </li>
+                        <?php endif; ?>
 
-                        $queryParams['page'] = $page - 1;
-                        $prevPageUrl = '?' . http_build_query($queryParams);
-
-                        $queryParams['page'] = $page + 1;
-                        $nextPageUrl = '?' . http_build_query($queryParams);
-
-                        $queryParams['page'] = $totalPages;
-                        $lastPageUrl = '?' . http_build_query($queryParams);
-                        ?>
-
-                        <!-- First Page Link -->
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $firstPageUrl ?>" aria-label="First">
-                                <span aria-hidden="true">&laquo;&laquo;</span>
-                            </a>
-                        </li>
-
-                        <!-- Previous Page Link -->
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $prevPageUrl ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-
-                        <!-- Page Number Links -->
+                        <!-- Page numbers -->
                         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                             <?php $queryParams['page'] = $i; ?>
-                            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                <a class="page-link" href="?<?= http_build_query($queryParams) ?>"><?= $i ?></a>
+                            <li class="page-item <?= $i == $currentPage ? 'active' : '' ?>">
+                                <a class="page-link" href="<?= $baseUrl . '?' . http_build_query($queryParams) ?>"><?= $i ?></a>
                             </li>
                         <?php endfor; ?>
 
-                        <!-- Next Page Link -->
-                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $nextPageUrl ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-
-                        <!-- Last Page Link -->
-                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $lastPageUrl ?>" aria-label="Last">
-                                <span aria-hidden="true">&raquo;&raquo;</span>
-                            </a>
-                        </li>
+                        <!-- Next button -->
+                        <?php if ($currentPage < $totalPages): ?>
+                            <?php $queryParams['page'] = $currentPage + 1; ?>
+                            <li class="page-item">
+                                <a class="page-link" href="<?= $baseUrl . '?' . http_build_query($queryParams) ?>">Next</a>
+                            </li>
+                        <?php endif; ?>
                     </ul>
                 </nav>
             <?php endif; ?>
