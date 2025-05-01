@@ -118,8 +118,6 @@ class ContractController
         return (int) $stmt->fetchColumn();
     }
 
-
-    // Method to delete a contract by its ID
     // Method to delete a contract by its ID
     public function deleteContract($id)
     {
@@ -744,7 +742,8 @@ class ContractController
             $query .= " AND contract_type = :contract_type";
         }
 
-        $query .= " ORDER BY contract_name
+        // Order by latest created_at (or change to `id DESC` if no created_at exists)
+        $query .= " ORDER BY created_at DESC
                 OFFSET :offset ROWS
                 FETCH NEXT :perPage ROWS ONLY";
 
@@ -766,6 +765,7 @@ class ContractController
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
 
 
     public function getTotalContractsCount($department, $searchQuery = null, $contractTypeFilter = null)

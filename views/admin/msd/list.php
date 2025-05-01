@@ -211,7 +211,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <th style="text-align: center;">Start</th>
                         <th></th>
                         <th style="text-align: center;">End</th>
-                        <th style="text-align: center;">File</th>
+                        <!-- <th style="text-align: center;">File</th> -->
                         <th style="text-align: center;">Action</th>
                     </tr>
                 </thead>
@@ -243,42 +243,52 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?php endif; ?>
 
                                 </td>
-                                <td style="text-align: center;"><?= htmlspecialchars($contract['contract_start']) ?></td>
-                                <td></td>
-                                <td style="text-align: center;"><?= htmlspecialchars($contract['contract_end']) ?></td>
                                 <td style="text-align: center;">
-                                    <?php if (!empty($contract['contract_file'])): ?>
-                                        <button class="btn btn-primary badge p-2" data-bs-toggle="modal"
-                                            data-bs-target="#fileModal<?= $contract['id'] ?>">View file</button>
-                                        <!-- File Modal -->
-                                        <div class="modal fade" id="fileModal<?= $contract['id'] ?>" tabindex="-1"
-                                            aria-labelledby="fileModalLabel<?= $contract['id'] ?>" aria-hidden="true">
-                                            <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="fileModalLabel<?= $contract['id'] ?>">
-                                                            <?= htmlspecialchars($contract['contract_name']) ?> -
-                                                            <?= htmlspecialchars($contract['contract_type']) ?>
-                                                        </h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body" style="padding: 0; overflow-y: auto;">
-                                                        <iframe
-                                                            src="<?= htmlspecialchars("../../../" . $contract['contract_file']) ?>"
-                                                            width="100%" style="height: 80vh;" frameborder="0"></iframe>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php else: ?>
-                                        No file
+                                    <?php if ($contract['contract_type'] === TEMP_LIGHTING): ?>
+                                        <span class="badge text-muted">
+                                            <?= !empty($contract['contract_start']) ? date('M-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+
+
+                                    <?php elseif ($contract['contract_type'] === TRANS_RENT): ?>
+                                        <span class="badge text-muted">
+                                            <?= !empty($contract['rent_start']) ? date('M-d-Y', strtotime($contract['rent_start'])) : '' ?>
+                                        </span>
+
+
+                                    <?php endif; ?>
+
+                                    <?php if ($contract['contract_type'] === EMP_CON): ?>
+                                        <span class="badge text-muted">
+                                            <?= !empty($contract['contract_start']) ? date('M-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+                                    <?php endif; ?>
+
+                                </td>
+
+                                <td style="text-align: center;">
+                                <td style="text-align: center;">
+                                    <?php if ($contract['contract_type'] === TEMP_LIGHTING): ?>
+                                        <span class="badge text-muted">
+                                            <?= !empty($contract['contract_end']) ? date('M-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
+
+
+                                    <?php elseif ($contract['contract_type'] === TRANS_RENT): ?>
+                                        <span class="badge text-muted">
+                                            <?= !empty($contract['rent_end']) ? date('M-d-Y', strtotime($contract['rent_end'])) : '' ?>
+                                        </span>
+
+
+                                    <?php endif; ?>
+
+                                    <?php if ($contract['contract_type'] === EMP_CON): ?>
+                                        <span class="badge text-muted">
+                                            <?= !empty($contract['contract_end']) ? date('M-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
                                     <?php endif; ?>
                                 </td>
+
                                 <td style="text-align: center;">
                                     <?php if ($contract['contract_type'] == EMP_CON): ?>
                                         <a href="view.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2"><i
@@ -286,8 +296,10 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?php else: ?>
                                         <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
                                             class="btn btn-success badge p-2"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
-                                        <a id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2"><i
-                                                class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+
+                                        <a href="" id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2"><i
+                                                class="fa fa-trash" aria-hidden="true"></i>
+                                            Delete</a>
                                     <?php endif; ?>
                                 </td>
                             </tr>
@@ -359,7 +371,16 @@ include_once '../../../views/layouts/includes/header.php';
 }
 ?>
 
-
+<!-- delete confirmation ---->
+<!-- <div id="popup" class="alert alert-danger border-danger">
+    <br>
+    <span class="text-dark fw-bold p-4">Are you sure you want to Delete this record?</span>
+    <div class="d-flex p-3 gap-2 justify-content-center">
+        <button class="btn btn-danger btn-block w-25">Yes</button>
+        <button class="btn btn-light btn-block w-25">No</button>
+    </div>
+</div>
+-->
 
 
 <!-- Bootstrap Modal for confirmation -->
@@ -472,6 +493,17 @@ include_once '../../../views/layouts/includes/header.php';
         padding: 10px 20px;
         color: white;
         font-weight: bold;
+    }
+
+    #popup {
+        padding: 10px;
+        position: absolute;
+        top: 30%;
+        left: 40%;
+        height: 15%;
+        font-size: 17px;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     }
 </style>
 <script>
