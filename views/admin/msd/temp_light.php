@@ -214,9 +214,11 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-2">
 
                 <div class="mt-3">
-                    <label class="badge text-muted" <?php
-                    $start = new DateTime($getContract['rent_start'] ?? '');
-                    $end = new DateTime($getContract['rent_end'] ?? '');
+                    <label class="badge text-muted"
+                    <?php
+                   $start = new DateTime($getContract['rent_start'] ?? $getContract['contract_start'] ?? 'now');
+$end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 'now');
+
                     $today = new DateTime();
 
                     // Calculate the difference
@@ -522,18 +524,50 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $datestart = new DateTime($employement_data['date_start']);
-                                        ?>
+                                        
+                                    <?php if ($employement_data['contract_type'] === TEMP_LIGHTING) : ?>
+                                        <?php if (!empty($employement_data['date_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                        <span class="badge text-dark"> <?= date_format($datestart, "M-d-Y"); ?></span>
+                                    <?php if ($employement_data['contract_type'] === TRANS_RENT) : ?>
+                                        <?php if (!empty($employement_data['rent_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>s
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
                                     </td>
 
+s
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $dateend = new DateTime($employement_data['date_end']);
-                                        ?>
-                                        <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
+
+
+                                    <?php if ($employement_data['contract_type'] === TEMP_LIGHTING) : ?>
+                                        <?php if (!empty($employement_data['date_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+
+                                    <?php if ($employement_data['contract_type'] === TRANS_RENT) : ?>
+                                        <?php if (!empty($employement_data['rent_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
                                     </td>
                                     <td style="text-align: center !important;">
                                         <!-- Delete button with icon -->
