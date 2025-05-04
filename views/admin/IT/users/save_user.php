@@ -39,25 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'type' => 'success'
         ];
 
-<<<<<<< Updated upstream
         // Redirect to users page
         header('location: ../users.php');
         exit;
     } else {
         // Handle the error (e.g., display an error message)
-=======
-            //Redirect to users page
-            header('location: ../users.php');
-            exit;
-        } else {
-            // If the result is false, log the error
-            error_log("Error: User creation failed. Data: " . json_encode($data), 3, __DIR__ . "/error_log.txt");
-            echo "Error occurred while creating user.";
-        }
-    } catch (Exception $e) {
-        // Log any exceptions
-        error_log("Exception occurred: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
->>>>>>> Stashed changes
         echo "Error occurred while creating user.";
     }
 }

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $setExpire = (new ContractController)->setExpired($id);
 
         $_SESSION['notification'] = [
-            'message' => 'Employment contract ended!',
+            'message' => 'Temporary lighting contract ended!',
             'type' => 'success'
         ];
 

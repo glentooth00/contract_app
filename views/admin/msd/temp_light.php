@@ -97,8 +97,6 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-
-
         <div class="gap-1">
             <span id="close" style="float: inline-end;display:none;">
                 <!-- <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i> -->
@@ -230,15 +228,22 @@ $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 
                         $remainingDays = 0; // You may want to set it to 0 if the contract has ended
                     }
                     ?> style="font-size: 15px;">Days Remaining:</label>
+                   <?php
+                    if (isset($getContract['contract_status']) && $getContract['contract_status'] === 'Expired') {
+                        $remainingDays = 0;
+                    }
+                    ?>
+
                     <div class="d-flex">
                         <input type="text" style="margin-left:7px;" class="form-control"
                             value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
                     </div>
+
                 </div>
 
                 <?php   
                      if ($remainingDays === 0) {
-                        echo 'CONTRACT ENDED';
+                        // echo 'CONTRACT ENDED';
                      }
                 ?>
 
@@ -448,8 +453,8 @@ $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 
             <div class="mt-5">
                 <h4>Contract History</h4>
             </div>
-            <hr class="">
-            <div class="">
+            <hr>
+            <div>
                 <table class="table table-stripped table-hover">
                     <thead>
                         <tr>
@@ -460,7 +465,7 @@ $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 
                             </th>
                             <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
                             </th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th>
+                            <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
                         </tr>
                     </thead>
                     <?php
@@ -544,8 +549,6 @@ $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 
                                     <?php endif; ?>
 
                                     </td>
-
-s
                                     <td style="text-align: center !important;">
 
 
@@ -569,18 +572,18 @@ s
                                     <?php endif; ?>
 
                                     </td>
-                                    <td style="text-align: center !important;">
-                                        <!-- Delete button with icon -->
+                                    <!-- <td style="text-align: center !important;">
+                                     
                                         <button class="btn btn-danger btn-sm" title="Delete">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
 
-                                        <!-- Edit button with icon -->
+                                      
                                         <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal"
                                             data-bs-target="#editModal">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </button>
-                                    </td>
+                                    </td> -->
 
 
                                 </tr>
@@ -730,6 +733,8 @@ s
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
+        const rentStart = document.getElementById('rentStart');
+        const rentEnd = document.getElementById('rentEnd');
         const deptSelect = document.getElementById('deptSelect');
 
         const saveBtn = document.getElementById('save');
@@ -745,6 +750,8 @@ s
             startDate?.removeAttribute('readonly');
             endDate?.removeAttribute('readonly');
             deptSelect?.removeAttribute('disabled');
+            rentStart?.removeAttribute('readonly');
+            rentEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -757,6 +764,7 @@ s
             startDate.setAttribute('readonly', true);
             endDate.setAttribute('readonly', true);
             deptSelect.setAttribute('disabled', true);
+            
 
             saveBtn.style.display = 'none';
 
@@ -790,21 +798,30 @@ s
 
     document.getElementById('save').addEventListener('click', function () {
 
-        const nameInput = document.getElementById('contractName');
-        const startDateValue = startDate?.value || document.getElementById('rent_start')?.value || '';
-        const endDateValue = endDate?.value || document.getElementById('rent_end')?.value || '';
-        const deptSelect = document.getElementById('deptSelect');
-        const id = document.getElementById('contractId');
+// Get the relevant DOM elements
+const nameInput = document.getElementById('contractName');
+const startDate = document.getElementById('startDate');
+const endDate = document.getElementById('endDate');
+const rentStart = document.getElementById('rent_start');
+const rentEnd = document.getElementById('rent_end');
+const deptSelect = document.getElementById('deptSelect');
+const id = document.getElementById('contractId');
 
-        const contractName = encodeURIComponent(nameInput?.value || '');
-        const contractStart = encodeURIComponent(formatDate(startDateValue));
-        const contractEnd = encodeURIComponent(formatDate(endDateValue));
-        const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
-        const contract_id = encodeURIComponent(id?.value || '');
+// Get the values for start and end dates, fallback to rent_start and rent_end if necessary
+const startDateValue = startDate?.value || rentStart?.value || '';
+const endDateValue = endDate?.value || rentEnd?.value || '';
 
-        // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
-    });
+// Get other values
+const contractName = encodeURIComponent(nameInput?.value || '');
+const contractStart = encodeURIComponent(formatDate(startDateValue));
+const contractEnd = encodeURIComponent(formatDate(endDateValue));
+const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
+const contract_id = encodeURIComponent(id?.value || '');
+
+// Redirect with query parameters
+window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+});
+
 
     function formatDate(dateString) {
         const [year, month, day] = dateString.split('-');

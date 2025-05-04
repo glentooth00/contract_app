@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 use App\Controllers\EmploymentContractController;
 use App\Controllers\ContractController;
