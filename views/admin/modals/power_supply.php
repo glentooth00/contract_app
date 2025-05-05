@@ -1,18 +1,37 @@
+<?php
+
+use App\Controllers\UserController;
+use App\Controllers\ContractTypeController;
+
+$userid = $_SESSION['id'];
+
+$user_department = (new UserController)->getUserById($userid);
+
+$department = $user_department['department'];
+
+$get_contract_types = ( new ContractTypeController )->getContractType($department);
+
+$name = $user_department['firstname'].' '. $user_department['middlename'].' '. $user_department['lastname'];
+
+var_dump($get_contract_types);
+
+
+?>
+
 <!---- CITETD MODAL ---->
-<div class="modal fade" id="shortTermModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="powerSupplyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Power Suppliers Contract(Short Term)</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Power Suppliers Contract</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <h2>CITETD MODAL</h2>
             <div class="modal-body">
                 <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-6 p-2">
                             <div class="mb-3">
-                                <label class="badge text-muted">Contract</label>
+                                <label class="badge text-muted">Contract file</label>
                                 <input type="file" name="contract_file" class="form-control">
 
                             </div>
@@ -24,15 +43,12 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="badge text-muted">Contract Type</label>
-                                <select class="form-select form-select-md mb-3" name="contract_type"
-                                    aria-label=".form-select-lg example">
-                                    <option selected hidden>Select contract type</option>
-                                    <option value="Employment Contract">Employment Contract</option>
-                                    <option value="Construction Contract">Construction Contract</option>
-                                    <option value="Licensing Agreement">Licensing Agreement</option>
-                                    <option value="Purchase Agreement">Purchase Agreement</option>
-                                    <option value="Service Agreement">Service Agreement</option>
+                                <label class="badge text-muted">Power Supply Contract type</label>
+                                <select class="form-select form-select-md mb-3" name="contract_type">
+                                <option value="" hidden>Select Power Supply contract type</option>
+                                    <?php foreach($get_contract_types as $contract_type): ?>
+                                        <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 
@@ -49,17 +65,15 @@
                                 <input type="date" class="form-control" name="contract_end" id="floatingInput"
                                     placeholder="">
                             </div>
-                            <!-- <div class="mb-3">
-                        <label class="badge text-muted">Contract Status</label>
-                            <select class="form-select form-select-md mb-3" name="contract_status" aria-label=".form-select-lg example">
-                                <option selected hidden>Select contract type</option>
-                                <option value="Employment Contract">Employment Contract</option>
-                                <option value="Construction Contract">Construction Contract</option>
-                                <option value="Licensing Agreement">Licensing Agreement</option>
-                                <option value="Purchase Agreement">Purchase Agreement</option>
-                                <option value="Service Agreement">Service Agreement</option>
-                            </select>
-                    </div> -->
+                            <div class="mb-3">
+                                <input type="hidden" class="form-control" name="uploader_department"
+                                    value="<?= $department ?>" id="floatingInput" placeholder="">
+                            </div>
+                            <div class="mb-3">
+                                <input type="hidden" class="form-control" name="uploader"
+                                    value="<?= $name ?>" id="floatingInput" placeholder="">
+                            </div>
+
                         </div>
                     </div>
             </div>

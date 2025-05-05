@@ -880,7 +880,7 @@ class ContractController
         return true;
     }
 
-
+    //for CITETD contracts
     public function getContractsByCITETDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
     {
         $offset = ($currentPage - 1) * $perPage;
@@ -921,7 +921,7 @@ class ContractController
     }
 
 
-
+    //for CITETD contracts
     public function getTotalContractsCountCITETD($department, $searchQuery = null, $contractTypeFilter = null)
     {
         $query = "SELECT COUNT(*) FROM contracts 

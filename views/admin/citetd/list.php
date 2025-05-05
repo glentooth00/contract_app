@@ -86,12 +86,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
@@ -154,19 +154,12 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="d-flex align-items-center gap-3 flex-wrap mb-1" style="margin-left: 1%;">
 
-                <a class="btn text-white btn-success p-2 btn btn-outline-success" data-mdb-ripple-init
-                    style="width:15%;padding-right:13px;font-size:15px;background-color:#007F73;" href="#!"
-                    role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
-                    <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                    Power Suppliers Contract<br>(Long Term)
-                </a>
 
-
-                <a class="btn text-white btn-success p-2" data-mdb-ripple-init
-                    style="width:15%;padding-right:10px;font-size:15px;background-color:#A0153E;" href="#!"
-                    role="button" data-bs-toggle="modal" data-bs-target="#shortTermModal">
+                <a class="btn text-white btn-success p-2 fw-bold" data-mdb-ripple-init
+                    style="width:18%;padding-right:10px;font-size:15px;background-color:#102E50;" href="#!"
+                    role="button" data-bs-toggle="modal" data-bs-target="#powerSupplyModal">
                     <i class="fa fa-file-text-o" aria-hidden="true"></i>
-                    Power Suppliers Contract<br>(Short Term)
+                    Add Power Suppliers Contract
                 </a>
 
                 <form method="GET" action="list.php">
@@ -362,12 +355,10 @@ include_once '../../../views/layouts/includes/header.php';
         include_once '../modals/hrad_modal.php';
         break;
     case "CITETD":
-        include_once '../modals/long_term.php';
-        include_once '../modals/short_term.php';
+        include_once '../modals/power_supply.php';
         break;
     case "ISD-MSD":
-        include_once '../modals/isdmsd_modal.php';
-        include_once '../modals/transformer_rental.php';
+        include_once '../modals/citetl.php';
         break;
 }
 ?>

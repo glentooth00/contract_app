@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s'),
         'contract_status' => 'Active',
-        'uploader_department' => 'CITETD',
+        'uploader_department' => $_POST['uploader_department'],
+        'uploader' => $_POST['uploader'],
     ];
 
     var_dump($dataValidation);
