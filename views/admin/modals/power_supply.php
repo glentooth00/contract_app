@@ -9,11 +9,12 @@ $user_department = (new UserController)->getUserById($userid);
 
 $department = $user_department['department'];
 
+$id = $user_department['id'];
+
 $get_contract_types = ( new ContractTypeController )->getContractType($department);
 
 $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $user_department['lastname'];
 
-var_dump($get_contract_types);
 
 
 ?>
@@ -72,6 +73,10 @@ var_dump($get_contract_types);
                             <div class="mb-3">
                                 <input type="hidden" class="form-control" name="uploader"
                                     value="<?= $name ?>" id="floatingInput" placeholder="">
+                            </div>
+                            <div class="mb-3">
+                                <input type="hidden" class="form-control" name="uploader_id"
+                                    value="<?= $id ?>" id="floatingInput" placeholder="">
                             </div>
 
                         </div>

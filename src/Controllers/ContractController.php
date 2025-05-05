@@ -881,51 +881,41 @@ class ContractController
     }
 
     //for CITETD contracts
-    public function getContractsByCITETDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
+    // public function getContractsByCITETDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
+    // {
+    //     $offset = ($currentPage - 1) * $perPage;
+
+    //     $query = "SELECT * FROM contracts 
+    //           WHERE uploader_department = 'CITETD' OR department_assigned = :department";
+
+    //     $stmt = $this->db->prepare($query);
+    //     $stmt->bindParam(':department', $department);
+
+    //     $stmt->execute();
+    //     return $stmt->fetchAll();
+    // }
+
+    public function getContractsByCITETDepartment()
     {
-        $offset = ($currentPage - 1) * $perPage;
 
-        $query = "SELECT * FROM contracts 
-              WHERE (uploader_department = 'CITETD' AND department_assigned = :department)";
-
-        if ($searchQuery) {
-            $query .= " AND contract_name LIKE :search_query";
-        }
-
-        if ($contractTypeFilter) {
-            $query .= " AND contract_type = :contract_type";
-        }
-
-        // Order by latest created_at (or change to `id DESC` if no created_at exists)
-        $query .= " ORDER BY created_at DESC
-                OFFSET :offset ROWS
-                FETCH NEXT :perPage ROWS ONLY";
+        $query = "SELECT * FROM contracts ";
 
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':department', $department);
-
-        if ($searchQuery) {
-            $searchTerm = '%' . $searchQuery . '%';
-            $stmt->bindParam(':search_query', $searchTerm);
-        }
-
-        if ($contractTypeFilter) {
-            $stmt->bindParam(':contract_type', $contractTypeFilter);
-        }
-
-        $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
 
         $stmt->execute();
         return $stmt->fetchAll();
     }
 
 
+
+
+
+
     //for CITETD contracts
     public function getTotalContractsCountCITETD($department, $searchQuery = null, $contractTypeFilter = null)
     {
         $query = "SELECT COUNT(*) FROM contracts 
-              WHERE (uploader_department = 'CITETD' OR department_assigned = :department)";
+              WHERE (uploader_department = 'CITETD' AND department_assigned = :department)";
 
         if ($searchQuery) {
             $query .= " AND contract_name LIKE :search_query";
@@ -952,6 +942,25 @@ class ContractController
     }
 
 
+    public function savePowerSupplyContract($data)
+    {
+
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department)";
+
+        $stmt = $this->db->prepare($query);
+
+        return $stmt->execute([
+            ':contract_name' => $data['contract_name'],
+            ':contract_type' => $data['contract_type'],
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':contract_file' => $data['contract_file'],
+            ':contract_status' => $data['contract_status'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+        ]);
+    }
 
 
 

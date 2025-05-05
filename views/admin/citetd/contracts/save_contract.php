@@ -15,14 +15,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_name' => $_POST['contract_name'],
         'contract_start' => $_POST['contract_start'],
         'contract_end' => $_POST['contract_end'],
+        'contract_type' => $_POST['contract_type'],
         'contract_file' => $filePath,
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s'),
         'contract_status' => 'Active',
+        'uploader_id' => $_POST['uploader_id'],
         'uploader_department' => $_POST['uploader_department'],
         'uploader' => $_POST['uploader'],
     ];
 
-    var_dump($dataValidation);
+    $saveContract = (new ContractController)->savePowerSupplyContract($dataValidation);
+
+    if ($saveContract) {
+
+        $_SESSION['notification'] = [
+            'message' => 'Power supply Contract successfully saved!',
+            'type' => 'success'
+        ];
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+
+    }
 
 }

@@ -21,18 +21,16 @@ $userid = $_SESSION['id'];
 
 //------------------------------------- for pagination ------------------------------------------------//
 // Get GET parameters
+$department = $_SESSION['department'];
 $searchQuery = $_GET['search_query'] ?? '';
 $contractTypeFilter = $_GET['contract_type_filter'] ?? '';
 $currentPage = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 $perPage = 10; // Number of items per page
 
-// Parameters for pagination
-$department = 'ISD-MSD'; // Example department
 
 // Get the contracts for the current page
 $contracts = (new ContractController)->getContractsByCITETDepartment($department, $searchQuery, $perPage, $currentPage, $contractTypeFilter);
 $totalContracts = (new ContractController)->getTotalContractsCountCITETD($department, $searchQuery, $contractTypeFilter);
-
 
 //------------------------------------- for pagination ------------------------------------------------//
 
@@ -208,101 +206,95 @@ include_once '../../../views/layouts/includes/header.php';
                         <th style="text-align: center;">Action</th>
                     </tr>
                 </thead>
+                <?php
+
+                print_r($contracts);
+                ?>
                 <tbody>
                     <?php if (!empty($contracts)): ?>
                         <?php foreach ($contracts as $contract): ?>
                             <tr>
-                                <td style="text-align: center;"><?= htmlspecialchars($contract['contract_name']) ?></td>
                                 <td style="text-align: center;">
+                                    <?= htmlspecialchars($contract['contract_name']) ?>
+                                </td>
+
+                                <!-- <td style="text-align: center;">
                                     <?php
-                                    $badgeColor = "#FAB12F";
-                                    if ($contract['contract_type'] == TRANS_RENT || $contract['contract_type'] == TEMP_LIGHTING) {
-                                        $badgeColor = ($contract['contract_type'] == TEMP_LIGHTING) ? "#03A791" : "#003092";
+                                    $badgeColor = '#FAB12F';
+                                    if ($contract['contract_type'] === TRANS_RENT) {
+                                        $badgeColor = '#003092';
+                                    } elseif ($contract['contract_type'] === TEMP_LIGHTING) {
+                                        $badgeColor = '#03A791';
                                     }
                                     ?>
                                     <span class="p-2 text-white badge"
-                                        style="background-color: <?= $badgeColor ?>; border-radius:5px;">
+                                        style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                         <?= htmlspecialchars($contract['contract_type']) ?>
                                     </span>
-                                </td>
+                                </td> -->
+
                                 <td style="text-align: center;">
-
-                                    <?php if ($contract['contract_status'] == 'Active'): ?>
-                                        <span class="badge text-white bg-success">
-                                            <?= htmlspecialchars($contract['contract_status']) ?></span>
-                                    <?php else: ?>
-                                        <span class="badge text-white  bg-danger">
-                                            <?= htmlspecialchars($contract['contract_status']) ?></span>
-                                    <?php endif; ?>
-
-                                </td>
-                                <td style="text-align: center;">
-                                    <?php if ($contract['contract_type'] === TEMP_LIGHTING): ?>
-                                        <span class="badge text-muted">
-                                            <?= !empty($contract['contract_start']) ? date('M-d-Y', strtotime($contract['contract_start'])) : '' ?>
-                                        </span>
-
-
-                                    <?php elseif ($contract['contract_type'] === TRANS_RENT): ?>
-                                        <span class="badge text-muted">
-                                            <?= !empty($contract['rent_start']) ? date('M-d-Y', strtotime($contract['rent_start'])) : '' ?>
-                                        </span>
-
-
-                                    <?php endif; ?>
-
-                                    <?php if ($contract['contract_type'] === EMP_CON): ?>
-                                        <span class="badge text-muted">
-                                            <?= !empty($contract['contract_start']) ? date('M-d-Y', strtotime($contract['contract_start'])) : '' ?>
-                                        </span>
-                                    <?php endif; ?>
-
+                                    <span
+                                        class="badge text-white <?= $contract['contract_status'] === 'Active' ? 'bg-success' : 'bg-danger' ?>">
+                                        <?= htmlspecialchars($contract['contract_status']) ?>
+                                    </span>
                                 </td>
 
+                                <!-- Start Date -->
                                 <td style="text-align: center;">
-                                <td style="text-align: center;">
-                                    <?php if ($contract['contract_type'] === TEMP_LIGHTING): ?>
-                                        <span class="badge text-muted">
-                                            <?= !empty($contract['contract_end']) ? date('M-d-Y', strtotime($contract['contract_end'])) : '' ?>
-                                        </span>
-
-
-                                    <?php elseif ($contract['contract_type'] === TRANS_RENT): ?>
-                                        <span class="badge text-muted">
-                                            <?= !empty($contract['rent_end']) ? date('M-d-Y', strtotime($contract['rent_end'])) : '' ?>
-                                        </span>
-
-
-                                    <?php endif; ?>
-
-                                    <?php if ($contract['contract_type'] === EMP_CON): ?>
-                                        <span class="badge text-muted">
-                                            <?= !empty($contract['contract_end']) ? date('M-d-Y', strtotime($contract['contract_end'])) : '' ?>
-                                        </span>
-                                    <?php endif; ?>
+                                    <!-- <?php
+                                    $startDate = '';
+                                    if ($contract['contract_type'] === TEMP_LIGHTING || $contract['contract_type'] === EMP_CON) {
+                                        $startDate = $contract['contract_start'] ?? '';
+                                    } elseif ($contract['contract_type'] === TRANS_RENT) {
+                                        $startDate = $contract['rent_start'] ?? '';
+                                    }
+                                    ?>
+                                    <span class="badge text-muted">
+                                        <?= !empty($startDate) ? date('M-d-Y', strtotime($startDate)) : '' ?>
+                                    </span> -->
                                 </td>
 
+                                <!-- End Date -->
                                 <td style="text-align: center;">
-                                    <?php if ($contract['contract_type'] == EMP_CON): ?>
-                                        <a href="view.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2"><i
-                                                class="fa fa-eye" aria-hidden="true"></i> View</a>
+                                    <!-- <?php
+                                    $endDate = '';
+                                    if ($contract['contract_type'] === TEMP_LIGHTING || $contract['contract_type'] === EMP_CON) {
+                                        $endDate = $contract['contract_end'] ?? '';
+                                    } elseif ($contract['contract_type'] === TRANS_RENT) {
+                                        $endDate = $contract['rent_end'] ?? '';
+                                    }
+                                    ?>
+                                    <span class="badge text-muted">
+                                        <?= !empty($endDate) ? date('M-d-Y', strtotime($endDate)) : '' ?>
+                                    </span> -->
+                                </td>
+
+                                <!-- Actions -->
+                                <td style="text-align: center;">
+                                    <!-- <?php if ($contract['contract_type'] === EMP_CON): ?>
+                                        <a href="view.php?contract_id=<?= $contract['id'] ?>" class="btn btn-success badge p-2">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
                                     <?php else: ?>
                                         <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                                            class="btn btn-success badge p-2"><i class="fa fa-eye" aria-hidden="true"></i> View</a>
-
-                                        <a href="" id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2"><i
-                                                class="fa fa-trash" aria-hidden="true"></i>
-                                            Delete</a>
-                                    <?php endif; ?>
+                                            class="btn btn-success badge p-2">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                        <a href="#" id="delete" data-id="<?= $contract['id'] ?>" class="btn btn-danger badge p-2">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    <?php endif; ?> -->
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="8" class="text-center">No contracts found.</td>
+                            <td colspan="6" class="text-center">No contracts found.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
+
             </table>
 
             <?php
