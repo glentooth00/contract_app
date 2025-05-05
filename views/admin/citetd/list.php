@@ -1,6 +1,6 @@
 <?php
 session_start();
-$userid = $_SESSION['id'];
+
 $department = $_SESSION['department'];
 $page_title = "List - $department";
 
@@ -83,20 +83,10 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Temporary Lighting Contract
-        </a>
-
-
-        <a class="btn text-white btn-success p-2" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#powerSupplyModal">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            Add Contract
+        </button>
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -192,12 +182,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php
-
-include_once '../modals/isdmsd_modal.php';
-include_once '../modals/transformer_rental.php';
-
-?>
+<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 

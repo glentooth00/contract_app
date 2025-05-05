@@ -21,12 +21,12 @@ $updateContract = (new ContractController)->updateContract($latestData) ?? false
 
 // Optional redirect back to previous page
 if ($updateContract) {
-    
+
     $_SESSION['notification'] = [
         'message' => 'Employment contract updated!',
         'type' => 'success'
     ];
 
     header("Location: " . $_SERVER['HTTP_REFERER']);
-   
+
 }

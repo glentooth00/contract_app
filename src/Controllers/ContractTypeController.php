@@ -50,6 +50,17 @@ class ContractTypeController
 
     }
 
+    public function getContractType($department)
+    {
+
+        $sql = "SELECT * FROM contract_types WHERE CAST(department AS NVARCHAR(MAX)) = :department";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function deleteContractType($data)
     {

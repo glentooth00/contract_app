@@ -41,19 +41,22 @@ include_once '../../../views/layouts/includes/header.php';
             <?= $contract_data ?></h2>
         <hr>
 
-        <?php if ( $getContract['contract_status'] == 'Expired' ) : ?>
+        <?php if ($getContract['contract_status'] == 'Expired'): ?>
 
             <div class="alert alert-danger text-center" role="alert">
-            <span class="display-4 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
-                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                </svg>
-                Contract has expired...</span>
-        </div>
-        
+                <span class="display-4 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor"
+                        class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                        <path
+                            d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                        <path
+                            d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                    </svg>
+                    Contract has expired...</span>
+            </div>
+
         <?php endif; ?>
-        
+
 
 
         <?php
@@ -90,11 +93,9 @@ include_once '../../../views/layouts/includes/header.php';
                         </span>';
                 }
             }
-            
+
         }
         ?>
-
-
 
         <div class="gap-1">
             <span id="close" style="float: inline-end;display:none;">
@@ -125,7 +126,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <?php if ($getContract['contract_type'] == TEMP_LIGHTING) : ?>
+            <?php if ($getContract['contract_type'] == TEMP_LIGHTING): ?>
                 <!-- Specific block for TEMP_LIGHTING contract type -->
                 <div class="row col-md-2">
                     <div class="mt-3">
@@ -150,9 +151,9 @@ include_once '../../../views/layouts/includes/header.php';
                         </div>
                     </div>
                 </div>
-                <?php elseif( $getContract['contract_type'] == TRANS_RENT ) : ?>
+            <?php elseif ($getContract['contract_type'] == TRANS_RENT): ?>
 
-                    <!-- Block for other contract types, if needed -->
+                <!-- Block for other contract types, if needed -->
                 <div class="row col-md-2">
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Rent Start date:</label>
@@ -161,7 +162,7 @@ include_once '../../../views/layouts/includes/header.php';
                             <input type="date" id="startDate" class="form-control pl-5"
                                 value="<?= isset($getContract['rent_start']) ? substr($getContract['rent_start'], 0, 10) : ''; ?>"
                                 name="contract_start" readonly>
-                                
+
                         </div>
                     </div>
                 </div>
@@ -178,7 +179,7 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
 
-            <?php else : ?>
+            <?php else: ?>
                 <!-- Block for other contract types, if needed -->
                 <div class="row col-md-2">
                     <div class="mt-3">
@@ -188,7 +189,7 @@ include_once '../../../views/layouts/includes/header.php';
                             <input type="date" id="startDate" class="form-control pl-5"
                                 value="<?= isset($getContract['rent_start']) ? substr($getContract['rent_start'], 0, 10) : ''; ?>"
                                 name="contract_start" readonly>
-                                
+
                         </div>
                     </div>
                 </div>
@@ -206,28 +207,46 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-                <!-- <?= $getContract['contract_type'] ?> -->
+            <!-- <?= $getContract['contract_type'] ?> -->
 
             <div class="row col-md-2">
 
                 <div class="mt-3">
-                    <label class="badge text-muted" <?php
+                    <label class="badge text-muted"
+                    <?php
+                   $start = new DateTime($getContract['rent_start'] ?? $getContract['contract_start'] ?? 'now');
+$end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 'now');
 
-                    $start = new DateTime($getContract['rent_start'] ?? '');
-                    $end = new DateTime($getContract['rent_end'] ?? '');
                     $today = new DateTime();
 
+                    // Calculate the difference
                     $interval = $today->diff($end);
-                    $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+                    $remainingDays = $interval->format('%r%a'); // This gives you the remaining days, including negative if past
+                    
+                    // Check if the remaining days is less than 0
+                    if ($remainingDays < 0) {
+                        $remainingDays = 0; // You may want to set it to 0 if the contract has ended
+                    }
+                    ?> style="font-size: 15px;">Days Remaining:</label>
+                   <?php
+                    if (isset($getContract['contract_status']) && $getContract['contract_status'] === 'Expired') {
+                        $remainingDays = 0;
+                    }
+                    ?>
 
-
-
-                    ?>    style="font-size: 15px;">Days Remaining:</label>
                     <div class="d-flex">
                         <input type="text" style="margin-left:7px;" class="form-control"
-                            value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
+                            value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
                     </div>
+
                 </div>
+
+                <?php   
+                     if ($remainingDays === 0) {
+                        // echo 'CONTRACT ENDED';
+                     }
+                ?>
+
             </div>
         </div>
 
@@ -244,22 +263,22 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3">
 
-            <?php if ($getContract['department_assigned'] ) : ?>
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
-                    <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
-                        <?php foreach ($departments as $department): ?>
-                            <option value="<?= $department['department_name']; ?>"
-                                <?= ($department['department_name'] == $getContract['department_assigned']) ? 'selected' : ''; ?>>
-                                <?= $department['department_name']; ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                    <!-- <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned']; ?>"  name="department_assigned" readonly> -->
-                </div>
-            <?php endif; ?>
+                <?php if ($getContract['department_assigned']): ?>
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
+                        <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
+                            <?php foreach ($departments as $department): ?>
+                                <option value="<?= $department['department_name']; ?>"
+                                    <?= ($department['department_name'] == $getContract['department_assigned']) ? 'selected' : ''; ?>>
+                                    <?= $department['department_name']; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned']; ?>"  name="department_assigned" readonly> -->
+                    </div>
+                <?php endif; ?>
 
-                
+
 
             </div>
             <div class="row col-md-2">
@@ -314,12 +333,12 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php if ($_SESSION['department'] === 'ISD-MSD'): ?>
 
                         <?php
-                            // Determine which end date to use
-                            $endDate = !empty($getContract['rent_end']) ? new DateTime($getContract['rent_end']) : new DateTime($getContract['contract_end']);
-                            $today = new DateTime();
+                        // Determine which end date to use
+                        $endDate = !empty($getContract['rent_end']) ? new DateTime($getContract['rent_end']) : new DateTime($getContract['contract_end']);
+                        $today = new DateTime();
 
-                            $remainingDays = $today->diff($endDate)->days;
-                            $isExpired = $endDate < $today;
+                        $remainingDays = $today->diff($endDate)->days;
+                        $isExpired = $endDate < $today;
 
                         ?>
                         <?php if (!$isExpired && $remainingDays <= 3 && $getContract['contract_status'] === 'Active'): ?>
@@ -343,7 +362,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                     <?php endif; ?>
 
-                    
+
                 </div>
             </div>
 
@@ -434,16 +453,19 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="mt-5">
                 <h4>Contract History</h4>
             </div>
-            <hr class="">
-            <div class="">
+            <hr>
+            <div>
                 <table class="table table-stripped table-hover">
                     <thead>
                         <tr>
                             <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Contract File</span></th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span></th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span></th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Contract
+                                    File</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
+                            </th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
+                            </th>
+                            <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
                         </tr>
                     </thead>
                     <?php
@@ -455,14 +477,14 @@ include_once '../../../views/layouts/includes/header.php';
                             <?php foreach ($contractHist_datas as $employement_data): ?>
                                 <tr>
                                     <td style="text-align: center !important;">
-                                        
-                                    <?php if ($employement_data['status'] == 'Active'): ?>
-                                        <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
-                                    <?php elseif ($employement_data['status'] == 'Expired'): ?>
-                                        <span class="badge bg-danger p-2">Rental Contract Ended</span>
-                                    <?php else: ?>
-                                        <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
-                                    <?php endif; ?>
+
+                                        <?php if ($employement_data['status'] == 'Active'): ?>
+                                            <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
+                                        <?php elseif ($employement_data['status'] == 'Expired'): ?>
+                                            <span class="badge bg-danger p-2">Rental Contract Ended</span>
+                                        <?php else: ?>
+                                            <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
+                                        <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">
 
@@ -507,30 +529,61 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $datestart = new DateTime($employement_data['date_start']);
-                                        ?>
+                                        
+                                    <?php if ($employement_data['contract_type'] === TEMP_LIGHTING) : ?>
+                                        <?php if (!empty($employement_data['date_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                        <span class="badge text-dark"> <?= date_format($datestart, "M-d-Y"); ?></span>
-                                    </td>
+                                    <?php if ($employement_data['contract_type'] === TRANS_RENT) : ?>
+                                        <?php if (!empty($employement_data['rent_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>s
+                                        <?php endif; ?>
+                                    <?php endif; ?>
 
-                                    <td style="text-align: center !important;">
-                                        <?php
-                                        $dateend = new DateTime($employement_data['date_end']);
-                                        ?>
-                                        <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
                                     </td>
                                     <td style="text-align: center !important;">
-                                        <!-- Delete button with icon -->
+
+
+                                    <?php if ($employement_data['contract_type'] === TEMP_LIGHTING) : ?>
+                                        <?php if (!empty($employement_data['date_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+
+                                    <?php if ($employement_data['contract_type'] === TRANS_RENT) : ?>
+                                        <?php if (!empty($employement_data['rent_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+
+                                    </td>
+                                    <!-- <td style="text-align: center !important;">
+                                     
                                         <button class="btn btn-danger btn-sm" title="Delete">
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
-                                        
-                                        <!-- Edit button with icon -->
-                                        <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal" data-bs-target="#editModal">
+
+                                      
+                                        <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal"
+                                            data-bs-target="#editModal">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </button>
-                                    </td>
+                                    </td> -->
 
 
                                 </tr>
@@ -680,6 +733,8 @@ include_once '../../../views/layouts/includes/header.php';
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
+        const rentStart = document.getElementById('rentStart');
+        const rentEnd = document.getElementById('rentEnd');
         const deptSelect = document.getElementById('deptSelect');
 
         const saveBtn = document.getElementById('save');
@@ -691,10 +746,12 @@ include_once '../../../views/layouts/includes/header.php';
 
         if (isReadOnly) {
             // Make all editable
-            nameInput.removeAttribute('readonly');
-            startDate.removeAttribute('readonly');
-            endDate.removeAttribute('readonly');
-            deptSelect.removeAttribute('disabled');
+            nameInput?.removeAttribute('readonly');
+            startDate?.removeAttribute('readonly');
+            endDate?.removeAttribute('readonly');
+            deptSelect?.removeAttribute('disabled');
+            rentStart?.removeAttribute('readonly');
+            rentEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -707,6 +764,7 @@ include_once '../../../views/layouts/includes/header.php';
             startDate.setAttribute('readonly', true);
             endDate.setAttribute('readonly', true);
             deptSelect.setAttribute('disabled', true);
+            
 
             saveBtn.style.display = 'none';
 
@@ -727,10 +785,10 @@ include_once '../../../views/layouts/includes/header.php';
         const isReadOnly = nameInput.hasAttribute('readonly');
 
         // Set them back to readonly/disabled
-        nameInput.setAttribute('readonly', true);
-        startDate.setAttribute('readonly', true);
-        endDate.setAttribute('readonly', true);
-        deptSelect.setAttribute('disabled', true);
+        nameInput?.setAttribute('readonly', true);
+        startDate?.setAttribute('readonly', true);
+        endDate?.setAttribute('readonly', true);
+        deptSelect?.setAttribute('disabled', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -740,21 +798,30 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('save').addEventListener('click', function () {
 
-        const nameInput = document.getElementById('contractName');
-        const startDate = document.getElementById('startDate');
-        const endDate = document.getElementById('endDate');
-        const deptSelect = document.getElementById('deptSelect');
-        const id = document.getElementById('contractId');
+// Get the relevant DOM elements
+const nameInput = document.getElementById('contractName');
+const startDate = document.getElementById('startDate');
+const endDate = document.getElementById('endDate');
+const rentStart = document.getElementById('rent_start');
+const rentEnd = document.getElementById('rent_end');
+const deptSelect = document.getElementById('deptSelect');
+const id = document.getElementById('contractId');
 
-        const contractName = encodeURIComponent(nameInput.value);
-        const contractStart = encodeURIComponent(formatDate(startDate.value));
-        const contractEnd = encodeURIComponent(formatDate(endDate.value));
-        const department = encodeURIComponent(deptSelect.value);
-        const contract_id = encodeURIComponent(id.value);
+// Get the values for start and end dates, fallback to rent_start and rent_end if necessary
+const startDateValue = startDate?.value || rentStart?.value || '';
+const endDateValue = endDate?.value || rentEnd?.value || '';
 
-        // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
-    });
+// Get other values
+const contractName = encodeURIComponent(nameInput?.value || '');
+const contractStart = encodeURIComponent(formatDate(startDateValue));
+const contractEnd = encodeURIComponent(formatDate(endDateValue));
+const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
+const contract_id = encodeURIComponent(id?.value || '');
+
+// Redirect with query parameters
+window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+});
+
 
     function formatDate(dateString) {
         const [year, month, day] = dateString.split('-');

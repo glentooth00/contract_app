@@ -154,7 +154,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         <div class="col-md-4 p-2">
                                             <div>
                                                 <?php
-                                                echo $userid;
+                                               $userid;
                                                 $getUser = (new UserController)->getUserById($userid);
 
                                                 // var_dump($getUser['firstname']);

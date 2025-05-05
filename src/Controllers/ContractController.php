@@ -118,8 +118,6 @@ class ContractController
         return (int) $stmt->fetchColumn();
     }
 
-
-    // Method to delete a contract by its ID
     // Method to delete a contract by its ID
     public function deleteContract($id)
     {
@@ -744,7 +742,8 @@ class ContractController
             $query .= " AND contract_type = :contract_type";
         }
 
-        $query .= " ORDER BY contract_name
+        // Order by latest created_at (or change to `id DESC` if no created_at exists)
+        $query .= " ORDER BY created_at DESC
                 OFFSET :offset ROWS
                 FETCH NEXT :perPage ROWS ONLY";
 
@@ -766,6 +765,7 @@ class ContractController
         $stmt->execute();
         return $stmt->fetchAll();
     }
+
 
 
     public function getTotalContractsCount($department, $searchQuery = null, $contractTypeFilter = null)
@@ -807,11 +807,169 @@ class ContractController
         return;
     }
 
+    public function updateLightingContract($data)
+    {
+        $sql = "UPDATE contracts 
+                SET 
+                    contract_name = :contract_name,
+                   contract_start = :contract_start,
+                    contract_end = :contract_end,
+                    updated_at = :updated_at 
+                WHERE id = :contract_id";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':contract_id', $data['id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']); // FIXED
+        $stmt->bindParam(':contract_end', $data['contract_end']);     // FIXED
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+
+        $stmt->execute();
+
+        return true;
+    }
+
+    public function updateTransRent($data) // Accepting the full $data array
+    {
+        $sql = "UPDATE contracts 
+                SET 
+                    contract_name = :contract_name,
+                    rent_start = :rent_start,
+                    rent_end = :rent_end,
+                    updated_at = :updated_at 
+                WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+
+        // Binding parameters to the data array
+        $stmt->bindParam(':id', $data['id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':rent_start', $data['rent_start']);
+        $stmt->bindParam(':rent_end', $data['rent_end']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+
+        // Executing the query
+        $stmt->execute();
+
+        return true;
+    }
+
+    public function updateTempLight($data) // Accepting the full $data array
+    {
+        $sql = "UPDATE contracts 
+                SET 
+                    contract_name = :contract_name,
+                    contract_start = :contract_start,
+                    contract_end = :contract_end,
+                    updated_at = :updated_at 
+                WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+
+        // Binding parameters to the data array
+        $stmt->bindParam(':id', $data['id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+
+        // Executing the query
+        $stmt->execute();
+
+        return true;
+    }
+
+    //for CITETD contracts
+    // public function getContractsByCITETDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
+    // {
+    //     $offset = ($currentPage - 1) * $perPage;
+
+    //     $query = "SELECT * FROM contracts 
+    //           WHERE uploader_department = 'CITETD' OR department_assigned = :department";
+
+    //     $stmt = $this->db->prepare($query);
+    //     $stmt->bindParam(':department', $department);
+
+    //     $stmt->execute();
+    //     return $stmt->fetchAll();
+    // }
+
+    public function getContractsByCITETDepartment($department)
+    {
+        // Prepare the query
+        $query = "SELECT * FROM contracts WHERE uploader_department = ? OR department_assigned = ? ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($query);
+
+        // Bind the parameters (correctly using bindValue or bindParam)
+        $stmt->bindValue(1, $department, PDO::PARAM_STR); // First placeholder for uploader_department
+        $stmt->bindValue(2, $department, PDO::PARAM_STR); // Second placeholder for department_assigned
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Fetch the results
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results; // Return the results
+    }
 
 
 
 
 
+
+
+    //for CITETD contracts
+    public function getTotalContractsCountCITETD($department, $searchQuery = null, $contractTypeFilter = null)
+    {
+        $query = "SELECT COUNT(*) FROM contracts 
+              WHERE (uploader_department = 'CITETD' AND department_assigned = :department)";
+
+        if ($searchQuery) {
+            $query .= " AND contract_name LIKE :search_query";
+        }
+
+        if ($contractTypeFilter) {
+            $query .= " AND contract_type = :contract_type";
+        }
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':department', $department);
+
+        if ($searchQuery) {
+            $searchTerm = '%' . $searchQuery . '%';
+            $stmt->bindParam(':search_query', $searchTerm);
+        }
+
+        if ($contractTypeFilter) {
+            $stmt->bindParam(':contract_type', $contractTypeFilter);
+        }
+
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
+
+    public function savePowerSupplyContract($data)
+    {
+
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department)";
+
+        $stmt = $this->db->prepare($query);
+
+        return $stmt->execute([
+            ':contract_name' => $data['contract_name'],
+            ':contract_type' => $data['contract_type'],
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':contract_file' => $data['contract_file'],
+            ':contract_status' => $data['contract_status'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+        ]);
+    }
 
 
 

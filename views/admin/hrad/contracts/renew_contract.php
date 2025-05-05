@@ -1,4 +1,4 @@
-<?php 
+<?php
 use App\Controllers\ContractController;
 use App\Controllers\EmploymentContractController;
 
@@ -24,20 +24,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $renew = (new ContractController)->renewContract($latestContract);
 
-    if($renew){
+    if ($renew) {
 
-        $getLastUpdated = (new EmploymentContractController )->insertLastupdatedData($latestContract);
+        $getLastUpdated = (new EmploymentContractController)->insertLastupdatedData($latestContract);
 
-        if($getLastUpdated){
-            
-             $_SESSION['notification'] = [
+        if ($getLastUpdated) {
+
+            $_SESSION['notification'] = [
                 'message' => 'Contract successfully renewed!',
                 'type' => 'success'
             ];
-            
+
             header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        }else{
+        } else {
 
             $_SESSION['notification'] = [
                 'message' => 'Something went wrong when renewing contract!',
