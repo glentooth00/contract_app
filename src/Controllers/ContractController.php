@@ -895,16 +895,25 @@ class ContractController
     //     return $stmt->fetchAll();
     // }
 
-    public function getContractsByCITETDepartment()
+    public function getContractsByCITETDepartment($department)
     {
-
-        $query = "SELECT * FROM contracts ";
-
+        // Prepare the query
+        $query = "SELECT * FROM contracts WHERE uploader_department = ? OR department_assigned = ? ORDER BY created_at DESC";
         $stmt = $this->db->prepare($query);
 
+        // Bind the parameters (correctly using bindValue or bindParam)
+        $stmt->bindValue(1, $department, PDO::PARAM_STR); // First placeholder for uploader_department
+        $stmt->bindValue(2, $department, PDO::PARAM_STR); // Second placeholder for department_assigned
+
+        // Execute the statement
         $stmt->execute();
-        return $stmt->fetchAll();
+
+        // Fetch the results
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results; // Return the results
     }
+
 
 
 

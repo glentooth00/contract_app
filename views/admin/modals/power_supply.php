@@ -16,7 +16,6 @@ $get_contract_types = ( new ContractTypeController )->getContractType($departmen
 $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $user_department['lastname'];
 
 
-
 ?>
 
 <!---- CITETD MODAL ---->
@@ -25,7 +24,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Power Suppliers Contract</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                
             </div>
             <div class="modal-body">
                 <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">

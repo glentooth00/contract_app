@@ -93,7 +93,7 @@
 
             <?php if ($logged_user == 'Admin'): ?>
               <li class="nav-item">
-                <a class="nav-link" href="department.php"><i class="fa fa-building-o p-2" aria-hidden="true"></i>
+                <a class="nav-link " href="department.php"><i class="fa fa-building-o p-2" aria-hidden="true"></i>
                   Departments</a>
               </li>
             <?php endif; ?>
@@ -139,7 +139,7 @@
 
 <style>
   .sideBar {
-    width: 22%;
+    width: 15%;
     padding: 20px;
     height: 110vh;
     box-sizing: border-box;
@@ -147,6 +147,14 @@
 
   .nav {
     margin-left: -1em;
+  }
+
+  .nav-link {
+    text-decoration: none !important;
+  }
+
+  ul li {
+    list-style: none;
   }
 
   .collapse {
