@@ -1,7 +1,7 @@
 <?php
 $session = session_start();
 
-$page_title  = 'Login';
+$page_title = 'Login';
 // require_once __DIR__ . '/vendor/autoload.php';
 
 // use App\Controllers\UserController;
@@ -36,12 +36,14 @@ $page_title  = 'Login';
                 </div>
                 <div class="password col-12">
                     <label class="badge text-muted">Password</label>
-                    <input type="password" id="password" class="form-control mb-1" name="password" placeholder="Enter password" required>
-                    
-                    <div class="mt-2" style="margin-left:1%;">
-                        <input type="checkbox" class="form-check-input mt-1" onclick="checkPassword()"><span class="badge text-muted"> Show password</span>
+                    <input type="password" id="password" class="form-control mb-1" name="password"
+                        placeholder="Enter password" required>
+
+                    <div class="" style="margin-left:1%;">
+                        <input type="checkbox" class="form-check-input mt-1" onclick="checkPassword()"><span
+                            class="badge text-muted"> Show password</span>
                     </div>
-                    
+
                     <p class="notifMsg p-1">
                         <?php if (isset($_SESSION['password'])): ?>
                             <?= $_SESSION['password']; ?>
@@ -60,35 +62,38 @@ $page_title  = 'Login';
             <div class="mt-3 forgotPassword p-1">
                 <a href="#">Forgot password?</a>
             </div>
-           
+
         </div>
     </div>
 </body>
 
 <style>
-    .notifMsg{
+    .notifMsg {
         font-size: 13px;
         color: red;
         font-weight: 500;
     }
-    .password{
+
+    .password {
         margin-top: -6%;
     }
-    .forgotPassword{
+
+    .forgotPassword {
         margin-top: 4%;
         font-size: 15px;
     }
-    .forgotPassword a{
+
+    .forgotPassword a {
         text-decoration: none;
     }
 </style>
 <script>
-    function checkPassword(){
+    function checkPassword() {
         var x = document.getElementById("password");
 
-        if(x.type === "password"){
+        if (x.type === "password") {
             x.type = "text";
-        }else{
+        } else {
             x.type = "password";
         }
     }

@@ -1,21 +1,29 @@
-<?php 
+<?php
 
+use App\Controllers\ContractController;
 use App\Controllers\EmploymentContractController;
 
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 session_start();
 
-if($_SERVER['REQUEST_METHOD'] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $updateData = [
         'id' => $_POST['contract_id'],
-        'status' => 'Employmeny contract ended',
+        'status' => 'Employment contract ended',
     ];
-    
+
     $updateExpiredEmploymentContract = (new EmploymentContractController)->udpateExpiredEmploymentContract($updateData);
-    
-    if($updateExpiredEmploymentContract) {
+
+    if ($updateExpiredEmploymentContract) {
+
+        $updateContractData = [
+            'id' => $_POST['contract_id'],
+            'contract_status' => 'Expired',
+        ];
+
+        $udpateContractStatus = (new ContractController)->updateStatus($updateContractData);
 
         $_SESSION['notification'] = [
             'message' => 'Employment contract ended!',
@@ -24,16 +32,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        }else{
 
-            $_SESSION['notification'] = [
-                'message' => 'Something went wrong!',
-                'type' => 'success'
-            ];
+    } else {
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+        $_SESSION['notification'] = [
+            'message' => 'Something went wrong!',
+            'type' => 'success'
+        ];
 
-        }
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+
+    }
 
     header("Location: " . $_SERVER['HTTP_REFERER']);
 

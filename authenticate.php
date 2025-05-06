@@ -28,39 +28,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         if ($password == $test['password']) {
-
-            $_SESSION['is_logged_in'];
-
+            $_SESSION['is_logged_in'] = true;
 
             $get_id = $_SESSION['data'];
-
             $_SESSION['id'] = $get_id['id'] ?? null;
 
-            $department = $_SESSION['data'];
+            // Set the department in its own session key
+            $_SESSION['department'] = $_SESSION['data']['department'];
 
-            switch ($department['department']) {
-
+            switch ($_SESSION['department']) {
                 case "IT":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/IT/index.php");
                     break;
-
                 case "ISD-HRAD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/hrad/index.php");
                     break;
-
                 case "ISD-MSD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/msd/index.php");
                     break;
-
                 case "CITETD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/citetd/index.php");
                     break;
             }
-
-
-            // header('location:views/admin/dashboard.php?');s
-
-
         } else {
             $_SESSION['password'] = 'Password is incorrect.';
             header('location:index.php');

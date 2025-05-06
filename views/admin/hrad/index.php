@@ -1,338 +1,525 @@
 <?php
+session_start();
+
+$department = $_SESSION['department'] ?? null;
+$page_title = "List - $department";
+
+require_once __DIR__ . '../../../../src/Config/constants.php';
+require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
-use App\Controllers\UserController;
 
-session_start();
+$contracts = (new ContractController)->getContractsByDepartment($department);
 
-require_once __DIR__ . '../../../../vendor/autoload.php';
+// getting the contract types to be compared with the contracts for their expiration
+$contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
+foreach ($contractTypes as $row) {
 
-$get_id = $_SESSION['data'];
+    $contractType = $row['contract_type'];
+    $EmpErt = $row['contract_ert'];
 
-$id = $get_id['id'];
-
-$get_user_department = (new UserController)->getUserDepartmentById($id);
-
-$user_department = $get_user_department['department'];
-
-$department = $_SESSION['department'] = $get_id['department'];
-
-$savedContracts = new ContractController();
-
-$page_title = 'Dashboard';
-
-$contractsPerPage = 10; // Default number of contracts per page
-$page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-$start = ($page - 1) * $contractsPerPage;
-
-// Get filters
-$contract_filter = isset($_GET['contract_type_filter']) ? $_GET['contract_type_filter'] : null;
-$search_query = isset($_GET['search_query']) ? trim($_GET['search_query']) : null;
-$status_filter = isset($_GET['contract_status_filter']) ? $_GET['contract_status_filter'] : null; // ✅ ADDED
-
-// Fetch filtered contracts with pagination
-$contracts = $savedContracts->getOldContractsWithPaginationAll($start, $contractsPerPage, $contract_filter, $search_query, $status_filter);
-
-// Get total number of contracts for pagination
-$totalContracts = $savedContracts->getTotalContracts($contract_filter, $status_filter, $search_query);
-
-// Check if the total contracts are less than 10, adjust contracts per page
-if ($totalContracts <= 10) {
-    $contractsPerPage = $totalContracts;
 }
-
-// Make sure totalContracts is not zero before dividing
-if ($totalContracts > 0 && $contractsPerPage > 0) {
-    $totalPages = ceil($totalContracts / $contractsPerPage);
-} else {
-    // If no contracts exist, set totalPages to 0 or 1 depending on your needs
-    $totalPages = 1;  // Fallback to 1 page if no contracts
-}
-
-// If there's only 1 or fewer total records, ensure pagination is for 1 page
-if ($totalPages < 1) {
-    $totalPages = 1;
-}
-
-$emp_ert = (new ContractTypeController)->getEmploymentErt();
-
-$EmpErt = $emp_ert['contract_ert'];
-
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner-border" role="status">
-        <span class="visually-hidden">Loading...</span>
+<!-- <div id="loadingSpinner" class="text-center"
+    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
+        <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
-<div class="pageContent">
-    <div class="sideBar bg-dark">
-       <?php include_once '../menu/sidebar.php'; ?>
+<div class="main-layout">
+    <div class="sideBar">
+        <?php include_once '../menu/sidebar.php'; ?>
     </div>
 
-    <div class="mainContent">
-        <!-- Content that will be shown after loading -->
-        <div id="content" class="mt-2">
-            
-            <div class="d-flex">
-                <h2 class="col-md-10">Contracts Overview</h2>
-                
-                <span class="mt-2 p-1 d-flex">
-                    <!-- <?= $department =  $_SESSION['department'] ?? null; ?> Account -->
+    <div class="content-area">
 
-                    <?php if(isset($user_department)){ ?>
+        <h1>Contracts Overview</h1>
+        <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
+            <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
-                        <?php switch( $user_department ) { case 'IT': ?>
+            <?php if (isset($department)) { ?>
 
-                                <span class="badge p-2" style="background-color: #0d6efd;"><?= $user_department; ?> user</span>
-                            
-                            <?php break; case 'ISD-HRAD': ?>
+                <?php switch ($department) {
+                    case 'IT': ?>
 
-                                <span class="badge p-2" style="background-color: #3F7D58;"><?= $user_department; ?> user</span>
-                            
-                            <?php break; case 'CITETD': ?>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
-                                <span class="badge p-2" style="background-color: #FFB433;"><?= $user_department; ?> user</span>
-                            
-                            <?php break; case 'IASD': ?>
-                                
-                                <span class="badge p-2" style="background-color: #EB5B00;"><?= $user_department; ?> user</span>
-                            
-                            <?php break;case 'ISD-MSD': ?>
+                        <?php break;
+                    case 'ISD-HRAD': ?>
 
-                                <span class="badge p-2" style="background-color: #6A9C89;"><?= $user_department; ?> user</span>
-                            
-                            <?php break; case 'BAC':  ?>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
-                                <span class="badge p-2" style="background-color: #3B6790;"><?= $user_department; ?> user</span>
-                            
-                            <?php break;  case '': ?>
-                            
-                            <?php default: ?>
-                                <!-- <span class="badge text-muted">no department assigned</span> -->
-                        <?php } ?>
+                        <?php break;
+                    case 'CITETD': ?>
 
-                        <?php }else { ?>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
 
+                        <?php break;
+                    case 'IASD': ?>
+
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+
+                        <?php break;
+                    case 'ISD-MSD': ?>
+
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+
+                        <?php break;
+                    case 'BAC': ?>
+
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+
+                        <?php break;
+                    case '': ?>
+
+                    <?php default: ?>
                         <!-- <span class="badge text-muted">no department assigned</span> -->
+                <?php } ?>
 
-                        <?php } ?>
-                </span>
-               
-            </div>
-            <hr>
+            <?php } else { ?>
 
-            <span class="text-sm badge"style="color:#AAB99A;">NOTE: Search by Contract type and Contract Name.</span>
-            <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-top:4px;">
-            <div>
-                <form method="GET" action="dashboard.php" class="d-flex align-items-center">
-                    <select class="form-select w-auto me-2" name="contract_type_filter" onchange="this.form.submit()">
-                        <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
-                        <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
-                        <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction Contract</option>
-                        <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing Agreement</option>
-                        <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement</option>
-                        <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement</option>
-                    </select>
+                <!-- <span class="badge text-muted">no department assigned</span> -->
 
-                    <select class="form-select w-auto" name="contract_status_filter" onchange="this.form.submit()">
-                        <option value="" <?= isset($_GET['contract_status_filter']) && $_GET['contract_status_filter'] == "" ? "selected" : "" ?>>All Status</option>
-                        <option value="Expired" <?= isset($_GET['contract_status_filter']) && $_GET['contract_status_filter'] == "Expired" ? "selected" : "" ?>>Expired</option>
-                        <option value="Active" <?= isset($_GET['contract_status_filter']) && $_GET['contract_status_filter'] == "Active" ? "selected" : "" ?>>Active</option>
-                    </select>
-                </form>
-            </div>
+            <?php } ?>
+        </span>
+        <hr>
+        <!-- Wrap both search and filter in a flex container -->
+        <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
 
-            <form method="GET" action="dashboard.php" class="input-group" style="width: 250px;">
-                <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract Name">
-                <button class="btn bg-dark text-white" type="submit">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
-        </div>
-
-            <table class="table table-striped border p-2 mt-1">
-                <thead>
-                    <tr>
-                        <th>Contract Name</th>
-                        <th style="text-align: center !important;">Contract Type</th>
-                        <th style="text-align: center !important;">Contract Start</th>
-                        <th style="text-align: center !important;">Contract End</th>
-                        <th style="text-align: center;">Days Remaining</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($contracts)) : ?>
-                        <tr>
-                            <td colspan="5" class="text-center">No contracts available</td>
-                        </tr>
-                    <?php else : ?>
-                        <?php foreach ($contracts as $contract) : ?>
-                            <tr>
-                                <td><?= isset($contract['contract_name']) ? htmlspecialchars($contract['contract_name']) : 'N/A' ?></td>
-                                <td style="text-align: center !important;"><?= isset($contract['contract_type']) ? htmlspecialchars($contract['contract_type']) : 'N/A' ?></td>
-                                <td style="text-align: center !important;">
-                                    <span class="badge text-muted"><?= isset($contract['contract_start']) ? date("M-d-Y", strtotime($contract['contract_start'])) : 'N/A' ?></span>
-                                </td>
-                                <td style="text-align: center !important;">
-                                    <span class="badge text-muted"><?= isset($contract['contract_end']) ? date("M-d-Y", strtotime($contract['contract_end'])) : 'N/A' ?></span>
-                                </td>
-                                <td style="text-align: center !important;">
-                                    <?php
-                                    $days_left = 0;
-
-                                    if (!empty($contract['contract_end'])) {
-                                        $contractEnd = new DateTime($contract['contract_end']);
-                                        $currentDate = new DateTime();
-
-                                        if ($currentDate <= $contractEnd) {
-                                            $interval = $currentDate->diff($contractEnd);
-                                            $days_left = $interval->days;
-                                        }
-                                    }
-                                    ?>
-
-                                    <?php if ($days_left <= $EmpErt && $days_left > 0): ?>
-                                        <!-- Contracts expiring within 5 days -->
-                                        <span class="badge p-2 font-monospace border border-danger fw-semibold"
-                                            style="font-size:15px;background-color:#E52020;width:14em;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                                                <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
-                                                <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                            </svg> 
-                                            <?= $days_left ?> days left
-                                        </span>
-
-                                    <?php elseif ($days_left <= 0): ?>
-                                        <?php
-                                            $_SESSION['contract_status'] = 'Expired';
-                                            $_SESSION['contract_id'] = $contract['id'];
-                                        ?>
-                                        <!-- Expired contracts -->
-                                        <span class="badge border-danger p-2 font-monospace fw-semibold"
-                                            style="font-size:15px;background-color:#FF9B17;width:14em;">
-                                            Expired
-                                        </span>
-
-                                    <?php else: ?>
-                                        <!-- Contracts with more than 5 days left -->
-                                        <span class="badge p-2 border font-monospace fw-semibold"
-                                            style="font-size:15px;background-color:#04a12b;width:14em;">
-                                            <?= $days_left ?> days until expiry
-                                        </span>
-                                    <?php endif; ?>
-                                </td>
-
-                            </tr>
+            <!-- Contract Type Filter -->
+            <div style="text-align: right;">
+                <label>Filter :</label>
+                <select id="statusFilter" class="form-select" style="width: 200px;margin-top:-1em">
+                    <option value="">Select All</option>
+                    <?php if (!empty($getAllContractType)): ?>
+                        <?php foreach ($getAllContractType as $contract): ?>
+                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>">
+                                <?= htmlspecialchars($contract['contract_type']) ?>
+                            </option>
                         <?php endforeach; ?>
                     <?php endif; ?>
-                </tbody>
+                </select>
+            </div>
+        </div>
 
+        <table id="table" class="table table-bordered table-striped display mt-2 hover">
+            <thead>
+                <tr>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Days Remaining</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($contracts)): ?>
+                    <?php foreach ($contracts as $contract): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td class="text-center">
+                                <?php
+                                $type = $contract['contract_type'] ?? '';
+                                $badgeColor = match ($type) {
+                                    TRANS_RENT => '#003092',
+                                    TEMP_LIGHTING => '#03A791',
+                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
+                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
+                                    default => '#FAB12F'
+                                };
+                                ?>
+                                <span class="p-2 text-white badge"
+                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
+                                    <?= htmlspecialchars($type) ?>
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge text-secondary">
+                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge text-secondary">
+                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                            </td>
+                            <td class="text-center">
+                                <span
+                                    class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
+                                    <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
+                                </span>
+                            </td>
 
-            </table>
+                            <?php
+                            $contractType = $contract['contract_type'];
 
-            <?php if ($totalContracts >= 10): ?>
-                <!-- Pagination links -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <?php 
-                        $queryParams = $_GET;
-                        $queryParams['page'] = 1;
-                        $firstPageUrl = '?' . http_build_query($queryParams);
+                            $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
 
-                        $queryParams['page'] = $page - 1;
-                        $prevPageUrl = '?' . http_build_query($queryParams);
+                            foreach ($getFromContractType as $row) {
 
-                        $queryParams['page'] = $page + 1;
-                        $nextPageUrl = '?' . http_build_query($queryParams);
+                                if ($contractType === $row['contract_type']) {
 
-                        $queryParams['page'] = $totalPages;
-                        $lastPageUrl = '?' . http_build_query($queryParams);
-                        ?>
+                                    $end = new DateTime($contract['contract_end']);
+                                    $now = new DateTime();
+
+                                    $interval = $now->diff($end);
+                                    $diff = $interval->days;
+
+                                    $diff;
+
+                                }
+
+                            }
+                            ?>
+
+                            <?php switch ($contractType):
+                                case EMP_CON: ?>
+                                    <!-- Code for EMP_CON -->
+                                    <span>
+                                        <?php
+                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
+                                        foreach ($getFromContractType as $row) {
+                                            if ($contractType === $row['contract_type']) {
+                                                $end = new DateTime($contract['contract_end']);
+                                                $now = new DateTime();
+                                                $ert = $row['contract_ert'];
+
+                                                $interval = $now->diff($end);
+                                                $diff = $interval->days;
+
+                                                // $diff;
                         
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $firstPageUrl ?>" aria-label="First">
-                                <span aria-hidden="true">&laquo;&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $prevPageUrl ?>" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
+                                                if ($diff >= $ert) {
+                                                    echo '<td class="text-center table-success">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
+                                                        </td>';
+                                                } else {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
+                                                    </td>';
 
-                        <?php for ($i = 1; $i <= $totalPages; $i++): 
-                            $queryParams['page'] = $i;
-                            $pageUrl = '?' . http_build_query($queryParams);
-                        ?>
-                            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                <a class="page-link" href="<?= $pageUrl ?>"><?= $i ?></a>
-                            </li>
-                        <?php endfor; ?>
+                                                }
 
-                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $nextPageUrl ?>" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="<?= $lastPageUrl ?>" aria-label="Last">
-                                <span aria-hidden="true">&raquo;&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            <?php endif; ?>
+                                            }
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php break;
+                                case PSC_LONG: ?>
+                                    <!-- Code for PSC_LONG -->
+                                    <!-- Code for EMP_CON -->
+                                    <span>
+                                        <?php
+                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
 
+                                        foreach ($getFromContractType as $row) {
+                                            if ($contractType === $row['contract_type']) {
+                                                $end = new DateTime($contract['contract_end']);
+                                                $now = new DateTime();
+                                                $ert = $row['contract_ert'];
+
+                                                $interval = $now->diff($end);
+                                                $diff = $interval->days;
+
+                                                // $diff;
+                        
+                                                if ($diff >= $ert) {
+                                                    echo '<td class="text-center table-success">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
+                                                        </td>';
+                                                } else {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
+                                                    </td>';
+
+                                                }
+
+                                            }
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php break;
+                                case PSC_SHORT: ?>
+                                    <!-- Code for PSC_SHORT -->
+                                    <!-- Code for EMP_CON -->
+                                    <span>
+                                        <?php
+                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
+                                        foreach ($getFromContractType as $row) {
+                                            if ($contractType === $row['contract_type']) {
+                                                $end = new DateTime($contract['contract_end']);
+                                                $now = new DateTime();
+                                                $ert = $row['contract_ert'];
+
+                                                $interval = $now->diff($end);
+                                                $diff = $interval->days;
+
+                                                // $diff;
+                        
+                                                if ($diff >= $ert) {
+                                                    echo '<td class="text-center table-success">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
+                                                        </td>';
+                                                } else {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
+                                                    </td>';
+
+                                                }
+
+                                            }
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php break;
+                                case TEMP_LIGHTING: ?>
+                                    <!-- Code for PSC_SHORT -->
+                                    <!-- Code for EMP_CON -->
+                                    <span>
+                                        <?php
+                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
+                                        foreach ($getFromContractType as $row) {
+                                            if ($contractType === $row['contract_type']) {
+                                                $end = new DateTime($contract['contract_end']);
+                                                $now = new DateTime();
+                                                $ert = $row['contract_ert'];
+
+                                                $interval = $now->diff($end);
+                                                $diff = $interval->days;
+
+                                                // $diff;
+                        
+                                                if ($diff >= $ert) {
+                                                    echo '<td class="text-center table-success">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
+                                                        </td>';
+                                                } else {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
+                                                    </td>';
+
+                                                }
+
+                                            }
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php break;
+                                case TRANS_RENT: ?>
+                                    <!-- Code for PSC_SHORT -->
+                                    <!-- Code for EMP_CON -->
+                                    <span>
+                                        <?php
+                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
+                                        foreach ($getFromContractType as $row) {
+                                            if ($contractType === $row['contract_type']) {
+                                                $end = new DateTime($contract['contract_end']);
+                                                $now = new DateTime();
+                                                $ert = $row['contract_ert'];
+
+                                                $interval = $now->diff($end);
+                                                $diff = $interval->days;
+
+                                                // $diff;
+                        
+                                                if ($diff >= $ert) {
+                                                    echo '<td class="text-center table-success fw-bold">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
+                                                        </td>';
+                                                } else {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
+                                                    </td>';
+
+                                                }
+
+                                            }
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php break;
+                                default: ?>
+                                    <!-- Code if no match -->
+                                    <p>Unknown Contract Type</p>
+                            <?php endswitch; ?>
+
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center">No contracts found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<?php include_once '../../../views/layouts/includes/footer.php'; ?>
+
+
+<!-- Bootstrap Modal for confirmation -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this contract?</p>
+            </div>
+            <div class="modal-footer">
+                <!-- Yes, Delete button -->
+                <a href="#" id="confirmDelete" class="btn btn-danger">Yes, Delete</a>
+                <!-- Cancel button -->
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            </div>
         </div>
     </div>
 </div>
 
-<!-- <?php 
-
-$contract_status = $_SESSION['contract_status'];
-$contract_id = $_SESSION['contract_id'];
 
 
-$update_contract_status = $savedContracts->updateContractStatus($contract_id,$contract_status );
+<!-- popup notification ---->
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>
 
 
-?> -->
+<?php if (isset($_SESSION['notification'])): ?>
+    <div id="notification"
+        class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
+        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        <!-- Icon -->
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
+            aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
+            <use
+                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
+        </svg>
+        <!-- Message -->
+        <div>
+            <?php echo $_SESSION['notification']['message']; ?>
+        </div>
+        <!-- Close Button -->
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['notification']); // Clear notification after displaying ?>
 
-<?php include_once '../../../views/layouts/includes/footer.php';   ?>
+    <script>
+        // Automatically fade the notification out after 6 seconds
+        setTimeout(function () {
+            let notification = document.getElementById('notification');
+            if (notification) {
+                notification.classList.remove('show');
+                notification.classList.add('fade');
+                notification.style.transition = 'opacity 1s ease';
+            }
+        }, 7000); // 6 seconds
+    </script>
+<?php endif; ?>
 
 <style>
-    /* Flex container for the layout */
-    .pageContent {
+    #table_filter {
         display: flex;
-        min-height: 100vh; /* Ensure it takes full viewport height */
-    }
-    /* Main content styles */
-    .mainContent {
-        background-color: #FFF;
-        width: 100%; /* Main content takes up remaining space */
-        padding: 20px;
+        align-items: center;
+        gap: 10px;
     }
 
-    /* Header styles */
-    .headerDiv {
-        background-color: #FBFBFB;
-        padding: 20px;
+    #statusFilter {
+        width: 200px;
+        /* Adjust width as needed */
     }
 </style>
 
 <script>
     // When the page finishes loading, hide the spinner
-    window.onload = function() {
+    window.onload = function () {
         document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
         document.getElementById("content").style.display = "block"; // Show the page content
     };
+
+    let selectedContractId = null;
+
+    document.addEventListener("click", function (e) {
+        const deleteBtn = e.target.closest('.delete-btn');
+        if (deleteBtn) {
+            e.preventDefault();
+
+            // Get contract ID from data attribute
+            selectedContractId = deleteBtn.getAttribute('data-id');
+
+            // Show modal using Bootstrap 5
+            const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            confirmModal.show();
+        }
+    });
+
+    // Handle Confirm Delete button click
+    document.getElementById('confirmDelete').addEventListener('click', function (e) {
+        if (selectedContractId) {
+            // Redirect to deletion endpoint (adjust URL to match your backend)
+            window.location.href = 'contracts/delete.php?id=' + selectedContractId;
+        }
+    });
+
+    //----------------DAtatables
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#table').DataTable({
+            "paging": true,   // Pagination enabled
+            "searching": true, // Search box enabled
+            "lengthChange": true, // Items per page option enabled
+            "pageLength": 10,   // Set default number of rows per page
+            "ordering": false,  // Sorting enabled
+            "info": true,      // Display table information
+        });
+
+        // Append the contract type filter next to the search input
+        var searchInput = $('#table_filter input');  // DataTables search input field
+        var filterDiv = $('#statusFilter').closest('div');  // The contract filter container
+        searchInput.closest('div').append(filterDiv);  // Move the filter next to the search input
+
+        // Apply filter based on contract type selection
+        $('#statusFilter').change(function () {
+            var filterValue = $(this).val();
+
+            if (filterValue) {
+                table.column(1).search(filterValue).draw();  // Column 1 is for contract type
+            } else {
+                table.column(1).search('').draw();  // Reset filter if 'Select All' is selected
+            }
+        });
+    });
+
+
+    //----------------DAtatables
 </script>

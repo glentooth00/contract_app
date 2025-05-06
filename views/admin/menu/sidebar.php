@@ -3,7 +3,7 @@
     <div class="col-md-5 p-2">
       <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid">
     </div>
-    <div class="col-md-5 ms-3 p-2">
+    <div class="col-md-5 ms-3 p-2 text-dark">
       <h6>Contract Monitoring App</h6>
     </div>
   </div>
@@ -128,9 +128,9 @@
         </ul>
       </li>
 
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
+      </li> -->
     </div>
 
     <!-- <i class="fa fa-sign-out fa-flip-vertical" aria-hidden="true"></i> -->

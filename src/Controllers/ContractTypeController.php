@@ -30,9 +30,14 @@ class ContractTypeController
         return;
     }
 
-    public function getContractId()
+    public function getEmploymentErt()
     {
+        $sql = "SELECT contract_ert FROM contract_types";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        return $results;
 
 
     }
@@ -40,15 +45,24 @@ class ContractTypeController
 
     public function getContractTypes()
     {
-
         $sql = "SELECT * FROM contract_types";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
+        return $results;
     }
+
+    public function getContractTypeByDepartment($contractType)
+    {
+        $sql = "SELECT * FROM contract_types WHERE contract_type = :contract_type";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(":contract_type", $contractType);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
+    }
+
 
     public function getContractType($department)
     {
@@ -74,10 +88,10 @@ class ContractTypeController
 
     }
 
-    public function getEmploymentErt()
+    public function getContractErt()
     {
 
-        $sql = "SELECT contract_ert FROM contract_types WHERE contract_type = 'Employment Contract'";
+        $sql = "SELECT * FROM contract_types";
         $stmt = $this->db->query($sql);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;

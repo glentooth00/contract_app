@@ -88,10 +88,12 @@ class EmploymentContractController
     public function udpateExpiredEmploymentContract($data)
     {
 
-        $sql = "UPDATE employment_history SET status = :status WHERE id = :id";
+        $sql = "UPDATE employment_history SET status = :status WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':status', $data['status']);
         $stmt->bindParam(':id', $data['id']);
+
+
         return $stmt->execute();
 
     }
