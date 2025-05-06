@@ -84,7 +84,7 @@ class ContractHistoryController
 
     public function getByContractId($id)
     {
-        $sql = "SELECT * FROM contract_history WHERE id = :id";
+        $sql = "SELECT * FROM contract_history WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

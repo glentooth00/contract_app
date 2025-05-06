@@ -29,7 +29,7 @@ $perPage = 10; // Number of items per page
 
 
 // Get the contracts for the current page
-$contracts = (new ContractController)->getContractsByCITETDepartment($department, $searchQuery, $perPage, $currentPage, $contractTypeFilter);
+$contracts = (new ContractController)->getContractsByDepartment($department, $searchQuery, $perPage, $currentPage, $contractTypeFilter);
 $totalContracts = (new ContractController)->getTotalContractsCountCITETD($department, $searchQuery, $contractTypeFilter);
 
 //------------------------------------- for pagination ------------------------------------------------//

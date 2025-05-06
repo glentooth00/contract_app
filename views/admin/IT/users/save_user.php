@@ -40,11 +40,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         // Redirect to users page
-        header('location: ../users.php');
+        header("Location: " . $_SERVER['HTTP_REFERER']);
         exit;
     } else {
         // Handle the error (e.g., display an error message)
-        echo "Error occurred while creating user.";
+        header("Location: " . $_SERVER['HTTP_REFERER']);
     }
 }
 

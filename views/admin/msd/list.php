@@ -10,7 +10,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 
-$contracts = (new ContractController)->getContractsByCITETDepartment($department);
+$contracts = (new ContractController)->getContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
@@ -105,7 +105,7 @@ include_once '../../../views/layouts/includes/header.php';
             <!-- Contract Type Filter -->
             <div style="text-align: right;">
                 <label>Filter :</label>
-                <select id="statusFilter" class="form-select" style="width: 200px;margin-top:-1em">
+                <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
                     <?php if (!empty($getAllContractType)): ?>
                         <?php foreach ($getAllContractType as $contract): ?>

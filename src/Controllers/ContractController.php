@@ -881,7 +881,7 @@ class ContractController
     }
 
     //for CITETD contracts
-    // public function getContractsByCITETDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
+    // public function getContractsByDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
     // {
     //     $offset = ($currentPage - 1) * $perPage;
 
@@ -895,7 +895,7 @@ class ContractController
     //     return $stmt->fetchAll();
     // }
 
-    public function getContractsByCITETDepartment($department)
+    public function getContractsByDepartment($department)
     {
         // Prepare the query
         $query = "SELECT * FROM contracts WHERE uploader_department = ? OR department_assigned = ? ORDER BY created_at DESC";
@@ -913,6 +913,26 @@ class ContractController
 
         return $results; // Return the results
     }
+
+    public function getExpiredContractsByDepartment($department)
+    {
+        // Corrected SQL query using a single WHERE clause
+        $query = "SELECT * FROM contracts 
+                  WHERE (uploader_department = ? OR department_assigned = ?) 
+                  AND contract_status = 'Expired' 
+                  ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($query);
+
+        // Bind parameters
+        $stmt->bindValue(1, $department, PDO::PARAM_STR);
+        $stmt->bindValue(2, $department, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 
@@ -969,6 +989,21 @@ class ContractController
             ':uploader_id' => $data['uploader_id'],
             ':uploader_department' => $data['uploader_department'],
         ]);
+    }
+
+
+
+    public function updateStatus($data)
+    {
+
+        $sql = "UPDATE contracts SET contract_status = :contract_status WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':id', $data['id']);
+
+
+        return $stmt->execute();
+
     }
 
 

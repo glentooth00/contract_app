@@ -492,33 +492,39 @@ include_once '../../../views/layouts/includes/header.php';
     });
 
     //----------------DAtatables
+    //----------------DAtatables
     $(document).ready(function () {
-        // Initialize DataTable
-        var table = $('#table').DataTable({
-            "paging": true,   // Pagination enabled
-            "searching": true, // Search box enabled
-            "lengthChange": true, // Items per page option enabled
-            "pageLength": 10,   // Set default number of rows per page
-            "ordering": false,  // Sorting enabled
-            "info": true,      // Display table information
-        });
+        var rowCount = $('#table tbody tr').length;
 
-        // Append the contract type filter next to the search input
-        var searchInput = $('#table_filter input');  // DataTables search input field
-        var filterDiv = $('#statusFilter').closest('div');  // The contract filter container
-        searchInput.closest('div').append(filterDiv);  // Move the filter next to the search input
+        // Check if the table has at least one data row (excluding the "No contracts found" message)
+        if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
+            // Initialize DataTable
+            var table = $('#table').DataTable({
+                "paging": true,
+                "searching": true,
+                "lengthChange": true,
+                "pageLength": 10,
+                "ordering": false,
+                "info": true
+            });
 
-        // Apply filter based on contract type selection
-        $('#statusFilter').change(function () {
-            var filterValue = $(this).val();
+            // Append the contract type filter next to the search input
+            var searchInput = $('#table_filter input'); // DataTables search input field
+            var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
+            searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
 
-            if (filterValue) {
-                table.column(1).search(filterValue).draw();  // Column 1 is for contract type
-            } else {
-                table.column(1).search('').draw();  // Reset filter if 'Select All' is selected
-            }
-        });
+            // Apply filter based on contract type selection
+            $('#statusFilter').change(function () {
+                var filterValue = $(this).val();
+                if (filterValue) {
+                    table.column(1).search(filterValue).draw(); // Column 1 is for contract type
+                } else {
+                    table.column(1).search('').draw(); // Reset filter
+                }
+            });
+        }
     });
+
 
 
     //----------------DAtatables

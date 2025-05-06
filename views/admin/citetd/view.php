@@ -1,5 +1,5 @@
 <?php
-
+use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
@@ -158,7 +158,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
+                    <!-- <label class="badge text-muted" style="font-size: 15px;">Department Assigned:</label>
                     <select id="deptSelect" class="form-select" style="margin-left:9px;" disabled>
                         <?php foreach ($departments as $department): ?>
                             <option value="<?= $department['department_name']; ?>"
@@ -166,7 +166,7 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?= $department['department_name']; ?>
                             </option>
                         <?php endforeach; ?>
-                    </select>
+                    </select> -->
                     <!-- <input type="text" style="margin-left:9px;" class="form-control pl-5" value="<?= $getContract['department_assigned']; ?>"  name="department_assigned" readonly> -->
                 </div>
             </div>
@@ -239,7 +239,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     data-departmentassigned="<?= $getContract['department_assigned'] ?>"
                                     data-type="<?= $getContract['contract_type'] ?>" data-bs-toggle="modal"
                                     data-bs-target="#extendModal">
-                                    Renew
+                                    Extend
                                 </button>
                                 <form action="contracts/end_contract.php" method="post">
                                     <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
@@ -329,38 +329,42 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
             </div>
-
-
-
         </div>
+
 
         <div>
             <div class="mt-5">
-                <h4>Employment History</h4>
+                <h4>Contract History</h4>
             </div>
-            <hr class="">
-            <div class="">
-                <table class="table table-stripped table-hover table-striped border">
+            <hr>
+            <div>
+                <table class="table table-stripped table-hover">
                     <thead>
                         <tr>
-                            <th style="text-align: center !important;">Status</th>
-                            <th style="text-align: center !important;">Contract File</th>
-                            <th style="text-align: center !important;">Date Start</th>
-                            <th style="text-align: center !important;">Date End</th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Contract
+                                    File</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
+                            </th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
+                            </th>
+                            <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
                         </tr>
                     </thead>
                     <?php
                     $id = $getContract['id'];
-                    $employement_datas = (new EmploymentContractController)->getByContractId($id);
+                    $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
                     ?>
                     <tbody class="">
-                        <?php if (!empty($employement_datas)): ?>
-                            <?php foreach ($employement_datas as $employement_data): ?>
+                        <?php if (!empty($contractHist_datas)): ?>
+                            <?php foreach ($contractHist_datas as $employement_data): ?>
                                 <tr>
                                     <td style="text-align: center !important;">
-                                        <!-- <?= $employement_data['status']; ?> -->
-                                        <?php if ($employement_data['status'] === 'Active' | $employement_data['status'] === 'Expired'): ?>
+
+                                        <?php if ($employement_data['status'] == 'Active'): ?>
                                             <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
+                                        <?php elseif ($employement_data['status'] == 'Expired'): ?>
+                                            <span class="badge bg-danger p-2">Rental Contract Ended</span>
                                         <?php else: ?>
                                             <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
                                         <?php endif; ?>
@@ -408,19 +412,38 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $datestart = new DateTime($employement_data['date_start']);
-                                        ?>
 
-                                        <span class="badge text-dark"> <?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php if (!empty($employement_data['date_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
                                     </td>
-
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $dateend = new DateTime($employement_data['date_end']);
-                                        ?>
-                                        <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
+                                        <?php if (!empty($employement_data['date_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+
                                     </td>
+
+                                    <!-- <td style="text-align: center !important;">
+
+                                        <button class="btn btn-danger btn-sm" title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+
+
+                                        <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal"
+                                            data-bs-target="#editModal">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </button>
+                                    </td> -->
+
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -433,7 +456,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </table>
             </div>
         </div>
-
 
     </div>
 </div>
@@ -573,6 +595,8 @@ include_once '../../../views/layouts/includes/header.php';
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
+        const rentStart = document.getElementById('rentStart');
+        const rentEnd = document.getElementById('rentEnd');
         const deptSelect = document.getElementById('deptSelect');
 
         const saveBtn = document.getElementById('save');
@@ -584,10 +608,12 @@ include_once '../../../views/layouts/includes/header.php';
 
         if (isReadOnly) {
             // Make all editable
-            nameInput.removeAttribute('readonly');
-            startDate.removeAttribute('readonly');
-            endDate.removeAttribute('readonly');
-            deptSelect.removeAttribute('disabled');
+            nameInput?.removeAttribute('readonly');
+            startDate?.removeAttribute('readonly');
+            endDate?.removeAttribute('readonly');
+            deptSelect?.removeAttribute('disabled');
+            rentStart?.removeAttribute('readonly');
+            rentEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -600,6 +626,7 @@ include_once '../../../views/layouts/includes/header.php';
             startDate.setAttribute('readonly', true);
             endDate.setAttribute('readonly', true);
             deptSelect.setAttribute('disabled', true);
+
 
             saveBtn.style.display = 'none';
 
@@ -620,10 +647,10 @@ include_once '../../../views/layouts/includes/header.php';
         const isReadOnly = nameInput.hasAttribute('readonly');
 
         // Set them back to readonly/disabled
-        nameInput.setAttribute('readonly', true);
-        startDate.setAttribute('readonly', true);
-        endDate.setAttribute('readonly', true);
-        deptSelect.setAttribute('disabled', true);
+        nameInput?.setAttribute('readonly', true);
+        startDate?.setAttribute('readonly', true);
+        endDate?.setAttribute('readonly', true);
+        deptSelect?.setAttribute('disabled', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -633,17 +660,25 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('save').addEventListener('click', function () {
 
+        // Get the relevant DOM elements
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
+        const rentStart = document.getElementById('rent_start');
+        const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
 
-        const contractName = encodeURIComponent(nameInput.value);
-        const contractStart = encodeURIComponent(formatDate(startDate.value));
-        const contractEnd = encodeURIComponent(formatDate(endDate.value));
-        const department = encodeURIComponent(deptSelect.value);
-        const contract_id = encodeURIComponent(id.value);
+        // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
+        const startDateValue = startDate?.value || rentStart?.value || '';
+        const endDateValue = endDate?.value || rentEnd?.value || '';
+
+        // Get other values
+        const contractName = encodeURIComponent(nameInput?.value || '');
+        const contractStart = encodeURIComponent(formatDate(startDateValue));
+        const contractEnd = encodeURIComponent(formatDate(endDateValue));
+        const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
+        const contract_id = encodeURIComponent(id?.value || '');
 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
