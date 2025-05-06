@@ -28,7 +28,7 @@
               Active Contracts</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="expired.php"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
+            <a class="nav-link" href="expired_list.php"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
               Expired Contracts</a>
           </li>
           <li class="nav-item">

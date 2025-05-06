@@ -101,6 +101,10 @@
             display: inline-block;
             margin-bottom: 20px;
         }
+
+        a.paginate_button.current {
+            padding: 1px !important;
+        }
     </style>
 </head>
 

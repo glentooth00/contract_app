@@ -53,6 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/citetd/index.php");
                     break;
+                case "BAC":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/bac/index.php");
+                    break;
             }
         } else {
             $_SESSION['password'] = 'Password is incorrect.';

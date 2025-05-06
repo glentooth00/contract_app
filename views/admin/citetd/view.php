@@ -1,5 +1,5 @@
 <?php
-
+use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
@@ -331,33 +331,40 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
         </div>
 
+
         <div>
             <div class="mt-5">
-                <h4>Contracts history</h4>
+                <h4>Contract History</h4>
             </div>
-            <hr class="">
-            <div class="">
+            <hr>
+            <div>
                 <table class="table table-stripped table-hover">
                     <thead>
                         <tr>
-                            <th style="text-align: center !important;">Status</th>
-                            <th style="text-align: center !important;">Contract File</th>
-                            <th style="text-align: center !important;">Date Start</th>
-                            <th style="text-align: center !important;">Date End</th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Contract
+                                    File</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
+                            </th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
+                            </th>
+                            <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
                         </tr>
                     </thead>
                     <?php
                     $id = $getContract['id'];
-                    $employement_datas = (new EmploymentContractController)->getByContractId($id);
+                    $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
                     ?>
                     <tbody class="">
-                        <?php if (!empty($employement_datas)): ?>
-                            <?php foreach ($employement_datas as $employement_data): ?>
+                        <?php if (!empty($contractHist_datas)): ?>
+                            <?php foreach ($contractHist_datas as $employement_data): ?>
                                 <tr>
                                     <td style="text-align: center !important;">
-                                        <!-- <?= $employement_data['status']; ?> -->
-                                        <?php if ($employement_data['status'] === 'Active' | $employement_data['status'] === 'Expired'): ?>
+
+                                        <?php if ($employement_data['status'] == 'Active'): ?>
                                             <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
+                                        <?php elseif ($employement_data['status'] == 'Expired'): ?>
+                                            <span class="badge bg-danger p-2">Rental Contract Ended</span>
                                         <?php else: ?>
                                             <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
                                         <?php endif; ?>
@@ -405,19 +412,38 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?php endif; ?>
                                     </td>
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $datestart = new DateTime($employement_data['date_start']);
-                                        ?>
 
-                                        <span class="badge text-dark"> <?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php if (!empty($employement_data['date_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
                                     </td>
-
                                     <td style="text-align: center !important;">
-                                        <?php
-                                        $dateend = new DateTime($employement_data['date_end']);
-                                        ?>
-                                        <span class="badge text-dark"> <?= date_format($dateend, "M-d-Y"); ?></span>
+                                        <?php if (!empty($employement_data['date_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+
                                     </td>
+
+                                    <!-- <td style="text-align: center !important;">
+
+                                        <button class="btn btn-danger btn-sm" title="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+
+
+                                        <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal"
+                                            data-bs-target="#editModal">
+                                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                                        </button>
+                                    </td> -->
+
+
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -426,9 +452,11 @@ include_once '../../../views/layouts/includes/header.php';
                             </tr>
                         <?php endif; ?>
                     </tbody>
+
                 </table>
             </div>
         </div>
+
     </div>
 </div>
 

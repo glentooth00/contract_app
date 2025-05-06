@@ -20,12 +20,12 @@ $page_title = 'Login';
     <div class="container mt-5 d-flex justify-content-center">
         <div class="formHolder col-md-3 bg-white p-4 rounded mt-5">
             <div class="d-flex justify-content-center">
-                <h2 class="text-dark">Login</h2>
+                <h2 class="text-dark p-2">Login</h2>
             </div>
             <form action="authenticate.php" method="post">
                 <div class="col-12">
-                    <label class="badge text-muted">Username</label>
-                    <input type="text" class="form-control" name="username" placeholder="Enter username" required>
+                    <input type="text" class="form-control" name="username" placeholder="Enter username" required
+                        autofocus>
                     <p class="notifMsg p-1">
                         <?php if (isset($_SESSION['username'])): ?>
                             <?= $_SESSION['username']; ?>
@@ -35,8 +35,7 @@ $page_title = 'Login';
 
                 </div>
                 <div class="password col-12">
-                    <label class="badge text-muted">Password</label>
-                    <input type="password" id="password" class="form-control mb-1" name="password"
+                    <input type="password" id="password" class="form-control mb-1 " name="password"
                         placeholder="Enter password" required>
 
                     <div class="" style="margin-left:1%;">
@@ -86,6 +85,8 @@ $page_title = 'Login';
     .forgotPassword a {
         text-decoration: none;
     }
+
+    @media screen and (max-width: 479px) {}
 </style>
 <script>
     function checkPassword() {

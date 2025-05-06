@@ -9,10 +9,19 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\ContractHistoryController;
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
+
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
+if ($getOneLatest) {
+    echo '<script>alert("Latest data inserted")</script>';
+} else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
@@ -95,7 +104,7 @@ include_once '../../../views/layouts/includes/header.php';
             <!-- Contract Type Filter -->
             <div style="text-align: right;">
                 <label>Filter :</label>
-                <select id="statusFilter" class="form-select" style="width: 200px;margin-top:-1em">
+                <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
                     <?php if (!empty($getAllContractType)): ?>
                         <?php foreach ($getAllContractType as $contract): ?>

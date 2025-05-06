@@ -1,6 +1,6 @@
 <?php
 session_start();
-$userid = $_SESSION['id'];
+
 $department = $_SESSION['department'];
 $page_title = "List - $department";
 
@@ -9,10 +9,19 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\ContractHistoryController;
 
-$contracts = (new ContractController)->getContractsByDepartment($department);
+$contracts = (new ContractController)->getExpiredContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
+
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
+if ($getOneLatest) {
+    echo '<script>alert("Latest data inserted")</script>';
+} else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
@@ -83,12 +92,10 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2" data-mdb-ripple-init style="width:15%;padding-right:10px;" href="#!"
-            role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#powerSupplyModal">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
             Add Contract
-        </a>
-
+        </button> -->
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -176,14 +183,15 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
+
+
+
+
+
     </div>
 </div>
 
-<?php
-
-include_once '../modals/hrad_modal.php';
-
-?>
+<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
@@ -307,32 +315,37 @@ include_once '../modals/hrad_modal.php';
 
     //----------------DAtatables
     $(document).ready(function () {
-        // Initialize DataTable
-        var table = $('#table').DataTable({
-            "paging": true,   // Pagination enabled
-            "searching": true, // Search box enabled
-            "lengthChange": true, // Items per page option enabled
-            "pageLength": 10,   // Set default number of rows per page
-            "ordering": false,  // Sorting enabled
-            "info": true,      // Display table information
-        });
+        var rowCount = $('#table tbody tr').length;
 
-        // Append the contract type filter next to the search input
-        var searchInput = $('#table_filter input');  // DataTables search input field
-        var filterDiv = $('#statusFilter').closest('div');  // The contract filter container
-        searchInput.closest('div').append(filterDiv);  // Move the filter next to the search input
+        // Check if the table has at least one data row (excluding the "No contracts found" message)
+        if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
+            // Initialize DataTable
+            var table = $('#table').DataTable({
+                "paging": true,
+                "searching": true,
+                "lengthChange": true,
+                "pageLength": 10,
+                "ordering": false,
+                "info": true
+            });
 
-        // Apply filter based on contract type selection
-        $('#statusFilter').change(function () {
-            var filterValue = $(this).val();
+            // Append the contract type filter next to the search input
+            var searchInput = $('#table_filter input'); // DataTables search input field
+            var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
+            searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
 
-            if (filterValue) {
-                table.column(1).search(filterValue).draw();  // Column 1 is for contract type
-            } else {
-                table.column(1).search('').draw();  // Reset filter if 'Select All' is selected
-            }
-        });
+            // Apply filter based on contract type selection
+            $('#statusFilter').change(function () {
+                var filterValue = $(this).val();
+                if (filterValue) {
+                    table.column(1).search(filterValue).draw(); // Column 1 is for contract type
+                } else {
+                    table.column(1).search('').draw(); // Reset filter
+                }
+            });
+        }
     });
+
 
 
     //----------------DAtatables

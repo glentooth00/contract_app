@@ -914,6 +914,26 @@ class ContractController
         return $results; // Return the results
     }
 
+    public function getExpiredContractsByDepartment($department)
+    {
+        // Corrected SQL query using a single WHERE clause
+        $query = "SELECT * FROM contracts 
+                  WHERE (uploader_department = ? OR department_assigned = ?) 
+                  AND contract_status = 'Expired' 
+                  ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($query);
+
+        // Bind parameters
+        $stmt->bindValue(1, $department, PDO::PARAM_STR);
+        $stmt->bindValue(2, $department, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
 
 
