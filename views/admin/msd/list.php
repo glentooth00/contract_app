@@ -83,7 +83,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2" data-mdb-ripple-init
+        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
             style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
             data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
@@ -91,7 +91,7 @@ include_once '../../../views/layouts/includes/header.php';
         </a>
 
 
-        <a class="btn text-white btn-success p-2" data-mdb-ripple-init
+        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
             style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
             data-bs-toggle="modal" data-bs-target="#transformerModal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
@@ -321,32 +321,37 @@ include_once '../modals/transformer_rental.php';
 
     //----------------DAtatables
     $(document).ready(function () {
-        // Initialize DataTable
-        var table = $('#table').DataTable({
-            "paging": true,   // Pagination enabled
-            "searching": true, // Search box enabled
-            "lengthChange": true, // Items per page option enabled
-            "pageLength": 10,   // Set default number of rows per page
-            "ordering": false,  // Sorting enabled
-            "info": true,      // Display table information
-        });
+        var rowCount = $('#table tbody tr').length;
 
-        // Append the contract type filter next to the search input
-        var searchInput = $('#table_filter input');  // DataTables search input field
-        var filterDiv = $('#statusFilter').closest('div');  // The contract filter container
-        searchInput.closest('div').append(filterDiv);  // Move the filter next to the search input
+        // Check if the table has at least one data row (excluding the "No contracts found" message)
+        if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
+            // Initialize DataTable
+            var table = $('#table').DataTable({
+                "paging": true,
+                "searching": true,
+                "lengthChange": true,
+                "pageLength": 10,
+                "ordering": false,
+                "info": true
+            });
 
-        // Apply filter based on contract type selection
-        $('#statusFilter').change(function () {
-            var filterValue = $(this).val();
+            // Append the contract type filter next to the search input
+            var searchInput = $('#table_filter input'); // DataTables search input field
+            var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
+            searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
 
-            if (filterValue) {
-                table.column(1).search(filterValue).draw();  // Column 1 is for contract type
-            } else {
-                table.column(1).search('').draw();  // Reset filter if 'Select All' is selected
-            }
-        });
+            // Apply filter based on contract type selection
+            $('#statusFilter').change(function () {
+                var filterValue = $(this).val();
+                if (filterValue) {
+                    table.column(1).search(filterValue).draw(); // Column 1 is for contract type
+                } else {
+                    table.column(1).search('').draw(); // Reset filter
+                }
+            });
+        }
     });
+
 
 
     //----------------DAtatables
