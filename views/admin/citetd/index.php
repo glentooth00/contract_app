@@ -33,9 +33,7 @@ include_once '../../../views/layouts/includes/header.php';
 </div> -->
 
 <div class="main-layout">
-    <div class="sideBar">
-        <?php include_once '../menu/sidebar.php'; ?>
-    </div>
+    <?php include_once '../menu/sidebar.php'; ?>
 
     <div class="content-area">
 

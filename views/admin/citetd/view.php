@@ -40,12 +40,12 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div> -->
 
-<div class="pageContent">
-    <div class="sideBar bg-dark">
-        <?php include_once '../menu/sidebar.php'; ?>
-    </div>
+<div class="main-layout ">
 
-    <div class="mainContent">
+    <?php include_once '../menu/sidebar.php'; ?>
+
+
+    <div class="content-area">
 
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
@@ -522,17 +522,11 @@ include_once '../../../views/layouts/includes/header.php';
         min-height: 100vh;
     }
 
-    .sideBar {
-        width: 260px;
-        /* or whatever fixed width you want */
-        min-height: 100vh;
-        /* color: white; */
-    }
-
     .mainContent {
         flex: 1;
         padding: 20px;
         background-color: #FFF;
+        width: 300px;
     }
 
 

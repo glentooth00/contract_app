@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$userid = $_SESSION['id'];
 $department = $_SESSION['department'];
 $page_title = "List - $department";
 
@@ -9,19 +9,10 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
-use App\Controllers\ContractHistoryController;
 
-$contracts = (new ContractController)->getExpiredContractsByDepartment($department);
+$contracts = (new ContractController)->getContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
-
-$getOneLatest = (new ContractHistoryController)->insertLatestData();
-if ($getOneLatest) {
-    echo '<script>alert("Latest data inserted")</script>';
-} else {
-    // Optional: echo nothing or a silent message
-    // echo "No contract data available to insert.";
-}
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
@@ -37,7 +28,6 @@ include_once '../../../views/layouts/includes/header.php';
 <div class="main-layout">
 
     <?php include_once '../menu/sidebar.php'; ?>
-
 
     <div class="content-area">
 
@@ -92,10 +82,20 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#powerSupplyModal">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            Add Contract
-        </button> -->
+        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
+            style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
+            data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            Temporary Lighting Contract
+        </a>
+
+
+        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
+            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
+            data-bs-toggle="modal" data-bs-target="#transformerModal">
+            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+            Transformer Rental Contract
+        </a>
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -165,7 +165,7 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                    <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
@@ -191,7 +191,12 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php include '../modals/power_supply.php'; ?>
+<?php
+
+include_once '../modals/isdmsd_modal.php';
+include_once '../modals/transformer_rental.php';
+
+?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
