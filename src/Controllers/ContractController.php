@@ -880,25 +880,12 @@ class ContractController
         return true;
     }
 
-    //for CITETD contracts
-    // public function getContractsByDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
-    // {
-    //     $offset = ($currentPage - 1) * $perPage;
-
-    //     $query = "SELECT * FROM contracts 
-    //           WHERE uploader_department = 'CITETD' OR department_assigned = :department";
-
-    //     $stmt = $this->db->prepare($query);
-    //     $stmt->bindParam(':department', $department);
-
-    //     $stmt->execute();
-    //     return $stmt->fetchAll();
-    // }
-
     public function getContractsByDepartment($department)
     {
         // Prepare the query
-        $query = "SELECT * FROM contracts WHERE uploader_department = ? OR department_assigned = ? ORDER BY created_at DESC";
+        $query = "SELECT * FROM contracts WHERE (uploader_department = ? OR department_assigned = ?) 
+                  AND contract_status = 'Active' 
+                  ORDER BY created_at DESC";
         $stmt = $this->db->prepare($query);
 
         // Bind the parameters (correctly using bindValue or bindParam)
@@ -932,13 +919,6 @@ class ContractController
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
-
-
-
-
 
     //for CITETD contracts
     public function getTotalContractsCountCITETD($department, $searchQuery = null, $contractTypeFilter = null)
