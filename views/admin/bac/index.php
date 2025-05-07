@@ -492,7 +492,6 @@ include_once '../../../views/layouts/includes/header.php';
     });
 
     //----------------DAtatables
-    //----------------DAtatables
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
 
