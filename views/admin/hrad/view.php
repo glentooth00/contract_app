@@ -41,9 +41,9 @@ include_once '../../../views/layouts/includes/header.php';
 </div> -->
 
 <div class="pageContent">
-    <div class="sideBar bg-dark">
-        <?php include_once '../menu/sidebar.php'; ?>
-    </div>
+
+    <?php include_once '../menu/sidebar.php'; ?>
+
 
     <div class="mainContent">
 
