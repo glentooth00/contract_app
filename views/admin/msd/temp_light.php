@@ -41,59 +41,30 @@ include_once '../../../views/layouts/includes/header.php';
             <?= $contract_data ?></h2>
         <hr>
 
-        <?php if ($getContract['contract_status'] == 'Expired'): ?>
-
-            <div class="alert alert-danger text-center" role="alert">
-                <span class="display-4 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" fill="currentColor"
-                        class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
-                        <path
-                            d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
-                        <path
-                            d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
-                    </svg>
-                    Contract has expired...</span>
-            </div>
-
-        <?php endif; ?>
-
-
-
         <?php
-        // Check if the rent_start and rent_end are not null before creating DateTime objects
-        if (!empty($getContract['rent_start'])) {
-            $start = new DateTime($getContract['rent_start']);
-        } else {
-            $start = null; // Set to null if the rent_start is empty
-        }
-
-        if (!empty($getContract['rent_end'])) {
-            $end = new DateTime($getContract['rent_end']);
-        } else {
-            $end = null; // Set to null if the rent_end is empty
-        }
-
+        $start = new DateTime($getContract['contract_start']);
+        $end = new DateTime($getContract['contract_end']);
         $today = new DateTime();
 
-        if ($end !== null) {
-            $interval = $today->diff($end);
-            $remainingDays = $interval->invert ? -$interval->days : $interval->days;
+        $interval = $today->diff($end);
+        $remainingDays = $interval->invert ? -$interval->days : $interval->days;
 
-            // Check if the contract is about to expire or already expired
-            if ($getContract['contract_status'] !== 'Expired') {
-                if ($remainingDays > 0 && $remainingDays <= 3) {
-                    echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                            This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
-                        </span>';
-                } elseif ($remainingDays === 0) {
-                    echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
-                            This contract has expired.
-                        </span>';
-                }
-            }
-
+        // Check if the contract is about to expire or already expired
+        if ($remainingDays > 0 && $remainingDays <= 15) {
+            echo '
+            <div class="alert alert-warning text-center border-danger display-2 p-2" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                   This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
+                    </div>';
+        } elseif ($getContract['contract_status'] === 'Expired') {
+            echo '<div class="alert alert-danger text-center display-2 p-2" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    THIS CONTRACT HAS EXPIRED!
+                    </div>';
         }
         ?>
 
@@ -214,14 +185,14 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted"
                     <?php
-                   $start = new DateTime($getContract['rent_start'] ?? $getContract['contract_start'] ?? 'now');
-$end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 'now');
+                    $start = new DateTime($getContract['rent_start'] ?? $getContract['contract_start'] ?? 'now');
+                    $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 'now');
 
                     $today = new DateTime();
 
                     // Calculate the difference
                     $interval = $today->diff($end);
-                    $remainingDays = $interval->format('%r%a'); // This gives you the remaining days, including negative if past
+                    echo $remainingDays = $interval->format('%r%a'); // This gives you the remaining days, including negative if past
                     
                     // Check if the remaining days is less than 0
                     if ($remainingDays < 0) {
@@ -242,8 +213,16 @@ $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 
                 </div>
 
                 <?php   
-                     if ($remainingDays === 0) {
-                        // echo 'CONTRACT ENDED';
+
+                echo $remainingDays;
+                     if ($remainingDays == 0) {
+
+                        $data = [
+                            'id' => $getContract['id'],
+                            'contract_status' => 'Expired',
+                        ];
+
+                        (new ContractController)->updateStatusExpired($data);
                      }
                 ?>
 

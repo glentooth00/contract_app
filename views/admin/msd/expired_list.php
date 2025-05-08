@@ -120,7 +120,8 @@ include_once '../../../views/layouts/includes/header.php';
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Name <span class="badge text-muted">( Account
+                            number )</span></th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
@@ -132,7 +133,16 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td>
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+
+                                <?php if (isset($contract['account_no'])): ?>
+                                    <span class="badge account_number">(
+                                        <?= $contract['account_no'] ?> )</span>
+                                <?php endif; ?>
+
+
+                            </td>
                             <td class="text-center">
                                 <?php
                                 $type = $contract['contract_type'] ?? '';
@@ -150,12 +160,24 @@ include_once '../../../views/layouts/includes/header.php';
                                 </span>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_start']) ? date('F-d-Y', strtotime($contract['rent_start'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_end']) ? date('F-d-Y', strtotime($contract['rent_end'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
                             <td class="text-center">
                                 <span
@@ -165,7 +187,7 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                    <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
@@ -183,7 +205,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
 
 
 
