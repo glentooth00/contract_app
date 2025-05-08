@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'updated_at' => date('Y-m-d H:i:s'),
         'uploader_department' => $_POST['uploader_department'],
         'uploader_id' => $_POST['uploader_id'],
+        'account_no' => $_POST['account_no'],
 
     ];
 

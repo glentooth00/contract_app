@@ -146,6 +146,28 @@ include_once '../../../views/layouts/includes/header.php';
                         <input type="text" style="margin-left:7px;" class="form-control"
                             value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
                     </div>
+
+                    <?php
+
+                    $remainingDays;
+                    // echo $id = $getContract['id'];
+                    
+                    if ($remainingDays === 0) {
+
+                        $data = [
+                            'id' => $getContract['id'],
+                            'contract_status' => 'Expired',
+                        ];
+
+                        (new ContractController)->updateStatusExpired($data);
+
+                    } else {
+                        // echo 'contract still active';
+                    }
+
+
+                    ?>
+
                 </div>
             </div>
         </div>

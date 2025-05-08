@@ -666,7 +666,8 @@ class ContractController
                     updated_at, 
                     uploader_department, 
                     uploader_id,
-                    department_assigned   -- ADD THIS
+                    department_assigned,
+                    account_no
                 ) VALUES (
                     :contract_type, 
                     :contract_name, 
@@ -681,7 +682,8 @@ class ContractController
                     :updated_at, 
                     :uploader_department, 
                     :uploader_id,
-                    :department_assigned  -- ADD THIS
+                    :department_assigned,
+                    :account_no  -- ADD THIS
                 )";
 
         $stmt = $this->db->prepare($sql);
@@ -706,6 +708,7 @@ class ContractController
         $stmt->bindParam(':uploader_department', $data['uploader_department']);
         $stmt->bindParam(':uploader_id', $data['uploader_id']);
         $stmt->bindParam(':department_assigned', $emptyDepartmentAssigned);
+        $stmt->bindParam(':account_no', $data['account_no']);
 
         $stmt->execute();
 
