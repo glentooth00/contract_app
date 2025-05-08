@@ -17,8 +17,8 @@ $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    echo '<script>alert("Latest data inserted")</script>';
-} else {
+    //     echo '<script>alert("Latest data inserted")</script>';
+// } else {
     // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
 }

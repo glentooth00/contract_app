@@ -13,6 +13,7 @@ $latestData = [
     'start' => $_GET['start'], // Changed from 'contract_start'
     'end' => $_GET['end'],     // Changed from 'contract_end'
     'department_assigned' => $_GET['dept'],
+    'contract_status' => 'Active',
     'updated_at' => date('Y-m-d H:i:s') // Include current timestamp
 ];
 

@@ -7,6 +7,7 @@ session_start();
 
 use App\Controllers\ContractController;
 
+require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
@@ -67,31 +68,38 @@ include_once '../../../views/layouts/includes/header.php';
                     <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
                     This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
                 </span>';
-        } elseif ($remainingDays === 0) {
-            echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
-                    Contract has expired.
-                </p>';
+        } elseif ($getContract['contract_status'] === 'Expired') {
+            echo '<div class="alert alert-danger text-center display-2 p-2" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    THIS CONTRACT HAS EXPIRED!
+                    </div>';
         }
         ?>
 
-        <div class="gap-1">
-            <span id="close" style="float: inline-end;display:none;">
-                <!-- <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i> -->
-                <i class="fa fa-times" style="width:30px;" aria-hidden="true"></i>
 
-            </span>
-            <span id="save" style="float: inline-end;display:none;">
-                <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i>
-            </span>
-            <span id="edit" style="float: inline-end;display:inline;">
-                <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;" alt=""></i>
-            </span>
-        </div>
 
+
+        <?php if ($department === $getContract['uploader_department']) { ?>
+
+            <div class="gap-1">
+                <span id="close" style="float: inline-end;display:none;">
+
+                    <i class="fa fa-times" style="width:30px;" aria-hidden="true"></i>
+
+                </span>
+                <span id="save" style="float: inline-end;display:none;">
+                    <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i>
+                </span>
+                <span id="edit" style="float: inline-end;display:inline;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;" alt=""></i>
+                </span>
+            </div>
+
+        <?php } ?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
-
-
 
             <div class="row col-md-3">
                 <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5"
@@ -140,6 +148,27 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="d-flex">
                         <input type="text" style="margin-left:7px;" class="form-control"
                             value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
+                        <?php
+
+                        $remainingDays;
+                        // echo $id = $getContract['id'];
+                        
+                        if ($remainingDays === 0) {
+
+                            $data = [
+                                'id' => $getContract['id'],
+                                'contract_status' => 'Expired',
+                            ];
+
+                            (new ContractController)->updateStatusExpired($data);
+
+                        } else {
+                            // echo 'contract still active';
+                        }
+
+
+                        ?>
+
                     </div>
                 </div>
             </div>
@@ -174,7 +203,7 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Status</label>
                     <div class="d-flex">
-                        <?php if (!$getContract['contract_status'] === 'Active' | $getContract['contract_status'] === 'Expired'): ?>
+                        <?php if (!$getContract['contract_status'] == 'Active' | $getContract['contract_status'] == 'Expired'): ?>
                             <i class="fa fa-ban p-2" style="color:#BF3131;font-size: 20px;" aria-hidden="true"></i>
                             <span class="alert p-1 alert-warning border-danger text-danger text-center"
                                 style="width: 7em;"><?= $getContract['contract_status']; ?></span>

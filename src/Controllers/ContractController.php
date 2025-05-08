@@ -521,7 +521,8 @@ class ContractController
                     contract_start = :contract_start,
                     contract_end = :contract_end,
                     department_assigned = :department_assigned,
-                    updated_at = :updated_at 
+                    updated_at = :updated_at,
+                    contract_status = :contract_status
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -532,6 +533,7 @@ class ContractController
         $stmt->bindParam(':contract_end', $data['end']);
         $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam('contract_status', $data['contract_status']);
 
         $stmt->execute();
 
@@ -880,6 +882,25 @@ class ContractController
         return true;
     }
 
+    public function getContractsByDepartmentAll($department)
+    {
+        // Prepare the query
+        $query = "SELECT * FROM contracts WHERE (uploader_department = ? OR department_assigned = ?) ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($query);
+
+        // Bind the parameters (correctly using bindValue or bindParam)
+        $stmt->bindValue(1, $department, PDO::PARAM_STR); // First placeholder for uploader_department
+        $stmt->bindValue(2, $department, PDO::PARAM_STR); // Second placeholder for department_assigned
+
+        // Execute the statement
+        $stmt->execute();
+
+        // Fetch the results
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results; // Return the results
+    }
+
     public function getContractsByDepartment($department)
     {
         // Prepare the query
@@ -984,6 +1005,17 @@ class ContractController
 
         return $stmt->execute();
 
+    }
+
+
+    public function updateStatusExpired($data)
+    {
+        $sql = 'UPDATE contracts SET contract_status = :contract_status WHERE id = :id ';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('contract_status', $data['contract_status']);
+        $stmt->bindParam('id', $data['id']);
+
+        return $stmt->execute();
     }
 
 
