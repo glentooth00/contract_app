@@ -209,5 +209,17 @@ class UserController
 
     }
 
+    public function checkUsername($username)
+    {
+        $sql = 'SELECT username FROM users WHERE username = :username';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
 
 }

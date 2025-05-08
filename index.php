@@ -65,7 +65,7 @@ $page_title = 'Login';
             </form>
 
             <div class="mt-3 forgotPassword p-1">
-                <a href="#">Forgot password?</a>
+                <a href="password/index.php">Forgot password?</a>
             </div>
 
         </div>
