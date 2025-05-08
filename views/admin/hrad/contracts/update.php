@@ -13,7 +13,8 @@ $latestData = [
     'start' => $_GET['start'], // Changed from 'contract_start'
     'end' => $_GET['end'],     // Changed from 'contract_end'
     'department_assigned' => $_GET['dept'],
-    'updated_at' => date('Y-m-d H:i:s') // Include current timestamp
+    'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+    'contract_status' => 'Active'
 ];
 
 // Call the controller method to perform update
@@ -21,12 +22,12 @@ $updateContract = (new ContractController)->updateContract($latestData) ?? false
 
 // Optional redirect back to previous page
 if ($updateContract) {
-    
+
     $_SESSION['notification'] = [
         'message' => 'Employment contract updated!',
         'type' => 'success'
     ];
 
     header("Location: " . $_SERVER['HTTP_REFERER']);
-   
+
 }
