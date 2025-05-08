@@ -21,52 +21,12 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                 <form action="contracts/trans_rent.php" method="post" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-12 p-2">
-                            <!-- <div class="mb-3 col-md-5">
-                                <label class="badge text-muted">Contract type</label>
-                                <select name="contract_type" class="form-select" id="contract_type">
-                                    <?php
-                                    $contract_types = (new ContractTypeController)->getContractTypes();
-                                    ?>
-                                    <?php if ($department == 'ISD-MSD'): ?>
-                                        <option hidden>Select Contract type</option>
-                                        <?php foreach ($contract_types as $contract_type): ?>
-                                            <?php if (in_array($contract_type['contract_type'], ['Transformer Rental', 'Temporary Lighting Contract'])): ?>
-
-                                                <option value="<?= $contract_type['contract_type'] ?>">
-                                                    <?= $contract_type['contract_type'] ?>
-                                                </option>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <option disabled>No contract available</option>
-                                    <?php endif; ?>
-                                </select>
-                            </div> -->
-
-                            <!-- Transformer Rental Form -->
-                            <!-- <div id="form-transformer-rental" class="contract-form-section" style="display:none;">
-                                <hr>
-                                <input type="hidden" class="form-control" name="contract_type" value="<?= TRANS_RENT ?>"
-                                    readonly>
-                                <div class="col-md-12 d-flex p-2 row">
-                                    <div class="col-md-3">
-                                        <label class="badge text-muted" for="">Date of Contract Creation</label>
-                                    </div>
-                                </div> -->
-                            <!-- Add your form inputs here -->
-                            <!-- </div> -->
-
-
-                            <!----------------------------------------------------  DIVISION BETWEEM CONTRACTS ------------------------------------------------------------------------------->
-
-
-                            <!-- Temporary Lighting Contract Form -->
                             <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12">
                                 <input type="hidden" class="form-control" name="contract_type"
                                     value="<?= TRANS_RENT ?>" readonly>
                                 <div class="col-md-12 d-block gap-2">
-                                    <div class="col-md-12 d-flex gap-2 row">
-                                        <div class="col-md-5 p-2">
+                                    <div class="col-md-12 d-flex gap-2 row justify-content-center">
+                                        <div class="col-md-3 p-2">
                                             <div>
                                                 <input type="hidden" class="form-control" name="uploader_department"
                                                     value="<?= $department ?>" required>
@@ -74,18 +34,18 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                                 <input type="text" class="form-control" name="contract_name" required>
                                             </div>
                                         </div>
-                                        <div class="col-md-5 p-2">
+                                        <div class="col-md-3 p-2">
                                             <div>
                                                 <lable class="badge text-muted">TC No.</lable>
                                                 <input type="text" class="form-control" name="tc_no" required>
                                             </div>
                                         </div>
-                                        <!-- <div class="col-md-5 p-2">
+                                        <div class="col-md-3 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Contract</lable>
-                                                <input type="text" class="form-control" name="TC_no" required>
+                                                <lable class="badge text-muted">Account no.</lable>
+                                                <input type="text" class="form-control" name="account_no" required>
                                             </div>
-                                        </div> -->
+                                        </div>
                                         <!-- <div class="col-md-4 p-2">
                                         <div>
                                             <lable class="badge text-muted">Date End</lable>
@@ -103,9 +63,9 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                     </div> -->
                                     </div>
-                                    <div class="col-md-12 d-flex gap-2 row">
+                                    <div class="col-md-12 d-flex gap-5 row justify-content-center">
 
-                                        <div class="col-md-5 p-2">
+                                        <div class="col-md-4 p-2">
                                             <div>
                                                 <lable class="badge text-muted">Rent Start</lable>
                                                 <div class="d-flex">
@@ -116,7 +76,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-5 p-2">
+                                        <div class="col-md-4 p-2">
                                             <div>
                                                 <lable class="badge text-muted">Rent End</lable>
                                                 <div class="d-flex">
@@ -136,7 +96,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                     </div> -->
                                     </div>
-                                    <div class="col-md-12 d-flex gap-4 row">
+                                    <div class="col-md-12 d-flex gap-4 row justify-content-center">
                                         <!-- <div class="col-md-5 p-2">
                                             <div>
                                                 <lable class="badge text-muted">Party of Second Part</lable>
