@@ -40,12 +40,12 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div> -->
 
-<div class="pageContent">
-    <div class="sideBar bg-dark">
-        <?php include_once '../menu/sidebar.php'; ?>
-    </div>
+<div class="main-layout">
 
-    <div class="mainContent">
+    <?php include_once '../menu/sidebar.php'; ?>
+
+
+    <div class="content-area">
 
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
@@ -68,9 +68,10 @@ include_once '../../../views/layouts/includes/header.php';
                     This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
                 </span>';
         } elseif ($remainingDays === 0) {
-            echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
-                    Contract has expired.
-                </p>';
+            echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            This contract has expired.
+        </span>';
         }
         ?>
 
@@ -140,6 +141,28 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="d-flex">
                         <input type="text" style="margin-left:7px;" class="form-control"
                             value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
+
+                        <?php
+
+                        // $remainingDays;
+                        // echo $id = $getContract['id'];
+                        
+                        if ($remainingDays === 0) {
+
+                            $data = [
+                                'id' => $getContract['id'],
+                                'contract_status' => 'Expired',
+                            ];
+
+                            (new ContractController)->updateStatusExpired($data);
+
+                        } else {
+                            echo 'contract still active';
+                        }
+
+
+                        ?>
+
                     </div>
                 </div>
             </div>

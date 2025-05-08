@@ -19,8 +19,14 @@ $page_title = 'Login';
 <body class="bg-dark">
     <div class="container mt-5 d-flex justify-content-center">
         <div class="formHolder col-md-3 bg-white p-4 rounded mt-5">
-            <div class="d-flex justify-content-center">
-                <h2 class="text-dark p-2">Login</h2>
+            <div class="d-flex justify-content-center mb-1">
+                <div>
+                    <img width="60px" src="public/images/login.svg">
+                </div>
+                <div>
+                    <h1 class="text-dark p-2">Login</h1>
+                </div>
+
             </div>
             <form action="authenticate.php" method="post">
                 <div class="col-12">

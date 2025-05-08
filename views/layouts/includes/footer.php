@@ -1,6 +1,10 @@
-<div class="footerDiv bg-dark">
-    <h4 class="text-white">Web App</h4>
-</div>
+<footer class="footerDiv bg-dark text-white py-3 mt-5">
+    <div class="container text-center">
+        <h5 class="mb-0">Web App</h5>
+        <small>&copy; <?= date('Y') ?> All rights reserved.</small>
+    </div>
+</footer>
+
 
 </body>
 
@@ -16,7 +20,7 @@
 
 <style>
     .footerDiv {
-        background-color: #FBFBFB;
+        background-color: #2c3e50 !important;
         padding: 5px;
         margin-top: auto;
         /* Push the footer to the bottom */

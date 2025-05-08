@@ -68,9 +68,10 @@ include_once '../../../views/layouts/includes/header.php';
                     This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
                 </span>';
         } elseif ($remainingDays === 0) {
-            echo '<p class="alert alert-danger text-danger p-2" style="font-size:20px;">
-                    Contract has expired.
-                </p>';
+            echo '<span class="alert p-2 alert-warning text-danger" style="font-size:20px;">
+            <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
+            This contract has expired.
+        </span>';
         }
         ?>
 

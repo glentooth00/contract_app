@@ -1,219 +1,234 @@
-<nav class="sideBAr">
-  <div class="logo bg-white mb-3 p-0 text-center col-md-12 d-flex align-items-center">
-    <div class="col-md-5 p-2">
-      <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid">
+<nav class="sideBar">
+  <div class="logo mb-3 p-2 d-flex align-items-center justify-content-center">
+    <div class="me-2">
+      <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid" style="max-height: 40px;">
     </div>
-    <div class="col-md-5 ms-3 p-2 text-dark">
-      <h6>Contract Monitoring App</h6>
+    <div>
+      <h6 class="m-0 text-dark fw-bold">Contract Monitor</h6>
     </div>
   </div>
 
-  <hr class="text-light">
+  <hr>
+
   <ul class="nav flex-column">
-    <div class="mt-1">
-      <li class="nav-item">
-        <a class="nav-link" id="dashboardLink" href="index.php"><i class="fa fa-tachometer p-2"
-            aria-hidden="true"></i>Dashboard</a>
-      </li>
+    <li class="nav-item">
+      <a class="nav-link" id="dashboardLink" href="index.php">
+        <img width="25px" src="../../../public/images/dashboard.svg">
+        <span>Dashboard</span>
+      </a>
+    </li>
 
-      <!-- Contracts Dropdown -->
+    <li class="nav-item">
+      <a class="nav-link" href="#" id="contractsDropdown">
+        <img width="25px" src="../../../public/images/folder.svg">
+        <span>Contracts</span>
+        <i class="fa fa-chevron-down ms-auto small toggle-icon"></i>
+      </a>
+      <ul class="collapse" id="contractsMenu">
+        <li class="nav-item">
+          <a class="nav-link" id="contractsLink" href="list.php">
+            <img width="25px" src="../../../public/images/active_contracts.svg">
+            <span>Active Contracts</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="expired_list.php">
+            <img width="25px" src="../../../public/images/contracts.svg">
+            <span>Expired Contracts</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <img width="25px" src="../../../public/images/archived.svg">
+            <span>Archived Contracts</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <?php
+    use App\Controllers\UserController;
+
+    $logged_user = null;
+    $usersLink = 'IT/users.php';
+
+    if (isset($_SESSION['data']['id'])) {
+      $id = $_SESSION['data']['id'];
+      $getUser = new UserController();
+      $logged_user = $getUser->getUserRolebyId($id);
+
+      $currentDir = basename(dirname($_SERVER['PHP_SELF']));
+      if ($currentDir === 'IT') {
+        $usersLink = 'users.php';
+      }
+    }
+    ?>
+
+    <?php if ($logged_user === 'Admin'): ?>
       <li class="nav-item">
-        <a class="nav-link" href="#" id="contractsDropdown">
-          <i class="fa fa-files-o p-2" aria-hidden="true"></i>Contracts
+        <a class="nav-link" href="<?php echo $usersLink; ?>">
+          <img width="27px" src="../../../public/images/user.svg">
+          <span>Users</span>
         </a>
-        <ul class="collapse" id="contractsMenu">
-          <li class="nav-item">
-            <a class="nav-link" id="contractsLink" href="list.php"><i class="fa fa-file-text-o p-2"
-                aria-hidden="true"></i>
-              Active Contracts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="expired_list.php"><i class="fa fa-file-o p-2" aria-hidden="true"></i>
-              Expired Contracts</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-file-archive-o p-2" aria-hidden="true"></i>
-              Archived Contracts</a>
-          </li>
-        </ul>
       </li>
+    <?php endif; ?>
 
-      <?php
-      use App\Controllers\UserController;
+    <li class="nav-item">
+      <a class="nav-link" href="#" id="settingsDropdown">
+        <img width="27px" src="../../../public/images/setting.svg">
+        <span>Settings</span>
+        <i class="fa fa-chevron-down ms-auto small toggle-icon"></i>
+      </a>
+      <ul class="collapse" id="settingsMenu">
+        <li class="nav-item">
+          <a class="nav-link" href="#">
+            <img width="27px" src="../../../public/images/general.svg">
+            <span>General</span>
+          </a>
+        </li>
 
-      if (isset($_SESSION['data']['id'])) {
-        $id = $_SESSION['data']['id'];
-
-        $getUser = new UserController();
-        $logged_user = $getUser->getUserRolebyId($id); // returns string like 'admin'
-      
-        ?>
-
-        <?php
-        // Detect current script directory
-        $currentDir = basename(dirname($_SERVER['PHP_SELF']));
-        $usersLink = ($currentDir == 'IT') ? 'users.php' : 'IT/users.php';
-        ?>
-
-        <?php if ($logged_user == 'Admin'): ?>
+        <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo $usersLink; ?>">
-              <i class="fa fa-users p-2" aria-hidden="true"></i>Users
+            <a class="nav-link" href="department.php">
+              <i class="fa fa-building-o" aria-hidden="true"></i><span>Departments</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contract_types.php">
+              <i class="fa fa-file-text-o" aria-hidden="true"></i><span>Contract Types</span>
             </a>
           </li>
         <?php endif; ?>
 
-
-        <?php
-      } else {
-        // echo "User session not found.";
-      }
-      ?>
-
-      <!-- Settings Dropdown -->
-      <li class="nav-item">
-        <a class="nav-link" href="#" id="settingsDropdown">
-          <i class="fa fa-cog p-2" aria-hidden="true"></i>Settings
-        </a>
-        <ul class="collapse" id="settingsMenu">
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-globe p-2" aria-hidden="true"></i>
-              General</a>
-          </li>
-
-          <?php
-
-          if (isset($_SESSION['data']['id'])) {
-            $id = $_SESSION['data']['id'];
-
-            $getUser = new UserController();
-            $logged_user = $getUser->getUserRolebyId($id); // returns string like 'admin'
-          
-            ?>
-
-            <?php if ($logged_user == 'Admin'): ?>
-              <li class="nav-item">
-                <a class="nav-link " href="department.php"><i class="fa fa-building-o p-2" aria-hidden="true"></i>
-                  Departments</a>
-              </li>
-            <?php endif; ?>
-
-            <?php if ($logged_user == 'Admin'): ?>
-              <li class="nav-item">
-                <a class="nav-link" href="contract_types.php"><i class="fa fa-file-text-o p-2" aria-hidden="true"></i>
-                  Contract Types</a>
-              </li>
-            <?php endif; ?>
-
-            <?php
-          } else {
-            // echo "User session not found.";
-          }
-          ?>
-
-
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-user-secret p-2  " aria-hidden="true"></i>
-              </i>Privacy</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#"><i class="fa fa-bell p-2" aria-hidden="true"></i>
-              Notifications</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="../logout.php"><i class="fa fa-sign-out fa-flip-horizontal p-2"
-                aria-hidden="true"></i>
-              Logout</a>
-          </li>
-        </ul>
-      </li>
-
-      <!-- <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li> -->
-    </div>
-
-    <!-- <i class="fa fa-sign-out fa-flip-vertical" aria-hidden="true"></i> -->
+        <li class="nav-item">
+          <a class="nav-link" href="#"><img width="28px"
+              src="../../../public/images/privacy.svg"><span>Privacy</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><img width="28px"
+              src="../../../public/images/notif.svg"><span>Notifications</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="../logout.php">
+            <img width="28px" src="../../../public/images/out.svg">
+            <span>Logout</span>
+          </a>
+        </li>
+      </ul>
+    </li>
   </ul>
 </nav>
 
 <style>
   .sideBar {
-    width: 15%;
-    padding: 20px;
-    height: 110vh;
-    box-sizing: border-box;
+    width: 260px;
+    height: 100vh;
+    background-color: #2c3e50;
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
+    overflow-y: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
-  .nav {
-    margin-left: -1em;
+  .logo {
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    text-align: center;
   }
 
   .nav-link {
-    text-decoration: none !important;
+    font-size: 15px;
+    color: #ecf0f1;
+    display: flex;
+    align-items: center;
+    padding: 10px 9px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    transition: all 0.2s ease;
+  }
+
+  .nav-link:hover {
+    background-color: #34495e;
+    color: white;
+    text-decoration: none;
+  }
+
+  .nav-link span {
+    margin-left: 10px;
+  }
+
+  .nav .nav-item .nav-link.active,
+  .nav .nav-item .disabled-link {
+    background-color: #1abc9c !important;
+    color: white !important;
+    font-weight: bold;
+  }
+
+  .collapse {
+    display: none;
+    margin-left: 3px;
+  }
+
+  .toggle-icon {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+  }
+
+  .expanded .toggle-icon {
+    transform: rotate(180deg);
+  }
+
+  hr {
+    border-top: 1px solid #7f8c8d;
+    margin: 1rem 0;
+  }
+
+  ul.nav {
+    padding-left: 0;
   }
 
   ul li {
     list-style: none;
   }
 
-  .collapse {
-    display: none;
+  .main-layout {
+    display: flex;
+    min-height: 100vh;
   }
 
-  .nav-link {
-    cursor: pointer;
-    color: white;
-  }
-
-  .submenu {
-    display: none;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .disabled-link {
-    pointer-events: none;
-    opacity: 1;
-    background-color: white;
-    color: black;
-  }
-
-  .disabled-link:hover,
-  .disabled-link:focus {
-    background-color: white;
-    color: black;
+  .content-area {
+    margin-left: 270px;
+    /* Same as sidebar width */
+    width: calc(100% - 240px);
+    background-color: #f8f9fa;
+    padding: 20px;
   }
 </style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
   $(document).ready(function () {
-    // Get the current page URL
-    var currentUrl = window.location.href;
+    const currentUrl = window.location.href;
 
-    // Disable the link for the current page
-    if (currentUrl.indexOf('dashboard.php') !== -1) {
-      $('#dashboardLink').addClass('disabled-link');
+    if (currentUrl.includes('index.php')) {
+      $('#dashboardLink').addClass('active');
     }
-    if (currentUrl.indexOf('contracts/index.php') !== -1) {
-      $('#contractsLink').addClass('disabled-link');
+    if (currentUrl.includes('list.php')) {
+      $('#contractsLink').addClass('active');
     }
 
-    // JavaScript to toggle the collapse with a smooth slide effect for Contracts
-    $('#contractsDropdown').on('click', function (event) {
-      event.preventDefault();
-      var submenu = $('#contractsMenu');
-      submenu.stop(true, true).slideToggle(300);
+    $('#contractsDropdown').click(function (e) {
+      e.preventDefault();
+      $('#contractsMenu').slideToggle(200);
+      $(this).toggleClass('expanded');
     });
 
-    // JavaScript to toggle the collapse with a smooth slide effect for Settings
-    $('#settingsDropdown').on('click', function (event) {
-      event.preventDefault();
-      var submenu = $('#settingsMenu');
-      submenu.stop(true, true).slideToggle(300);
+    $('#settingsDropdown').click(function (e) {
+      e.preventDefault();
+      $('#settingsMenu').slideToggle(200);
+      $(this).toggleClass('expanded');
     });
   });
 </script>

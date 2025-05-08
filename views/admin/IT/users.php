@@ -7,12 +7,26 @@ $page_title = "List - $department";
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
+use App\Controllers\ContractController;
+use App\Controllers\ContractTypeController;
+use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
+use App\Controllers\UserController;
 
-$page_title = 'Departments';
+$getUser = new UserController();
+$results = $getUser->getAllUsers();
 
-$fetchDepts = new DepartmentController();
-$departments = $fetchDepts->getAllDepartments();
+$contracts = (new ContractController)->getContractsByDepartment($department);
+
+$getAllContractType = (new ContractTypeController)->getContractTypes();
+
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
+if ($getOneLatest) {
+    echo '<script>alert("Latest data inserted")</script>';
+} else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
@@ -79,10 +93,9 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init style="width:15%;padding-right:10px;"
-            href="#!" role="button" data-bs-toggle="modal" data-bs-target="#departmentModal">
-            <i class="fa fa-building-o" aria-hidden="true"></i>
-            Add Department
+        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2" style="width: 10em;"
+            data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="fa fa-user-plus" aria-hidden="true"></i> Add User
         </a>
 
         <!-- Wrap both search and filter in a flex container -->
@@ -108,37 +121,109 @@ include_once '../../../views/layouts/includes/header.php';
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th style="text-align: center !important;">Deprtment </th>
-                    <!-- <th style="text-align: center !important;">Name</th>
-            <th style="text-align: center !important;">Role</th>
-            <th style="text-align: center !important;">Department</th> -->
+                    <th style="text-align: center !important;">Image</th>
+                    <th style="text-align: center !important;">Name</th>
+                    <th style="text-align: center !important;">Role</th>
+                    <th style="text-align: center !important;">Department</th>
                     <th style="text-align: center !important;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($departments as $department) { ?>
+                <?php foreach ($results as $result) { ?>
                     <tr>
-                        <td style="text-align: center !important;"><?= $department['department_name'] ?></td>
-                        <td class="d-flex justify-content-center gap-2 w-100">
-                            <button class="btn btn-success btn-sm">View</button>
-                            <a href="departments/delete_department.php?id=<?= $department['id'] ?>"
-                                class="btn btn-danger btn-sm">Delete</a>
+                        <td style="text-align: center !important;">
+
+                            <?php if ($result['gender'] === 'Male' || $result['gender'] === 'Female'): ?>
+                                <img src="/contract_app/admin/user_image/<?= $result['user_image'] ?>" width="90px;"
+                                    style="border-radius:50px;">
+                            <?php elseif (!empty($result['user_image'])): ?>
+                                <img src="/contract_app/admin/user_image/<?= $result['user_image'] ?>" width="90px;"
+                                    style="border-radius:50px;">
+                            <?php else: ?>
+                                <img src="/contract_app/public/images/male.png" width="90px;" style="border-radius:50px;">
+                            <?php endif; ?>
+
+
+
+                        </td>
+                        <td style="text-align: center !important;padding:40px;">
+                            <span class="mt-3"> <?= $result['firstname'] ?>     <?= $result['middlename'] ?>
+                                <?= $result['lastname'] ?></span>
+                        </td>
+                        <td style="text-align: center !important;padding:40px;"><?= $result['user_role'] ?> </td>
+                        <td style="text-align: center !important;padding:40px;">
+
+                            <?php if (isset($result['department'])) { ?>
+
+                                <?php switch ($result['department']) {
+                                    case 'IT': ?>
+
+                                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $result['department'] ?></span>
+
+                                        <?php break;
+                                    case 'ISD-HRAD': ?>
+
+                                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $result['department'] ?></span>
+
+                                        <?php break;
+                                    case 'CITETD': ?>
+
+                                        <span class="badge p-2" style="background-color: #FFB433;"><?= $result['department'] ?></span>
+
+                                        <?php break;
+                                    case 'IASD': ?>
+
+                                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $result['department'] ?></span>
+
+                                        <?php break;
+                                    case 'ISD-MSD': ?>
+
+                                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $result['department'] ?></span>
+
+                                        <?php break;
+                                    case 'BAC': ?>
+
+                                        <span class="badge p-2" style="background-color: #3B6790;"><?= $result['department'] ?></span>
+
+                                        <?php break;
+                                    case '': ?>
+
+                                    <?php default: ?>
+                                        <span class="badge text-muted">no department assigned</span>
+                                <?php } ?>
+
+                            <?php } else { ?>
+
+                                <span class="badge text-muted">no department assigned</span>
+
+                            <?php } ?>
+
+                        </td>
+                        <td style="text-align: center !important;padding:40px;">
+                            <div class="d-flex gap-2" style="margin-left:5em;">
+                                <button class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i>
+                                    View</button>
+
+                                <form action="users/delete.php" method="POST" style="display:inline;">
+                                    <input type="hidden" name="id" value="<?= $result['id'] ?>">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                                    </button>
+                                </form>
+
+                            </div>
                         </td>
                     </tr>
                 <?php } ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
 
-<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
+
+
 
 
 <!-- Bootstrap Modal for confirmation -->
@@ -163,30 +248,103 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 <!-- Add New Contract Modal --->
-<div class="modal fade" id="departmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Department</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add User Account</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="departments/save_department.php" method="post" enctype="multipart/form-data">
-                    <div class="p-2">
-                        <label class="badge text-muted mb-1" style="margin-left: -1%;">Department Name:<span
-                                class="text-danger">*</span></label>
-                        <input class="form-control" name="department_name" required>
+                <form action="users/save_user.php" method="post" enctype="multipart/form-data">
+                    <div class="col-md-12 d-flex gap-2">
+                        <div class="p-2">
+                            <div class="mb-3">
+                                <label class="badge text-muted">User image <span class="text-danger">*</span></label>
+
+                                <input type="file" name="user_image" class="form-control" required>
+                                <span class="badge" style="color:#4C585B;">(suggested image size : 216 x 234
+                                    pixels)</span>
+
+                            </div>
+                            <div class="d-flex gap-2">
+                                <div class="mb-3">
+                                    <label class="badge text-muted">First name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="firstname" id="floatingInput"
+                                        placeholder="Firstname" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="badge text-muted">Middle name <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="middlename" id="floatingInput"
+                                        placeholder="Middlename" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="badge text-muted">Last name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="lastname" id="floatingInput"
+                                        placeholder="Lastname" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="badge text-muted">Gender<span class="text-danger">*</span></label>
+                                <select class="form-select form-select-md mb-3" name="gender"
+                                    aria-label=".form-select-lg example">
+                                    <option selected hidden>Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <hr>
+                            <div class="col-md-12 gap-2 d-flex">
+                                <div class="mb-3 col-md-6">
+                                    <label class="badge text-muted">Department<span class="text-danger">*</span></label>
+                                    <select class="form-select form-select-md mb-3" name="department"
+                                        aria-label=".form-select-lg example">
+                                        <option selected hidden>Select Department</option>
+                                        <?php
+                                        $getDept = (new DepartmentController)->getAllDepartments();
+                                        ?>
+                                        <?php foreach ($getDept as $dept): ?>
+                                        <option value="<?= $dept['department_name'] ?>">
+                                            <?= $dept['department_name'] ?>
+                                        </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                    <label class="badge text-muted">Role <span class="text-danger">*</span></label>
+                                    <select class="form-select form-select-md mb-3" name="user_role"
+                                        aria-label=".form-select-lg example">
+                                        <option selected hidden>Select user role</option>
+                                        <option value="User">User</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="badge text-muted">Username <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="username" id="floatingInput"
+                                    placeholder="Username" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="badge text-muted">Password <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="password" id="floatingInput"
+                                    placeholder="Password" required>
+                            </div>
+                        </div>
                     </div>
             </div>
             <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Add Department</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
+                    user</button>
             </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <!-- popup notification ---->
 

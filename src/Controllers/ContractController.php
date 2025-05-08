@@ -521,7 +521,8 @@ class ContractController
                     contract_start = :contract_start,
                     contract_end = :contract_end,
                     department_assigned = :department_assigned,
-                    updated_at = :updated_at 
+                    updated_at = :updated_at,
+                    contract_status = :contract_status
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -532,6 +533,7 @@ class ContractController
         $stmt->bindParam(':contract_end', $data['end']);
         $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam('contract_status', $data['contract_status']);
 
         $stmt->execute();
 
@@ -880,25 +882,31 @@ class ContractController
         return true;
     }
 
-    //for CITETD contracts
-    // public function getContractsByDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
-    // {
-    //     $offset = ($currentPage - 1) * $perPage;
+    public function getContractsByDepartmentAll($department)
+    {
+        // Prepare the query
+        $query = "SELECT * FROM contracts WHERE (uploader_department = ? OR department_assigned = ?) ORDER BY created_at DESC";
+        $stmt = $this->db->prepare($query);
 
-    //     $query = "SELECT * FROM contracts 
-    //           WHERE uploader_department = 'CITETD' OR department_assigned = :department";
+        // Bind the parameters (correctly using bindValue or bindParam)
+        $stmt->bindValue(1, $department, PDO::PARAM_STR); // First placeholder for uploader_department
+        $stmt->bindValue(2, $department, PDO::PARAM_STR); // Second placeholder for department_assigned
 
-    //     $stmt = $this->db->prepare($query);
-    //     $stmt->bindParam(':department', $department);
+        // Execute the statement
+        $stmt->execute();
 
-    //     $stmt->execute();
-    //     return $stmt->fetchAll();
-    // }
+        // Fetch the results
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $results; // Return the results
+    }
 
     public function getContractsByDepartment($department)
     {
         // Prepare the query
-        $query = "SELECT * FROM contracts WHERE uploader_department = ? OR department_assigned = ? ORDER BY created_at DESC";
+        $query = "SELECT * FROM contracts WHERE (uploader_department = ? OR department_assigned = ?) 
+                  AND contract_status = 'Active' 
+                  ORDER BY created_at DESC";
         $stmt = $this->db->prepare($query);
 
         // Bind the parameters (correctly using bindValue or bindParam)
@@ -932,13 +940,6 @@ class ContractController
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
-
-
-
-
 
     //for CITETD contracts
     public function getTotalContractsCountCITETD($department, $searchQuery = null, $contractTypeFilter = null)
@@ -1004,6 +1005,17 @@ class ContractController
 
         return $stmt->execute();
 
+    }
+
+
+    public function updateStatusExpired($data)
+    {
+        $sql = 'UPDATE contracts SET contract_status = :contract_status WHERE id = :id ';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('contract_status', $data['contract_status']);
+        $stmt->bindParam('id', $data['id']);
+
+        return $stmt->execute();
     }
 
 
