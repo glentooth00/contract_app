@@ -135,7 +135,6 @@ include_once '../../../views/layouts/includes/header.php';
                         <tr>
                             <td>
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
-
                                 <?php if (isset($contract['account_no'])): ?>
                                     <span class="badge account_number">(
                                         <?= $contract['account_no'] ?> )</span>
@@ -300,6 +299,10 @@ include_once '../../../views/layouts/includes/header.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+
+    .account_number {
+        color: #9BA4B5;
     }
 </style>
 
