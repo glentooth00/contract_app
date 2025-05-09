@@ -14,7 +14,8 @@ if (isset($_GET['id'])) {
         'contract_name' => $_GET['name'],
         'rent_start' => $_GET['start'], // 'start' corresponds to rent_start in PHP
         'rent_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP
-        'updated_at' => date('Y-m-d H:i:s') // Add this to match bindParam
+        'updated_at' => date('Y-m-d H:i:s'), // Add this to match bindParam
+        'contract_status' => 'Active',
     ];
 
     // Get contract type by ID
@@ -27,6 +28,7 @@ if (isset($_GET['id'])) {
 
         $data1 = [
             'id' => $_GET['id'],
+            'contract_status' => 'Active',
             'contract_name' => $_GET['name'],
             'rent_start' => $_GET['start'], // 'start' corresponds to rent_start in PHP
             'rent_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP

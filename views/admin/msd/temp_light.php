@@ -42,8 +42,8 @@ include_once '../../../views/layouts/includes/header.php';
         <hr>
 
         <?php
-        $start = new DateTime($getContract['contract_start']);
-        $end = new DateTime($getContract['contract_end']);
+        $start = new DateTime($getContract['rent_start'] ?? $getContract['contract_start'] ?? 'now');
+        $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 'now');
         $today = new DateTime();
 
         $interval = $today->diff($end);
@@ -183,7 +183,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-2">
 
                 <div class="mt-3">
-                    <label class="badge text-muted"
+                    <label class="badge text-muted" style="font-size: 15px;">
                     <?php
                     $start = new DateTime($getContract['rent_start'] ?? $getContract['contract_start'] ?? 'now');
                     $end = new DateTime($getContract['rent_end'] ?? $getContract['contract_end'] ?? 'now');
@@ -192,19 +192,18 @@ include_once '../../../views/layouts/includes/header.php';
 
                     // Calculate the difference
                     $interval = $today->diff($end);
-                    echo $remainingDays = $interval->format('%r%a'); // This gives you the remaining days, including negative if past
+                    $remainingDays = $interval->format('%r%a'); // This gives you the remaining days, including negative if past
                     
                     // Check if the remaining days is less than 0
                     if ($remainingDays < 0) {
                         $remainingDays = 0; // You may want to set it to 0 if the contract has ended
                     }
-                    ?> style="font-size: 15px;">Days Remaining:</label>
+                    ?>Days Remaining:</label>
                    <?php
                     if (isset($getContract['contract_status']) && $getContract['contract_status'] === 'Expired') {
                         $remainingDays = 0;
                     }
                     ?>
-
                     <div class="d-flex">
                         <input type="text" style="margin-left:7px;" class="form-control"
                             value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
@@ -214,7 +213,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                 <?php   
 
-                echo $remainingDays;
+              $remainingDays;
                      if ($remainingDays == 0) {
 
                         $data = [
@@ -225,7 +224,6 @@ include_once '../../../views/layouts/includes/header.php';
                         (new ContractController)->updateStatusExpired($data);
                      }
                 ?>
-
             </div>
         </div>
 
