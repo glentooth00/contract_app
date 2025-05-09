@@ -9,10 +9,19 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\ContractHistoryController;
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
+
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
+if ($getOneLatest) {
+    //     echo '<script>alert("Latest data inserted")</script>';
+// } else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
@@ -205,10 +214,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
 
     </div>
 </div>

@@ -13,6 +13,8 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 // $type = $_SESSION['TEMP_LIGHTING'];
 
+$department = $_SESSION['department'] ?? null;
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_SESSION['contract_id'];
@@ -38,7 +40,7 @@ include_once '../../../views/layouts/includes/header.php';
 
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?></h2>
+            <?= $contract_data ?> <span class="badge" style="color: #9BA4B5;">(<?= $getContract['account_no'] ?>)</span></h2>
         <hr>
 
         <?php
@@ -68,20 +70,42 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-        <div class="gap-1">
-            <span id="close" style="float: inline-end;display:none;">
-                <!-- <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i> -->
-                <i class="fa fa-times" style="width:30px;" aria-hidden="true"></i>
+            <?php if ($department === $getContract['uploader_department']) { ?>
 
-            </span>
-            <span id="save" style="float: inline-end;display:none;">
-                <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;" alt=""></i>
-            </span>
-            <span id="edit" style="float: inline-end;display:inline;">
-                <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;" alt=""></i>
-            </span>
-        </div>
+            <div class="gap-1">
 
+                <?php if($getContract['contract_status'] === 'Expired') { ?>
+                    <span id="add" style="float:inline-end;display:inline;" data-bs-toggle="modal" data-bs-target="#transformerModal">
+                    <i class="fa fa-plus" aria-hidden="true" style="width:40px;font-size:25px;"></i>
+                </span>
+                <?php } ?>
+               
+
+                <span id="close" style="float: inline-end;display:none;">
+
+                    <i class="fa fa-times" style="width:40px;font-size:25px;" aria-hidden="true"></i>
+
+                </span>
+
+                <span id="save" style="float: inline-end;display:none;">
+                    <i class="fa fa-floppy-o" aria-hidden="true" style="width:40px;font-size:25px;" alt=""></i>
+                </span>
+
+                <span id="edit" style="float: inline-end;display:inline;">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:40px;font-size:25px;" alt=""></i>
+                </span>
+
+                
+            </div>
+
+            <?php } ?>
+
+            <?php
+
+include_once '../modals/isdmsd_modal.php';
+include_once 'modal/transformer_rental.php';
+
+?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
 
@@ -95,6 +119,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <input type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly>
                 </div>
+                
             </div>
 
             <?php if ($getContract['contract_type'] == TEMP_LIGHTING): ?>
@@ -580,6 +605,14 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+
+<?php
+
+include_once '../modals/isdmsd_modal.php';
+include_once '/modals/transformer_rental.php';
+
+?>
+
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -679,6 +712,9 @@ include_once '../../../views/layouts/includes/header.php';
     }
 
     #close:hover {
+        cursor: pointer;
+    }
+    #add:hover{
         cursor: pointer;
     }
 </style>

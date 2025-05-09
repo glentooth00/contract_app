@@ -105,5 +105,16 @@ class ContractHistoryController
 
     }
 
+    public function updatedExpired($data)
+    {
+        $sql = "UPDATE contract_history SET status = :status WHERE contract_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $data['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
+        return $stmt->execute();
+
+
+    }
+
 
 }
