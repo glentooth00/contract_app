@@ -209,5 +209,30 @@ class UserController
 
     }
 
+    public function checkUsername($username)
+    {
+        $sql = 'SELECT username, id FROM users WHERE username = :username';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
+    public function changePass($data)
+    {
+        $sql = 'INSERT INTO change_password ( user_id, username, created_at, updated_at ) VALUES ( :user_id, :username, :created_at, :updated_at )';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':user_id', $data['user_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':username', $data['username'], PDO::PARAM_STR);
+        $stmt->bindParam(':created_at', $data['created_at']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->execute();
+
+        return;
+    }
+
 
 }
