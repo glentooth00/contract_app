@@ -842,7 +842,8 @@ class ContractController
                     contract_name = :contract_name,
                     rent_start = :rent_start,
                     rent_end = :rent_end,
-                    updated_at = :updated_at 
+                    updated_at = :updated_at,
+                    contract_status = :contract_status
                 WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
@@ -853,6 +854,8 @@ class ContractController
         $stmt->bindParam(':rent_start', $data['rent_start']);
         $stmt->bindParam(':rent_end', $data['rent_end']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+
 
         // Executing the query
         $stmt->execute();

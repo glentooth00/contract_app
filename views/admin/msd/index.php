@@ -208,7 +208,6 @@ include_once '../../../views/layouts/includes/header.php';
                         
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
-                                                    <span class="text-danger fw-bold">' . $expired . '</span>
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
                                                         </td>';
                                                 } elseif ($contract['contract_status'] === 'Expired') {
@@ -252,7 +251,6 @@ include_once '../../../views/layouts/includes/header.php';
                         
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
-                                                    <span class="text-danger fw-bold">' . $expired . '</span>
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
                                                         </td>';
                                                 } elseif ($contract['contract_status'] === 'Expired') {
@@ -296,7 +294,6 @@ include_once '../../../views/layouts/includes/header.php';
                         
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
-                                                    <span class="text-danger fw-bold">' . $expired . '</span>
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
                                                         </td>';
                                                 } elseif ($contract['contract_status'] === 'Expired') {
@@ -383,7 +380,6 @@ include_once '../../../views/layouts/includes/header.php';
                         
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
-                                                    <span class="text-danger fw-bold">' . $expired . '</span>
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
                                                         </td>';
                                                 } elseif ($contract['contract_status'] === 'Expired') {
