@@ -650,6 +650,29 @@ class ContractController
         return false;
     }
 
+    public function uploadRentalFileTR($file)
+    {
+        // Check if file is valid
+        if (!isset($file) || !isset($file['name']) || !isset($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
+            return false;
+        }
+
+        $uploadDir = __DIR__ . "/../../admin/rentals/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $fileName = basename($file["name"]);
+        $targetFile = $uploadDir . $fileName;
+
+        if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+            return "admin/rentals/" . $fileName;
+        }
+
+        return false;
+    }
+
+
     public function storeTransFormerRental($data)
     {
         $sql = "INSERT INTO contracts (

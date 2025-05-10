@@ -2,6 +2,7 @@
 session_start();
 
 $department = $_SESSION['department'] ?? null;
+$user_id = $_SESSION['id'] ?? null;
 $page_title = "List - $department";
 $expired = 'Expired';
 require_once __DIR__ . '../../../../src/Config/constants.php';

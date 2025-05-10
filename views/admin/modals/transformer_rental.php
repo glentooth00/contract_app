@@ -119,12 +119,12 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                                                 // var_dump($getUser['firstname']);
                                                 ?>
-                                                <input type="hidden" id="date_start" class="form-control"
+                                                <input type="text" id="date_start" class="form-control"
                                                     name="uploader_id" value="<?= $userid ?>">
-                                                <input type="hidden" id="date_start" class="form-control"
+                                                <input type="text" id="date_start" class="form-control"
                                                     name="uploader"
                                                     value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
-                                                <input type="hidden" id="date_start" class="form-control"
+                                                <input type="text" id="date_start" class="form-control"
                                                     name="uploader_dept" value="<?= $department ?>" required>
                                             </div>
                                         </div>

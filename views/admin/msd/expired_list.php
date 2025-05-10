@@ -3,7 +3,7 @@ session_start();
 
 $department = $_SESSION['department'];
 $page_title = "List - $department";
-
+$user_id = $_SESSION['id'] ?? null;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
@@ -116,6 +116,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
+
 
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>

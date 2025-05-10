@@ -20,13 +20,13 @@ class ContractHistoryController
 
     public function insertLatestData()
     {
-        $sql = "SELECT TOP 1 * FROM contracts ORDER BY created_at DESC";
+        $sql = "SELECT * FROM contract_history WHERE contract_id = :id AND account_no = :account_no";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // var_dump($result);
+        var_dump($result);
 
         if (!$result) {
             return false;
@@ -34,7 +34,7 @@ class ContractHistoryController
 
         $contract_id = $result['id'];
 
-        // ✅ Check if this contract is already in employment_history
+        // // ✅ Check if this contract is already in employment_history
         $checkSql = "SELECT COUNT(*) FROM contract_history WHERE contract_id = :contract_id";
         $checkStmt = $this->db->prepare($checkSql);
         $checkStmt->bindParam(':contract_id', $contract_id);
@@ -48,22 +48,23 @@ class ContractHistoryController
         }
 
         // Prepare data
-        $contract_name = $result['contract_name'];
-        $contract_type = $result['contract_type'];
-        $date_start = $result['contract_start'];
-        $date_end = $result['contract_end'];
-        $rent_start = $result['rent_start'];
-        $rent_end = $result['rent_end'];
-        $contract_file = $result['contract_file'];
-        $status = 'Active';
-        $created_at = date('Y-m-d H:i:s');
-        $updated_at = date('Y-m-d H:i:s');
+        echo $contract_name = $result['contract_name'];
+        echo $contract_type = $result['contract_type'];
+        echo $date_start = $result['contract_start'];
+        echo $date_end = $result['contract_end'];
+        echo $rent_start = $result['rent_start'];
+        echo $rent_end = $result['rent_end'];
+        echo $contract_file = $result['contract_file'];
+        echo $status = 'Active';
+        echo $created_at = date('Y-m-d H:i:s');
+        echo $updated_at = date('Y-m-d H:i:s');
+        echo $account_no = $result['account_no'];
 
         $insertLatest = "INSERT INTO contract_history (
-            status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at, rent_start, rent_end
-        ) VALUES (
-            :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at, :rent_start, :rent_end
-        )";
+                status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at, rent_start, rent_end, account_no
+            ) VALUES (
+                :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at, :rent_start, :rent_end, :account_no
+            )";
 
         $stmt = $this->db->prepare($insertLatest);
 
@@ -78,6 +79,7 @@ class ContractHistoryController
         $stmt->bindParam(':contract_id', $contract_id);
         $stmt->bindParam(':created_at', $created_at);
         $stmt->bindParam(':updated_at', $updated_at);
+        $stmt->bindParam(':account_no', $account_no);
 
         return $stmt->execute();
     }
@@ -92,6 +94,17 @@ class ContractHistoryController
         // Fetch the result and return as an array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Use fetchAll to ensure it returns an array
     }
+
+    public function getByContractIdAccountNumber($account_no)
+    {
+        $sql = "SELECT * FROM contract_history WHERE CAST(account_no AS NVARCHAR(MAX)) = :account_no";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':account_no', $account_no, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
     public function udpateExpiredRentalContract($data)
@@ -115,6 +128,16 @@ class ContractHistoryController
 
 
     }
+
+    public function updateExpiredDays($data)
+    {
+        $sql = 'UPDATE contract_history SET status = :status WHERE CAST(account_no AS NVARCHAR(MAX)) = :account_no';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':account_no', $data['account_no'], PDO::PARAM_STR);
+        $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
 
 
 }

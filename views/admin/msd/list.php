@@ -17,10 +17,10 @@ $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    //     echo '<script>alert("Latest data inserted")</script>';
-// } else {
-    // Optional: echo nothing or a silent message
-    // echo "No contract data available to insert.";
+    echo '<script>alert("Latest data inserted")</script>';
+} else {
+    //Optional: echo nothing or a silent message
+    echo "No contract data available to insert.";
 }
 
 include_once '../../../views/layouts/includes/header.php';
@@ -195,15 +195,26 @@ include_once '../../../views/layouts/includes/header.php';
                                 </span>
                             </td>
                             <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                                        class="btn btn-success btn-sm">
-                                        <i class="fa fa-eye"></i> View
-                                    </a>
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </a>
-                                </div>
+
+                                <?php if ($contract['contract_type'] === TRANS_RENT || $contract['contract_type'] === TEMP_LIGHTING): ?>
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                            class="btn btn-success btn-sm">
+                                            <i class="fa fa-eye"></i> View
+                                        </a>
+                                    <?php else: ?>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                                class="btn btn-success btn-sm">
+                                                <i class="fa fa-eye"></i> View
+                                            </a>
+                                        <?php endif; ?>
+
+                                        <a href="#" class="btn btn-danger badge p-2 delete-btn"
+                                            data-id="<?= $contract['id'] ?>">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

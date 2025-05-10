@@ -46,22 +46,6 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                                 <input type="text" class="form-control" name="account_no" required>
                                             </div>
                                         </div>
-                                        <!-- <div class="col-md-4 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <div class="d-flex">
-                                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                                <input type="date" id="date_end" class="form-control" name="contract_end" required>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                        <!-- <div class="col-md-4 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
-                                        </div>
-                                    </div> -->
                                     </div>
                                     <div class="col-md-12 d-flex gap-5 row justify-content-center">
 
