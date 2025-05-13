@@ -80,9 +80,9 @@
         </li> -->
         <?php if ($department === 'BAC'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo $usersLink; ?>">
+            <a class="nav-link" href="procurement.php">
               <img width="27px" src="../../../public/images/mop.svg">
-              <span>Mode Of Procurment</span>
+              <span>Mode Of Procurement</span>
             </a>
           </li>
         <?php endif; ?>
