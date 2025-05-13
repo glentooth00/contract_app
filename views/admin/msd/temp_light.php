@@ -126,19 +126,19 @@ include_once '../../../views/layouts/includes/header.php';
                                                 <input type="hidden" class="form-control" name="uploader_department"
                                                     value="<?= $department ?>" required>
                                                 <lable class="badge text-muted">Contract Name</lable>
-                                                <input type="text" class="form-control" name="contract_name" required>
+                                                <input type="text" class="form-control" value="<?= $getContract['contract_name'] ?>" name="contract_name"  required>
                                             </div>
                                         </div>
                                         <div class="col-md-3 p-2" style="width: 13em;">
                                             <div>
                                                 <lable class="badge text-muted">TC No.</lable>
-                                                <input type="text" class="form-control" name="tc_no" required>
+                                                <input type="text" class="form-control" name="tc_no" value="<?= $getContract['tc_no'] ?>" required>
                                             </div>
                                         </div>
                                         <div class="col-md-3 p-2" style="width: 13em;">
                                             <div>
                                                 <lable class="badge text-muted">Account no.</lable>
-                                                <input type="text" class="form-control" name="account_no" required>
+                                                <input type="text" class="form-control" value="<?= $getContract['account_no'] ?>" name="account_no" required>
                                             </div>
                                         </div>
                                     
@@ -187,7 +187,7 @@ include_once '../../../views/layouts/includes/header.php';
                                         <div class="col-md-5 p-2">
                                             <div>
                                                 <lable class="badge text-muted">Contract file</lable>
-                                                <input type="file" class="form-control" name="contract_file"
+                                                <input id="contractFileInput" type="file" class="form-control" name="contract_file"
                                                     style="width: 16.7em;" required>
                                             </div>
                                         </div>
@@ -221,12 +221,30 @@ include_once '../../../views/layouts/includes/header.php';
       </div>
       <div class="modal-footer">
         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-        <button type="submit" class="btn btn-primary">Submit New Contract</button>
+        <button type="submit" id="submitButton" class="btn btn-primary" disabled onmouseover="pointer">Submit New Contract</button>
       </div>
       </form>
     </div>
   </div>
 </div>
+
+
+<script>
+    const fileInput = document.getElementById('contractFileInput');
+    const submitButton = document.getElementById('submitButton');
+
+    fileInput.addEventListener('change',function(){
+
+        if ( fileInput.files.length > 0 ){
+            submitButton.disabled = false;
+        } else {
+            submitButton.disabled = true;
+        }
+
+    });
+
+</script>
+
 
 
         <div class="mt-3 col-md-12 d-flex gap-5">
@@ -517,7 +535,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                                     class="form-control">
                                 <label for="contract_name" class="form-label badge text-muted">Contract
                                     Name</label>
-                                <input type="text" id="contract_name" name="contract_name"
+                                <input type="text" id="contract_name" value="<?= $getContract['contract_name'] ?>" name="contract_name"
                                     class="form-control">
                             </div>
                             <div class="mb-2">
@@ -651,7 +669,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                                             <label for="contract_name" class="form-label badge text-muted">Contract
                                                 Name</label>
                                             <input type="text" id="contract_name" name="contract_name"
-                                                class="form-control">
+                                                class="form-control" value="<?= $getContract['contract_name'] ?>">
                                         </div>
                                         <div class="mb-2">
                                             <label for="start_date" class="form-label badge text-muted">Start
