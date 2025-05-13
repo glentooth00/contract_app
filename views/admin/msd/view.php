@@ -40,12 +40,10 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div> -->
 
-<div class="pageContent">
-    <div class="sideBar bg-dark">
-        <?php include_once '../menu/sidebar.php'; ?>
-    </div>
+<div class="main-layout ">
+    <?php include_once '../menu/sidebar.php'; ?>
 
-    <div class="mainContent">
+    <div class="content-area">
 
         <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>

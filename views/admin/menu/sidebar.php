@@ -20,7 +20,7 @@
 
     <li class="nav-item">
       <a class="nav-link" href="#" id="contractsDropdown">
-        <img width="25px" src="../../../public/images/folder.svg">
+        <img width="25px" src="../../../public/images/contracts.svg">
         <span>Contracts</span>
         <i class="fa fa-chevron-down ms-auto small toggle-icon"></i>
       </a>
@@ -33,7 +33,7 @@
         </li>
         <li class="nav-item">
           <a class="nav-link" href="expired_list.php">
-            <img width="25px" src="../../../public/images/contracts.svg">
+            <img width="25px" src="../../../public/images/expired.svg">
             <span>Expired Contracts</span>
           </a>
         </li>
@@ -64,53 +64,63 @@
     }
     ?>
 
-    <?php if ($logged_user === 'Admin'): ?>
-      <li class="nav-item">
-        <a class="nav-link" href="<?php echo $usersLink; ?>">
-          <img width="27px" src="../../../public/images/user.svg">
-          <span>Users</span>
-        </a>
-      </li>
-    <?php endif; ?>
 
     <li class="nav-item">
       <a class="nav-link" href="#" id="settingsDropdown">
-        <img width="27px" src="../../../public/images/setting.svg">
+        <img width="27px" src="../../../public/images/settings.svg">
         <span>Settings</span>
         <i class="fa fa-chevron-down ms-auto small toggle-icon"></i>
       </a>
       <ul class="collapse" id="settingsMenu">
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#">
             <img width="27px" src="../../../public/images/general.svg">
             <span>General</span>
           </a>
-        </li>
-
-        <?php if ($logged_user === 'Admin'): ?>
+        </li> -->
+        <?php if ($department === 'BAC'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="department.php">
-              <i class="fa fa-building-o" aria-hidden="true"></i><span>Departments</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="contract_types.php">
-              <i class="fa fa-file-text-o" aria-hidden="true"></i><span>Contract Types</span>
+            <a class="nav-link" href="<?php echo $usersLink; ?>">
+              <img width="27px" src="../../../public/images/mop.svg">
+              <span>Mode Of Procurment</span>
             </a>
           </li>
         <?php endif; ?>
 
-        <li class="nav-item">
+        <?php if ($logged_user === 'Admin'): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="<?php echo $usersLink; ?>">
+              <img width="27px" src="../../../public/images/user.svg">
+              <span>Users</span>
+            </a>
+          </li>
+        <?php endif; ?>
+
+        <?php if ($logged_user === 'Admin'): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="department.php">
+              <img width="27px" src="../../../public/images/departments.svg"></i>
+              <span>Departments</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="contract_types.php">
+              <img width="27px" src="../../../public/images/contract-types.svg"></i></i><span>Contract Types</span>
+            </a>
+          </li>
+        <?php endif; ?>
+
+        <!-- <li class="nav-item">
           <a class="nav-link" href="#"><img width="28px"
               src="../../../public/images/privacy.svg"><span>Privacy</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#"><img width="28px"
               src="../../../public/images/notif.svg"><span>Notifications</span></a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="../logout.php">
-            <img width="28px" src="../../../public/images/out.svg">
+            <img width="28px" src="../../../public/images/logout.svg">
             <span>Logout</span>
           </a>
         </li>
@@ -123,7 +133,7 @@
   .sideBar {
     width: 260px;
     height: 100vh;
-    background-color: #2c3e50;
+    background-color: #F7F7F7;
     color: white;
     padding: 1rem;
     position: fixed;
@@ -139,8 +149,9 @@
   }
 
   .nav-link {
+    font-weight: 700;
+    color: #393E46;
     font-size: 15px;
-    color: #ecf0f1;
     display: flex;
     align-items: center;
     padding: 10px 9px;
@@ -168,7 +179,7 @@
 
   .collapse {
     display: none;
-    margin-left: 3px;
+    margin-left: 1px;
   }
 
   .toggle-icon {

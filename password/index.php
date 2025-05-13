@@ -16,9 +16,9 @@ $page_title = 'Login';
 ?>
 <?php include_once '../views/layouts/includes/header.php'; ?>
 
-<body class="bg-dark">
-    <div class="container mt-5 d-flex justify-content-center">
-        <div class="formHolder col-md-5 bg-white p-4 rounded mt-5">
+<body class="">
+    <div class="container d-flex justify-content-center" style="margin-top:10em;margin-bottom:21em;">
+        <div class="formHolder card col-md-5 bg-white p-4 rounded mt-5">
             <div class="d-flex justify-content-center mb-1">
                 <div>
                     <img width="60px" src="../public/images/changepass.svg">
@@ -70,7 +70,7 @@ $page_title = 'Login';
 
         </div>
     </div>
-
+    <?php include_once '../views/layouts/includes/footer.php'; ?>
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
             <path

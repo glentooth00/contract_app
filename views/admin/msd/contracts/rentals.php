@@ -9,7 +9,6 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    ;
 
     if ($_POST['contract_type'] === TEMP_LIGHTING) {
 
@@ -34,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         ];
 
-        // var_dump($contractDetails);
+        var_dump($contractDetails);
 
         $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
 
@@ -54,4 +53,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+header("Location: " . $_SERVER['HTTP_REFERER']);

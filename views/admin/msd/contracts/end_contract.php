@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($updateExpiredEmploymentContract) {
 
-        echo $id = $updateData['id'];
+        $id = $updateData['id'];
 
         $setExpire = (new ContractController)->setExpired($id);
 

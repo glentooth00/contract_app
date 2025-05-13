@@ -83,19 +83,19 @@ include_once '../../../views/layouts/includes/header.php';
         <hr>
 
         <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
+            style="width:15%;padding-right:10px;font-size:14px;" href="#!" role="button" data-bs-toggle="modal"
+            data-bs-target="#bacModal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Temporary Lighting Contract
+            Add Contract
         </a>
 
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
+        <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
             style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
             data-bs-toggle="modal" data-bs-target="#transformerModal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
             Transformer Rental Contract
-        </a>
+        </a> -->
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -193,8 +193,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 <?php
 
-include_once '../modals/isdmsd_modal.php';
-include_once '../modals/transformer_rental.php';
+include_once '../modals/bac_modal.php';
 
 ?>
 

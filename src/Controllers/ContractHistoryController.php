@@ -34,7 +34,7 @@ class ContractHistoryController
 
         $contract_id = $result['id'];
 
-        // ✅ Check if this contract is already in employment_history
+        // // ✅ Check if this contract is already in employment_history
         $checkSql = "SELECT COUNT(*) FROM contract_history WHERE contract_id = :contract_id";
         $checkStmt = $this->db->prepare($checkSql);
         $checkStmt->bindParam(':contract_id', $contract_id);
@@ -58,12 +58,13 @@ class ContractHistoryController
         $status = 'Active';
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
+        $account_no = $result['account_no'];
 
         $insertLatest = "INSERT INTO contract_history (
-            status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at, rent_start, rent_end
-        ) VALUES (
-            :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at, :rent_start, :rent_end
-        )";
+                status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at, rent_start, rent_end, account_no
+            ) VALUES (
+                :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at, :rent_start, :rent_end, :account_no
+            )";
 
         $stmt = $this->db->prepare($insertLatest);
 
@@ -78,6 +79,7 @@ class ContractHistoryController
         $stmt->bindParam(':contract_id', $contract_id);
         $stmt->bindParam(':created_at', $created_at);
         $stmt->bindParam(':updated_at', $updated_at);
+        $stmt->bindParam(':account_no', $account_no);
 
         return $stmt->execute();
     }
@@ -92,6 +94,27 @@ class ContractHistoryController
         // Fetch the result and return as an array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Use fetchAll to ensure it returns an array
     }
+
+    public function getByContractIdAccountById($id)
+    {
+        $sql = "SELECT * FROM contract_history WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getByContractIdAccountByAccountNumber($account_no)
+    {
+        $sql = "SELECT * FROM contract_history WHERE account_no = :account_no";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':account_no', $account_no, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
     public function udpateExpiredRentalContract($data)
@@ -115,6 +138,16 @@ class ContractHistoryController
 
 
     }
+
+    public function updateExpiredDays($data)
+    {
+        $sql = 'UPDATE contract_history SET status = :status WHERE CAST(account_no AS NVARCHAR(MAX)) = :account_no';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':account_no', $data['account_no'], PDO::PARAM_STR);
+        $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
 
 
 }

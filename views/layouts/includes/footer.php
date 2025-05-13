@@ -20,7 +20,8 @@
 
 <style>
     .footerDiv {
-        background-color: #2c3e50 !important;
+        color: #393E46 !important;
+        background-color: #F7F7F7 !important;
         padding: 5px;
         margin-top: auto;
         /* Push the footer to the bottom */
