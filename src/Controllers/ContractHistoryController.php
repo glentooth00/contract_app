@@ -20,7 +20,7 @@ class ContractHistoryController
 
     public function insertLatestData()
     {
-        $sql = "SELECT * FROM contract_history WHERE contract_id = :id AND account_no = :account_no";
+        $sql = "SELECT TOP 1 * FROM contracts ORDER BY created_at DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
@@ -95,9 +95,19 @@ class ContractHistoryController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Use fetchAll to ensure it returns an array
     }
 
-    public function getByContractIdAccountNumber($account_no)
+    public function getByContractIdAccountById($id)
     {
-        $sql = "SELECT * FROM contract_history WHERE CAST(account_no AS NVARCHAR(MAX)) = :account_no";
+        $sql = "SELECT * FROM contract_history WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getByContractIdAccountByAccountNumber($account_no)
+    {
+        $sql = "SELECT * FROM contract_history WHERE account_no = :account_no";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':account_no', $account_no, PDO::PARAM_STR);
         $stmt->execute();

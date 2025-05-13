@@ -709,7 +709,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
             </div>
         </div>
         <?php 
-            echo $remainingDays;
+            $remainingDays;
             if ($remainingDays === 0) {
 
                 $data = [
@@ -717,7 +717,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                     'status'=> 'Expired',
                 ];
 
-                var_dump($data);
+                // var_dump($data);
 
                 (new ContractHistoryController )->updateExpiredDays( $data);
             }
@@ -743,10 +743,18 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                             <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
                         </tr>
                     </thead>
+
                     <?php
-                    $id = $getContract['id'];
-                    $account_no = $getContract['account_no'];
-                    $contractHist_datas = (new ContractHistoryController)->getByContractIdAccountNumber($id, $account_no);
+
+                    if( $getContract['contract_type'] === TRANS_RENT){
+                        // echo 'CONTRACT TYPE is '. TRANS_RENT;
+                        $account_no = $getContract['account_no'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractIdAccountByAccountNumber($account_no);
+
+                    }else{
+                        $id = $getContract['id'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractIdAccountById($id);
+                    }
 
                     ?>
                     <tbody class="">
