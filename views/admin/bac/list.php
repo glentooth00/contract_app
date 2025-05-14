@@ -9,11 +9,20 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\ContractHistoryController;
+
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
+// if ($getOneLatest) {
+//     echo '<script>alert("Latest data inserted")</script>';
+// } else {
+//     //Optional: echo nothing or a silent message
+//     echo "No contract data available to insert.";
+// }
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
@@ -135,12 +144,16 @@ include_once '../../../views/layouts/includes/header.php';
                             <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
                             <td class="text-center">
                                 <?php
+
                                 $type = $contract['contract_type'] ?? '';
+
                                 $badgeColor = match ($type) {
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
+                                    INFRA => '#328E6E',
+                                    SACC => '#123458',
+                                    GOODS => '#F75A5A',
+                                    'Infrastructure Contract' => '#007bff',
+                                    'Service and Consultancy Contract' => '#28a745',
+                                    'Goods Contract' => '#28a745',
                                     default => '#FAB12F'
                                 };
                                 ?>
@@ -165,7 +178,7 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                    <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
@@ -312,7 +325,8 @@ include_once '../modals/bac_modal.php';
         }
     });
 
-    //----------------DAtatables
+    //----------------DAtatables --------------------------------//
+
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
 
@@ -345,7 +359,5 @@ include_once '../modals/bac_modal.php';
         }
     });
 
-
-
-    //----------------DAtatables
+    //----------------DAtatables --------------------------------//
 </script>

@@ -157,7 +157,7 @@
     padding: 10px 9px;
     border-radius: 5px;
     margin-bottom: 5px;
-    transition: all 0.2s ease;
+    transition: all 0.1s ease;
   }
 
   .nav-link:hover {

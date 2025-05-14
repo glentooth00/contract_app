@@ -117,4 +117,55 @@ class ProcurementController
         }
     }
 
+    // public function storeContract($data)
+    // {
+    //     try {
+
+    //         $sql = "INSERT INTO contracts
+    //             (  contract_file,
+    //                 contract_name,
+    //                 contractPrice,
+    //                 contract_start,
+    //                 contract_end,
+    //                 contract_status,
+    //                 supplier,
+    //                 contract_type,
+    //                 procurementMode ) VALUES (
+
+    //                 :contract_file,
+    //                 :contract_name,
+    //                 :contractPrice,
+    //                 :contract_start,
+    //                 :contract_end,
+    //                 :contract_status,
+    //                 :supplier,
+    //                 :contract_type,
+    //                 :procurementMode
+    //                 )";
+    //         $stmt = $this->db->prepare($sql);
+    //         $stmt->bindParam(":contract_file", $data["contract_file"]);
+    //         $stmt->bindParam(":contract_name", $data["contract_name"]);
+    //         $stmt->bindParam(":contractPrice", $data["contractPrice"]);
+    //         $stmt->bindParam(":contract_start", $data["contract_start"]);
+    //         $stmt->bindParam(":contract_end", $data["contract_end"]);
+    //         $stmt->bindParam(":contract_status", $data["contract_status"]);
+    //         $stmt->bindParam(":supplier", $data["supplier"]);
+    //         $stmt->bindParam("contract_type", $data["contract_type"]);
+    //         $stmt->bindParam("procurementMode", $data["procurementMode"]);
+    //         $stmt->execute();
+
+    //         $result = $stmt->execute();
+
+    //         if (!$result) {
+    //             // Debug SQL error
+    //             $error = $stmt->errorInfo();
+    //             echo '<pre>SQL Error: ' . print_r($error, true) . '</pre>';
+    //         }
+
+    //     } catch (\PDOException $e) {
+    //         echo '<pre>PDO Exception: ' . $e->getMessage() . '</pre>';
+    //         return false;
+    //     }
+    // }
+
 }

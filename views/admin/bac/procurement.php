@@ -166,7 +166,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     </a>-->
                                     <a href="#" class="btn btn-danger badge p-2 delete-btn"
                                         data-id="<?= $getAllProcurement['id'] ?>" style="width: 15%;">
-                                        <img width="15px" src="../../../../public/images/delete.svg">
+                                        <img width="15px" src="../../../public/images/delete.svg">
                                         Delete
                                     </a>
                                 </div>
