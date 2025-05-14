@@ -29,7 +29,7 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
                 
             </div>
             <div class="modal-body">
-                <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">
+                <form action="procurement/save_contract.php" method="POST" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-6 p-2">
                             <div class="mb-3">
@@ -39,23 +39,34 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
                             </div>
                             <div class="mb-3">
                                 <label class="badge text-muted">Total Contract Cost</label>
-                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost" placeholder="₱0.00">
+                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost" placeholder="0.00">
                             </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">Starting Date</label>
-                                <input type="date" class="form-control" name="contract_start" id="floatingInput"
-                                    placeholder="name@example.com">
-                            </div>
-
+                            <!-- ₱0.00 -->
                             <div class="mb-3">
                                 <label class="badge text-muted">Contract type</label>
-                                <select class="form-select form-select-md mb-3" name="contract_type">
+                                <select class="form-select form-select-md mb-3" name="contract_type" id="contract_type">
                                 <option value="" hidden>Select Contract type</option>
                                     <?php foreach($get_contract_types as $contract_type): ?>
                                         <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                            <div class="mb-3 d-flex gap-3" style="width: 100%;">
+                                <div class="col-md-6">
+                                    <label class="badge text-muted">Start Date</label>
+                                    <input type="date" class="form-control" name="contract_start" id="floatingInput"
+                                    placeholder="name@example.com">
+                                </div>
+                               <div class="col-md-6">
+                                    <label class="badge text-muted">End Date</label>
+                                    <input type="date" class="form-control" name="contract_end" id="floatingInput"
+                                        placeholder="">
+                               </div>
+
+                                      
+                            </div>
+
+                            
 
                         </div>
 
@@ -65,26 +76,35 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
                                 <input type="text" class="form-control" name="contract_name" id="floatingInput"
                                     placeholder="">
                             </div>
-                             <div class="mb-3">
-                                <label class="badge text-muted">Supplier</label>
-                                <input type="text" class="form-control" name="supplier" id="floatingInput"
-                                    placeholder="">
-                            </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">End Date</label>
-                                <input type="date" class="form-control" name="contract_end" id="floatingInput"
-                                    placeholder="">
-                            </div>
-                            
                               <div class="mb-3">
                                 <label class="badge text-muted">Mode of Procurement</label>
-                                <select class="form-select form-select-md mb-3" name="contract_type">
+                                <select class="form-select form-select-md mb-3" name="procurementMode">
                                 <option value="" hidden>Select Procurement mode</option>
                                     <?php foreach($procurementModes as $procurementMode): ?>
                                         <option value="<?= $procurementMode['procMode'] ?>"><?= $procurementMode['procMode'] ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+                             <div class="mb-3" id="supplier_field" style="display: none;">
+                                <label class="badge text-muted">Supplier</label>
+                                <input type="text" class="form-control" name="supplier" id="floatingInput"
+                                    placeholder="">
+                            </div>
+                            <!-- <div class="mb-3 col-md-6">
+                                <label class="badge text-muted">End Date</label>
+                                <input type="date" class="form-control" name="contract_end" id="floatingInput"
+                                    placeholder="">
+                            </div> -->
+                            
+                              <!-- <div class="mb-3">
+                                <label class="badge text-muted">Mode of Procurement</label>
+                                <select class="form-select form-select-md mb-3" name="procurementMode">
+                                <option value="" hidden>Select Procurement mode</option>
+                                    <?php foreach($procurementModes as $procurementMode): ?>
+                                        <option value="<?= $procurementMode['procMode'] ?>"><?= $procurementMode['procMode'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div> -->
                             <div class="mb-3">
                                 <input type="hidden" class="form-control" name="uploader_department"
                                     value="<?= $department ?>" id="floatingInput" placeholder="">
@@ -130,9 +150,20 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
     value = value.replace(/[^\d.]/g, '');
 
     // Add the peso symbol (₱) at the start
-    let formattedValue = '₱' + value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Adds commas
+    let formattedValue = '' + value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Adds commas
 
     e.target.value = formattedValue;
+});
+
+document.getElementById('contract_type').addEventListener('change', function () {
+    var selected = this.value;
+    var supplierField = document.getElementById('supplier_field');
+
+    if (selected === 'Goods Contract') {
+        supplierField.style.display = 'block';
+    } else {
+        supplierField.style.display = 'none';
+    }
 });
 
 </script>

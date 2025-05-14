@@ -1047,6 +1047,72 @@ class ContractController
         return $stmt->execute();
     }
 
+    public function storeContract($data)
+    {
+        try {
+            // $formattedPrice = number_format((float) str_replace(',', '', $data["contractPrice"]), 2, '.', '');
+
+            $sql = "INSERT INTO contracts (
+                    contract_file,
+                    contract_name,
+                    contractPrice,
+                    contract_start,
+                    contract_end,
+                    contract_status,
+                    supplier,
+                    contract_type,
+                    procurementMode,
+                    uploader_id,
+                    uploader_department,
+                    uploader
+                ) VALUES (
+                    :contract_file,
+                    :contract_name,
+                    :contractPrice,
+                    :contract_start,
+                    :contract_end,
+                    :contract_status,
+                    :supplier,
+                    :contract_type,
+                    :procurementMode,
+                    :uploader_id,
+                    :uploader_department,
+                    :uploader
+                )";
+
+            $stmt = $this->db->prepare($sql);
+
+            // Bind all parameters, making sure contractPrice is passed as numeric
+            $stmt->bindParam(":contract_file", $data["contract_file"]);
+            $stmt->bindParam(":contract_name", $data["contract_name"]);
+            $stmt->bindValue(":contractPrice", $data["contractPrice"]);
+            $stmt->bindParam(":contract_start", $data["contract_start"]);
+            $stmt->bindParam(":contract_end", $data["contract_end"]);
+            $stmt->bindParam(":contract_status", $data["contract_status"]);
+            $stmt->bindParam(":supplier", $data["supplier"]);
+            $stmt->bindParam(":contract_type", $data["contract_type"]);
+            $stmt->bindParam(":procurementMode", $data["procurementMode"]);
+            $stmt->bindParam(":uploader", $data["uploader"]);
+            $stmt->bindParam(":uploader_id", $data["uploader_id"]);
+            $stmt->bindParam("uploader_department", $data["uploader_department"]);
+
+            $result = $stmt->execute();
+
+            if (!$result) {
+                $error = $stmt->errorInfo();
+                echo '<pre>SQL Error: ' . print_r($error, true) . '</pre>';
+                return false;
+            }
+
+            return true;
+
+        } catch (\PDOException $e) {
+            echo '<pre>PDO Exception: ' . $e->getMessage() . '</pre>';
+            return false;
+        }
+    }
+
+
 
 
 }

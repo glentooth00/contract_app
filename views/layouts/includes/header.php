@@ -23,7 +23,7 @@
     <!-- Custom Styles -->
     <style>
         html {
-            overflow-x: hidden;
+            /* overflow-x: hidden; */
         }
 
         body {
