@@ -44,13 +44,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'type' => 'success'
             ];
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit;
 
         }
 
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+        header("Location: " . $_SERVER['REQUEST_URI']);
+        exit;
 
     }
 }
 
-header("Location: " . $_SERVER['HTTP_REFERER']);
+header("Location: " . $_SERVER['REQUEST_URI']);
+exit;

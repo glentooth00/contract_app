@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
@@ -380,7 +381,7 @@ include_once '../../../views/layouts/includes/header.php';
                     </thead>
                     <?php
                     $id = $getContract['id'];
-                    $employement_datas = (new EmploymentContractController)->getByContractId($id);
+                    $employement_datas = (new ContractHistoryController())->getByContractId($id);
                     ?>
                     <tbody class="">
                         <?php if (!empty($employement_datas)): ?>

@@ -20,7 +20,7 @@ class ContractHistoryController
 
     public function insertLatestData()
     {
-        $sql = "SELECT TOP 1 * FROM contracts ORDER BY created_at DESC";
+        $sql = "SELECT TOP 1 * FROM contracts ORDER BY id DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
