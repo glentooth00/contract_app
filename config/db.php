@@ -1,6 +1,6 @@
 <?php
 // Load database config
-$config = require_once 'config/database.php';
+$config = require_once 'database.php';
 
 // Get the default database type
 $default = $config['default'];
@@ -21,7 +21,7 @@ if ($dbConfig['driver'] === 'mysqli') {
 } elseif ($dbConfig['driver'] === 'sqlsrv') {
     // SQL Server Connection (Using PDO)
     $dsn = "sqlsrv:Server={$dbConfig['server']};Database={$dbConfig['database']}";
-    
+
     try {
         $pdo = new PDO($dsn, $dbConfig['username'], $dbConfig['password']);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

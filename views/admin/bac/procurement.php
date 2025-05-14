@@ -9,10 +9,11 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\ProcurementController;
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
-$getAllContractType = (new ContractTypeController)->getContractTypes();
+$getAllProcurements = (new ProcurementController)->list();
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
@@ -31,7 +32,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Procurement Modes</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -101,17 +102,16 @@ include_once '../../../views/layouts/includes/header.php';
                         </button> -->
                     </div>
                     <div class="modal-body">
-                        <form>
+                        <form action="procurement/save.php" method="POST">
                             <div>
                                 <!-- <label class="badge text-dark">Procurement Mode</label> -->
                                 <input type="text" class="form-control" name="procMode"
                                     placeholder="Add Procurement mode" autofocus>
                             </div>
-
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                        <button type="button" class="btn btn-success">Save changes</button>
+                        <button type="submit" class="btn btn-success">Save changes</button>
                         </form>
                     </div>
                 </div>
@@ -149,56 +149,25 @@ include_once '../../../views/layouts/includes/header.php';
             <thead>
                 <tr>
                     <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
-                    <!-- <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th> -->
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($contracts)): ?>
-                    <?php foreach ($contracts as $contract): ?>
+                <?php if (!empty($getAllProcurements)): ?>
+                    <?php foreach ($getAllProcurements as $getAllProcurement): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
-                            <!-- <td class="text-center">
-                                <?php
-                                $type = $contract['contract_type'] ?? '';
-                                $badgeColor = match ($type) {
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
-                                    default => '#FAB12F'
-                                };
-                                ?>
-                                <span class="p-2 text-white badge"
-                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
-                                    <?= htmlspecialchars($type) ?>
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
-                            </td>
-                            <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
-                            </td>
-                            <td class="text-center">
-                                <span
-                                    class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
-                                    <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
-                                </span>
-                            </td> -->
+                            <td><?= htmlspecialchars($getAllProcurement['procMode'] ?? '') ?></td>
+
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
-                                    <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                    <!-- <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
-                                    </a>
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Delete
+                                    </a>-->
+                                    <a href="#" class="btn btn-danger badge p-2 delete-btn"
+                                        data-id="<?= $getAllProcurement['id'] ?>" style="width: 15%;">
+                                        <img width="15px" src="../../../../public/images/delete.svg">
+                                        Delete
                                     </a>
                                 </div>
                             </td>
@@ -312,6 +281,17 @@ include_once '../modals/bac_modal.php';
         width: 200px;
         /* Adjust width as needed */
     }
+
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: none;
+    }
 </style>
 
 <script>
@@ -341,7 +321,7 @@ include_once '../modals/bac_modal.php';
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
             // Redirect to deletion endpoint (adjust URL to match your backend)
-            window.location.href = 'contracts/delete.php?id=' + selectedContractId;
+            window.location.href = 'procurement/delete.php?id=' + selectedContractId;
         }
     });
 

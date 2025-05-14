@@ -6,10 +6,12 @@ use PDO;
 use mysqli;
 use PDOException;
 
-class Database {
+class Database
+{
     private static $connection = null;
 
-    public static function connect() {
+    public static function connect()
+    {
         if (self::$connection === null) {
             $config = require __DIR__ . '/../../config/database.php';
             $default = $config['default'];
