@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ProcurementController;
 use App\Controllers\UserController;
 use App\Controllers\ContractTypeController;
 
@@ -15,6 +16,7 @@ $get_contract_types = ( new ContractTypeController )->getContractType($departmen
 
 $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $user_department['lastname'];
 
+$procurementModes = ( new ProcurementController )->getAllProcMode();
 
 ?>
 
@@ -34,6 +36,10 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                 <label class="badge text-muted">Contract file</label>
                                 <input type="file" name="contract_file" class="form-control">
 
+                            </div>
+                            <div class="mb-3">
+                                <label class="badge text-muted">Total Contract Cost</label>
+                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost" placeholder="₱0.00">
                             </div>
                             <div class="mb-3">
                                 <label class="badge text-muted">Starting Date</label>
@@ -59,10 +65,25 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                 <input type="text" class="form-control" name="contract_name" id="floatingInput"
                                     placeholder="">
                             </div>
+                             <div class="mb-3">
+                                <label class="badge text-muted">Supplier</label>
+                                <input type="text" class="form-control" name="supplier" id="floatingInput"
+                                    placeholder="">
+                            </div>
                             <div class="mb-3">
                                 <label class="badge text-muted">End Date</label>
                                 <input type="date" class="form-control" name="contract_end" id="floatingInput"
                                     placeholder="">
+                            </div>
+                            
+                              <div class="mb-3">
+                                <label class="badge text-muted">Mode of Procurement</label>
+                                <select class="form-select form-select-md mb-3" name="contract_type">
+                                <option value="" hidden>Select Procurement mode</option>
+                                    <?php foreach($procurementModes as $procurementMode): ?>
+                                        <option value="<?= $procurementMode['procMode'] ?>"><?= $procurementMode['procMode'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <input type="hidden" class="form-control" name="uploader_department"
@@ -88,3 +109,30 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
         </div>
     </div>
 </div>
+<style>
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: none;
+    }
+
+</style>
+<script>
+    document.getElementById('total_contract_cost').addEventListener('input', function (e) {
+    let value = e.target.value;
+
+    // Remove non-numeric characters (except for the decimal point)
+    value = value.replace(/[^\d.]/g, '');
+
+    // Add the peso symbol (₱) at the start
+    let formattedValue = '₱' + value.replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Adds commas
+
+    e.target.value = formattedValue;
+});
+
+</script>
