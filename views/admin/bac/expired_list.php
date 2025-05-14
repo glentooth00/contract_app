@@ -38,7 +38,9 @@ include_once '../../../views/layouts/includes/header.php';
 
     <?php include_once '../menu/sidebar.php'; ?>
 
+
     <div class="content-area">
+
         <h1>Expired Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
@@ -119,8 +121,7 @@ include_once '../../../views/layouts/includes/header.php';
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col" style="border: 1px solid #A9A9A9;">Name <span class="badge text-muted">( Account
-                            number )</span></th>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Name </th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
