@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Controllers;
 
@@ -6,17 +6,20 @@ use App\Config\Database;
 use PDO;
 use App\Controllers\CrudController;
 
-class ContractTypeController{
-    
+class ContractTypeController
+{
+
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = Database::connect();
     }
 
 
-    public function insertContractType($data){
-        
+    public function insertContractType($data)
+    {
+
         $sql = "INSERT INTO contract_types (contract_type, contract_duration,contract_ert) VALUES (:contract_type, :contract_duration, :contract_ert)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_type', $data['contract_type']);
@@ -27,39 +30,68 @@ class ContractTypeController{
         return;
     }
 
-    public function getContractId(){
+    public function getEmploymentErt()
+    {
+        $sql = "SELECT contract_ert FROM contract_types";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        
+        return $results;
+
 
     }
 
 
-    public function getContractTypes(){
-
+    public function getContractTypes()
+    {
         $sql = "SELECT * FROM contract_types";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
-        
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        return $results;
+    }
+
+    public function getContractTypeByDepartment($contractType)
+    {
+        $sql = "SELECT * FROM contract_types WHERE contract_type = :contract_type";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(":contract_type", $contractType);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $results;
     }
 
 
-    public function deleteContractType($data){
+    public function getContractType($department)
+    {
+
+        $sql = "SELECT * FROM contract_types WHERE CAST(department AS NVARCHAR(MAX)) = :department";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':department', $department);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function deleteContractType($data)
+    {
 
         $sql = "DELETE FROM contract_types WHERE id = :id ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $data['id']);
-        
+
 
         return $stmt->execute();
 
     }
 
-    public function getEmploymentErt(){
+    public function getContractErt()
+    {
 
-        $sql = "SELECT contract_ert FROM contract_types WHERE contract_type = 'Employment Contract'";
+        $sql = "SELECT * FROM contract_types";
         $stmt = $this->db->query($sql);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result;

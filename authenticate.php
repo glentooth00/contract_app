@@ -2,6 +2,7 @@
 
 session_start();
 
+require_once __DIR__ . '../src/Config/constants.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
 use App\Controllers\UserController;
@@ -15,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'password' => $_POST['password'],
     ]);
 
-    $test =  $_SESSION['data'];
+    $test = $_SESSION['data'];
 
 
     $username = $_POST['username'];
@@ -27,20 +28,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         if ($password == $test['password']) {
+            $_SESSION['is_logged_in'] = true;
 
-            $_SESSION['is_logged_in'];
+            $get_id = $_SESSION['data'];
+            $_SESSION['id'] = $get_id['id'] ?? null;
 
+            // Set the department in its own session key
+            $_SESSION['department'] = $_SESSION['data']['department'];
 
-                $get_id = $_SESSION['data'];
-
-                $userId = $get_id['id'];
-
-                $encoded =  base64_encode( $userId);
-
-
-                header('location:views/admin/dashboard.php?user='. $encoded);
-
-
+            switch ($_SESSION['department']) {
+                case "IT":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/IT/index.php");
+                    break;
+                case "ISD-HRAD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/hrad/index.php");
+                    break;
+                case "ISD-MSD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/msd/index.php");
+                    break;
+                case "CITETD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/citetd/index.php");
+                    break;
+                case "BAC":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/bac/index.php");
+                    break;
+            }
         } else {
             $_SESSION['password'] = 'Password is incorrect.';
             header('location:index.php');
