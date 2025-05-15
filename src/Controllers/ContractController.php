@@ -1065,7 +1065,8 @@ class ContractController
                     procurementMode,
                     uploader_id,
                     uploader_department,
-                    uploader
+                    uploader,
+                    department_assigned
                 ) VALUES (
                     :contract_file,
                     :contract_name,
@@ -1078,7 +1079,8 @@ class ContractController
                     :procurementMode,
                     :uploader_id,
                     :uploader_department,
-                    :uploader
+                    :uploader,
+                    :department_assigned
                 )";
 
             $stmt = $this->db->prepare($sql);
@@ -1096,6 +1098,7 @@ class ContractController
             $stmt->bindParam(":uploader", $data["uploader"]);
             $stmt->bindParam(":uploader_id", $data["uploader_id"]);
             $stmt->bindParam("uploader_department", $data["uploader_department"]);
+            $stmt->bindParam("department_assigned", $data["department_assigned"]);
 
             $result = $stmt->execute();
 

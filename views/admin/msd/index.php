@@ -26,12 +26,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout">
     <?php include_once '../menu/sidebar.php'; ?>
@@ -128,11 +128,15 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?php
                                 $type = $contract['contract_type'] ?? '';
                                 $badgeColor = match ($type) {
+                                    INFRA => '#328E6E',
+                                    SACC => '#123458',
+                                    GOODS => '#F75A5A',
+                                    EMP_CON => '#FAB12F',
+                                    PSC_LONG => '#007bff',
+                                    PSC_SHORT => '#28a745',
                                     TRANS_RENT => '#003092',
                                     TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
-                                    default => '#FAB12F'
+                                // default => '#FAB12F'
                                 };
                                 ?>
                                 <span class="p-2 text-white badge"

@@ -29,32 +29,38 @@ $page_title = 'Login';
         </div>
         <form action="authenticate.php" method="post">
             <div class="col-12">
-                <input type="text" class="form-control" name="username" placeholder="Enter username" required autofocus>
+                <div class="input-group">
+                    <span class="input-group-text"><img width="25px;" src="public/images/username.svg"></span>
+                    <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+                </div>
+
                 <p class="notifMsg p-1">
                     <?php if (isset($_SESSION['username'])): ?>
                         <?= $_SESSION['username']; ?>
-                        <?php unset($_SESSION['username']); ?> <!-- Unset session variable after displaying it -->
+                        <?php unset($_SESSION['username']); ?>
                     <?php endif; ?>
                 </p>
-
             </div>
             <div class="password col-12">
-                <input type="password" id="password" class="form-control mb-1 " name="password"
-                    placeholder="Enter password" required>
+                <div class="input-group mb-1">
+                    <span class="input-group-text"><img width="25px;" src="public/images/password.svg"></span>
+                    <input type="password" id="password" class="form-control" name="password" placeholder="Password"
+                        required>
+                </div>
 
-                <div class="" style="margin-left:1%;">
-                    <input type="checkbox" class="form-check-input mt-1" onclick="checkPassword()"><span
-                        class="badge text-muted"> Show password</span>
+                <div class="mt-3" style="margin-left:1%;">
+                    <input type="checkbox" class="form-check-input mt-1" onclick="checkPassword()">
+                    <span class="badge text-muted">Show password</span>
                 </div>
 
                 <p class="notifMsg p-1">
                     <?php if (isset($_SESSION['password'])): ?>
                         <?= $_SESSION['password']; ?>
-                        <?php unset($_SESSION['password']); ?> <!-- Unset session variable after displaying it -->
+                        <?php unset($_SESSION['password']); ?>
                     <?php endif; ?>
                 </p>
-
             </div>
+
             <div class="col-12 mb-1 mt-4">
                 <!-- <label class="badge text-muted">Password</label> -->
                 <button type="submit" class="btn btn-success btn-block w-100" name="submit">Login</button>
