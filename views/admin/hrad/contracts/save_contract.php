@@ -34,43 +34,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'uploader_department' => $_POST['uploader_department'] ?? 'Missing uploader_department',
         ];
 
-        echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
+        // echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
 
         // Save contract
         $contractSaved = $contractController->saveContract($contractData);
 
-        if (!$contractSaved) {
-            echo "<p>Error: Failed to save contract. Check ContractController::saveContract().</p>";
-        }
-
-        // Save employment history
-        $employmentController = new EmploymentContractController();
-        $employmentSaved = $employmentController->insertLatestData();
-
-        if (!$employmentSaved) {
-            echo "<p>Error: Failed to insert employment history. Check EmploymentContractController::insertLatestData().</p>";
-        }
-
-        if ($contractSaved && $employmentSaved) {
+        if ($contractSaved) {
             $_SESSION['notification'] = [
-                'message' => 'Contract successfully saved!',
+                'message' => 'Contract successfully renewed!',
                 'type' => 'success'
             ];
-            echo "<p>All operations successful. (Contract and Employment history saved.)</p>";
-            // You can uncomment redirect once debugging is done
+
             header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit;
         }
 
-    } else {
-        echo "<p>Error uploading file. Check ContractController::uploadFile().</p>";
-        if (isset($_FILES["contract_file"])) {
-            echo "<pre>File Upload Debug Info:\n" . print_r($_FILES["contract_file"], true) . "</pre>";
-        } else {
-            echo "<p>No file was uploaded (contract_file is missing).</p>";
-        }
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+
     }
-} else {
-    echo "<p>Invalid request method. Expected POST.</p>";
+
+    header("Location: " . $_SERVER['HTTP_REFERER']);
 }
 ?>

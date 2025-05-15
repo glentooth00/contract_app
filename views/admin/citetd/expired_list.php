@@ -41,7 +41,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Expired Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
