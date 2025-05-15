@@ -317,7 +317,7 @@ include_once '../../../views/layouts/includes/header.php';
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
-                                                echo $ert = $row['contract_ert'];
+                                                $ert = $row['contract_ert'];
 
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;

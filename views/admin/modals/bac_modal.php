@@ -22,7 +22,7 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
 
 <!---- CITETD MODAL ---->
 <div class="modal fade" id="bacModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Create Contract</h5>
@@ -32,14 +32,14 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
                 <form action="procurement/save_contract.php" method="POST" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-6 p-2">
-                            <div class="mb-3">
+                            <div class="mb-3 col-md-6">
                                 <label class="badge text-muted">Contract file</label>
                                 <input type="file" name="contract_file" class="form-control">
 
                             </div>
-                            <div class="mb-3">
+                            <div class="mb-3 col-md-6">
                                 <label class="badge text-muted">Total Contract Cost</label>
-                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost" placeholder="0.00">
+                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost" placeholder="₱ 0.00">
                             </div>
                             <!-- ₱0.00 -->
                             <div class="mb-3">
@@ -62,12 +62,7 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
                                     <input type="date" class="form-control" name="contract_end" id="floatingInput"
                                         placeholder="">
                                </div>
-
-                                      
                             </div>
-
-                            
-
                         </div>
 
                         <div class="col-md-6 p-2">
@@ -90,21 +85,6 @@ $procurementModes = ( new ProcurementController )->getAllProcMode();
                                 <input type="text" class="form-control" name="supplier" id="floatingInput"
                                     placeholder="">
                             </div>
-                            <!-- <div class="mb-3 col-md-6">
-                                <label class="badge text-muted">End Date</label>
-                                <input type="date" class="form-control" name="contract_end" id="floatingInput"
-                                    placeholder="">
-                            </div> -->
-                            
-                              <!-- <div class="mb-3">
-                                <label class="badge text-muted">Mode of Procurement</label>
-                                <select class="form-select form-select-md mb-3" name="procurementMode">
-                                <option value="" hidden>Select Procurement mode</option>
-                                    <?php foreach($procurementModes as $procurementMode): ?>
-                                        <option value="<?= $procurementMode['procMode'] ?>"><?= $procurementMode['procMode'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div> -->
                             <div class="mb-3">
                                 <input type="hidden" class="form-control" name="uploader_department"
                                     value="<?= $department ?>" id="floatingInput" placeholder="">
