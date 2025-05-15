@@ -17,7 +17,7 @@ $page_title = 'Login';
 <?php include_once '../views/layouts/includes/header.php'; ?>
 
 <body class="">
-    <div class="container d-flex justify-content-center" style="margin-top:10em;margin-bottom:21em;">
+    <div class="container d-flex justify-content-center" style="margin-top:10em;margin-bottom:20em;">
         <div class="formHolder card col-md-5 bg-white p-4 rounded mt-5">
             <div class="d-flex justify-content-center mb-1">
                 <div>
@@ -62,15 +62,14 @@ $page_title = 'Login';
                     </div>
                 </div>
             </form>
-
-
             <div class="mt-3 forgotPassword p-1">
-                <a href="..//index.php">Login</a>
+                <a href="../index.php" class="button">Login</a>
             </div>
-
         </div>
     </div>
+
     <?php include_once '../views/layouts/includes/footer.php'; ?>
+
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
             <path
@@ -137,6 +136,10 @@ $page_title = 'Login';
 
         .forgotPassword a {
             text-decoration: none;
+        }
+
+        .formHolder {
+            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
         }
 
         @media screen and (max-width: 479px) {}
