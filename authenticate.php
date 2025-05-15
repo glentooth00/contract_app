@@ -57,6 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/bac/index.php");
                     break;
+                case "IASD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/iasd/index.php");
+                    break;
             }
         } else {
             $_SESSION['password'] = 'Password is incorrect.';

@@ -59,9 +59,13 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                     <div class="row p-3">
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Total Contract Cost</label>
-                            <input type="text" class="form-control" name="contractPrice" id="total_contract_cost"
-                                placeholder="₱ 0.00">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-peso-sign"></i></span>
+                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost"
+                                    placeholder="0.00">
+                            </div>
                         </div>
+
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Mode of Procurement</label>
                             <select class="form-select" name="procurementMode">
@@ -95,12 +99,24 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Start Date</label>
-                            <input type="date" class="form-control" name="contract_start">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fa fa-calendar" style="font-size: 18px;" aria-hidden="true"></i>
+                                </span>
+                                <input type="date" class="form-control" name="contract_start">
+                            </div>
                         </div>
+
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">End Date</label>
-                            <input type="date" class="form-control" name="contract_end">
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="fa fa-calendar" style="font-size: 18px;" aria-hidden="true"></i>
+                                </span>
+                                <input type="date" class="form-control" name="contract_end">
+                            </div>
                         </div>
+
 
                         <!-- Hidden Inputs -->
                         <input type="hidden" name="uploader_department" value="<?= $department ?>">

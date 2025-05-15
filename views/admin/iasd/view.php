@@ -110,26 +110,26 @@ include_once '../../../views/layouts/includes/header.php';
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly>
                 </div>
             </div>
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                    <div class="d-flex">
-                        <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
-                    </div>
+
+            <div class="col-md-2 mt-3">
+                <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                    <input type="date" id="startDate" class="form-control"
+                        value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
                 </div>
             </div>
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                    <div class="d-flex">
-                        <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_end']; ?>" name="contract_end" readonly>
-                    </div>
+
+            <div class="col-md-2 mt-3">
+                <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                    <input type="date" id="endDate" class="form-control" value="<?= $getContract['contract_end']; ?>"
+                        name="contract_end" readonly>
                 </div>
             </div>
+
+
             <div class="row col-md-2">
 
                 <div class="mt-3">
@@ -201,13 +201,19 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+
+            <?php if (!$getContract['contractPrice']): ?>
+
+            <?php else: ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
+
 
             <?php if (!$getContract['supplier']): ?>
 
@@ -767,6 +773,7 @@ include_once '../../../views/layouts/includes/header.php';
         var endDate = button.data('enddate');
         var departmentAssigned = button.data('departmentassigned');
         var contractType = button.data('type');
+
 
         $('#contract_id').val(contractId);
         $('#contract_name').val(contractName);
