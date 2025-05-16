@@ -44,7 +44,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                     <?php
                                     $contract_types = (new ContractTypeController)->getContractTypes();
                                     ?>
-                                    <?php if ($department == 'ISD-HRAD'): ?>
+                                    <?php if ($department == 'ISD-HRAD' | $department == 'IASD'): ?>
                                         <?php foreach ($contract_types as $contract_type): ?>
 
                                             <?php if ($contract_type['contract_type'] === 'Employment Contract' | $contract_type['contract_type'] === 'Rental Contract'): ?>

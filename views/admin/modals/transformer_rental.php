@@ -9,22 +9,23 @@ $departments = (new DepartmentController)->getAllDepartments();
 $getUserInfo = (new UserController)->getUserByDept($department);
 
 ?>
-<!-- ISD-MSD MODAL -->
-<div class="modal fade" id="transformerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Transformer Rental Contract</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="contracts/trans_rent.php" method="post" enctype="multipart/form-data">
-                    <div class="col-md-12 d-flex gap-2 p-3">
-                        <div class="col-md-12 p-2">
-                            <div id="form-temporary-lighting-contract" class="contract-form-section col-md-12">
-                                <input type="hidden" class="form-control" name="contract_type"
+
+<div class="modal fade" id="transformerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Transformer Rental</h5>
+        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button> -->
+      </div>
+      <div class="modal-body">
+        <form action="contracts/trans_rent.php" method="post" enctype="multipart/form-data">
+             <div class="col-md-12 d-flex gap-2 p-3">
+                 <div class="col-md-12 p-2">
+                    <input type="hidden" class="form-control" name="contract_type"
                                     value="<?= TRANS_RENT ?>" readonly>
-                                <div class="col-md-12 d-block gap-2">
+                                      <div class="col-md-12 d-block gap-2">
                                     <div class="col-md-12 d-flex gap-2 row justify-content-center">
                                         <div class="col-md-3 p-2">
                                             <div>
@@ -137,50 +138,61 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                     </div>
 
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save Contract</button>
-            </div>
-            </form>
+                 </div>
+
+                </div>
         </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Save changes</button>
+        </form>
+      </div>
     </div>
+  </div>
 </div>
+
+
 
 <!-- JS to toggle form display -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const contractSelect = document.getElementById("contract_type");
-        const formSections = document.querySelectorAll(".contract-form-section");
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const contractSelect = document.getElementById("contract_type");
+    //     const formSections = document.querySelectorAll(".contract-form-section");
 
-        function toggleFormSection() {
-            const selected = contractSelect.value.toLowerCase().replace(/\s+/g, '-');
-            formSections.forEach(section => section.style.display = "none");
+    //     function toggleFormSection() {
+    //         const selected = contractSelect.value.toLowerCase().replace(/\s+/g, '-');
+    //         formSections.forEach(section => section.style.display = "none");
 
-            const targetForm = document.getElementById("form-" + selected);
-            if (targetForm) {
-                targetForm.style.display = "block";
+    //         const targetForm = document.getElementById("form-" + selected);
+    //         if (targetForm) {
+    //             targetForm.style.display = "block";
+    //         }
+    //     }
+
+    //     // Initial check (in case there's a pre-selected option)
+    //     toggleFormSection();
+
+    //     // Event listener for changes
+    //     contractSelect.addEventListener("change", toggleFormSection);
+    // });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const rentStartInput = document.getElementById('rent_start');
+    const rentEndInput = document.getElementById('rent_end');
+
+    if (rentStartInput && rentEndInput) {
+        rentStartInput.addEventListener('change', function () {
+            const startDate = new Date(this.value);
+            if (!isNaN(startDate)) {
+                startDate.setDate(startDate.getDate() + 90);
+                const year = startDate.getFullYear();
+                const month = String(startDate.getMonth() + 1).padStart(2, '0');
+                const day = String(startDate.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+                rentEndInput.value = formattedDate;
             }
-        }
+        });
+    }
+});
 
-        // Initial check (in case there's a pre-selected option)
-        toggleFormSection();
-
-        // Event listener for changes
-        contractSelect.addEventListener("change", toggleFormSection);
-    });
-
-    document.getElementById('rent_start').addEventListener('change', function () {
-        const startDate = new Date(this.value);
-        if (!isNaN(startDate)) {
-            startDate.setDate(startDate.getDate() + 90);
-            const year = startDate.getFullYear();
-            const month = String(startDate.getMonth() + 1).padStart(2, '0');
-            const day = String(startDate.getDate()).padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
-            document.getElementById('rent_end').value = formattedDate;
-        }
-    });
 </script>

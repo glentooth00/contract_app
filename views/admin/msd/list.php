@@ -93,7 +93,7 @@ include_once '../../../views/layouts/includes/header.php';
 
         <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
             style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
+            data-bs-toggle="modal" data-bs-target="#temporaryModal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
             Temporary Lighting Contract
         </a>

@@ -23,6 +23,13 @@ $getOneLatest = (new ContractHistoryController)->insertLatestData();
 //     //Optional: echo nothing or a silent message
 //     echo "No contract data available to insert.";
 // }
+
+//----------------------Data For MODAL----------------------------//
+
+
+
+
+//---------------------------------------------------------------//
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
@@ -91,20 +98,27 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;" href="#!" role="button" data-bs-toggle="modal"
-            data-bs-target="#allModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Add Contract
-        </a>
+        <div class="dropdown">
+            <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img width="20px" src="../../../public/images/add.svg">
+                Create Contract
+            </a>
 
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                    data-bs-target="#<?= $department ?>Modal">Employment Contract</a>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#powerSupplyModal">Power Supply</a>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#transformerModal">Transformer
+                    Rental</a>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#temporaryModal">Temporary
+                    Lighting</a>
+                <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bacModal">BAC
+                    ( Implementing/Requesting department )
+                </a>
+            </div>
 
-        <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a> -->
+        </div>
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -164,14 +178,29 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?= htmlspecialchars($type) ?>
                                 </span>
                             </td>
+
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_start']) ? date('F-d-Y', strtotime($contract['rent_start'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_end']) ? date('F-d-Y', strtotime($contract['rent_end'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
+
                             <td class="text-center">
                                 <span
                                     class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
@@ -203,7 +232,11 @@ include_once '../../../views/layouts/includes/header.php';
 
 <?php
 
-include_once '../modals/all_modal.php';
+include_once '../modals/transformer_rental.php';
+include_once '../modals/hrad_modal.php';
+include_once '../modals/power_supply.php';
+include_once '../modals/isdmsd_modal.php';
+include_once '../modals/bac_modal.php';
 
 ?>
 

@@ -46,11 +46,12 @@
       </ul>
     </li>
 
+
     <?php
     use App\Controllers\UserController;
 
     $logged_user = null;
-    $usersLink = 'IT/users.php';
+    $usersLink = 'admin/users.php';
 
     if (isset($_SESSION['data']['id'])) {
       $id = $_SESSION['data']['id'];
@@ -58,7 +59,7 @@
       $logged_user = $getUser->getUserRolebyId($id);
 
       $currentDir = basename(dirname($_SERVER['PHP_SELF']));
-      if ($currentDir === 'IT') {
+      if ($currentDir === 'admin') {
         $usersLink = 'users.php';
       }
     }
@@ -92,6 +93,15 @@
             <a class="nav-link" href="<?php echo $usersLink; ?>">
               <img width="27px" src="../../../public/images/user.svg">
               <span>Users</span>
+            </a>
+          </li>
+        <?php endif; ?>
+
+        <?php if ($logged_user === 'Admin'): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="<?php echo $usersLink; ?>">
+              <img width="27px" src="../../../public/images/managePassword.svg">
+              <span>Manage Passwords</span>
             </a>
           </li>
         <?php endif; ?>
@@ -215,6 +225,15 @@
     width: calc(100% - 240px);
     background-color: #f8f9fa;
     padding: 20px;
+    height: 65em;
+  }
+
+  .nav-link:hover img {
+    filter: brightness(0) invert(1);
+  }
+
+  .nav-link img {
+    transition: filter 0.3s ease;
   }
 </style>
 

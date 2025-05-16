@@ -15,6 +15,7 @@ $latestData = [
     'department_assigned' => $_GET['dept'],
     'contract_status' => 'Active',
     'updated_at' => date('Y-m-d H:i:s') // Include current timestamp
+
 ];
 
 // Call the controller method to perform update
