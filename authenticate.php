@@ -37,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['department'] = $_SESSION['data']['department'];
 
             switch ($_SESSION['department']) {
-                case "IT":
+                case "Admin":
                     $_SESSION['department'] = $_SESSION['data']['department'];
-                    header("location:views/admin/IT/index.php");
+                    header("location:views/admin/admin/index.php");
                     break;
                 case "ISD-HRAD":
                     $_SESSION['department'] = $_SESSION['data']['department'];
@@ -56,6 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 case "BAC":
                     $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/bac/index.php");
+                    break;
+                case "IASD":
+                    $_SESSION['department'] = $_SESSION['data']['department'];
+                    header("location:views/admin/iasd/index.php");
                     break;
             }
         } else {

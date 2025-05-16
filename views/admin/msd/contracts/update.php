@@ -17,9 +17,14 @@ if (isset($_GET['id'])) {
         'rent_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP
         'updated_at' => date('Y-m-d H:i:s'), // Add this to match bindParam
         'contract_status' => 'Active',
+        'daysRemaining' => $_GET['daysRemaining']
     ];
 
-    // Get contract type by ID
+    $daysRemaining = $_GET['daysRemaining'];
+
+
+
+    // // Get contract type by ID
     $id = $data['id'];
     $getContractType = (new ContractController)->getContractbyId($id);
 
@@ -36,41 +41,56 @@ if (isset($_GET['id'])) {
             'updated_at' => date('Y-m-d H:i:s') // Add this to match bindParam
         ];
 
+
         $updateTransRent = (new ContractController)->updateTransRent($data1);
 
         if ($updateTransRent) {
 
-            $i = [
-                'id' => $data['id'],
-                'status' => 'Expired',
-            ];
+            $daysRemaining;
 
-            $r = (new ContractHistoryController)->updatedExpired($i);
+            if ($daysRemaining > 0) {
 
-            $_SESSION['notification'] = [
-                'message' => $data['contract_name'] . ' updated!',
-                'type' => 'success'
-            ];
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+                $i = [
+                    'id' => $data['id'],
+                    'status' => 'Active',
+                ];
+
+                $r = (new ContractHistoryController)->updatedExpired($i);
+
+                $_SESSION['notification'] = [
+                    'message' => $data['contract_name'] . ' updated!',
+                    'type' => 'success'
+                ];
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            } else {
+
+
+                $i = [
+                    'id' => $data['id'],
+                    'status' => 'Expire',
+                ];
+
+                $r = (new ContractHistoryController)->updatedExpired($i);
+
+                $_SESSION['notification'] = [
+                    'message' => $data['contract_name'] . ' updated!',
+                    'type' => 'success'
+                ];
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
         }
 
     } elseif ($getContractType['contract_type'] === TEMP_LIGHTING) {
 
-        $data2 = [
-            'id' => $_GET['id'],
-            'contract_status' => 'Active',
-            'contract_name' => $_GET['name'],
-            'contract_start' => $_GET['start'],
-            'contract_end' => $_GET['end'],
-            'updated_at' => date('Y-m-d H:i:s')
-        ];
+        $daysRemaining;
 
-        $updateTransRent = (new ContractController)->updateTempLight($data2);
-        if ($updateTransRent) {
+        if ($daysRemaining > 0) {
 
             $i = [
                 'id' => $data['id'],
-                'status' => 'Expired',
+                'status' => 'Active',
             ];
 
             $r = (new ContractHistoryController)->updatedExpired($i);
@@ -80,6 +100,23 @@ if (isset($_GET['id'])) {
                 'type' => 'success'
             ];
             header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        } else {
+
+
+            $i = [
+                'id' => $data['id'],
+                'status' => 'Expire',
+            ];
+
+            $r = (new ContractHistoryController)->updatedExpired($i);
+
+            $_SESSION['notification'] = [
+                'message' => $data['contract_name'] . ' updated!',
+                'type' => 'success'
+            ];
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+
         }
 
         header("Location: " . $_SERVER['HTTP_REFERER']);

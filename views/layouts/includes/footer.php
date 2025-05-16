@@ -1,4 +1,4 @@
-<footer class="footerDiv bg-dark text-white py-3 mt-5">
+<footer class="footerDiv bg-dark text-white py-3 mt-2">
     <div class="container text-center">
         <h5 class="mb-0">Web App</h5>
         <small>&copy; <?= date('Y') ?> All rights reserved.</small>

@@ -93,7 +93,7 @@ include_once '../../../views/layouts/includes/header.php';
 
         <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
             style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
+            data-bs-toggle="modal" data-bs-target="#temporaryModal">
             <i class="fa fa-file-text-o" aria-hidden="true"></i>
             Temporary Lighting Contract
         </a>
@@ -156,11 +156,15 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?php
                                 $type = $contract['contract_type'] ?? '';
                                 $badgeColor = match ($type) {
+                                    INFRA => '#328E6E',
+                                    SACC => '#123458',
+                                    GOODS => '#F75A5A',
+                                    EMP_CON => '#FAB12F',
+                                    PSC_LONG => '#007bff',
+                                    PSC_SHORT => '#28a745',
                                     TRANS_RENT => '#003092',
                                     TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
-                                    default => '#FAB12F'
+                                // default => '#FAB12F'
                                 };
                                 ?>
                                 <span class="p-2 text-white badge"

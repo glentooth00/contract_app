@@ -7,7 +7,7 @@ $userid = $_SESSION['id'];
 
 $user_department = (new UserController)->getUserById($userid);
 
-$department = $user_department['department'];
+$department = ($user_department['department']) ? 'IASD' : $user_department['department'];
 
 $id = $user_department['id'];
 
@@ -27,7 +27,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                 
             </div>
             <div class="modal-body">
-                <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">
+                <form action="contracts/save_contract_powersupply.php" method="post" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-6 p-2">
                             <div class="mb-3">
@@ -39,17 +39,24 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                 <label class="badge text-muted">Starting Date</label>
                                 <input type="date" class="form-control" name="contract_start" id="floatingInput"
                                     placeholder="name@example.com">
-
                             </div>
-
                             <div class="mb-3">
-                                <label class="badge text-muted">Power Supply Contract type</label>
-                                <select class="form-select form-select-md mb-3" name="contract_type">
-                                <option value="" hidden>Select Power Supply contract type</option>
-                                    <?php foreach($get_contract_types as $contract_type): ?>
-                                        <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
+                                <?php if( $department === CITETD ) : ?>
+                                    <label class="badge text-muted">Power Supply Contract type</label>
+                                        <select class="form-select form-select-md mb-3" name="contract_type">
+                                        <option value="" hidden>Select Power Supply contract type</option>
+                                            <?php foreach($get_contract_types as $contract_type): ?>
+                                                <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
+                                            <?php endforeach; ?>
+                                    </select>
+                                <?php elseif( $department === IASD ) : ?>
+                                    <label class="badge text-muted">Power Supply Contract type</label>
+                                        <select class="form-select form-select-md mb-3" name="contract_type">
+                                        <option value="" hidden>Select Power Supply contract type</option>
+                                            <option value="Power Suppliers Contract (LONG TERM)">Power Suppliers Contract (LONG TERM)</option>
+                                            <option value="Power Suppliers Contract (SHORT TERM)">Power Suppliers Contract (SHORT TERM)</option>
+                                    </select>
+                                <?php endif; ?>
                             </div>
 
                         </div>

@@ -608,7 +608,7 @@ class ContractController
 
         // Set default values
         $contract_status = !empty($data['contract_status']) ? $data['contract_status'] : 'Active';
-        $department_assigned = ''; // <-- Always empty string
+        // $department_assigned = ''; // <-- Always empty string
 
         $stmt->bindParam(':TC_no', $data['TC_no']);
         $stmt->bindParam(':contract_start', $data['contract_start']);
@@ -617,7 +617,7 @@ class ContractController
         $stmt->bindParam(':uploader', $data['uploader']);
         $stmt->bindParam(':uploader_id', $data['uploader_id']);
         $stmt->bindParam(':uploader_dept', $data['uploader_dept']);
-        $stmt->bindParam(':department_assigned', $department_assigned); // always empty
+        $stmt->bindParam(':department_assigned', $data['department_assigned']); // always empty
         $stmt->bindParam(':created_at', $data['created_at']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam(':contract_status', $contract_status);
@@ -720,7 +720,7 @@ class ContractController
 
         $emptyContractStart = '';
         $emptyContractEnd = '';
-        $emptyDepartmentAssigned = '';
+        // $emptyDepartmentAssigned = '';
 
         $stmt->bindParam(':contract_start', $emptyContractStart);
         $stmt->bindParam(':contract_end', $emptyContractEnd);
@@ -730,7 +730,7 @@ class ContractController
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam(':uploader_department', $data['uploader_department']);
         $stmt->bindParam(':uploader_id', $data['uploader_id']);
-        $stmt->bindParam(':department_assigned', $emptyDepartmentAssigned);
+        $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':account_no', $data['account_no']);
 
         $stmt->execute();
@@ -1005,8 +1005,8 @@ class ContractController
     public function savePowerSupplyContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department)";
 
         $stmt = $this->db->prepare($query);
 
@@ -1017,6 +1017,7 @@ class ContractController
             ':contract_end' => $data['contract_end'],
             ':contract_file' => $data['contract_file'],
             ':contract_status' => $data['contract_status'],
+            ':department_assigned' => $data['department_assigned'],
             ':uploader_id' => $data['uploader_id'],
             ':uploader_department' => $data['uploader_department'],
         ]);
@@ -1065,7 +1066,8 @@ class ContractController
                     procurementMode,
                     uploader_id,
                     uploader_department,
-                    uploader
+                    uploader,
+                    department_assigned
                 ) VALUES (
                     :contract_file,
                     :contract_name,
@@ -1078,7 +1080,8 @@ class ContractController
                     :procurementMode,
                     :uploader_id,
                     :uploader_department,
-                    :uploader
+                    :uploader,
+                    :department_assigned
                 )";
 
             $stmt = $this->db->prepare($sql);
@@ -1096,6 +1099,7 @@ class ContractController
             $stmt->bindParam(":uploader", $data["uploader"]);
             $stmt->bindParam(":uploader_id", $data["uploader_id"]);
             $stmt->bindParam("uploader_department", $data["uploader_department"]);
+            $stmt->bindParam("department_assigned", $data["department_assigned"]);
 
             $result = $stmt->execute();
 

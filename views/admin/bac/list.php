@@ -151,10 +151,12 @@ include_once '../../../views/layouts/includes/header.php';
                                     INFRA => '#328E6E',
                                     SACC => '#123458',
                                     GOODS => '#F75A5A',
-                                    'Infrastructure Contract' => '#007bff',
-                                    'Service and Consultancy Contract' => '#28a745',
-                                    'Goods Contract' => '#28a745',
-                                    default => '#FAB12F'
+                                    EMP_CON => '#FAB12F',
+                                    PSC_LONG => '#007bff',
+                                    PSC_SHORT => '#28a745',
+                                    TRANS_RENT => '#003092',
+                                    TEMP_LIGHTING => '#03A791',
+                                // default => '#FAB12F'
                                 };
                                 ?>
                                 <span class="p-2 text-white badge"
@@ -182,9 +184,15 @@ include_once '../../../views/layouts/includes/header.php';
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </a>
+
+                                    <?php if ($department === BAC): ?>
+
+                                    <?php else: ?>
+                                        <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    <?php endif; ?>
+
                                 </div>
                             </td>
                         </tr>
@@ -321,7 +329,7 @@ include_once '../modals/bac_modal.php';
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
             // Redirect to deletion endpoint (adjust URL to match your backend)
-            window.location.href = 'contracts/delete.php?id=' + selectedContractId;
+            window.location.href = 'procurement/delete_contract.php?id=' + selectedContractId;
         }
     });
 

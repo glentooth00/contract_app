@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === POST) {
         'supplier' => $_POST['supplier'] ?? '',
         'contract_end' => $_POST['contract_end'],
         'procurementMode' => $_POST['procurementMode'],
+        'department_assigned' => $_POST['department_assigned'],
         'contract_status' => 'Active',
         'uploader_id' => $_POST['uploader_id'],
         'uploader' => $_POST['uploader'],
