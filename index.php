@@ -9,14 +9,14 @@ $page_title = 'Login';
 
 <p class="">
     <?php if (isset($_SESSION['username'])): ?>
-        <span id="notification"><?= $_SESSION['username']; ?> <button type="button"
+        <span id="notification" class="notification"><?= $_SESSION['username']; ?> <button type="button"
                 onclick="this.parentElement.style.display='none'"
                 style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button></span>
         <?php unset($_SESSION['username']); ?>
     <?php endif; ?>
 
     <?php if (isset($_SESSION['password'])): ?>
-        <span id="notification"><?= $_SESSION['password']; ?> <button type="button"
+        <span id="notification" class="notification"><?= $_SESSION['password']; ?> <button type="button"
                 onclick="this.parentElement.style.display='none'"
                 style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button></span>
         <?php unset($_SESSION['password']); ?>
@@ -157,6 +157,26 @@ $page_title = 'Login';
         color: white;
     }
 
+    .notification {
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+        display: inline-block;
+        position: relative;
+        background: #333;
+        color: #FEFDED;
+        padding: 10px 40px 10px 10px;
+        border-radius: 4px;
+        margin: 10px 0;
+    }
+
+    .notification.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+
+
     .password {
         margin-top: -6%;
     }
@@ -187,4 +207,15 @@ $page_title = 'Login';
             icon.classList.add('fa-eye');
         }
     }
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const notif = document.getElementById('notification');
+        if (notif) {
+            // Add 'show' class to trigger animation
+            setTimeout(() => {
+                notif.classList.add('show');
+            }, 100); // slight delay to ensure DOM is ready
+        }
+    });
 </script>

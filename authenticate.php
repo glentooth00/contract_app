@@ -23,9 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($username == $test['username']) {
 
-        // echo 'username is the same';
-
-
         if ($password === $test['password']) {
 
             $_SESSION['is_logged_in'] = true;
@@ -60,21 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 case "IASD":
                     $_SESSION['department'] = $_SESSION['data']['department'];
                     header("location:views/admin/iasd/index.php");
-                    break;
             }
         } else {
 
-            $_SESSION['username'] = 'username is incorrect.';
+            $_SESSION['password'] = 'Password is incorrect.';
             header('location:index.php');
         }
 
-        $_SESSION['password'] = 'password is incorrect.';
-        header('location:index.php');
     } else {
 
         $_SESSION['username'] = 'Username is incorrect.';
         header('location:index.php');
     }
-    // echo 'wrong username';
+
 
 }
