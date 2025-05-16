@@ -18,9 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $test = $_SESSION['data'] ?? '';
 
-    // var_dump($test);
-
-
     $username = $_POST['username'];
     $password = $_POST['password'];
 
