@@ -9,9 +9,139 @@ $departments = (new DepartmentController)->getAllDepartments();
 $getUserInfo = (new UserController)->getUserByDept($department);
 
 ?>
-<!-- ISD-MSD MODAL -->
-<div class="modal fade" id="<?= $department ?>Modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+
+<!-- Modal -->
+<div class="modal fade" id="temporaryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Temporary Lighting Contract</h5>
+            </div>
+            <div class="modal-body">
+                <form action="contracts/rentals.php" method="post" enctype="multipart/form-data">
+                      <div class="p-2 col-md-12">
+                                <input type="hidden" class="form-control" name="contract_type"
+                                    value="<?= TEMP_LIGHTING ?>" readonly>
+                                <div class="d-block gap-2">
+                                    <div class="col-md-12 d-flex">
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Contract Name</lable>
+                                                <input type="text" class="form-control" name="contract_name" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">TC No.</lable>
+                                                <input type="text" class="form-control" name="TC_no" required>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <div class="d-flex">
+                                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                                <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                        <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                    </div>
+                                    <div class="col-md-12 d-flex">
+
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Date Start</lable>
+                                                <div class="d-flex">
+                                                    <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                        aria-hidden="true"></i>
+                                                    <input type="date" id="date_start" class="form-control"
+                                                        name="contract_start" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Date End</lable>
+                                                <div class="d-flex">
+                                                    <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                        aria-hidden="true"></i>
+                                                    <input type="date" id="date_end" class="form-control"
+                                                        name="contract_end" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                    </div>
+                                    <div class="col-md-12 d-flex">
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Party of Second Part</lable>
+                                                <input type="text" class="form-control" name="party_of_second_part"
+                                                    required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Contract file</lable>
+                                                <input type="file" class="form-control" name="contract_file"
+                                                    style="width: 16.7em;" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 p-2">
+                                            <div>
+                                                <?php
+                                                $userid;
+                                                $getUser = (new UserController)->getUserById($userid);
+
+                                                // var_dump($getUser['firstname']);
+                                                ?>
+                                                <input type="hidden" id="date_start" class="form-control"
+                                                    name="uploader_id" value="<?= $userid ?>">
+                                                <input type="hidden" id="date_start" class="form-control"
+                                                    name="uploader"
+                                                    value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
+                                                <input type="hidden" id="date_start" class="form-control"
+                                                    name="uploader_dept" value="<?= $department ?>" required>
+                                            </div>
+                                        </div>
+                                        <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                    </div>
+
+                                </div>
+                            </div>
+
+                     </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                    <button type="submit" class="btn btn-success">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- ISD-MSD MODAL -->
+<div class="modal fade" id="temporaryModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

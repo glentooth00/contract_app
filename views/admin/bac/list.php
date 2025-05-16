@@ -184,9 +184,15 @@ include_once '../../../views/layouts/includes/header.php';
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </a>
+
+                                    <?php if ($department === BAC): ?>
+
+                                    <?php else: ?>
+                                        <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    <?php endif; ?>
+
                                 </div>
                             </td>
                         </tr>

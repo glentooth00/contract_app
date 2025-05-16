@@ -370,7 +370,7 @@ include_once '../../../views/layouts/includes/header.php';
                     }
                     ?>
                     <div class="d-flex">
-                        <input type="text" style="margin-left:7px;" class="form-control"
+                        <input type="text" id="remainingDays" style="margin-left:7px;" class="form-control"
                             value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
                     </div>
 
@@ -447,9 +447,7 @@ include_once '../../../views/layouts/includes/header.php';
                         name="contract_type" readonly>
                 </div>
             </div>
-
             <div class="mt-3 col-md-12 d-flex gap-5">
-
 <!-- <div class="row col-md-3">
     <div class="mt-3">
         <label class="badge text-muted" style="font-size: 15px;">Implementing Dept:</label>
@@ -1116,6 +1114,7 @@ const rentStart = document.getElementById('rent_start');
 const rentEnd = document.getElementById('rent_end');
 const deptSelect = document.getElementById('deptSelect');
 const id = document.getElementById('contractId');
+const days_remaining = document.getElementById('remainingDays');
 
 // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
 const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1127,9 +1126,10 @@ const contractStart = encodeURIComponent(formatDate(startDateValue));
 const contractEnd = encodeURIComponent(formatDate(endDateValue));
 const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
 const contract_id = encodeURIComponent(id?.value || '');
+const daysRemaining = encodeURIComponent(days_remaining.value).match(/\d+/)[0];
 
 // Redirect with query parameters
-window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&daysRemaining=${daysRemaining}`;
 });
 
 

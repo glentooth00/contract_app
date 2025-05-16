@@ -8,7 +8,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">
+                <form action="contracts/save_contract_powersupply.php" method="post" enctype="multipart/form-data">
                     <div class="col-md-12 d-flex gap-2 p-3">
                         <div class="col-md-6 p-2">
                             <input type="hidden" name="contract_type" value="<?= PSC_LONG ?>" class="form-control">

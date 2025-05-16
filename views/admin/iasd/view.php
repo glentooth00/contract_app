@@ -215,6 +215,8 @@ include_once '../../../views/layouts/includes/header.php';
             <?php endif; ?>
 
 
+
+
             <?php if (!$getContract['supplier']): ?>
 
             <?php else: ?>
@@ -270,7 +272,7 @@ include_once '../../../views/layouts/includes/header.php';
 
         <div class="mt-3 col-md-12 d-flex gap-5">
 
-            <div class="row col-md-3">
+            <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Uploading Dept:</label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
@@ -284,7 +286,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             ?>
 
-            <div class="row col-md-3">
+            <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Uploaded by:</label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
