@@ -16,7 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'password' => $_POST['password'],
     ]);
 
-    $test = $_SESSION['data'];
+    $test = $_SESSION['data'] ?? '';
+
+    // var_dump($test);
 
 
     $username = $_POST['username'];
@@ -24,10 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($username == $test['username']) {
 
-        echo 'username is the same';
+        // echo 'username is the same';
 
 
-        if ($password == $test['password']) {
+        if ($password === $test['password']) {
+
             $_SESSION['is_logged_in'] = true;
 
             $get_id = $_SESSION['data'];
@@ -63,14 +66,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     break;
             }
         } else {
-            $_SESSION['password'] = 'Password is incorrect.';
+
+            $_SESSION['username'] = 'username is incorrect.';
             header('location:index.php');
         }
+
+        $_SESSION['password'] = 'password is incorrect.';
+        header('location:index.php');
     } else {
 
         $_SESSION['username'] = 'Username is incorrect.';
         header('location:index.php');
     }
-
+    // echo 'wrong username';
 
 }

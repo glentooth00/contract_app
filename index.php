@@ -7,6 +7,22 @@ $page_title = 'Login';
 ?>
 <?php include_once 'views/layouts/includes/header.php'; ?>
 
+<p class="">
+    <?php if (isset($_SESSION['username'])): ?>
+        <span id="notification"><?= $_SESSION['username']; ?> <button type="button"
+                onclick="this.parentElement.style.display='none'"
+                style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button></span>
+        <?php unset($_SESSION['username']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['password'])): ?>
+        <span id="notification"><?= $_SESSION['password']; ?> <button type="button"
+                onclick="this.parentElement.style.display='none'"
+                style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button></span>
+        <?php unset($_SESSION['password']); ?>
+    <?php endif; ?>
+</p>
+
 <div class="container d-flex justify-content-center" style="margin-top: 11em;margin-bottom:20em;">
     <div class="formHolder card col-md-3 bg-white p-4 rounded mt-5">
         <div class="d-flex justify-content-center mb-1">
@@ -23,14 +39,9 @@ $page_title = 'Login';
                     <span class="input-group-text"><img width="25px;" src="public/images/username.svg"></span>
                     <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
                 </div>
-                <p class="notifMsg p-1">
-                    <?php if (isset($_SESSION['username'])): ?>
-                        <?= $_SESSION['username']; ?>
-                        <?php unset($_SESSION['username']); ?>
-                    <?php endif; ?>
-                </p>
+
             </div>
-            <div class="password col-12">
+            <div class="password col-12 mt-2">
                 <div class="input-group mb-1 position-relative">
                     <!-- Left-side Icon -->
                     <span class="input-group-text">
@@ -47,12 +58,12 @@ $page_title = 'Login';
                         <i id="togglePasswordIcon" class="fas fa-eye text-muted"></i>
                     </span>
                 </div>
-                <p class="notifMsg p-1">
+                <!-- <p class="notifMsg p-1">
                     <?php if (isset($_SESSION['password'])): ?>
                         <?= $_SESSION['password']; ?>
                         <?php unset($_SESSION['password']); ?>
                     <?php endif; ?>
-                </p>
+                </p> -->
             </div>
             <div class="col-12 mb-1 mt-4">
                 <!-- <label class="badge text-muted">Password</label> -->
@@ -127,9 +138,23 @@ $page_title = 'Login';
     }
 
     .notifMsg {
+        position: absolute;
         font-size: 13px;
         color: red;
         font-weight: 500;
+    }
+
+    #notification {
+        background-color: #DD5746;
+        position: absolute;
+        width: 30%;
+        text-align: center;
+        padding: 15px;
+        border-radius: 4px;
+        margin-left: 35%;
+        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
+        z-index: 1;
+        color: white;
     }
 
     .password {
