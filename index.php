@@ -7,7 +7,7 @@ $page_title = 'Login';
 ?>
 <?php include_once 'views/layouts/includes/header.php'; ?>
 
-<div class="container d-flex justify-content-center" style="margin-top: 10em;margin-bottom:20em;">
+<div class="container d-flex justify-content-center" style="margin-top: 11em;margin-bottom:20em;">
     <div class="formHolder card col-md-3 bg-white p-4 rounded mt-5">
         <div class="d-flex justify-content-center mb-1">
             <div>
