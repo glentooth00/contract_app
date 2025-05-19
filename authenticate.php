@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $test = $_SESSION['data'] ?? '';
 
+    echo $test['username'];
+
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -60,14 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             }
         } else {
 
-            $_SESSION['password'] = 'Password is incorrect.';
-            header('location:index.php');
+            // $_SESSION['password'] = 'Password is incorrect.';
+            // header('location:index.php');
         }
 
     } else {
 
-        $_SESSION['username'] = 'Username is incorrect.';
-        header('location:index.php');
+        // $_SESSION['username'] = 'Username is incorrect.';
+        // header('location:index.php');
     }
 
 

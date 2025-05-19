@@ -22,7 +22,7 @@ $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    echo '<script>alert("Latest data inserted")</script>';
+    // echo '<script>alert("Latest data inserted")</script>';
 } else {
     // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
@@ -46,7 +46,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Users</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -201,8 +201,9 @@ include_once '../../../views/layouts/includes/header.php';
                         </td>
                         <td style="text-align: center !important;padding:40px;">
                             <div class="d-flex gap-2" style="margin-left:5em;">
-                                <button class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i>
-                                    View</button>
+                                <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i
+                                        class="fa fa-pencil" aria-hidden="true"></i>
+                                    View</a>
 
                                 <form action="users/delete.php" method="POST" style="display:inline;">
                                     <input type="hidden" name="id" value="<?= $result['id'] ?>">

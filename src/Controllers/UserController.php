@@ -235,4 +235,116 @@ class UserController
     }
 
 
+    public function getUserDataById($id)
+    {
+
+        $sql = "SELECT * FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+
+    }
+
+
+    public function updateUserimage($data, $id)
+    {
+        try {
+
+
+            // Check if the image is uploaded
+            if (isset($_FILES['user_image'])) {
+                $user_image = $_FILES['user_image'];
+
+                // Check if the file was uploaded without errors
+                if ($user_image['error'] == 0) {
+                    // Define the target directory
+                    $uploadDir = realpath(__DIR__ . "/../../admin/user_image/");
+
+                    if (!$uploadDir) {
+                        return "The target directory does not exist.";
+                    }
+
+                    // Generate a unique name for the file to prevent overwriting
+                    $imageName = uniqid() . "_" . basename($user_image['name']);
+
+                    // Define the target file path
+                    $targetFilePath = $uploadDir . DIRECTORY_SEPARATOR . $imageName;
+
+                    // Move the uploaded file to the target directory
+                    if (!move_uploaded_file($user_image['tmp_name'], $targetFilePath)) {
+                        return "Error uploading image.";
+                    }
+
+                    // Store the image name in the data array
+                    $data['user_image'] = $imageName;
+                } else {
+                    return "Error uploading image.";
+                }
+            }
+
+
+            $sql = 'UPDATE users 
+            SET user_image = :user_image WHERE id = :id';
+
+            $stmt = $this->db->prepare($sql);
+
+            $stmt->bindParam(':id', $id['id']);
+
+            $stmt->bindParam(':user_image', $data['user_image']);
+
+
+            if ($stmt->execute()) {
+                return ['status' => 'success', 'message' => 'User updated successfully'];
+            } else {
+                return ['status' => 'error', 'message' => 'Failed to execute statement'];
+            }
+        } catch (PDOException $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+    public function updateUserData($data, $id)
+    {
+        try {
+            // SQL query to update user data
+            $sql = "UPDATE users SET 
+                    firstname = :firstname,
+                    middlename = :middlename,
+                    lastname = :lastname,
+                    gender = :gender,
+                    department = :department,
+                    username = :username,
+                    password = :password
+                WHERE id = :id";
+
+            $stmt = $this->db->prepare($sql);
+
+            // Bind parameters
+            $stmt->bindParam(':firstname', $data['firstname']);
+            $stmt->bindParam(':middlename', $data['middlename']);
+            $stmt->bindParam(':lastname', $data['lastname']);
+            $stmt->bindParam(':gender', $data['gender']);
+            $stmt->bindParam(':department', $data['department']);
+            $stmt->bindParam(':username', $data['username']);
+            $stmt->bindParam(':password', $data['password']);
+            $stmt->bindParam(':id', $id['id']);
+
+            if ($stmt->execute()) {
+                return ['status' => 'success', 'message' => 'User updated successfully.'];
+            } else {
+                return ['status' => 'error', 'message' => 'Failed to execute update statement.'];
+            }
+        } catch (PDOException $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+
+
+
+
+
+
 }
