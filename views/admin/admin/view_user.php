@@ -84,7 +84,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
         <hr>
 
-        <div class="d-flex col-md-12 gap-3">
+        <div class="d-flex col-md-12 gap-3 mb-2 p-2">
 
             <div class="col-md-3 card">
                 <div class="d-flex justify-content-center" style="border-radius: 20px;padding:25px;">
@@ -186,6 +186,8 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                     Edit</button>
                             </div> -->
 
+                            <?php $userID = $getUser['id'] ?>
+
                         <?php endforeach; ?>
                     </div>
 
@@ -195,11 +197,141 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
         </div>
 
+        <div class="col-md-12" style=" margin-left: .5em;">
+            <div class="card">
 
+
+                <div class="p-2 mt-3" style="margin-left:10px;">
+                    <h5>Activity</h5>
+                    <hr>
+                </div>
+
+                <div class="col-md-11 d-flex gap-3 p-3" style="margin-top: -30px;">
+
+                    <?php
+
+                    $userID;
+
+                    $getContractsByUsers = (new ContractController)->getcontractByUsersId($userID);
+
+                    ?>
+
+                    <div class="col-md-4 card">
+                        <div class="mt-1 p-3">
+                            <h5>Contracts</h5>
+                            <hr>
+                            <table class="table table-striped hover">
+
+                                <head>
+                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Name
+                                    </th>
+                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Type
+                                    </th>
+                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
+                                </head>
+                                <tbody>
+                                    <?php foreach ($getContractsByUsers as $getContractsByUser): ?>
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <?= $getContractsByUser['contract_name'] ?>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php
+                                                $type = $getContractsByUser['contract_type'] ?? '';
+                                                $badgeColor = match ($type) {
+                                                    INFRA => '#328E6E',
+                                                    SACC => '#123458',
+                                                    GOODS => '#F75A5A',
+                                                    EMP_CON => '#FAB12F',
+                                                    PSC_LONG => '#007bff',
+                                                    PSC_SHORT => '#28a745',
+                                                    TRANS_RENT => '#003092',
+                                                    TEMP_LIGHTING => '#03A791',
+                                                // default => '#FAB12F'
+                                                };
+                                                ?>
+                                                <span class="p-2 text-white badge"
+                                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
+                                                    <?= htmlspecialchars($type) ?>
+                                                </span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php if (!empty($getContractsByUser['contract_file'])): ?>
+                                                    <!-- Trigger the modal with this button -->
+                                                    <button class="btn btn-primary badge p-2" data-bs-toggle="modal"
+                                                        data-bs-target="#fileModal<?= $getContractsByUser['id'] ?>"
+                                                        style="text-align: center !important;">
+                                                        View file
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="fileModal<?= $getContractsByUser['id'] ?>"
+                                                        tabindex="-1"
+                                                        aria-labelledby="fileModalLabel<?= $getContractsByUser['id'] ?>"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog modal-xl"
+                                                            style="min-height: 100vh; max-height: 300vh;">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title"
+                                                                        id="fileModalLabel<?= $getContractsByUser['id'] ?>">
+                                                                        <?= $getContractsByUser['contract_name'] ?> -
+                                                                        <?= $getContractsByUser['contract_type'] ?>
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body" style="padding: 0; overflow-y: auto;">
+                                                                    <!-- Display the contract file inside the modal -->
+                                                                    <iframe
+                                                                        src="<?= htmlspecialchars("../../../" . $getContractsByUser['contract_file']) ?>"
+                                                                        width="100%" style="height: 80vh;"
+                                                                        frameborder="0"></iframe>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php else: ?>
+                                                    No file
+                                                <?php endif; ?>
+
+
+                                            </td>
+
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4 card">
+                        <div class="mt-1 p-3">
+                            <h5>Logs</h5>
+                            <hr>
+                        </div>
+                    </div>
+                    <div class="col-md-4 card">
+                        <div class="mt-1 p-3">
+                            <h5>Logs</h5>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
 
     </div>
 
 </div>
+
+
 
 
 <!-- Modal -->
@@ -221,7 +353,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                 <div class="mb-3">
                                     <label class="form-label text-muted">Firstname</label>
                                     <input type="text" class="form-control" name="firstname"
-                                        value="<?= htmlspecialchars($getUser['firstname']) ?>">
+                                        value="<?= htmlspecialchars($getUser['firstname']) ?>" autofocus>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-muted">Lastname</label>
@@ -282,15 +414,9 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                     <input type="text" class="form-control" id="userPassword" name="password"
                                         value="<?= $getUser['password'] ?>">
                                 </div>
-                                <div class="ms-2 mb-2">
-                                    <button type="button" class="btn btn-light" onclick="togglePassword()">
-                                        <img width="21px" class="icons" src="../../../public/images/viewPass.svg">
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     <?php endforeach; ?>
-
             </div>
             <div class="modal-footer">
                 <button type="submit" class="btn btn-success">Update</button>
@@ -386,10 +512,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
     </script>
 <?php endif; ?>
 
-
-<?php
-require_once __DIR__ . "../../../layouts/includes/footer.php";
-?>
+<?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
 <style>
     .upload {

@@ -20,7 +20,6 @@ foreach ($contractTypes as $row) {
     $EmpErt = $row['contract_ert'];
 
 }
-
 include_once '../../../views/layouts/includes/header.php';
 ?>
 

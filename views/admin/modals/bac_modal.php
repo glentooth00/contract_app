@@ -137,7 +137,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                         <!-- Hidden Inputs -->
                         <input type="hidden" name="uploader_department" value="<?= $department ?>">
                         <input type="hidden" name="uploader" value="<?= $name ?>">
-                        <input type="hidden" name="uploader_id" value="<?= $id ?>">
+                        <input type="text" name="uploader_id" value="<?= $id ?>">
                     </div>
 
                     <div class="modal-footer">
