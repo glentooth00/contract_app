@@ -25,12 +25,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center"
+<div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div> -->
+</div>
 
 <div class="main-layout">
     <?php include_once '../menu/sidebar.php'; ?>
@@ -515,7 +515,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     echo '
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
                                                         <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                                                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                                         </svg> ' . $expired . '</span>
@@ -526,7 +526,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -536,7 +535,6 @@ include_once '../../../views/layouts/includes/header.php';
                                     <!-- Code if no match -->
                                     <p>Unknown Contract Type</p>
                             <?php endswitch; ?>
-
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -546,12 +544,10 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
     </div>
 </div>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
-
 
 <!-- Bootstrap Modal for confirmation -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -573,11 +569,7 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
     </div>
 </div>
-
-
-
 <!-- popup notification ---->
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -592,7 +584,6 @@ include_once '../../../views/layouts/includes/header.php';
             d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
     </symbol>
 </svg>
-
 
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
@@ -702,8 +693,5 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
-
-
-
     //----------------DAtatables
 </script>

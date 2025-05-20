@@ -155,7 +155,13 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td>
+                                <a style="text-decoration: none;font-weight:600;color:#2A4759;"
+                                    href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>">
+                                    <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                </a>
+
+                            </td>
                             <td class="text-center">
                                 <?php
 

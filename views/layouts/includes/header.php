@@ -25,7 +25,7 @@
     <!-- Custom Styles -->
     <style>
         html {
-            /* overflow-x: hidden; */
+            width: 100%;
         }
 
         body {
