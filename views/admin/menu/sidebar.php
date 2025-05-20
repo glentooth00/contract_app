@@ -99,7 +99,7 @@
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo $usersLink; ?>">
+            <a class="nav-link" href="reset_password.php">
               <img width="27px" src="../../../public/images/managePassword.svg">
               <span>Manage Passwords</span>
             </a>
