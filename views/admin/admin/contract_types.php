@@ -28,7 +28,7 @@ include_once '../../layouts/includes/header.php';
     <div class="content-area">
         <!-- Content that will be shown after loading -->
         <div class="mt-3" id="content">
-            <h2>Departments</h2>
+            <h2>Contract Types</h2>
             <hr>
 
             <div class="d-flex align-items-center gap-3 flex-wrap" style="margin-left: 1%;">
@@ -37,24 +37,6 @@ include_once '../../layouts/includes/header.php';
                     <i class="fa fa-plus" aria-hidden="true"></i>
                     Add Contact Type
                 </a>
-
-                <!-- <form method="GET" action="contracts.php">
-        <select class="form-select w-auto" name="contract_type_filter" onchange="this.form.submit()">
-            <option value="" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "" ? "selected" : "" ?>>All Contracts</option>
-            <option value="Employment Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Employment Contract" ? "selected" : "" ?>>Employment Contract</option>
-            <option value="Construction Contract" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Construction Contract" ? "selected" : "" ?>>Construction Contract</option>
-            <option value="Licensing Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Licensing Agreement" ? "selected" : "" ?>>Licensing Agreement</option>
-            <option value="Purchase Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Purchase Agreement" ? "selected" : "" ?>>Purchase Agreement</option>
-            <option value="Service Agreement" <?= isset($_GET['contract_type_filter']) && $_GET['contract_type_filter'] == "Service Agreement" ? "selected" : "" ?>>Service Agreement</option>
-        </select>
-    </form>
-
-    <form method="GET" action="contracts.php" class="input-group" style="width: 250px;">
-        <input type="text" class="form-control" name="search_query" value="<?= isset($_GET['search_query']) ? htmlspecialchars($_GET['search_query']) : '' ?>" placeholder="Search Contract">
-        <button class="btn bg-dark text-white" type="submit">
-            <i class="fa fa-search"></i>
-        </button>
-    </form> -->
             </div>
         </div>
 
@@ -80,6 +62,12 @@ include_once '../../layouts/includes/header.php';
 
                                             <span class="badge p-2"
                                                 style="background-color: #1B56FD;"><?= $contractType['contract_type'] ?></span>
+
+                                            <?php break;
+                                        case 'Rental Contract': ?>
+
+                                            <span class="badge p-2"
+                                                style="background-color: #DC8686;"><?= $contractType['contract_type'] ?></span>
 
                                             <?php break;
                                         case 'Power Suppliers Contract (LONG TERM)': ?>

@@ -201,13 +201,16 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
-                </div>
-            </div>
+            <?php if (!empty($getContract['contractPrice'])): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+                    </div>
+                </div>`
+            <?php endif; ?>
+
 
             <?php if (!$getContract['supplier']): ?>
 

@@ -225,7 +225,7 @@
     width: calc(100% - 240px);
     background-color: #f8f9fa;
     padding: 20px;
-    height: 65em;
+    height: 100em;
   }
 
   .nav-link:hover img {

@@ -22,7 +22,7 @@ $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    echo '<script>alert("Latest data inserted")</script>';
+    // echo '<script>alert("Latest data inserted")</script>';
 } else {
     // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
@@ -46,7 +46,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Users</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -93,9 +93,9 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2" style="width: 10em;"
-            data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="fa fa-user-plus" aria-hidden="true"></i> Add User
+        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2 fw-bold"
+            style="width: 10em;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <img style="margin-left: 17px;" width="23px" src="../../../public/images/add_user.svg"></img> Add User
         </a>
 
         <!-- Wrap both search and filter in a flex container -->
@@ -103,7 +103,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
             <!-- Contract Type Filter -->
-            <div style="text-align: right;">
+            <!-- <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
@@ -115,7 +115,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
-            </div>
+            </div> -->
         </div>
 
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
@@ -133,18 +133,17 @@ include_once '../../../views/layouts/includes/header.php';
                     <tr>
                         <td style="text-align: center !important;">
 
-                            <?php if ($result['gender'] === 'Male' || $result['gender'] === 'Female'): ?>
-                                <img src="/contract_app/admin/user_image/<?= $result['user_image'] ?>" width="90px;"
-                                    style="border-radius:50px;">
-                            <?php elseif (!empty($result['user_image'])): ?>
-                                <img src="/contract_app/admin/user_image/<?= $result['user_image'] ?>" width="90px;"
-                                    style="border-radius:50px;">
-                            <?php else: ?>
-                                <img src="/contract_app/public/images/male.png" width="90px;" style="border-radius:50px;">
-                            <?php endif; ?>
+                            <?php
+                            $imageSrc = '';
+                            if (!empty($result['user_image'])) {
+                                $imageSrc = "/contract_app/admin/user_image/{$result['user_image']}";
+                            } else {
+                                $imageSrc = "/contract_app/public/images/male.png";
+                            }
+                            ?>
 
-
-
+                            <img src="<?= $imageSrc ?>" width="90" height="90"
+                                style="border-radius: 50%; object-fit: cover;">
                         </td>
                         <td style="text-align: center !important;padding:40px;">
                             <span class="mt-3"> <?= $result['firstname'] ?>     <?= $result['middlename'] ?>
@@ -201,8 +200,9 @@ include_once '../../../views/layouts/includes/header.php';
                         </td>
                         <td style="text-align: center !important;padding:40px;">
                             <div class="d-flex gap-2" style="margin-left:5em;">
-                                <button class="btn btn-success btn-sm"><i class="fa fa-pencil" aria-hidden="true"></i>
-                                    View</button>
+                                <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i
+                                        class="fa fa-pencil" aria-hidden="true"></i>
+                                    View</a>
 
                                 <form action="users/delete.php" method="POST" style="display:inline;">
                                     <input type="hidden" name="id" value="<?= $result['id'] ?>">
