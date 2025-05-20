@@ -91,8 +91,8 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                     <img src="/contract_app/admin/user_image/<?= $img ?>" width="65%"
                         style="background-color: #e4e4e4;border-radius: 200px;padding: 15px;" class="profile-pic">
 
-                    <img width="30px" class="icons" id="closeBtn" src="../../../public/images/upload.svg" type=" button"
-                        id="modalBtn" data-toggle="modal" data-target="#imageModal"
+                    <img width="30px" class="icons" id="uploadBtn" src="../../../public/images/upload.svg"
+                        type=" button" id="modalBtn" data-toggle="modal" data-target="#imageModal"
                         style="background-color: #ffffff;height: 31px;padding: 5px;border-radius: 20px;position: absolute;top: 13em;left: 16em;">
 
                 </div>
@@ -124,8 +124,10 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
 
             <div class="col-md-9 card p-4 position-relative">
-                <div class="col-md-4">
-                    <button id="modalBtn" data-toggle="modal" data-target="#dataModal">Edit</button>
+                <div class="col-md-12">
+                    <button class="btn btn-dark" id="modalBtn" data-toggle="modal" data-target="#dataModal"
+                        style="float: inline-end;">
+                        <img width="18px" height="25px" src="../../../public/images/edit2.svg"></button>
                 </div>
 
                 <div class="row p-3 g-3">
@@ -135,9 +137,9 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                             <div class="col-md-3">
                                 <label class="form-label text-muted">Firstname</label>
                                 <input type="text" name="firstname" class="form-control"
-                                    value=<?= htmlspecialchars($getUser['firstname']) ?> readonly>
+                                    value="<?= $getUser['firstname'] ?>" readonly>
                             </div>
-                            <div class="col-md-3">
+                            <div class=" col-md-3">
                                 <label class="form-label text-muted">Middlename</label>
                                 <input type="text" class="form-control" name="middlename"
                                     value="<?= $getUser['middlename'] ?>" readonly>
@@ -206,13 +208,13 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
     <div class="modal-dialog modal-lg" role="document"> <!-- Made it wider -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Update User Data</h5>
             </div>
             <div class="modal-body">
 
                 <form action="users/update_user_data.php" method="post">
                     <?php foreach ($getUserDatas as $getUser): ?>
-                        <input type="text" name="id" value="<?= $getUser['id']; ?>">
+                        <input type="hidden" name="id" value="<?= $getUser['id']; ?>">
                         <div class="row">
 
                             <div class="col-md-6">
@@ -228,7 +230,12 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label text-muted">Gender</label>
-                                    <input type="text" class="form-control" name="gender" value="<?= $getUser['gender'] ?>">
+                                    <select name="gender" class="form-select">
+                                        <option value="<?= $getUser['gender'] ?>" hidden selected><?= $getUser['gender'] ?>
+                                        </option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
                                 </div>
                             </div>
 
@@ -244,7 +251,9 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                         <label class="form-label text-muted">Department</label>
                                         <select class="form-select form-select-md mb-3" name="department"
                                             aria-label=".form-select-lg example">
-                                            <option selected hidden>Select Department</option>
+                                            <option value="<?= $getUser['department'] ?>" selected hidden>
+                                                <?= $getUser['department'] ?>
+                                            </option>
                                             <?php
                                             $getDept = (new DepartmentController)->getAllDepartments();
                                             ?>
@@ -298,7 +307,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
     <div class="modal-dialog modal-dialog-centered" role="document"> <!-- Vertically centers modal -->
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Update User</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Update User image</h5>
             </div>
             <div class="modal-body">
                 <form action="users/update_user.php" method="post" enctype="multipart/form-data">
@@ -399,6 +408,16 @@ require_once __DIR__ . "../../../layouts/includes/footer.php";
 
     .modalBtn:hover {
         cursor: pointer;
+    }
+
+    #uploadBtn {
+        transition: transform 0.2s ease;
+        cursor: pointer;
+    }
+
+    #uploadBtn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 </style>
 <script>
