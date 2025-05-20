@@ -93,9 +93,9 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2" style="width: 10em;"
-            data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <i class="fa fa-user-plus" aria-hidden="true"></i> Add User
+        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2 fw-bold"
+            style="width: 10em;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <img style="margin-left: 17px;" width="23px" src="../../../public/images/add_user.svg"></img> Add User
         </a>
 
         <!-- Wrap both search and filter in a flex container -->
@@ -103,7 +103,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
             <!-- Contract Type Filter -->
-            <div style="text-align: right;">
+            <!-- <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
@@ -115,7 +115,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
-            </div>
+            </div> -->
         </div>
 
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
@@ -133,18 +133,17 @@ include_once '../../../views/layouts/includes/header.php';
                     <tr>
                         <td style="text-align: center !important;">
 
-                            <?php if ($result['gender'] === 'Male' || $result['gender'] === 'Female'): ?>
-                                <img src="/contract_app/admin/user_image/<?= $result['user_image'] ?>" width="90px;"
-                                    style="border-radius:50px;">
-                            <?php elseif (!empty($result['user_image'])): ?>
-                                <img src="/contract_app/admin/user_image/<?= $result['user_image'] ?>" width="90px;"
-                                    style="border-radius:50px;">
-                            <?php else: ?>
-                                <img src="/contract_app/public/images/male.png" width="90px;" style="border-radius:50px;">
-                            <?php endif; ?>
+                            <?php
+                            $imageSrc = '';
+                            if (!empty($result['user_image'])) {
+                                $imageSrc = "/contract_app/admin/user_image/{$result['user_image']}";
+                            } else {
+                                $imageSrc = "/contract_app/public/images/male.png";
+                            }
+                            ?>
 
-
-
+                            <img src="<?= $imageSrc ?>" width="90" height="90"
+                                style="border-radius: 50%; object-fit: cover;">
                         </td>
                         <td style="text-align: center !important;padding:40px;">
                             <span class="mt-3"> <?= $result['firstname'] ?>     <?= $result['middlename'] ?>

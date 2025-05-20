@@ -1118,6 +1118,15 @@ class ContractController
     }
 
 
+    public function getcontractByUsersId($userID)
+    {
+        $sql = "SELECT * FROM contracts WHERE uploader_id = :userID";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':userID', $userID);
+        $stmt->execute();
+        return $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 }

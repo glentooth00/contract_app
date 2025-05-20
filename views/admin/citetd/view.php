@@ -223,9 +223,10 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-2">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                    <label class="badge text-muted" style="font-size: 15px;">Implementing
+                        Department</label>
+                    <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
+                        value="<?= $getContract['department_assigned']; ?>" name="department_assigned" readonly>
                 </div>
             </div>
 
@@ -268,7 +269,7 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Uploading Dept:</label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['uploader_department']; ?>" name="contract_type" readonly>
+                        value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
                 </div>
             </div>
 
