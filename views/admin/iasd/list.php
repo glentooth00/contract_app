@@ -98,7 +98,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <div class="dropdown">
+        <div class="dropdown mb-3">
             <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img width="20px" src="../../../public/images/add.svg">
