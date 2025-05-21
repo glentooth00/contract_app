@@ -7,7 +7,7 @@ $userid = $_SESSION['id'];
 
 $user_department = (new UserController)->getUserById($userid);
 
-$department = ($user_department['department']) ? 'IASD' : $user_department['department'];
+$department = ($user_department['department']);
 
 $id = $user_department['id'];
 
@@ -73,7 +73,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                     placeholder="">
                             </div>
                             <div class="mb-3">
-                                <input type="hidden" class="form-control" name="uploader_department"
+                                <input type="text" class="form-control" name="uploader_department"
                                     value="<?= $department ?>" id="floatingInput" placeholder="">
                             </div>
                             <div class="mb-3">

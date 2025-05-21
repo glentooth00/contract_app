@@ -34,13 +34,6 @@ include_once '../../../views/layouts/includes/header.php';
 
 ?>
 
-<!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
-    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
 
 <div class="main-layout ">
 
@@ -203,13 +196,16 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+            <?php if (!empty($getContract['contractPrice'])): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
+
 
             <?php if (!$getContract['supplier']): ?>
 
@@ -223,13 +219,30 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+            <?php if ($getContract['contract_type'] === EMP_CON): ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Department Assigned</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
+
+            <?php else: ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                    </div>
+                </div>
+
+
+            <?php endif; ?>
+
+
 
             <div class="row col-md-3">
                 <div class="mt-3">
@@ -382,7 +395,8 @@ include_once '../../../views/layouts/includes/header.php';
                                         </div>
 
                                         <div class="mb-2">
-                                            <label for="end_date" class="form-label badge text-muted">End Date</label>
+                                            <label for="end_date" class="form-label badge text-muted">End
+                                                Date</label>
                                             <input type="date" id="end_date" name="contract_end" class="form-control">
                                         </div>
                                         <div class="mb-2">
@@ -416,12 +430,15 @@ include_once '../../../views/layouts/includes/header.php';
                 <table class="table table-stripped table-hover">
                     <thead>
                         <tr>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Status</span>
+                            </th>
                             <th style="text-align: center !important;"><span class="badge text-muted">Contract
                                     File</span></th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date
+                                    Start</span>
                             </th>
-                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date
+                                    End</span>
                             </th>
                             <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
                         </tr>
@@ -638,11 +655,6 @@ include_once '../../../views/layouts/includes/header.php';
 </style>
 
 <script>
-    // When the page finishes loading, hide the spinner
-    window.onload = function () {
-        document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
-        document.getElementById("content").style.display = "block"; // Show the page content
-    };
 
 
     document.addEventListener("click", function (e) {

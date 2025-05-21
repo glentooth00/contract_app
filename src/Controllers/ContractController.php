@@ -1127,6 +1127,15 @@ class ContractController
         return $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getContractsAssigned($departmentName)
+    {
+        $sql = 'SELECT * FROM contracts WHERE department_assigned = :departmentName';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('departmentName', $departmentName);
+        $stmt->execute();
+        return $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 }

@@ -245,7 +245,7 @@ include_once '../modals/hrad_modal.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">

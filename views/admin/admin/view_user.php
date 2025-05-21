@@ -216,9 +216,9 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
                     ?>
 
-                    <div class="col-md-4 card">
+                    <div class="col-md-5 card">
                         <div class="mt-1 p-3">
-                            <h5>Contracts</h5>
+                            <h5>Contracts Uploaded</h5>
                             <hr>
                             <table class="table table-striped hover">
 
@@ -252,7 +252,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                                 };
                                                 ?>
                                                 <span class="p-2 text-white badge"
-                                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
+                                                    style="font-size:11.5px;background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                                     <?= htmlspecialchars($type) ?>
                                                 </span>
                                             </td>
@@ -310,18 +310,115 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
                         </div>
                     </div>
-                    <div class="col-md-4 card">
+                    <div class="col-md-5 card">
+
+                        <?php
+
+                        $departmentName = $user_department;
+
+                        $getContractsByDepartmentAssigned = (new ContractController)->getContractsAssigned($departmentName);
+
+                        ?>
+
                         <div class="mt-1 p-3">
-                            <h5>Logs</h5>
+                            <h5>Contracts Assigned</h5>
                             <hr>
+
+                            <table class="table table-striped hover">
+
+                                <head>
+                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Name
+                                    </th>
+                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Type
+                                    </th>
+                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
+                                </head>
+                                <tbody>
+                                    <?php foreach ($getContractsByDepartmentAssigned as $assignedContracts): ?>
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <?= $assignedContracts['contract_name'] ?>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php
+                                                $type = $assignedContracts['contract_type'] ?? '';
+                                                $badgeColor = match ($type) {
+                                                    INFRA => '#328E6E',
+                                                    SACC => '#123458',
+                                                    GOODS => '#F75A5A',
+                                                    EMP_CON => '#FAB12F',
+                                                    PSC_LONG => '#007bff',
+                                                    PSC_SHORT => '#28a745',
+                                                    TRANS_RENT => '#003092',
+                                                    TEMP_LIGHTING => '#03A791',
+                                                // default => '#FAB12F'
+                                                };
+                                                ?>
+                                                <span class="p-2 text-white badge"
+                                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
+                                                    <?= htmlspecialchars($type) ?>
+                                                </span>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?php if (!empty($assignedContracts['contract_file'])): ?>
+                                                    <!-- Trigger the modal with this button -->
+                                                    <button class="btn btn-primary badge p-2" data-bs-toggle="modal"
+                                                        data-bs-target="#fileModal<?= $assignedContracts['id'] ?>"
+                                                        style="text-align: center !important;">
+                                                        View file
+                                                    </button>
+
+                                                    <!-- Modal -->
+                                                    <div class="modal fade" id="fileModal<?= $assignedContracts['id'] ?>"
+                                                        tabindex="-1"
+                                                        aria-labelledby="fileModalLabel<?= $assignedContracts['id'] ?>"
+                                                        aria-hidden="true">
+                                                        <div class="modal-dialog modal-xl"
+                                                            style="min-height: 100vh; max-height: 300vh;">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title"
+                                                                        id="fileModalLabel<?= $assignedContracts['id'] ?>">
+                                                                        <?= $assignedContracts['contract_name'] ?> -
+                                                                        <?= $assignedContracts['contract_type'] ?>
+                                                                    </h5>
+                                                                    <button type="button" class="btn-close"
+                                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body" style="padding: 0; overflow-y: auto;">
+                                                                    <!-- Display the contract file inside the modal -->
+                                                                    <iframe
+                                                                        src="<?= htmlspecialchars("../../../" . $assignedContracts['contract_file']) ?>"
+                                                                        width="100%" style="height: 80vh;"
+                                                                        frameborder="0"></iframe>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php else: ?>
+                                                    No file
+                                                <?php endif; ?>
+
+
+                                            </td>
+
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <div class="col-md-4 card">
+                    <!-- <div class="col-md-4 card">
                         <div class="mt-1 p-3">
-                            <h5>Logs</h5>
+                            <h5>Activity Logs</h5>
                             <hr>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
             </div>
@@ -483,7 +580,8 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
+
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">

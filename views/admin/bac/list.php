@@ -26,13 +26,6 @@ $getOneLatest = (new ContractHistoryController)->insertLatestData();
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-<!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
-    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div>
 
 <div class="main-layout">
 
@@ -260,7 +253,7 @@ include_once '../modals/bac_modal.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
@@ -368,4 +361,6 @@ include_once '../modals/bac_modal.php';
     });
 
     //----------------DAtatables --------------------------------//
+
+
 </script>
