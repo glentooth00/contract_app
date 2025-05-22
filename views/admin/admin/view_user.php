@@ -45,7 +45,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;">Admin user</span>
 
                         <?php break;
                     case 'ISD-HRAD': ?>
@@ -107,9 +107,56 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                         </span>
                     </div>
                     <div>
-                        <span>
-                            <h6 class="fw-bold text-muted"><?= $user_department ?></h6>
-                        </span>
+                        <?php if (isset($user_department)) { ?>
+
+                            <?php switch ($user_department) {
+                                case 'IT': ?>
+
+                                    <span class="badge p-2 mt-1 mb-1"
+                                        style="background-color: #0d6efd;"><?= $user_department ?></span>
+
+                                    <?php break;
+                                case 'ISD-HRAD': ?>
+
+                                    <span class="badge p-2 mt-1 mb-1"
+                                        style="background-color: #3F7D58;"><?= $user_department ?></span>
+
+                                    <?php break;
+                                case 'CITETD': ?>
+
+                                    <span class="badge p-2 mt-1 mb-1"
+                                        style="background-color: #FFB433;"><?= $user_department ?></span>
+
+                                    <?php break;
+                                case 'IASD': ?>
+
+                                    <span class="badge p-2 mt-1 mb-1"
+                                        style="background-color: #EB5B00;"><?= $user_department ?></span>
+
+                                    <?php break;
+                                case 'ISD-MSD': ?>
+
+                                    <span class="badge p-2 mt-1 mb-1"
+                                        style="background-color: #6A9C89;"><?= $user_department ?></span>
+
+                                    <?php break;
+                                case 'BAC': ?>
+
+                                    <span class="badge p-2 mt-1 mb-1"
+                                        style="background-color: #3B6790;"><?= $user_department ?></span>
+
+                                    <?php break;
+                                case '': ?>
+
+                                <?php default: ?>
+                                    <span class="badge text-muted">no department assigned</span>
+                            <?php } ?>
+
+                        <?php } else { ?>
+
+                            <span class="badge text-muted">no department assigned</span>
+
+                        <?php } ?>
                     </div>
                     <div class="mb-2">
                         <span>
@@ -220,15 +267,20 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                         <div class="mt-1 p-3">
                             <h5>Contracts Uploaded</h5>
                             <hr>
-                            <table class="table table-striped hover">
 
-                                <head>
-                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Name
-                                    </th>
-                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Type
-                                    </th>
-                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
-                                </head>
+
+                            <table id="table" class="table table-bordered table-striped display mt-2 hover">
+
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract
+                                            Name</th>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract
+                                            Type</th>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
+                                    </tr>
+                                </thead>
+
                                 <tbody>
                                     <?php foreach ($getContractsByUsers as $getContractsByUser): ?>
                                         <tr>
@@ -324,15 +376,21 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                             <h5>Contracts Assigned</h5>
                             <hr>
 
-                            <table class="table table-striped hover">
 
-                                <head>
-                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Name
-                                    </th>
-                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract Type
-                                    </th>
-                                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
-                                </head>
+                            <table id="assignedContractsTable"
+                                class="table table-bordered table-striped display mt-2 hover">
+
+
+                                <thead>
+                                    <tr>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract
+                                            Name</th>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract
+                                            Type</th>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
+                                    </tr>
+                                </thead>
+
                                 <tbody>
                                     <?php foreach ($getContractsByDepartmentAssigned as $assignedContracts): ?>
                                         <tr>
@@ -413,7 +471,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                             </table>
                         </div>
                     </div>
-                    <!-- <div class="col-md-4 card">
+                    <!-- <div class="col-md-2 card">
                         <div class="mt-1 p-3">
                             <h5>Activity Logs</h5>
                             <hr>
@@ -638,7 +696,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
     #uploadBtn:hover {
         transform: scale(1.05);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); */
     }
 </style>
 <script>
@@ -646,5 +704,56 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
         const input = document.getElementById("userPassword");
         input.type = input.type === "password" ? "text" : "password";
     }
+    //----------------DAtatables
+    $(document).ready(function () {
+        var rowCount = $('#table tbody tr').length;
 
+        // Check if the table has at least one data row (excluding the "No contracts found" message)
+        if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
+            // Initialize DataTable
+            var table = $('#table').DataTable({
+                "paging": true,
+                "searching": true,
+                "lengthChange": true,
+                "pageLength": 10,
+                "ordering": false,
+                "info": true
+            });
+
+            // Append the contract type filter next to the search input
+            var searchInput = $('#table_filter input'); // DataTables search input field
+            var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
+            searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
+
+            // Apply filter based on contract type selection
+            $('#statusFilter').change(function () {
+                var filterValue = $(this).val();
+                if (filterValue) {
+                    table.column(1).search(filterValue).draw(); // Column 1 is for contract type
+                } else {
+                    table.column(1).search('').draw(); // Reset filter
+                }
+            });
+        }
+    });
+
+    $(document).ready(function () {
+        var rowCount = $('#assignedContractsTable tbody tr').length;
+
+        if (rowCount > 0 && $('#assignedContractsTable tbody tr td').first().attr('colspan') !== '6') {
+            var table = $('#assignedContractsTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "lengthChange": true,
+                "pageLength": 10,
+                "ordering": false,
+                "info": true
+            });
+        }
+    });
+
+
+
+
+    //----------------DAtatables
 </script>

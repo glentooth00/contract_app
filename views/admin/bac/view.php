@@ -235,7 +235,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
                         <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                            value="<?= $getContract['implementing_dept']; ?>" name="contract_type" readonly>
                     </div>
                 </div>
 
@@ -445,7 +445,20 @@ include_once '../../../views/layouts/includes/header.php';
                     </thead>
                     <?php
                     $id = $getContract['id'];
+                    $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+                    if($status === 'Expired'){
+
+                        $stat = [
+                            'id'=> $getContract['id'],
+                            'status'=> 'Expired',
+                        ];
+
+                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+
+                    }
+
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>

@@ -934,7 +934,7 @@ class ContractController
     {
         // Prepare the query with secondary sorting by id
         $query = "SELECT * FROM contracts 
-                WHERE (uploader_department = ? OR department_assigned = ?) 
+                WHERE (uploader_department = ? OR implementing_dept = ?) 
                 AND contract_status = 'Active' 
                 ORDER BY id DESC";
 
@@ -1067,7 +1067,7 @@ class ContractController
                     uploader_id,
                     uploader_department,
                     uploader,
-                    department_assigned
+                    implementing_dept
                 ) VALUES (
                     :contract_file,
                     :contract_name,
@@ -1081,7 +1081,7 @@ class ContractController
                     :uploader_id,
                     :uploader_department,
                     :uploader,
-                    :department_assigned
+                    :implementing_dept
                 )";
 
             $stmt = $this->db->prepare($sql);
@@ -1099,7 +1099,7 @@ class ContractController
             $stmt->bindParam(":uploader", $data["uploader"]);
             $stmt->bindParam(":uploader_id", $data["uploader_id"]);
             $stmt->bindParam("uploader_department", $data["uploader_department"]);
-            $stmt->bindParam("department_assigned", $data["department_assigned"]);
+            $stmt->bindParam("implementing_dept", $data["implementing_dept"]);
 
             $result = $stmt->execute();
 
@@ -1129,13 +1129,39 @@ class ContractController
 
     public function getContractsAssigned($departmentName)
     {
-        $sql = 'SELECT * FROM contracts WHERE department_assigned = :departmentName';
+        $sql = 'SELECT * FROM contracts WHERE implementing_dept = :departmentName';
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam('departmentName', $departmentName);
+        $stmt->bindParam(':departmentName', $departmentName);
         $stmt->execute();
         return $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function updateGoodsContract($data) // Accepting the full $data array
+    {
+        $sql = "UPDATE contracts 
+                SET 
+                    contract_name = :contract_name,
+                    contract_start = :contract_start,
+                    contract_end = :contract_end,
+                    updated_at = :updated_at,
+                    contract_status = :contract_status
+                WHERE id = :id";
 
+        $stmt = $this->db->prepare($sql);
+
+        // Binding parameters to the data array
+        $stmt->bindParam(':id', $data['id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+
+
+        // Executing the query
+        $stmt->execute();
+
+        return true;
+    }
 
 }
