@@ -28,7 +28,8 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">
                 <h5 class="modal-title mb-0" id="exampleModalLabel">Create Contract</h5>
-                <span id="refreshBtn"><img id="refresh" width="22px" src="../../../public/images/refresh.svg"></span>
+                <span id="refreshBtn"><span class="text-muted p-2 badge">Clear form</span><img id="refresh" width="22px"
+                        src="../../../public/images/refresh.svg"></span>
             </div>
 
             <div class="modal-body">
@@ -106,7 +107,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                     <div class="row p-3">
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Implementing Department</label>
-                            <select name="department_assigned" class="form-select">
+                            <select name="implementing_dept" class="form-select">
                                 <option hidden>Select Department</option>
                                 <?php foreach ($departments as $dept): ?>
                                     <option value="<?= $dept['department_name'] ?>">
@@ -167,8 +168,8 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 
     #refreshBtn:hover {
         cursor: pointer;
-        border-radius: 25px;
-        box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+        margin-bottom: 3px;
+
     }
 </style>
 <script>

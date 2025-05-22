@@ -429,7 +429,20 @@ include_once '../../../views/layouts/includes/header.php';
                     </thead>
                     <?php
                     $id = $getContract['id'];
+                    $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+                    if ($status === 'Expired') {
+
+                        $stat = [
+                            'id' => $getContract['id'],
+                            'status' => 'Expired',
+                        ];
+
+                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+
+                    }
+
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>
