@@ -35,7 +35,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                             </div>
 
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
 
                                 <label class="badge text-muted">Contract Type</label>
                                 <select class="form-select form-select-md mb-3" name="contract_type"
@@ -61,7 +61,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         <option disabled> no contract available</option>
                                     <?php endif; ?>
                                 </select>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="col-md-6 p-2">
@@ -88,6 +88,9 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                 </select>
                             </div>
                             <div>
+                                <input type="hidden" name="contract_type" value="Employment Contract">
+                            </div>
+                            <div>
                                 <input type="hidden" name="uploader_id" value="<?= $getUserInfo['id'] ?>">
                                 <input type="hidden" name="uploader_department"
                                     value="<?= $getUserInfo['department'] ?>">
@@ -98,7 +101,8 @@ $getUserInfo = (new UserController)->getUserByDept($department);
             <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
 
-                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save Contract</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save
+                    Contract</button>
             </div>
             </form>
         </div>

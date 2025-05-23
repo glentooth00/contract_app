@@ -2,7 +2,7 @@
 session_start();
 
 $department = $_SESSION['department'];
-$page_title = "List - $department";
+$page_title = "Users List";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
@@ -18,7 +18,7 @@ $results = $getUser->getAllUsers();
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
-$getAllContractType = (new ContractTypeController)->getContractTypes();
+$getAllContractTypes = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
@@ -152,50 +152,30 @@ include_once '../../../views/layouts/includes/header.php';
                         <td style="text-align: center !important;padding:40px;"><?= $result['user_role'] ?> </td>
                         <td style="text-align: center !important;padding:40px;">
 
-                            <?php if (isset($result['department'])) { ?>
+                            <?php
+                            $department = $result['department'] ?? '';
+                            $badgeColor = match ($department) {
+                                IT => '#0d6efd',
+                                'ISD-HRAD' => '#3F7D58',
+                                CITETD => '#FFB433',
+                                IASD => '#EB5B00',
+                                'ISD-MSD' => '#6A9C89',
+                                FSD => '#4E6688',
+                                BAC => '#123458',
+                                AOSD => '#03A791',
+                                '' => '', // to handle empty string (optional)
+                                default => ''
+                            };
+                            ?>
 
-                                <?php switch ($result['department']) {
-                                    case 'IT': ?>
-
-                                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'ISD-HRAD': ?>
-
-                                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'CITETD': ?>
-
-                                        <span class="badge p-2" style="background-color: #FFB433;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'IASD': ?>
-
-                                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'ISD-MSD': ?>
-
-                                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'BAC': ?>
-
-                                        <span class="badge p-2" style="background-color: #3B6790;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case '': ?>
-
-                                    <?php default: ?>
-                                        <span class="badge text-muted">no department assigned</span>
-                                <?php } ?>
-
-                            <?php } else { ?>
-
+                            <?php if (!empty($department) && $badgeColor): ?>
+                                <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
+                                    <?= htmlspecialchars($department) ?>
+                                </span>
+                            <?php else: ?>
                                 <span class="badge text-muted">no department assigned</span>
+                            <?php endif; ?>
 
-                            <?php } ?>
 
                         </td>
                         <td style="text-align: center !important;padding:40px;">
@@ -249,7 +229,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 <!-- Add New Contract Modal --->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add User Account</h5>
@@ -257,95 +237,145 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <div class="modal-body">
                 <form action="users/save_user.php" method="post" enctype="multipart/form-data">
-                    <div class="col-md-12 d-flex gap-2">
-                        <div class="p-2">
-                            <div class="mb-3">
-                                <label class="badge text-muted">User image <span class="text-danger">*</span></label>
+                    <div class="col-md-12 d-flex gap-3">
+                        <div class="row col-md-9 d-inline-block gap-3">
+                            <div class="d-inline-flex gap-2">
+                                <div class="col-md-5">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1" class="badge text-muted form-label">User
+                                            image<span class="text-danger">*</span></label>
+                                        <input type="file" class="form-control" name="user_image"
+                                            id="exampleFormControlInput1" placeholder="name@example.com">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 d-flex gap-2">
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1"
+                                            class="badge text-muted form-label">Firstname<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="firstname" class="form-control" placeholder="firstname"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1"
+                                            class="badge text-muted form-label">Middlename<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="middlename" class="form-control"
+                                            placeholder="middlename" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleFormControlInput1"
+                                            class="badge text-muted form-label">Lastname<span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="lastname" class="form-control" placeholder="lastname"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
 
-                                <input type="file" name="user_image" class="form-control" required>
-                                <span class="badge" style="color:#4C585B;">(suggested image size : 216 x 234
-                                    pixels)</span>
 
-                            </div>
-                            <div class="d-flex gap-2">
-                                <div class="mb-3">
-                                    <label class="badge text-muted">First name <span
+                            <div class="col-md-12 d-flex align-items-end gap-3 mb-4">
+                                <div class="col-md-3">
+                                    <label class="badge text-muted form-label">Department <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="firstname" id="floatingInput"
-                                        placeholder="Firstname" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="badge text-muted">Middle name <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="middlename" id="floatingInput"
-                                        placeholder="Middlename" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="badge text-muted">Last name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="lastname" id="floatingInput"
-                                        placeholder="Lastname" required>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">Gender<span class="text-danger">*</span></label>
-                                <select class="form-select form-select-md mb-3" name="gender"
-                                    aria-label=".form-select-lg example">
-                                    <option selected hidden>Select gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <hr>
-                            <div class="col-md-12 gap-2 d-flex">
-                                <div class="mb-3 col-md-6">
-                                    <label class="badge text-muted">Department<span class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md mb-3" name="department"
-                                        aria-label=".form-select-lg example">
+                                    <select class="form-select form-select-md" name="department" id="department"
+                                        required>
                                         <option selected hidden>Select Department</option>
                                         <?php
                                         $getDept = (new DepartmentController)->getAllDepartments();
-                                        ?>
-                                        <?php foreach ($getDept as $dept): ?>
-                                        <option value="<?= $dept['department_name'] ?>">
-                                            <?= $dept['department_name'] ?>
+                                        foreach ($getDept as $dept): ?>
+                                        <option value="<?= htmlspecialchars($dept['department_name']) ?>">
+                                            <?= htmlspecialchars($dept['department_name']) ?>
                                         </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="mb-3 col-md-6">
-                                    <label class="badge text-muted">Role <span class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md mb-3" name="user_role"
-                                        aria-label=".form-select-lg example">
+
+                                <div class="col-md-3">
+                                    <label class="badge text-muted form-label">Role <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select form-select-md" name="user_role" id="user_role" required>
                                         <option selected hidden>Select user role</option>
                                         <option value="User">User</option>
+                                        <option value="Manager">Manager</option>
                                         <option value="Admin">Admin</option>
                                     </select>
                                 </div>
+
+                                <div class="col-md-3">
+                                    <label class="badge text-muted form-label">Username <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="username" placeholder="Username"
+                                        required>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="badge text-muted form-label">Password <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="password" placeholder="Password"
+                                        required>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="badge text-muted form-label">Gender <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select form-select-md" name="gender"
+                                        aria-label=".form-select-lg example">
+                                        <option selected hidden>Select gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+
                             </div>
 
-                            <div class="mb-3">
-                                <label class="badge text-muted">Username <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="username" id="floatingInput"
-                                    placeholder="Username" required>
+                            <div class="col-12 mb-4">
+                                <label class="badge text-muted mb-2">Contracts</label>
+                                <div class="row">
+                                    <?php foreach ($getAllContractTypes as $getAllContractType): ?>
+                                    <div class="col-md-4 mb-2">
+                                        <?php
+                                        $type = $getAllContractType['contract_type'] ?? '';
+                                        $badgeColor = match ($type) {
+                                            INFRA => '#328E6E',
+                                            SACC => '#123458',
+                                            GOODS => '#F75A5A',
+                                            EMP_CON => '#DC8686',
+                                            PSC_LONG => '#007bff',
+                                            PSC_SHORT => '#28a745',
+                                            TRANS_RENT => '#003092',
+                                            TEMP_LIGHTING => '#03A791',
+                                            default => '#FAB12F'
+                                        };
+                                        ?>
+                                        <label class="form-check-label d-flex align-items-center gap-2">
+                                            <input type="checkbox" class="form-check-input" name="contract_type[]"
+                                                value="<?= htmlspecialchars($type) ?>">
+                                            <span class="badge text-white"
+                                                style="background-color: <?= $badgeColor ?>; border-radius: 5px; font-size: 11px; padding: 7px;">
+                                                <?= htmlspecialchars($type) ?>
+                                            </span>
+                                        </label>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">Password <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="password" id="floatingInput"
-                                    placeholder="Password" required>
-                            </div>
+
+
                         </div>
+
+
                     </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
+                            user</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
-                    user</button>
-            </div>
-            </form>
         </div>
     </div>
 </div>
-
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -372,7 +402,8 @@ include_once '../../../views/layouts/includes/header.php';
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
             <use
-                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
+                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : '#exclamation-triangle-fill'; ?>" />
+
         </svg>
         <!-- Message -->
         <div>
@@ -472,8 +503,16 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
-
-
-
     //----------------DAtatables
+
+
+    document.getElementById('department').addEventListener('change', function () {
+        const roleSelect = document.getElementById('user_role');
+        if (this.value === 'FSD') {
+            roleSelect.value = 'Manager';
+        } else {
+            roleSelect.value = '';
+        }
+    });
+
 </script>
