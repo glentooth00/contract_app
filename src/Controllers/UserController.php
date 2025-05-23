@@ -147,8 +147,8 @@ class UserController
         // }
 
         // Prepare SQL to insert user data (with or without image)
-        $sql = "INSERT INTO $this->table (firstname, middlename, lastname, user_role, department, gender, user_image, username, password)
-                VALUES (:firstname, :middlename, :lastname, :user_role, :department, :gender, :user_image, :username, :password)";
+        $sql = "INSERT INTO $this->table (firstname, middlename, lastname, user_role, department, gender, user_image, username, password, contract_types)
+                VALUES (:firstname, :middlename, :lastname, :user_role, :department, :gender, :user_image, :username, :password, :contract_types)";
 
         // Prepare the statement
         $stmt = $this->db->prepare($sql);
@@ -163,7 +163,7 @@ class UserController
         $stmt->bindParam(':user_image', $data['user_image'], PDO::PARAM_STR); // Image filename
         $stmt->bindParam(':username', $data['username'], PDO::PARAM_STR);
         $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR); // Password can be hashed before storing
-
+        $stmt->bindParam(':contract_types', $data['contract_types'], PDO::PARAM_STR);
         // Execute the query
         if ($stmt->execute()) {
             return "User has been successfully saved!";

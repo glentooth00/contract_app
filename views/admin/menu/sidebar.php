@@ -32,7 +32,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="expired_list.php">
+          <a class="nav-link" id="expiredLink" href="expired_list.php">
             <img width="25px" src="../../../public/images/expired.svg">
             <span>Expired Contracts</span>
           </a>
@@ -81,7 +81,7 @@
         </li> -->
         <?php if ($department === 'BAC'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="procurement.php">
+            <a class="nav-link" id="mop" href="procurement.php">
               <img width="27px" src="../../../public/images/mop.svg">
               <span>Mode Of Procurement</span>
             </a>
@@ -90,7 +90,7 @@
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo $usersLink; ?>">
+            <a class="nav-link" id="users" href="<?php echo $usersLink; ?>">
               <img width="27px" src="../../../public/images/user.svg">
               <span>Users</span>
             </a>
@@ -99,22 +99,22 @@
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="reset_password.php">
+            <a class="nav-link" id="changepass" href="reset_password.php">
               <img width="27px" src="../../../public/images/managePassword.svg">
-              <span>Manage Passwords</span>
+              <span>Change Password</span>
             </a>
           </li>
         <?php endif; ?>
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="department.php">
+            <a class="nav-link" id="department" href="department.php">
               <img width="27px" src="../../../public/images/departments.svg"></i>
               <span>Departments</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="contract_types.php">
+            <a class="nav-link" id="types" href="contract_types.php">
               <img width="27px" src="../../../public/images/contract-types.svg"></i></i><span>Contract Types</span>
             </a>
           </li>
@@ -245,8 +245,36 @@
     if (currentUrl.includes('index.php')) {
       $('#dashboardLink').addClass('active');
     }
+
     if (currentUrl.includes('list.php')) {
       $('#contractsLink').addClass('active');
+    }
+
+    if (currentUrl.includes('expired_list.php')) {
+      $('#expiredLink').addClass('active');
+      $('#contractsLink').removeClass('active');
+    }
+
+    if (currentUrl.includes('procurement.php')) {
+      $('#mop').addClass('active');
+    }
+
+    if (currentUrl.includes('users.php')) {
+      $('#users').addClass('active');
+      $('#changepass').removeClass('active');
+    }
+
+    if (currentUrl.includes('department.php')) {
+      $('#users').removeClass('active');
+      $('#changepass').removeClass('active');
+      $('#department').addClass('active');
+    }
+
+    if (currentUrl.includes('contract_types.php')) {
+      $('#users').removeClass('active');
+      $('#changepass').removeClass('active');
+      $('#department').removeClass('active');
+      $('#types').addClass('active');
     }
 
     $('#contractsDropdown').click(function (e) {

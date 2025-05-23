@@ -88,12 +88,13 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
             <div class="col-md-3 card">
                 <div class="d-flex justify-content-center" style="border-radius: 20px;padding:25px;">
-                    <img src="/contract_app/admin/user_image/<?= $img ?>" width="65%"
+                    <img id="uploadBtn" data-toggle="modal" data-target="#imageModal"
+                        src="/contract_app/admin/user_image/<?= $img ?>" width="65%"
                         style="background-color: #e4e4e4;border-radius: 200px;padding: 15px;" class="profile-pic">
-
+                    <!-- 
                     <img width="30px" class="icons" id="uploadBtn" src="../../../public/images/upload.svg"
                         type=" button" id="modalBtn" data-toggle="modal" data-target="#imageModal"
-                        style="background-color: #ffffff;height: 31px;padding: 5px;border-radius: 20px;position: absolute;top: 13em;left: 16em;">
+                        style="background-color: #ffffff;height: 31px;padding: 5px;border-radius: 20px;position: absolute;top: 13em;left: 16em;"> -->
 
                 </div>
                 <div class="p-1">
@@ -107,56 +108,28 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                         </span>
                     </div>
                     <div>
-                        <?php if (isset($user_department)) { ?>
+                        <?php
+                        $badgeColor = match ($user_department) {
+                            IT => '#0d6efd',
+                            'ISD-HRAD' => '#3F7D58',
+                            CITETD => '#FFB433',
+                            IASD => '#EB5B00',
+                            'ISD-MSD' => '#6A9C89',
+                            FSD => '#4E6688',
+                            BAC => '#3B6790',
+                            AOSD => '#85193C',
+                            '' => '', // to handle empty string (optional)
+                            default => ''
+                        };
+                        ?>
 
-                            <?php switch ($user_department) {
-                                case 'IT': ?>
-
-                                    <span class="badge p-2 mt-1 mb-1"
-                                        style="background-color: #0d6efd;"><?= $user_department ?></span>
-
-                                    <?php break;
-                                case 'ISD-HRAD': ?>
-
-                                    <span class="badge p-2 mt-1 mb-1"
-                                        style="background-color: #3F7D58;"><?= $user_department ?></span>
-
-                                    <?php break;
-                                case 'CITETD': ?>
-
-                                    <span class="badge p-2 mt-1 mb-1"
-                                        style="background-color: #FFB433;"><?= $user_department ?></span>
-
-                                    <?php break;
-                                case 'IASD': ?>
-
-                                    <span class="badge p-2 mt-1 mb-1"
-                                        style="background-color: #EB5B00;"><?= $user_department ?></span>
-
-                                    <?php break;
-                                case 'ISD-MSD': ?>
-
-                                    <span class="badge p-2 mt-1 mb-1"
-                                        style="background-color: #6A9C89;"><?= $user_department ?></span>
-
-                                    <?php break;
-                                case 'BAC': ?>
-
-                                    <span class="badge p-2 mt-1 mb-1"
-                                        style="background-color: #3B6790;"><?= $user_department ?></span>
-
-                                    <?php break;
-                                case '': ?>
-
-                                <?php default: ?>
-                                    <span class="badge text-muted">no department assigned</span>
-                            <?php } ?>
-
-                        <?php } else { ?>
-
+                        <?php if (!empty($user_department) && $badgeColor): ?>
+                            <span class="badge p-2 text-white mb-2 mt-2" style="background-color: <?= $badgeColor ?>;">
+                                <?= htmlspecialchars($user_department) ?>
+                            </span>
+                        <?php else: ?>
                             <span class="badge text-muted">no department assigned</span>
-
-                        <?php } ?>
+                        <?php endif; ?>
                     </div>
                     <div class="mb-2">
                         <span>
@@ -206,10 +179,49 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                 <input type="text" class="form-control" name="gender" value="<?= $getUser['department'] ?>"
                                     readonly>
                             </div>
+
+                            <div class="col-md-12">
+                                <h5>Contract types Assigned</h5>
+                                <hr>
+                                <div>
+                                    <?php
+                                    $contractTypesJson = $getUser['contract_types'] ?? '[]';
+                                    $contractTypes = json_decode($contractTypesJson, true); // decode JSON string to PHP array
+                                    ?>
+
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <?php foreach ($contractTypes as $type):
+                                            $badgeColor = match ($type) {
+                                                INFRA => '#328E6E',
+                                                SACC => '#123458',
+                                                GOODS => '#F75A5A',
+                                                EMP_CON => '#DC8686',
+                                                PSC_LONG => '#007bff',
+                                                PSC_SHORT => '#28a745',
+                                                TRANS_RENT => '#003092',
+                                                TEMP_LIGHTING => '#03A791',
+                                                default => '#FAB12F'
+                                            };
+                                            ?>
+                                            <label class="form-check-label">
+                                                <span class="badge text-white"
+                                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px; font-size: 14px; padding: 7px;">
+                                                    <?= htmlspecialchars($type) ?>
+                                                </span>
+                                            </label>
+                                        <?php endforeach; ?>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
                             <span class="">
                                 <h5>Credentials</h5>
                             </span>
                             <hr>
+
+
                             <div class="col-md-3">
                                 <label class="form-label text-muted">Username</label>
                                 <input type="text" class="form-control" name="middlename"

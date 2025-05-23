@@ -17,6 +17,9 @@ define('CITETD', 'CITETD');
 define('BAC', 'BAC');
 define('ISD-MSD', 'ISD-MSD');
 define('IASD', 'IASD');
+define('FSD', 'FSD');
+define('AOSD', 'AOSD');
+
 
 //REQUESTS
 define('POST', 'POST');
