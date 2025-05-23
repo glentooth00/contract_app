@@ -932,24 +932,26 @@ class ContractController
 
     public function getContractsByDepartment($department)
     {
-        // Prepare the query with secondary sorting by id
         $query = "SELECT * FROM contracts 
-                WHERE (uploader_department = ? OR implementing_dept = ?) 
-                AND contract_status = 'Active' 
-                ORDER BY id DESC";
+              WHERE (uploader_department = :dept1 
+                  OR implementing_dept = :dept2 
+                  OR department_assigned = :dept3) 
+              AND contract_status = 'Active' 
+              ORDER BY id DESC";
 
         $stmt = $this->db->prepare($query);
 
-        // Bind the parameters
-        $stmt->bindValue(1, $department, PDO::PARAM_STR); // uploader_department
-        $stmt->bindValue(2, $department, PDO::PARAM_STR); // department_assigned
+        $stmt->bindParam(':dept1', $department, PDO::PARAM_STR);
+        $stmt->bindParam(':dept2', $department, PDO::PARAM_STR);
+        $stmt->bindParam(':dept3', $department, PDO::PARAM_STR);
 
-        // Execute the statement
         $stmt->execute();
 
-        // Fetch and return the results
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+
 
 
     public function getExpiredContractsByDepartment($department)
