@@ -5,6 +5,8 @@ use App\Controllers\ContractController;
 
 session_start();
 
+echo $department = $_SESSION['department'];
+
 require_once __DIR__ . '/../../../../vendor/autoload.php';
 
 // Enable error reporting for full PHP errors
@@ -29,19 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'contract_end' => $_POST["contract_end"] ?? 'Missing contract_end',
             'contract_file' => $filePath,
             'contract_status' => 'Active',
+            'implementing_dept' => 'ISD-HRAD',
             'department_assigned' => $_POST["department_assigned"] ?? 'Missing department_assigned',
             'uploader_id' => $_POST['uploader_id'] ?? 'Missing uploader_id',
             'uploader_department' => $_POST['uploader_department'] ?? 'Missing uploader_department',
         ];
 
-        // echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
+        echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
 
-        // Save contract
+        //Save contract
         $contractSaved = $contractController->saveContract($contractData);
 
         if ($contractSaved) {
             $_SESSION['notification'] = [
-                'message' => 'Contract successfully renewed!',
+                'message' => 'Contract successfully saved!',
                 'type' => 'success'
             ];
 

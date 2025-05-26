@@ -81,7 +81,7 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-        <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned']) { ?>
+        <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
 
             <div class="gap-1">
                 <span id="close" style="float: inline-end;display:none;">
@@ -224,13 +224,24 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+            <?php if (!empty($getContract['implementing_department'])): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['implementing_department']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php else: ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Assigned Department</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                    </div>
+                </div>
+            <?php endif; ?>
+
 
             <div class="row col-md-3">
                 <div class="mt-3">
