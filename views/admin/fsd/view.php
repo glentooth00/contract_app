@@ -76,7 +76,7 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-        <!-- <?php if ($department === $getContract['uploader_department']) { ?>
+        <?php if ($department === $getContract['uploader_department']) { ?>
 
             <div class="gap-1">
                 <span id="close" style="float: inline-end;display:none;">
@@ -92,7 +92,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </span>
             </div>
 
-        <?php } ?> -->
+        <?php } ?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
 
