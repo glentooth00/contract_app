@@ -12,6 +12,8 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 
+$contractType = $_GET['type'];
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -448,11 +450,11 @@ include_once '../../../views/layouts/includes/header.php';
                     $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
-                    if($status === 'Expired'){
+                    if ($status === 'Expired') {
 
                         $stat = [
-                            'id'=> $getContract['id'],
-                            'status'=> 'Expired',
+                            'id' => $getContract['id'],
+                            'status' => 'Expired',
                         ];
 
                         $updateStatus = (new ContractHistoryController)->updateStatus($stat);

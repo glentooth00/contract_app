@@ -41,8 +41,8 @@ class ContractController
     public function saveContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned, implementing_dept) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned, :implementing_dept)";
 
         $stmt = $this->db->prepare($query);
 
@@ -56,6 +56,7 @@ class ContractController
             ':uploader_id' => $data['uploader_id'],
             ':uploader_department' => $data['uploader_department'],
             ':department_assigned' => $data['department_assigned'],
+            ':implementing_dept' => $data['implementing_dept'],
 
         ]);
     }
@@ -913,21 +914,22 @@ class ContractController
 
     public function getContractsByDepartmentAll($department)
     {
-        // Prepare the query
-        $query = "SELECT * FROM contracts WHERE (uploader_department = ? OR department_assigned = ?) ORDER BY created_at DESC";
+        $query = "SELECT * FROM contracts 
+              WHERE (uploader_department = :dept1 
+                  OR implementing_dept = :dept2 
+                  OR department_assigned = :dept3) 
+              AND contract_status = 'Active' 
+              ORDER BY id DESC";
+
         $stmt = $this->db->prepare($query);
 
-        // Bind the parameters (correctly using bindValue or bindParam)
-        $stmt->bindValue(1, $department, PDO::PARAM_STR); // First placeholder for uploader_department
-        $stmt->bindValue(2, $department, PDO::PARAM_STR); // Second placeholder for department_assigned
+        $stmt->bindParam(':dept1', $department, PDO::PARAM_STR);
+        $stmt->bindParam(':dept2', $department, PDO::PARAM_STR);
+        $stmt->bindParam(':dept3', $department, PDO::PARAM_STR);
 
-        // Execute the statement
         $stmt->execute();
 
-        // Fetch the results
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return $results; // Return the results
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getContractsByDepartment($department)
