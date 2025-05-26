@@ -92,9 +92,13 @@ include_once '../../../views/layouts/includes/header.php';
                 <span id="save" style="float: inline-end;display:none;">
                     <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
                 </span>
-                <span id="edit" style="float: inline-end;display:inline;">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
-                </span>
+                <?php if ($getContract['department_assigned'] === CITETD): ?>
+
+                <?php else: ?>
+                    <span id="edit" style="float: inline-end;display:inline;">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
+                    </span>
+                <?php endif; ?>
             </div>
 
         <?php } ?>
