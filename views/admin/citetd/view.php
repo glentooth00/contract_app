@@ -49,8 +49,8 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
+                    aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
         <hr>
 
@@ -81,7 +81,7 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-        <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned']) { ?>
+        <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
 
             <div class="gap-1">
                 <span id="close" style="float: inline-end;display:none;">
@@ -223,7 +223,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <?php if (empty($getContract['supplier'])): ?>
+            <?php if (empty($getContract['implementing_dept'])): ?>
             <?php else: ?>
 
                 <div class="row col-md-2">
@@ -231,7 +231,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">Implementing
                             Department</label>
                         <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['department_assigned']; ?>" name="department_assigned" readonly>
+                            value="<?= $getContract['implementing_dept']; ?>" name="department_assigned" readonly>
                     </div>
                 </div>
             <?php endif; ?>
@@ -289,8 +289,7 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Uploaded by:</label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname']; ?>"
-                        name="contract_type" readonly>
+                        value="<?= $getContract['uploader']; ?>" name="contract_type" readonly>
                 </div>
             </div>
 

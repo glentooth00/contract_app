@@ -787,7 +787,7 @@ include_once '../../../views/layouts/includes/header.php';
         const contract_id = encodeURIComponent(id?.value || '');
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+        window.location.href = `procurement/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
     });
 
     function formatDate(dateString) {

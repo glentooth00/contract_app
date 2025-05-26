@@ -73,7 +73,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                     placeholder="">
                             </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="uploader_department"
+                                <input type="hidden" class="form-control" name="uploader_department"
                                     value="<?= $department ?>" id="floatingInput" placeholder="">
                             </div>
                             <div class="mb-3">

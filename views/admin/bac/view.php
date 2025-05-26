@@ -44,8 +44,8 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
+                    aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
         <hr>
 
