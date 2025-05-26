@@ -63,6 +63,7 @@ class UserController
                 'lastname' => $user['lastname'],
                 'middlename' => $user['middlename'],
                 'department' => $user['department'],
+                'contract_types' => $user['contract_types'],
             ];
 
         } else {
