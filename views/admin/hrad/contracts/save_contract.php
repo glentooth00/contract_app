@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($contractSaved) {
             $_SESSION['notification'] = [
-                'message' => 'Contract successfully renewed!',
+                'message' => 'Contract successfully saved!',
                 'type' => 'success'
             ];
 
