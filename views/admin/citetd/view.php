@@ -201,16 +201,18 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+            <?php if ($getContract['contractPrice'] === True): ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
-            <?php if (!$getContract['supplier']): ?>
-
+            <?php if (empty($getContract['supplier'])): ?>
             <?php else: ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
@@ -221,14 +223,18 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Implementing
-                        Department</label>
-                    <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['department_assigned']; ?>" name="department_assigned" readonly>
+            <?php if (empty($getContract['supplier'])): ?>
+            <?php else: ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Implementing
+                            Department</label>
+                        <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['department_assigned']; ?>" name="department_assigned" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
             <div class="row col-md-3">
                 <div class="mt-3">
