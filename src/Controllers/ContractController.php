@@ -1009,8 +1009,8 @@ class ContractController
     public function savePowerSupplyContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department, uploader) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department, :uploader)";
 
         $stmt = $this->db->prepare($query);
 
@@ -1024,6 +1024,7 @@ class ContractController
             ':department_assigned' => $data['department_assigned'],
             ':uploader_id' => $data['uploader_id'],
             ':uploader_department' => $data['uploader_department'],
+            ':uploader' => $data['uploader'],
         ]);
     }
 

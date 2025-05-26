@@ -29,11 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $userData = $_SESSION['data'] ?? null;
 
+
     if (is_array($userData)) {
         $inputUsername = $_POST['username'];
         $inputPassword = $_POST['password'];
         $storedUsername = $userData['username'];
         $storedPassword = $userData['password'];
+
 
         if ($inputUsername === $storedUsername) {
             if ($inputPassword === $storedPassword) {
@@ -42,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $_SESSION['id'] = $userData['id'] ?? null;
                 $_SESSION['department'] = $userData['department'];
+                $_SESSION['contract_types'] = $userData['contract_types'];
 
                 switch ($_SESSION['department']) {
                     case "IT":
@@ -61,6 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         break;
                     case "IASD":
                         header("Location: views/admin/iasd/index.php");
+                        break;
+                    case "FSD":
+                        header("Location: views/admin/fsd/index.php");
                         break;
                     default:
                         $_SESSION['username'] = 'Department not recognized.';
