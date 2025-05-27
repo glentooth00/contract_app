@@ -49,8 +49,8 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="list.php" onclick="history.back(); return false;" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
+                    aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
         <hr>
 
@@ -83,7 +83,7 @@ include_once '../../../views/layouts/includes/header.php';
 
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
 
-       
+
             <div class="gap-1">
                 <span id="close" style="float: inline-end;display:none;">
 
@@ -429,11 +429,11 @@ include_once '../../../views/layouts/includes/header.php';
                     $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
-                    if($status === 'Expired'){
+                    if ($status === 'Expired') {
 
                         $stat = [
-                            'id'=> $getContract['id'],
-                            'status'=> 'Expired',
+                            'id' => $getContract['id'],
+                            'status' => 'Expired',
                         ];
 
                         $updateStatus = (new ContractHistoryController)->updateStatus($stat);

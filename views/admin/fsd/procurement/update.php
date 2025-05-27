@@ -8,20 +8,20 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 // Prepare the latest contract data (make sure keys match what your method expects)
 $latestData = [
-    'id' => $_GET['id'], // Changed from 'contract_id'
+    'contract_id' => $_GET['id'], // this must match ':contract_id'
     'contract_name' => $_GET['name'],
-    'start' => $_GET['start'], // Changed from 'contract_start'
-    'end' => $_GET['end'],     // Changed from 'contract_end'
+    'start' => $_GET['start'],
+    'end' => $_GET['end'],
     'department_assigned' => $_GET['dept'],
     'contract_status' => 'Active',
-    'updated_at' => date('Y-m-d H:i:s') // Include current timestamp
-
+    'updated_at' => date('Y-m-d H:i:s')
 ];
+
 
 // var_dump($latestData);
 
-// Call the controller method to perform update
-$updateContract = (new ContractController)->updateContract($latestData) ?? false;
+//Call the controller method to perform update
+$updateContract = (new ContractController)->updateContract1($latestData) ?? false;
 
 // Optional redirect back to previous page
 if ($updateContract) {

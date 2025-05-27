@@ -76,7 +76,7 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-        <?php if ($department === $getContract['uploader_department'] || $department === 'FSD') { ?>
+        <?php if ($department === $getContract['uploader_department']) { ?>
 
             <div class="gap-1">
                 <span id="close" style="float: inline-end;display:none;">
@@ -233,16 +233,13 @@ include_once '../../../views/layouts/includes/header.php';
 
             <?php if ($getContract['contract_type'] === EMP_CON): ?>
 
-                <?php if (!empty($getContract['department_assigned'])): ?>
-                    <div class="row col-md-2">
-                        <div class="mt-3">
-                            <label class="badge text-muted" style="font-size: 15px;">Department Assigned</label>
-                            <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
-                                value="<?= $getContract['department_assigned']; ?>" name="department_assigned" readonly>
-                        </div>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Department Assigned</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
                     </div>
-                <?php endif; ?>
-
+                </div>
 
             <?php else: ?>
 
@@ -777,7 +774,6 @@ include_once '../../../views/layouts/includes/header.php';
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
-        const deptAssigned = document.getElementById('deptAssigned');
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -791,7 +787,7 @@ include_once '../../../views/layouts/includes/header.php';
         const contract_id = encodeURIComponent(id?.value || '');
 
         // Redirect with query parameters
-        window.location.href = `procurement/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
     });
 
     function formatDate(dateString) {
