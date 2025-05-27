@@ -68,6 +68,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     case "FSD":
                         header("Location: views/admin/fsd/index.php");
                         break;
+                    case "PSPTD":
+                        header("Location: views/admin/psptd/index.php");
+                        break;
                     default:
                         $_SESSION['username'] = 'Department not recognized.';
                         header('Location: index.php');

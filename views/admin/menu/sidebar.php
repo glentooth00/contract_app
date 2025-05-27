@@ -48,6 +48,7 @@
 
 
     <?php
+    use App\Controllers\NotificationController;
     use App\Controllers\UserController;
 
     $logged_user = null;
@@ -96,7 +97,29 @@
             </a>
           </li>
         <?php endif; ?>
+        <?php if ($department === 'CITETD'): ?>
+          <li class="nav-item">
+            <a class="nav-link" id="changepass" href="view_pending_updates.php">
+              <img width="27px" src="../../../public/images/bell.svg">
+              <span>Notifications
+                <span>
+                  <?php
 
+                  $getLatestActivities = (new NotificationController)->checkRecentUpdates();
+
+                  ?>
+                  <?php if (!empty($getLatestActivities)): ?>
+                    <span class="badge bg-danger">
+                      <?= $getLatestActivities ?>
+                    </span>
+                  <?php endif; ?>
+
+                  <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
+                </span>
+              </span>
+            </a>
+          </li>
+        <?php endif; ?>
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
             <a class="nav-link" id="changepass" href="reset_password.php">

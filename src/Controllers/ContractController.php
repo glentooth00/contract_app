@@ -487,6 +487,17 @@ class ContractController
 
     }
 
+    public function getContractbyIdPending($contract_id)
+    {
+        $sql = "SELECT * FROM contracts WHERE contract_id = :contract_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_id', $contract_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // return as array of rows
+    }
+
+
 
     public function insertLatestData()
     {
@@ -523,7 +534,8 @@ class ContractController
                     contract_end = :contract_end,
                     department_assigned = :department_assigned,
                     updated_at = :updated_at,
-                    contract_status = :contract_status
+                    contract_status = :contract_status,
+                    -- action_status = :action_status
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -535,11 +547,67 @@ class ContractController
         $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam('contract_status', $data['contract_status']);
+        // $stmt->bindParam('action_status', $data['action_status']);
 
         $stmt->execute();
 
         return true;
     }
+
+    public function updateContractByAdmin($data)
+    {
+        $sql = "UPDATE contracts 
+            SET 
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end,
+                department_assigned = :department_assigned,
+                updated_at = :updated_at,
+                contract_status = :contract_status,
+                action_status = :action_status
+            WHERE id = :contract_id";  // use :id as in your $latestData
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':contract_id', $data['contract_id']); // matches $latestData['id']
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']); // key corrected
+        $stmt->bindParam(':contract_end', $data['contract_end']);     // key corrected
+        $stmt->bindParam(':department_assigned', $data['department_assigned']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':action_status', $data['action_status']);
+
+        $stmt->execute();
+
+        return true;
+    }
+
+
+    public function pendingUpdateContract($data)
+    {
+        $sql = "INSERT INTO incoming_data (contract_id, contract_name, start_date, end_date, user_dept, action_status, updated_at, created_at, updated_by, status) 
+            VALUES (:contract_id, :contract_name, :start_date, :end_date, :user_dept, :action_status, :updated_at, :created_at, :updated_by, :status)";
+
+        $stmt = $this->db->prepare($sql);
+
+        // Correct bindings
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':start_date', $data['start_date']);
+        $stmt->bindParam(':end_date', $data['end_date']);
+        $stmt->bindParam(':user_dept', $data['user_dept']);
+        $stmt->bindParam(':action_status', $data['action_status']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':created_at', $data['created_at']);
+        $stmt->bindParam(':updated_by', $data['updated_by']);
+        $stmt->bindParam(':status', $data['status']);
+
+        $stmt->execute();
+
+        return true;
+    }
+
 
 
     public function renewContract($data)
@@ -1009,8 +1077,8 @@ class ContractController
     public function savePowerSupplyContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department, uploader) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department, :uploader)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department, uploader, implementing_dept) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department, :uploader, :implementing_dept)";
 
         $stmt = $this->db->prepare($query);
 
@@ -1025,6 +1093,7 @@ class ContractController
             ':uploader_id' => $data['uploader_id'],
             ':uploader_department' => $data['uploader_department'],
             ':uploader' => $data['uploader'],
+            ':implementing_dept' => $data['implementing_dept'],
         ]);
     }
 
