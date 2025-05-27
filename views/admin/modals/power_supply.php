@@ -49,7 +49,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                                 <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
                                             <?php endforeach; ?>
                                     </select>
-                                <?php elseif( $department === IASD ) : ?>
+                                <?php elseif( $department === IASD || $department === 'PSPTD') : ?>
                                     <label class="badge text-muted">Power Supply Contract type</label>
                                         <select class="form-select form-select-md mb-3" name="contract_type">
                                         <option value="" hidden>Select Power Supply contract type</option>
@@ -77,7 +77,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                     value="<?= $department ?>" id="floatingInput" placeholder="">
                             </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="uploader"
+                                <input type="hidden" class="form-control" name="uploader"
                                     value="<?= $name ?>" id="floatingInput" placeholder="">
                             </div>
                             <div class="mb-3">

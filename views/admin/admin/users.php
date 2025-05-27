@@ -160,6 +160,7 @@ include_once '../../../views/layouts/includes/header.php';
                                 CITETD => '#FFB433',
                                 IASD => '#EB5B00',
                                 'ISD-MSD' => '#6A9C89',
+                                'PSPTD' => '#83B582',
                                 FSD => '#4E6688',
                                 BAC => '#123458',
                                 AOSD => '#03A791',
@@ -299,6 +300,7 @@ include_once '../../../views/layouts/includes/header.php';
                                         <option value="User">User</option>
                                         <option value="Manager">Manager</option>
                                         <option value="Admin">Admin</option>
+                                        <option value="Chief">Chief</option>
                                     </select>
                                 </div>
 
