@@ -11,14 +11,14 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
-$contracts = (new ContractController)->getContractsByDepartment($department);
+$contracts = (new ContractController)->getExpiredContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    //     echo '<script>alert("Latest data inserted")</script>';
-// } else {
+    echo '<script>alert("Latest data inserted")</script>';
+} else {
     // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
 }
@@ -41,22 +41,9 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Expired Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
-            <a href="view_pending_updates.php" style="text-decoration: none;">
-                <div style="position: relative; display: inline-block; margin-right: 30px;">
-                    <?php if (!empty($getLatestActivities)): ?>
-                        <span class="badge bg-danger" style="position: absolute; top: -10px; right: -10px;
-                display: inline-flex; justify-content: center; align-items: center;
-                border-radius: 50%; width: 20px; height: 20px; font-size: 12px;">
-                            <?= $getLatestActivities ?>
-                        </span>
-                    <?php endif; ?>
-                    <img width="25px" src="../../../public/images/bell.svg" alt="Activities need attention">
-                </div>
-            </a>
-
 
             <?php if (isset($department)) { ?>
 
@@ -105,10 +92,10 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#powerSupplyModal">
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#powerSupplyModal">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
             Add Contract
-        </button>
+        </button> -->
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -150,15 +137,11 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?php
                                 $type = $contract['contract_type'] ?? '';
                                 $badgeColor = match ($type) {
-                                    INFRA => '#328E6E',
-                                    SACC => '#123458',
-                                    GOODS => '#F75A5A',
-                                    EMP_CON => '#FAB12F',
-                                    PSC_LONG => '#007bff',
-                                    PSC_SHORT => '#28a745',
                                     TRANS_RENT => '#003092',
                                     TEMP_LIGHTING => '#03A791',
-                                // default => '#FAB12F'
+                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
+                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
+                                    default => '#FAB12F'
                                 };
                                 ?>
                                 <span class="p-2 text-white badge"
