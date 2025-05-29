@@ -58,7 +58,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                                         <div class="col-md-5 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Date Start</lable>
+                                                <lable class="badge text-muted">Actual Date Started</lable>
                                                 <div class="d-flex">
                                                     <i class="fa fa-calendar p-2" style="font-size: 20px;"
                                                         aria-hidden="true"></i>
@@ -69,7 +69,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                         <div class="col-md-5 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Date End</lable>
+                                                <lable class="badge text-muted">Expiration End</lable>
                                                 <div class="d-flex">
                                                     <i class="fa fa-calendar p-2" style="font-size: 20px;"
                                                         aria-hidden="true"></i>

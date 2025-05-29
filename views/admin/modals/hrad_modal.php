@@ -11,12 +11,12 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
 ?>
 <!---- ISD-RAD MODAL ---->
-<div class="modal fade" id="<?= $department ?>Modal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="hradModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Employment Contract</h5>
+                <h5 class="modal-title text-white badge" style="font-size:20px;background-color:#FAB12F"
+                    id="exampleModalLabel">Add Employment Contract</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

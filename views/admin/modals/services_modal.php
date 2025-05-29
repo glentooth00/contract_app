@@ -23,12 +23,13 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 ?>
 
 <!---- CITETD MODAL ---->
-<div class="modal fade" id="InfraGoodsServiceModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title mb-0" id="exampleModalLabel">Create Contract</h5>
+                <h5 class="modal-title badge text-white mb-0" style="font-size:20px;background-color:#123458;"
+                    id="exampleModalLabel">
+                    Services & Consultancy Contract</h5>
                 <span id="refreshBtn"><span class="text-muted p-2 badge">Clear form</span><img id="refresh" width="22px"
                         src="../../../public/images/refresh.svg"></span>
             </div>
@@ -37,16 +38,17 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                 <form id="contractForm" action="procurement/save_contract.php" method="POST"
                     enctype="multipart/form-data">
                     <!-- First Row -->
+                    <input type="hidden" name="contract_file" value="<?= SACC ?>" class="form-control">
                     <div class="row p-3">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-5 mb-3">
                             <label class="badge text-muted">Contract File</label>
                             <input type="file" name="contract_file" class="form-control">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-5 mb-3">
                             <label class="badge text-muted">Contract Name</label>
                             <input type="text" class="form-control" name="contract_name" placeholder="">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <!-- <div class="col-md-4 mb-3">
                             <?php if ($department === BAC): ?>
 
                                 <label class="badge text-muted">Contract Type</label>
@@ -70,88 +72,88 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                                     </option>
                                 </select>
 
-                            <?php endif; ?>
-
-                        </div>
-                    </div>
-
-                    <!-- Second Row -->
-                    <div class="row p-3">
-                        <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">Total Contract Cost</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fa-solid fa-peso-sign"></i></span>
-                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost"
-                                    placeholder="0.00">
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">Mode of Procurement</label>
-                            <select class="form-select" name="procurementMode">
-                                <option value="" hidden>Select mode</option>
-                                <?php foreach ($procurementModes as $procurementMode): ?>
-                                    <option value="<?= $procurementMode['procMode'] ?>"><?= $procurementMode['procMode'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="col-md-4 mb-3" id="supplier_field" style="display: none;">
-                            <label class="badge text-muted">Supplier</label>
-                            <input type="text" class="form-control" name="supplier" placeholder="">
-                        </div>
-
+                            <?php endif; ?> -->
 
                     </div>
-
-                    <div class="row p-3">
-                        <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">Implementing Department</label>
-                            <select name="implementing_dept" class="form-select">
-                                <option hidden>Select Department</option>
-                                <?php foreach ($departments as $dept): ?>
-                                    <option value="<?= $dept['department_name'] ?>">
-                                        <?= $dept['department_name'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">Start Date</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fa fa-calendar" style="font-size: 18px;" aria-hidden="true"></i>
-                                </span>
-                                <input type="date" class="form-control" id="start" name="contract_start">
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">End Date</label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="fa fa-calendar" style="font-size: 18px;" aria-hidden="true"></i>
-                                </span>
-                                <input type="date" class="form-control" id="end" name="contract_end">
-                            </div>
-                        </div>
-
-
-                        <!-- Hidden Inputs -->
-                        <input type="hidden" name="uploader_department" value="<?= $department ?>">
-                        <input type="hidden" name="uploader" value="<?= $name ?>">
-                        <input type="hidden" name="uploader_id" value="<?= $id ?>">
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save
-                            Contract</button>
-                    </div>
-                </form>
             </div>
+
+            <!-- Second Row -->
+            <div class="row p-3">
+                <div class="col-md-4 mb-3">
+                    <label class="badge text-muted">Total Contract Cost</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa-solid fa-peso-sign"></i></span>
+                        <input type="text" class="form-control" name="contractPrice" id="total_contract_cost"
+                            placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="badge text-muted">Mode of Procurement</label>
+                    <select class="form-select" name="procurementMode">
+                        <option value="" hidden>Select mode</option>
+                        <?php foreach ($procurementModes as $procurementMode): ?>
+                            <option value="<?= $procurementMode['procMode'] ?>"><?= $procurementMode['procMode'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-4 mb-3" id="supplier_field" style="display: none;">
+                    <label class="badge text-muted">Supplier</label>
+                    <input type="text" class="form-control" name="supplier" placeholder="">
+                </div>
+
+
+            </div>
+
+            <div class="row p-3">
+                <div class="col-md-4 mb-3">
+                    <label class="badge text-muted">Implementing Department</label>
+                    <select name="implementing_dept" class="form-select">
+                        <option hidden>Select Department</option>
+                        <?php foreach ($departments as $dept): ?>
+                            <option value="<?= $dept['department_name'] ?>">
+                                <?= $dept['department_name'] ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label class="badge text-muted">Start Date</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar" style="font-size: 18px;" aria-hidden="true"></i>
+                        </span>
+                        <input type="date" class="form-control" id="start" name="contract_start">
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="badge text-muted">End Date</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa fa-calendar" style="font-size: 18px;" aria-hidden="true"></i>
+                        </span>
+                        <input type="date" class="form-control" id="end" name="contract_end">
+                    </div>
+                </div>
+
+
+                <!-- Hidden Inputs -->
+                <input type="hidden" name="uploader_department" value="<?= $department ?>">
+                <input type="hidden" name="uploader" value="<?= $name ?>">
+                <input type="hidden" name="uploader_id" value="<?= $id ?>">
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save
+                    Contract</button>
+            </div>
+            </form>
         </div>
     </div>
+</div>
 </div>
 
 

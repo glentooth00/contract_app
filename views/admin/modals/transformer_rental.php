@@ -68,7 +68,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                                         <div class="col-md-4 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Rent Start</lable>
+                                                <lable class="badge text-muted">Installation Date</lable>
                                                 <div class="d-flex">
                                                     <i class="fa fa-calendar p-2" style="font-size: 20px;"
                                                         aria-hidden="true"></i>
@@ -79,7 +79,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                         </div>
                                         <div class="col-md-4 p-2">
                                             <div>
-                                                <lable class="badge text-muted">Rent End</lable>
+                                                <lable class="badge text-muted">Retirement Date</lable>
                                                 <div class="d-flex">
                                                     <i class="fa fa-calendar p-2" style="font-size: 20px;"
                                                         aria-hidden="true"></i>

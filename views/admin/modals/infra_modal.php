@@ -23,12 +23,13 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 ?>
 
 <!---- CITETD MODAL ---->
-<div class="modal fade" id="InfraGoodsServiceModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="infraModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title mb-0" id="exampleModalLabel">Create Contract</h5>
+                <h5 class="modal-title mb-0 text-white badge" style="font-size:20px;background-color:#328E6E"
+                    id="exampleModalLabel">
+                    Infrastructure Contract</h5>
                 <span id="refreshBtn"><span class="text-muted p-2 badge">Clear form</span><img id="refresh" width="22px"
                         src="../../../public/images/refresh.svg"></span>
             </div>
@@ -36,18 +37,19 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
             <div class="modal-body">
                 <form id="contractForm" action="procurement/save_contract.php" method="POST"
                     enctype="multipart/form-data">
+                    <input type="hidden" name="contract_file" value="<?= INFRA ?>" class="form-control">
                     <!-- First Row -->
                     <div class="row p-3">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="badge text-muted">Contract File</label>
                             <input type="file" name="contract_file" class="form-control">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-5 mb-3">
                             <label class="badge text-muted">Contract Name</label>
                             <input type="text" class="form-control" name="contract_name" placeholder="">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <?php if ($department === BAC): ?>
+                            <!-- <?php if ($department === BAC): ?>
 
                                 <label class="badge text-muted">Contract Type</label>
                                 <select class="form-select" name="contract_type" id="contract_type">
@@ -70,7 +72,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                                     </option>
                                 </select>
 
-                            <?php endif; ?>
+                            <?php endif; ?> -->
 
                         </div>
                     </div>

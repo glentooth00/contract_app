@@ -23,12 +23,13 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 ?>
 
 <!---- CITETD MODAL ---->
-<div class="modal fade" id="InfraGoodsServiceModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="goodsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">
-                <h5 class="modal-title mb-0" id="exampleModalLabel">Create Contract</h5>
+                <h5 class="modal-title mb-0 text-white badge" id="exampleModalLabel"
+                    style="font-size:20px;background-color:#F75A5A">
+                    Goods Contract</h5>
                 <span id="refreshBtn"><span class="text-muted p-2 badge">Clear form</span><img id="refresh" width="22px"
                         src="../../../public/images/refresh.svg"></span>
             </div>
@@ -37,6 +38,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                 <form id="contractForm" action="procurement/save_contract.php" method="POST"
                     enctype="multipart/form-data">
                     <!-- First Row -->
+                    <input type="hidden" name="contract_file" value="<?= GOODS ?>" class="form-control">
                     <div class="row p-3">
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Contract File</label>
@@ -46,7 +48,11 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <label class="badge text-muted">Contract Name</label>
                             <input type="text" class="form-control" name="contract_name" placeholder="">
                         </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-4 mb-3" id="supplier_field">
+                            <label class="badge text-muted">Supplier</label>
+                            <input type="text" class="form-control" name="supplier" placeholder="">
+                        </div>
+                        <!-- <div class="col-md-4 mb-3">
                             <?php if ($department === BAC): ?>
 
                                 <label class="badge text-muted">Contract Type</label>
@@ -72,7 +78,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 
                             <?php endif; ?>
 
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- Second Row -->

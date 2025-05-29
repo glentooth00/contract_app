@@ -92,11 +92,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init style="width:15%;padding-right:10px;"
-            href="#!" role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Add Contract
-        </a>
+
 
 
         <!-- Wrap both search and filter in a flex container -->
