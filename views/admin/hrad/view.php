@@ -236,7 +236,7 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="row col-md-2">
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Assigned Department</label>
-                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                        <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
                     </div>
                 </div>
@@ -443,6 +443,8 @@ include_once '../../../views/layouts/includes/header.php';
                     $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
+
+
                     if ($status === 'Expired') {
 
                         $stat = [
@@ -454,6 +456,8 @@ include_once '../../../views/layouts/includes/header.php';
 
                     }
 
+                    // var_dump($contractHist_datas);
+                    
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>
@@ -775,7 +779,7 @@ include_once '../../../views/layouts/includes/header.php';
         const contract_id = encodeURIComponent(id?.value || '');
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}`;
     });
 
     function formatDate(dateString) {
