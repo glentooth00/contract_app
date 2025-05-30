@@ -35,17 +35,16 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
             </div>
 
             <div class="modal-body">
-                <form id="contractForm" action="procurement/save_contract.php" method="POST"
-                    enctype="multipart/form-data">
+                <form id="contractForm" action="contracts/save_infra.php" method="POST" enctype="multipart/form-data">
                     <!-- First Row -->
-                    <input type="hidden" name="contract_file" value="<?= GOODS ?>" class="form-control">
+                    <input type="hidden" name="contract_type" value="<?= GOODS ?>" class="form-control">
                     <div class="row p-3">
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Contract File</label>
                             <input type="file" name="contract_file" class="form-control">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">Contract Name</label>
+                            <label class="badge text-muted">Customer Name</label>
                             <input type="text" class="form-control" name="contract_name" placeholder="">
                         </div>
                         <div class="col-md-4 mb-3" id="supplier_field">
@@ -87,7 +86,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <label class="badge text-muted">Total Contract Cost</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-peso-sign"></i></span>
-                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost"
+                                <input type="text" class="form-control contract-cost" name="contractPrice"
                                     placeholder="0.00">
                             </div>
                         </div>
@@ -101,11 +100,6 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                                     </option>
                                 <?php endforeach; ?>
                             </select>
-                        </div>
-
-                        <div class="col-md-4 mb-3" id="supplier_field" style="display: none;">
-                            <label class="badge text-muted">Supplier</label>
-                            <input type="text" class="form-control" name="supplier" placeholder="">
                         </div>
 
 
@@ -182,39 +176,18 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 <script>
     let duration = 0;
 
-    document.getElementById('total_contract_cost').addEventListener('input', function (e) {
-        let value = e.target.value;
+    document.querySelectorAll('.contract-cost').forEach(input => {
+        input.addEventListener('input', function (e) {
+            let value = e.target.value;
 
-        // Remove non-numeric characters (except for the decimal point)
-        value = value.replace(/[^\d.]/g, '');
+            // Remove non-numeric characters (except for the decimal point)
+            value = value.replace(/[^\d.]/g, '');
 
-        // Add commas for thousands separator
-        let formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            // Add commas for thousands separator
+            let formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-        e.target.value = formattedValue;
-    });
-
-    document.getElementById('contract_type').addEventListener('change', function () {
-        const selected = this.value;
-        const supplierField = document.getElementById('supplier_field');
-
-        // Show/hide supplier field only for Goods Contract
-        supplierField.style.display = (selected === 'Goods Contract') ? 'block' : 'none';
-
-        // Set duration based on selected contract type
-        switch (selected) {
-            case 'Goods Contract':
-                duration = 15;
-                break;
-            case 'Infrastructure Contract':
-            case 'Service and Consultancy Contract':
-                duration = 30;
-                break;
-            default:
-                duration = 0;
-        }
-
-        console.log("Duration set to:", duration);
+            e.target.value = formattedValue;
+        });
     });
 
 

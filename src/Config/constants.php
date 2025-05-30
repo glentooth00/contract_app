@@ -12,7 +12,7 @@ define('GOODS', 'Goods Contract');
 
 //Departments
 define('IT', 'IT');
-define('ISD-HRAD', 'ISD-HRAD');
+define('ISD', 'ISD');
 define('CITETD', 'CITETD');
 define('BAC', 'BAC');
 define('ISD-MSD', 'ISD-MSD');

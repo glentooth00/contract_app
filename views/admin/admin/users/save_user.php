@@ -12,6 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $middlename = $_POST['middlename'] ?? 'No Middlename';
     $lastname = $_POST['lastname'] ?? 'No Lastname';
     $user_role = $_POST['user_role'] ?? 'No User role';
+    $user_type = $_POST['user_type'] ?? 'No User role';
     $department = $_POST['department'] ?? 'No Department';
     $gender = $_POST['gender'] ?? 'No Gender';
     $username = $_POST['username'] ?? '';
@@ -26,6 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'middlename' => $middlename,
         'lastname' => $lastname,
         'user_role' => $user_role,
+        'user_type' => $user_type,
         'department' => $department,
         'gender' => $gender,
         'username' => $username,

@@ -46,7 +46,6 @@
       </ul>
     </li>
 
-
     <?php
     use App\Controllers\NotificationController;
     use App\Controllers\UserController;
@@ -62,9 +61,21 @@
       $currentDir = basename(dirname($_SERVER['PHP_SELF']));
       if ($currentDir === 'admin') {
         $usersLink = 'users.php';
+        $usersTypes = 'userTypes.php';
+        $usersRoles = 'userRoles.php';
       }
     }
     ?>
+    <?php if ($logged_user === 'Admin'): ?>
+      <li class="nav-item">
+        <a class="nav-link" id="users" href="<?php echo $usersLink; ?>">
+          <img width="27px" src="../../../public/images/user.svg">
+          <span>Users</span>
+        </a>
+      </li>
+    <?php endif; ?>
+
+
 
 
     <li class="nav-item">
@@ -91,9 +102,17 @@
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" id="users" href="<?php echo $usersLink; ?>">
-              <img width="27px" src="../../../public/images/user.svg">
-              <span>Users</span>
+            <a class="nav-link" id="userRoles" href="<?php echo $usersRoles; ?>">
+              <img width="27px" src="../../../public/images/userRole.svg">
+              <span>User Roles</span>
+            </a>
+          </li>
+        <?php endif; ?>
+        <?php if ($logged_user === 'Admin'): ?>
+          <li class="nav-item">
+            <a class="nav-link" id="userTypes" href="<?php echo $usersTypes; ?>">
+              <img width="27px" src="../../../public/images/userTypes.svg">
+              <span>User Types</span>
             </a>
           </li>
         <?php endif; ?>
@@ -284,6 +303,16 @@
 
     if (currentUrl.includes('users.php')) {
       $('#users').addClass('active');
+      $('#changepass').removeClass('active');
+    }
+
+    if (currentUrl.includes('userRoles.php')) {
+      $('#userRoles').addClass('active');
+      $('#changepass').removeClass('active');
+    }
+
+    if (currentUrl.includes('userTypes.php')) {
+      $('#userTypes').addClass('active');
       $('#changepass').removeClass('active');
     }
 

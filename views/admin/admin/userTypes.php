@@ -12,8 +12,6 @@ use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\UserController;
-use App\Controllers\UserRoleController;
-
 
 $getUser = new UserController();
 $results = $getUser->getAllUsers();
@@ -60,7 +58,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'ISD': ?>
+                    case 'ISD-HRAD': ?>
 
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
@@ -158,7 +156,7 @@ include_once '../../../views/layouts/includes/header.php';
                             $department = $result['department'] ?? '';
                             $badgeColor = match ($department) {
                                 IT => '#0d6efd',
-                                ISD => '#3F7D58',
+                                'ISD-HRAD' => '#3F7D58',
                                 CITETD => '#FFB433',
                                 IASD => '#EB5B00',
                                 'ISD-MSD' => '#6A9C89',
@@ -301,7 +299,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                             <!-- Department & Role Row -->
                             <div class="row mb-3">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="badge text-muted form-label">Department <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select" name="department" required>
@@ -315,27 +313,14 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="badge text-muted form-label">Role <span
                                             class="text-danger">*</span></label>
                                     <select class="form-select" name="user_role" required>
-                                        <option selected hidden>Select Role</option>
-                                        <?php
-                                        $getDept = (new UserRoleController)->getRoles();
-                                        foreach ($getDept as $dept): ?>
-                                            <option value="<?= htmlspecialchars($dept['user_role']) ?>">
-                                                <?= htmlspecialchars($dept['user_role']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="badge text-muted form-label">User Type<span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select" name="user_type" required>
-                                        <option value="" selected hidden>Select User Type</option>
-                                        <option value="Admin">Admin</option>
+                                        <option selected hidden>Select user role</option>
                                         <option value="User">User</option>
+                                        <option value="Manager">Manager</option>
+                                        <option value="Admin">Admin</option>
                                     </select>
                                 </div>
                             </div>
@@ -379,7 +364,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
-                            user Account</button>
+                            user</button>
                     </div>
                 </form>
             </div>

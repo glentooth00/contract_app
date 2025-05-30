@@ -49,8 +49,8 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
+                    aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
         <hr>
 
@@ -201,6 +201,17 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
+            <?php if (!empty($getContract['address'])): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Address:</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['address']; ?>" name="address" readonly>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+
             <?php if (!empty($getContract['contractPrice'])): ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
@@ -224,15 +235,17 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($getContract['implementing_department'])): ?>
+            <?php if ($getContract['contract_type'] === INFRA): ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
                         <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['implementing_department']; ?>" name="contract_type" readonly>
+                            value="<?= $getContract['implementing_dept'] ?>" name="contract_type" readonly>
                     </div>
                 </div>
-            <?php else: ?>
+            <?php endif; ?>
+
+            <?php if ($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Assigned Department</label>
@@ -241,6 +254,7 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
             <?php endif; ?>
+
 
 
             <div class="row col-md-3">

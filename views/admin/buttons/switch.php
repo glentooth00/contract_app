@@ -29,6 +29,14 @@
                 case SACC:
                     include_once __DIR__ . "../../contract_buttons/services_button.php";
                     break;
+
+                case TEMP_LIGHTING:
+                    include_once __DIR__ . "../../contract_buttons/temp_lighting_button.php";
+                    break;
+
+                case TRANS_RENT:
+                    include_once __DIR__ . "../../contract_buttons/trans_rent_button.php";
+                    break;
                 // case "Service and Consultancy Contract":
                 //     // Add other includes if needed
                 //     break 2;

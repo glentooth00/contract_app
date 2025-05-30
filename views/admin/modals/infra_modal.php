@@ -35,9 +35,8 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
             </div>
 
             <div class="modal-body">
-                <form id="contractForm" action="procurement/save_contract.php" method="POST"
-                    enctype="multipart/form-data">
-                    <input type="hidden" name="contract_file" value="<?= INFRA ?>" class="form-control">
+                <form id="contractForm" action="contracts/save_infra.php" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="contract_type" value="<?= INFRA ?>" class="form-control">
                     <!-- First Row -->
                     <div class="row p-3">
                         <div class="col-md-6 mb-3">
@@ -83,8 +82,8 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <label class="badge text-muted">Total Contract Cost</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-peso-sign"></i></span>
-                                <input type="text" class="form-control" name="contractPrice" id="total_contract_cost"
-                                    placeholder="0.00">
+                                <input type="text" class="form-control contract-cost" name="contractPrice"
+                                    id="total_contract_cost" placeholder="0.00">
                             </div>
                         </div>
 

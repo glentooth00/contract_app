@@ -6,11 +6,11 @@ if (!empty($contractTypes)) {
     foreach ($contractTypes as $type) {
         switch ($type) {
             case TEMP_LIGHTING:
-                include_once '/modals/isdmsd_modal.php';
+                include_once 'isdmsd_modal.php';
                 break;
 
             case TRANS_RENT:
-                include_once '/modals/transformer_rental.php';
+                include_once 'transformer_rental.php';
                 break;
 
             case EMP_CON:

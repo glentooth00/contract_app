@@ -684,7 +684,8 @@ class ContractController
                     contract_status,
                     contract_file,
                     contract_type,
-                    contract_name) 
+                    contract_name,
+                    address) 
                 VALUES 
                     (:TC_no, 
                     :contract_start, 
@@ -699,7 +700,8 @@ class ContractController
                     :contract_status,
                     :contract_file,
                     :contract_type,
-                    :contract_name)";
+                    :contract_name,
+                    :address)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -721,6 +723,7 @@ class ContractController
         $stmt->bindParam(':contract_file', $data['contract_file']);
         $stmt->bindParam(':contract_type', $data['contract_type']);
         $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':address', $data['address']);
 
         $stmt->execute();
 
@@ -787,7 +790,8 @@ class ContractController
                     uploader_department, 
                     uploader_id,
                     department_assigned,
-                    account_no
+                    account_no,
+                    address
                 ) VALUES (
                     :contract_type, 
                     :contract_name, 
@@ -803,7 +807,8 @@ class ContractController
                     :uploader_department, 
                     :uploader_id,
                     :department_assigned,
-                    :account_no  -- ADD THIS
+                    :account_no,
+                    :address
                 )";
 
         $stmt = $this->db->prepare($sql);
@@ -829,6 +834,7 @@ class ContractController
         $stmt->bindParam(':uploader_id', $data['uploader_id']);
         $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':account_no', $data['account_no']);
+        $stmt->bindParam(':address', $data['address']);
 
         $stmt->execute();
 
