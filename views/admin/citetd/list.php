@@ -1,7 +1,8 @@
 <?php
 session_start();
 
-$department = $_SESSION['department'];
+$department = $_SESSION['department'] ?? null;
+$role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -27,12 +28,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout">
 
@@ -58,57 +59,49 @@ include_once '../../../views/layouts/includes/header.php';
             </a>
 
 
-            <?php if (isset($department)) { ?>
+            <?php switch ($department) {
+                case 'IT': ?>
 
-                <?php switch ($department) {
-                    case 'IT': ?>
+                    <span class="badge p-2" style="background-color: #0d6efd;"><?= $role ?> user</span>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                    <?php break;
+                case 'ISD': ?>
 
-                        <?php break;
-                    case 'ISD-HRAD': ?>
+                    <span class="badge p-2" style="background-color: #3F7D58;"><?= $role ?> user</span>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
+                    <?php break;
+                case 'CITET': ?>
 
-                        <?php break;
-                    case 'CITETD': ?>
+                    <span class="badge p-2" style="background-color: #FFB433;"><?= $role ?> user</span>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
+                    <?php break;
+                case 'IASD': ?>
 
-                        <?php break;
-                    case 'IASD': ?>
+                    <span class="badge p-2" style="background-color: #EB5B00;"><?= $role ?> user</span>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+                    <?php break;
+                case 'ISD-MSD': ?>
 
-                        <?php break;
-                    case 'ISD-MSD': ?>
+                    <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+                    <?php break;
+                case 'BAC': ?>
 
-                        <?php break;
-                    case 'BAC': ?>
+                    <span class="badge p-2" style="background-color: #3B6790;"><?= $role ?> user</span>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+                    <?php break;
+                case '': ?>
 
-                        <?php break;
-                    case '': ?>
-
-                    <?php default: ?>
-                        <!-- <span class="badge text-muted">no department assigned</span> -->
-                <?php } ?>
-
-            <?php } else { ?>
-
-                <!-- <span class="badge text-muted">no department assigned</span> -->
-
+                <?php default: ?>
+                    <!-- <span class="badge text-muted">no department assigned</span> -->
             <?php } ?>
+
+            <!-- <span class="badge text-muted">no department assigned</span> -->
+
         </span>
         <hr>
 
-        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#powerSupplyModal">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            Add Contract
-        </button>
+        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -208,7 +201,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php include '../modals/power_supply.php'; ?>
+<?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 

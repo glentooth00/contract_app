@@ -28,6 +28,10 @@ if (!empty($contractTypes)) {
             case SACC:
                 include_once 'services_modal.php';
                 break;
+
+            case PSC_SHORT:
+                include_once 'power_supply.php';
+                break;
             // case "Service and Consultancy Contract":
             //     // Add other includes if needed
             //     break 2;

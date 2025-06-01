@@ -112,7 +112,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                         $badgeColor = match ($user_department) {
                             IT => '#0d6efd',
                             'ISD-HRAD' => '#3F7D58',
-                            CITETD => '#FFB433',
+                            CITET => '#FFB433',
                             IASD => '#EB5B00',
                             'ISD-MSD' => '#6A9C89',
                             FSD => '#4E6688',

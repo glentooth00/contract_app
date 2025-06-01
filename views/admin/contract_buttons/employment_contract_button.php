@@ -2,6 +2,6 @@
     <a class="btn text-white fw-bold" data-mdb-ripple-init style="font-size:13px;background-color:#FAB12F" href="#!"
         role="button" data-bs-toggle="modal" data-bs-target="#hradModal">
         <i class="fa fa-file-text-o" aria-hidden="true"></i>
-        Add Employment Contract
+        Employment Contract
     </a>
 </div>

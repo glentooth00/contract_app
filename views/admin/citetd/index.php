@@ -2,6 +2,7 @@
 session_start();
 
 $department = $_SESSION['department'] ?? null;
+$role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -57,35 +58,36 @@ include_once '../../../views/layouts/includes/header.php';
 
             <?php if (isset($department)) { ?>
 
+
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $role ?> user</span>
 
                         <?php break;
-                    case 'ISD-HRAD': ?>
+                    case 'ISD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $role ?> user</span>
 
                         <?php break;
-                    case 'CITETD': ?>
+                    case 'CITET': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $role ?> user</span>
 
                         <?php break;
                     case '': ?>

@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     case "ISD-MSD":
                         header("Location: views/admin/msd/index.php");
                         break;
-                    case "CITETD":
+                    case "CITET":
                         header("Location: views/admin/citetd/index.php");
                         break;
                     case "BAC":

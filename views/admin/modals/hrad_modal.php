@@ -78,7 +78,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                             <div class="mb-3">
                                 <label class="badge text-muted">Department Assigned</label>
-                                <select name="department_assigned" class="form-select" id="">
+                                <select name="department_assigned" class="form-select" id="" required>
                                     <?php foreach ($departments as $department): ?>
                                         <option hidden>Select Department</option>
                                         <option value="<?= $department['department_name'] ?>">

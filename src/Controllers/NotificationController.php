@@ -96,6 +96,54 @@ class NotificationController
         $stmt->execute();
     }
 
+    public function savePendingData($data)
+    {
+        $sql = "INSERT INTO " . $this->table . " (
+                    contract_name,
+                    contract_start,
+                    contract_end,
+                    contract_type,
+                    contract_file,
+                    created_at,
+                    updated_at,
+                    contract_status,
+                    uploader_id,
+                    uploader_department,
+                    uploader,
+                    approval_status
+                ) VALUES (
+                    :contract_name,
+                    :contract_start,
+                    :contract_end,
+                    :contract_type,
+                    :contract_file,
+                    :created_at,
+                    :updated_at,
+                    :contract_status,
+                    :uploader_id,
+                    :uploader_department,
+                    :uploader,
+                    :approval_status
+                )";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
+        $stmt->bindParam(':contract_file', $data['contract_file']);
+        $stmt->bindParam(':created_at', $data['created_at']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':uploader_id', $data['uploader_id']);
+        $stmt->bindParam(':uploader_department', $data['uploader_department']);
+        $stmt->bindParam(':uploader', $data['uploader']);
+        $stmt->bindParam(':approval_status', $data['approval_status']);
+        $stmt->execute();
+
+        return true;
+
+    }
+
 
 
 }

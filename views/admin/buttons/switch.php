@@ -37,6 +37,10 @@
                 case TRANS_RENT:
                     include_once __DIR__ . "../../contract_buttons/trans_rent_button.php";
                     break;
+
+                case PSC_SHORT:
+                    include_once __DIR__ . "../../contract_buttons/power_supply_short.php";
+                    break;
                 // case "Service and Consultancy Contract":
                 //     // Add other includes if needed
                 //     break 2;

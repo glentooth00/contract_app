@@ -48,6 +48,7 @@
 
     <?php
     use App\Controllers\NotificationController;
+    use App\Controllers\PendingDataController;
     use App\Controllers\UserController;
 
     $logged_user = null;
@@ -116,7 +117,7 @@
             </a>
           </li>
         <?php endif; ?>
-        <?php if ($department === 'CITETD'): ?>
+        <?php if ($department === CITET): ?>
           <li class="nav-item">
             <a class="nav-link" id="changepass" href="view_pending_updates.php">
               <img width="27px" src="../../../public/images/bell.svg">
@@ -125,7 +126,8 @@
                   <?php
 
                   $getLatestActivities = (new NotificationController)->checkRecentUpdates();
-
+                  // $getPendingData = (new PendingDataController)->checkPendingData();
+                
                   ?>
                   <?php if (!empty($getLatestActivities)): ?>
                     <span class="badge bg-danger">
