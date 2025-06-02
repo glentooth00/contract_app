@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'approval_status' => 'Pending'
         ];
 
+        // var_dump($dataValidation);
 
         $saveContract = (new PendingDataController)->savePendingData($dataValidation);
 
