@@ -55,8 +55,8 @@ class ContractController
             ':contract_status' => $data['contract_status'],
             ':uploader_id' => $data['uploader_id'],
             ':uploader_department' => $data['uploader_department'],
-            ':department_assigned' => $data['department_assigned'],
-            ':implementing_dept' => $data['implementing_dept'],
+            ':department_assigned' => $data['department_assigned'] ?? null,
+            ':implementing_dept' => $data['implementing_dept'] ?? null,
 
         ]);
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\NotificationController;
+use App\Controllers\PendingDataController;
 session_start();
 
 $department = $_SESSION['department'];
@@ -29,6 +30,7 @@ if ($getOneLatest) {
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <!-- Loading Spinner - Initially visible -->
 <div id="loadingSpinner" class="text-center"
@@ -66,32 +68,44 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'ISD-HRAD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'CITETD': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case '': ?>
@@ -148,15 +162,19 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td>
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                            </td>
 
                             <td class="text-center">
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['start_date']) ? date('F-d-Y', strtotime($contract['start_date'])) : '' ?></span>
+                                    <?= !empty($contract['start_date']) ? date('F-d-Y', strtotime($contract['start_date'])) : '' ?>
+                                </span>
                             </td>
                             <td class="text-center">
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['end_date']) ? date('F-d-Y', strtotime($contract['end_date'])) : '' ?></span>
+                                    <?= !empty($contract['end_date']) ? date('F-d-Y', strtotime($contract['end_date'])) : '' ?>
+                                </span>
                             </td>
                             <!-- <td class="text-center">
                                 <span
@@ -168,19 +186,176 @@ include_once '../../../views/layouts/includes/header.php';
                                 <div class="d-flex justify-content-center gap-2">
                                     <!-- <a href="#" class="btn btn-success btn-sm view-btn" data-toggle="modal"
                                         data-target="#exampleModal" data-id="<?= $contract['id'] ?>"
-                                        data-contract-id="<?= $contract['contract_id'] ?>"
-                                        data-name=" <?= $contract['contract_name'] ?>"
-                                        data-start="<?= $contract['start_date'] ?>" data-end="<?= $contract['end_date'] ?>">
+                                        data-contract-id="<?= $contract['id'] ?>" data-name=" <?= $contract['contract_name'] ?>"
+                                        data-start="<?= $contract['contract_start'] ?>"
+                                        data-end="<?= $contract['contract_end'] ?>">
                                         <i class="fa fa-eye"></i> View
                                     </a> -->
-                                    <a href="view_pending_updates.php?contract_id=<?= $contract['contract_id'] ?>"
-                                        class="btn btn-success btn-sm">
-                                        <i class="fa fa-eye"></i> View
+                                    <a href="view_pending_updates.php?id=<?= $contract['id'] ?>" class="btn btn-success btn-sm"
+                                        data-toggle="modal" data-target="#newData">
+                                        <i class="fa fa-eye"></i> View New Data
                                     </a>
+
+
+
+
 
                                     <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
                                         <i class="fa fa-trash"></i> Delete
                                     </a>
+
+
+
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="newData" tabindex="-1" role="dialog"
+                                        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                                                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button> -->
+                                                </div>
+                                                <div class="modal-body">
+                                                    <?php
+                                                    $id = $contract['id'];
+
+                                                    $getPendingDatas = (new PendingDataController)->getNewData($id);
+                                                    ?>
+                                                    <form action="contracts/approve.php" method="POST"
+                                                        enctype="multipart/form-data">
+                                                        <div class="col-md-12 d-flex">
+
+                                                            <div class="p-2 col-md-6">
+                                                                <div class="mb-3">
+                                                                    <label class="badge text-dark float-start">Contract
+                                                                        Name</label>
+                                                                    <input type="text" class="form-control" name="contract_name"
+                                                                        value="<?= $contract['contract_name'] ?>" readonly>
+                                                                </div>
+                                                                <div class="mb-3 col-md-12">
+                                                                    <label class="badge text-dark float-start">Contract
+                                                                        Start</label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text">
+                                                                            <i class="bi bi-calendar-date"></i>
+                                                                        </span>
+                                                                        <input type="date" class="form-control"
+                                                                            name="contract_start"
+                                                                            value="<?= $contract['contract_start'] ?>" readonly>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label class="badge text-dark float-start">Contract
+                                                                        file</label><br>
+                                                                    <span id="file" class="badge bg-primary fs-6"
+                                                                        data-toggle="modal" data-target="#testModal">View
+                                                                        File</span>
+                                                                    <input type="hidden" name="contract_file"
+                                                                        value="<?= $contract['contract_file'] ?>">
+
+
+                                                                    <!-- Modal -->
+                                                                    <div class="modal fade" id="testModal" tabindex="-1"
+                                                                        role="dialog" aria-labelledby="exampleModalLabel"
+                                                                        aria-hidden="true">
+                                                                        <div class="modal-dialog modal-xl" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title"
+                                                                                        id="exampleModalLabel">Modal title</h5>
+                                                                                    <!-- <button type="button" class="close"
+                                                                                        data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button> -->
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <iframe
+                                                                                        src="<?= htmlspecialchars("../../../" . $contract['contract_file']) ?>"
+                                                                                        width="100%" style="height: 80vh;"
+                                                                                        frameborder="0"></iframe>
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-secondary"
+                                                                                        data-dismiss="modal">Close</button>
+                                                                                    <button type="button"
+                                                                                        class="btn btn-primary">Save
+                                                                                        changes</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                </div>
+
+                                                                <!---FILE MODAL --->
+
+
+
+
+
+
+                                                    </div>
+
+                                                    <div class="p-2 col-md-6">
+                                                        <div class="mb-3">
+                                                            <label class="badge text-dark float-start">Contract
+                                                                type</label>
+                                                            <input type="text" class="form-control" name="contract_type"
+                                                                value="<?= $contract['contract_type'] ?>" readonly>
+                                                        </div>
+                                                        <div class="mb-3 col-md-12">
+                                                            <label class="badge text-dark float-start">Contract
+                                                                End</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">
+                                                                    <i class="bi bi-calendar-date"></i>
+                                                                </span>
+                                                                <input type="date" class="form-control"
+                                                                    name="contract_end"
+                                                                    value="<?= $contract['contract_end'] ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="badge text-dark float-start">Creation
+                                                                Date</label>
+                                                            <input type="date" class="form-control" name="created_at"
+                                                                value="<?= date('Y-m-d', strtotime($contract['created_at'])) ?>"
+                                                                readonly>
+                                                        </div>
+                                                        </span>
+                                                         <input type="hidden" class="form-control"
+                                                            name="id"
+                                                            value="<?= $contract['id'] ?>"
+                                                            readonly>
+                                                        <input type="hidden" class="form-control"
+                                                            name="uploader_department"
+                                                            value="<?= $contract['uploader_department'] ?>"
+                                                            readonly><input type="hidden" class="form-control"
+                                                            name="uploader"
+                                                            value="<?= $contract['uploader'] ?>" readonly>
+                                                          <input type="hidden" class="form-control"
+                                                            name="uploader_id"
+                                                            value="<?= $contract['uploader_id'] ?>" readonly>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                        <div class="modal-footer">  
+                                            <!-- <button type="button" class="btn btn-secondary"
+                                                data-dismiss="modal">Close</button> -->
+                                                    <button type="submit" class="btn btn-success">Approve</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
                                 </div>
                             </td>
                         </tr>
@@ -199,6 +374,9 @@ include_once '../../../views/layouts/includes/header.php';
 
     </div>
 </div>
+
+
+
 
 
 
@@ -525,6 +703,10 @@ include_once '../../../views/layouts/includes/header.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+
+    #file:hover {
+        cursor: pointer;
     }
 </style>
 <?php if (isset($_GET['contract_id'])): ?>

@@ -34,7 +34,9 @@ class PendingDataController
                     uploader_id,
                     uploader_department,
                     uploader,
-                    approval_status
+                    approval_status,
+                    data_type,
+                    status
                 ) VALUES (
                     :contract_name,
                     :contract_start,
@@ -47,7 +49,9 @@ class PendingDataController
                     :uploader_id,
                     :uploader_department,
                     :uploader,
-                    :approval_status
+                    :approval_status,
+                    :data_type,
+                    :status
                 )";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_name', $data['contract_name']);
@@ -62,6 +66,8 @@ class PendingDataController
         $stmt->bindParam(':uploader_department', $data['uploader_department']);
         $stmt->bindParam(':uploader', $data['uploader']);
         $stmt->bindParam(':approval_status', $data['approval_status']);
+        $stmt->bindParam(':data_type', $data['data_type']);
+        $stmt->bindParam(':status', $data['status']);
         $stmt->execute();
 
         return true;
@@ -79,6 +85,26 @@ class PendingDataController
         }
 
         return 0;
+    }
+
+
+    public function getNewData($id)
+    {
+        $sql = "SELECT * FROM pending_data WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $result = $stmt->fetch();
+    }
+
+    public function delete($id)
+    {
+        $sql = "DELETE FROM pending_data WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return;
     }
 
 }

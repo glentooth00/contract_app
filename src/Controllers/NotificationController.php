@@ -23,7 +23,7 @@ class NotificationController
 
     public function checkRecentUpdates()
     {
-        $sql = "SELECT COUNT(*) as total FROM incoming_data WHERE status = 1";
+        $sql = "SELECT COUNT(*) as total FROM pending_data WHERE status = 1";
         $stmt = $this->db->prepare($sql);
 
         if ($stmt->execute()) {
@@ -36,7 +36,7 @@ class NotificationController
 
     public function displayAllPendingUpdates()
     {
-        $sql = "SELECT * FROM incoming_data WHERE status = 1";
+        $sql = "SELECT * FROM pending_data WHERE status = 1";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);

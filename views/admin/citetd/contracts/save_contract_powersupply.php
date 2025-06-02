@@ -28,7 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'uploader_id' => $_POST['uploader_id'],
             'uploader_department' => $_POST['uploader_department'],
             'uploader' => $_POST['uploader'],
-            'approval_status' => 'Pending'
+            'approval_status' => 'Pending',
+            'data_type' => 'New',
+            'status' => 1,
         ];
 
         // var_dump($dataValidation);

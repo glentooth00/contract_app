@@ -53,6 +53,7 @@
 
     $logged_user = null;
     $usersLink = 'admin/users.php';
+    $role = $_SESSION['user_role'] ?? null;
 
     if (isset($_SESSION['data']['id'])) {
       $id = $_SESSION['data']['id'];
@@ -118,28 +119,38 @@
           </li>
         <?php endif; ?>
         <?php if ($department === CITET): ?>
-          <li class="nav-item">
-            <a class="nav-link" id="changepass" href="view_pending_updates.php">
-              <img width="27px" src="../../../public/images/bell.svg">
-              <span>Notifications
-                <span>
-                  <?php
+          <?php if ($role === 'Manager'): ?>
+            <li class="nav-item">
+              <a class="nav-link" id="changepass" href="view_pending_updates.php">
+                <img width="27px" src="../../../public/images/bell.svg">
+                <span>Notifications
+                  <span>
+                    <?php
 
-                  $getLatestActivities = (new NotificationController)->checkRecentUpdates();
-                  // $getPendingData = (new PendingDataController)->checkPendingData();
+                    $getLatestActivities = (new NotificationController)->checkRecentUpdates();
+
+
+                    // var_dump($getPendingData);
                 
-                  ?>
-                  <?php if (!empty($getLatestActivities)): ?>
-                    <span class="badge bg-danger">
-                      <?= $getLatestActivities ?>
-                    </span>
-                  <?php endif; ?>
 
-                  <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
+
+                    ?>
+
+
+                    <?php if (!empty($getLatestActivities)): ?>
+                      <span class="badge bg-danger">
+                        <?= $getLatestActivities ?>
+                      </span>
+                    <?php endif; ?>
+
+
+
+                    <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
+                  </span>
                 </span>
-              </span>
-            </a>
-          </li>
+              </a>
+            </li>
+          <?php endif; ?>
         <?php endif; ?>
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
