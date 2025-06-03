@@ -30,11 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'contract_file' => $filePath,
             'department_assigned' => 'ISD-MSD',
             'contrasct_status' => 'Active',
+            'account_no' => $_POST['account_no'],
+            'address' => $_POST['address'],
             // 'contract_status' => $data['contract_status'] ?? null,
 
         ];
 
-        var_dump($contractDetails);
+        // var_dump($contractDetails);
 
         $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
 

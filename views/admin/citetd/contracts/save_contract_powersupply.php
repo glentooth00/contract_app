@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'status' => 1,
         ];
 
-        // var_dump($dataValidation);
+        var_dump($dataValidation);
 
         $saveContract = (new PendingDataController)->savePendingData($dataValidation);
 

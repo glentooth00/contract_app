@@ -48,7 +48,7 @@ class NotificationController
     public function getPendingDatabyId($id)
     {
 
-        $sql = "SELECT * FROM incoming_data WHERE contract_id = :id ";
+        $sql = "SELECT * FROM pending_data WHERE contract_id = :id ";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam('id', $id);
         $stmt->execute();

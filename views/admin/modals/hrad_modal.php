@@ -9,6 +9,7 @@ $departments = (new DepartmentController)->getAllDepartments();
 
 $getUserInfo = (new UserController)->getUserByDept($department);
 
+echo $uploader = $getUserInfo['firstname'];
 ?>
 <!---- ISD-RAD MODAL ---->
 <div class="modal fade" id="hradModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -91,6 +92,8 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                 <input type="hidden" name="contract_type" value="Employment Contract">
                             </div>
                             <div>
+                                <input type="hidden" name="uploader"
+                                    value="<?= $getUserInfo['firstname'] . ' ' . $getUserInfo['middlename'] . ' ' . $getUserInfo['lastname'] ?>">
                                 <input type="hidden" name="uploader_id" value="<?= $getUserInfo['id'] ?>">
                                 <input type="hidden" name="uploader_department"
                                     value="<?= $getUserInfo['department'] ?>">

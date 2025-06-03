@@ -107,4 +107,84 @@ class PendingDataController
         return;
     }
 
+    public function PendingUpdate($data)
+    {
+        $sql = "UPDATE pending_data SET 
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end,
+                updated_at = :updated_at,
+                contract_status = :contract_status,
+                status = :status
+            WHERE contract_id = :contract_id"; // WHERE goes after SET
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_name' => $data['contract_name'],
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':updated_at' => $data['updated_at'],
+            ':contract_status' => $data['contract_status'],
+            ':status' => $data['status'],
+            ':contract_id' => $data['contract_id'], // WHERE condition must come last
+        ]);
+    }
+
+
+    public function PendingInsert($data)
+    {
+        $sql = "INSERT INTO pending_data (
+                contract_id,
+                contract_name,
+                contract_start,
+                created_at,
+                contract_end,
+                updated_at,
+                contract_status,
+                contract_type,
+                uploader_id,
+                uploader,
+                data_type,
+                uploader_department,
+                status
+            ) VALUES (
+                :contract_id,
+                :contract_name,
+                :contract_start,
+                :created_at,
+                :contract_end,
+                :updated_at,
+                :contract_status,
+                :contract_type,
+                :uploader_id,
+                :uploader,
+                :data_type,
+                :uploader_department,
+                :status
+            )";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_id' => $data['contract_id'],
+            ':contract_name' => $data['contract_name'],
+            ':contract_start' => $data['contract_start'],
+            ':created_at' => $data['created_at'],
+            ':contract_end' => $data['contract_end'],
+            ':updated_at' => $data['updated_at'],
+            ':contract_status' => $data['contract_status'],
+            ':contract_type' => $data['contract_type'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader' => $data['uploader'], // <- fix this line
+            ':status' => $data['status'],
+            'uploader' => $data['uploader'],
+            'data_type' => $data['data_type'],
+            'uploader_department' => $data['uploader_department']
+        ]);
+
+    }
+
+
+
 }

@@ -178,7 +178,7 @@ class UserController
     public function getUserByDept($department)
     {
 
-        $sql = "SELECT id, department FROM users WHERE department = :department";
+        $sql = "SELECT * FROM users WHERE department = :department";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':department', $department, PDO::PARAM_STR);
         $stmt->execute();

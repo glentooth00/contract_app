@@ -38,6 +38,17 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                             <input type="text" class="form-control" name="TC_no" required>
                         </div>
 
+                        <div class="col-md-6 p-2">
+                            <label class="badge text-muted">Account No.</label>
+                            <input type="text" class="form-control" name="account_no" required>
+                        </div>
+
+                        <!-- Party of Second Part -->
+                        <div class="col-md-6 p-2">
+                            <label class="badge text-muted">Party of Second Part</label>
+                            <input type="text" class="form-control" name="party_of_second_part" required>
+                        </div>
+
                         <!-- Actual Date Started -->
                         <div class="col-md-6 p-2">
                             <label class="badge text-muted">Actual Date Started</label>
@@ -56,11 +67,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                             </div>
                         </div>
 
-                        <!-- Party of Second Part -->
-                        <div class="col-md-6 p-2">
-                            <label class="badge text-muted">Party of Second Part</label>
-                            <input type="text" class="form-control" name="party_of_second_part" required>
-                        </div>
+
 
                         <!-- Contract File -->
                         <div class="col-md-6 p-2">
