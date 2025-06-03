@@ -85,12 +85,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;" href="#!" role="button" data-bs-toggle="modal"
-            data-bs-target="#bacModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Add Contract
-        </a>
+        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
 
 
         <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
@@ -201,29 +196,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php
-
-$contractTypes = json_decode($_SESSION['contract_types'], true);
-
-if (!empty($contractTypes)) {
-    foreach ($contractTypes as $type) {
-        switch ($type) {
-            case INFRA:
-                include_once __DIR__ . "/../modals/bac_modal.php";
-                break 2;
-
-            // case "Goods Contract":
-            // case "Service and Consultancy Contract":
-            //     // Add other includes if needed
-            //     break 2;
-
-            case EMP_CON:
-                include_once __DIR__ . "/../modals/bac_modal.php";
-                break 2;
-        }
-    }
-}
-?>
+<?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
 
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>

@@ -1,11 +1,9 @@
 <?php
-
-use App\Controllers\EmploymentContractController;
 session_start();
-$userid = $_SESSION['id'];
+
 $department = $_SESSION['department'];
 $page_title = "List - $department";
-
+$user_id = $_SESSION['id'] ?? null;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
@@ -13,15 +11,15 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
-$contracts = (new ContractController)->getContractsByDepartment(department: $department);
+$contracts = (new ContractController)->getExpiredContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    // echo '<script>alert("Latest data inserted")</script>';
+    echo '<script>alert("Latest data inserted")</script>';
 } else {
-    //Optional: echo nothing or a silent message
+    // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
 }
 
@@ -37,11 +35,13 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 <div class="main-layout">
+
     <?php include_once '../menu/sidebar.php'; ?>
+
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Expired Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -92,12 +92,10 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init style="width:15%;padding-right:10px;"
-            href="#!" role="button" data-bs-toggle="modal" data-bs-target="#<?= $department ?>Modal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#powerSupplyModal">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
             Add Contract
-        </a>
-
+        </button> -->
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -119,10 +117,11 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
         </div>
 
+
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Name </th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
@@ -134,20 +133,24 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td>
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                <?php if (isset($contract['account_no'])): ?>
+                                    <span class="badge account_number">(
+                                        <?= $contract['account_no'] ?> )</span>
+                                <?php endif; ?>
+
+
+                            </td>
                             <td class="text-center">
                                 <?php
                                 $type = $contract['contract_type'] ?? '';
                                 $badgeColor = match ($type) {
-                                    INFRA => '#328E6E',
-                                    SACC => '#123458',
-                                    GOODS => '#F75A5A',
-                                    EMP_CON => '#FAB12F',
-                                    PSC_LONG => '#007bff',
-                                    PSC_SHORT => '#28a745',
                                     TRANS_RENT => '#003092',
                                     TEMP_LIGHTING => '#03A791',
-                                // default => '#FAB12F'
+                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
+                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
+                                    default => '#FAB12F'
                                 };
                                 ?>
                                 <span class="p-2 text-white badge"
@@ -156,12 +159,24 @@ include_once '../../../views/layouts/includes/header.php';
                                 </span>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_start']) ? date('F-d-Y', strtotime($contract['rent_start'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_end']) ? date('F-d-Y', strtotime($contract['rent_end'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
                             <td class="text-center">
                                 <span
@@ -189,14 +204,14 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
+
+
+
+
     </div>
 </div>
 
-<?php
-
-include_once '../modals/hrad_modal.php';
-
-?>
+<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
@@ -285,6 +300,10 @@ include_once '../modals/hrad_modal.php';
         width: 200px;
         /* Adjust width as needed */
     }
+
+    .account_number {
+        color: #9BA4B5;
+    }
 </style>
 
 <script>
@@ -350,8 +369,6 @@ include_once '../modals/hrad_modal.php';
             });
         }
     });
-
-
 
     //----------------DAtatables
 </script>

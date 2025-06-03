@@ -101,7 +101,7 @@ class EmploymentContractController
     public function insertLastupdatedData($data)
     {
 
-        $insertLatest = "INSERT INTO employment_history (
+        $insertLatest = "INSERT INTO contract_history (
                  status, contract_type, date_start, date_end, contract_name, contract_file, contract_id, created_at, updated_at
              ) VALUES (
                  :status, :contract_type, :date_start, :date_end, :contract_name, :contract_file, :contract_id, :created_at, :updated_at

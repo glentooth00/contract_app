@@ -44,19 +44,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $_SESSION['id'] = $userData['id'] ?? null;
                 $_SESSION['department'] = $userData['department'];
+                $_SESSION['user_role'] = $userData['user_role'];
                 $_SESSION['contract_types'] = $userData['contract_types'];
 
                 switch ($_SESSION['department']) {
                     case "IT":
                         header("Location: views/admin/admin/index.php");
                         break;
-                    case "ISD-HRAD":
-                        header("Location: views/admin/hrad/index.php");
+                    case "ISD":
+                        header("Location: views/admin/ISD/index.php");
                         break;
                     case "ISD-MSD":
                         header("Location: views/admin/msd/index.php");
                         break;
-                    case "CITETD":
+                    case "CITET":
                         header("Location: views/admin/citetd/index.php");
                         break;
                     case "BAC":

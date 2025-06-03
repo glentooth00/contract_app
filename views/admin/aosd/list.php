@@ -1,7 +1,8 @@
 <?php
 session_start();
 $userid = $_SESSION['id'];
-$department = $_SESSION['department'];
+$department = $_SESSION['department'] ?? null;
+$role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -49,32 +50,37 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
-                    case 'ISD-HRAD': ?>
+                    case 'ISD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'CITETD': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case 'AOSD': ?>
+
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case '': ?>
@@ -91,21 +97,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#temporaryModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Temporary Lighting Contract
-        </a>
-
-
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a>
-
+        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
@@ -233,12 +225,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php
-
-include_once '../modals/isdmsd_modal.php';
-include_once '../modals/transformer_rental.php';
-
-?>
+<?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 

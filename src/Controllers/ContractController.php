@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use PDOException;
 use App\Config\Database;
 use PDO;
 use App\Controllers\CrudController;
@@ -41,8 +42,8 @@ class ContractController
     public function saveContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned, implementing_dept) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned, :implementing_dept)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned, implementing_dept, uploader) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned, :implementing_dept, :uploader)";
 
         $stmt = $this->db->prepare($query);
 
@@ -54,9 +55,10 @@ class ContractController
             ':contract_file' => $data['contract_file'],
             ':contract_status' => $data['contract_status'],
             ':uploader_id' => $data['uploader_id'],
+            ':uploader' => $data['uploader'],
             ':uploader_department' => $data['uploader_department'],
-            ':department_assigned' => $data['department_assigned'],
-            ':implementing_dept' => $data['implementing_dept'],
+            ':department_assigned' => $data['department_assigned'] ?? null,
+            ':implementing_dept' => $data['implementing_dept'] ?? null,
 
         ]);
     }
@@ -532,9 +534,9 @@ class ContractController
                     contract_name = :contract_name,
                     contract_start = :contract_start,
                     contract_end = :contract_end,
-                    department_assigned = :department_assigned,
+                    -- department_assigned = :department_assigned,
                     updated_at = :updated_at,
-                    contract_status = :contract_status,
+                    contract_status = :contract_status
                     -- action_status = :action_status
                 WHERE id = :contract_id";
 
@@ -544,7 +546,7 @@ class ContractController
         $stmt->bindParam(':contract_name', $data['contract_name']);
         $stmt->bindParam(':contract_start', $data['start']);
         $stmt->bindParam(':contract_end', $data['end']);
-        $stmt->bindParam(':department_assigned', $data['department_assigned']);
+        // $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam('contract_status', $data['contract_status']);
         // $stmt->bindParam('action_status', $data['action_status']);
@@ -684,7 +686,9 @@ class ContractController
                     contract_status,
                     contract_file,
                     contract_type,
-                    contract_name) 
+                    contract_name,
+                    address,
+                    account_no) 
                 VALUES 
                     (:TC_no, 
                     :contract_start, 
@@ -699,7 +703,9 @@ class ContractController
                     :contract_status,
                     :contract_file,
                     :contract_type,
-                    :contract_name)";
+                    :contract_name,
+                    :address,
+                    :account_no)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -721,6 +727,8 @@ class ContractController
         $stmt->bindParam(':contract_file', $data['contract_file']);
         $stmt->bindParam(':contract_type', $data['contract_type']);
         $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':address', $data['address']);
+        $stmt->bindParam(':account_no', $data['account_no']);
 
         $stmt->execute();
 
@@ -787,7 +795,8 @@ class ContractController
                     uploader_department, 
                     uploader_id,
                     department_assigned,
-                    account_no
+                    account_no,
+                    address
                 ) VALUES (
                     :contract_type, 
                     :contract_name, 
@@ -803,7 +812,8 @@ class ContractController
                     :uploader_department, 
                     :uploader_id,
                     :department_assigned,
-                    :account_no  -- ADD THIS
+                    :account_no,
+                    :address
                 )";
 
         $stmt = $this->db->prepare($sql);
@@ -829,6 +839,7 @@ class ContractController
         $stmt->bindParam(':uploader_id', $data['uploader_id']);
         $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':account_no', $data['account_no']);
+        $stmt->bindParam(':address', $data['address']);
 
         $stmt->execute();
 
@@ -1105,8 +1116,8 @@ class ContractController
     public function savePowerSupplyContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department, uploader, implementing_dept) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department, :uploader, :implementing_dept)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, department_assigned, uploader_id, uploader_department, uploader, implementing_dept, approval_status) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :department_assigned, :uploader_id, :uploader_department, :uploader, :implementing_dept, :approval_status)";
 
         $stmt = $this->db->prepare($query);
 
@@ -1122,6 +1133,7 @@ class ContractController
             ':uploader_department' => $data['uploader_department'],
             ':uploader' => $data['uploader'],
             ':implementing_dept' => $data['implementing_dept'],
+            ':approval_status' => $data['approval_status']
         ]);
     }
 
@@ -1265,5 +1277,29 @@ class ContractController
 
         return true;
     }
+
+    public function managerUpdate($data)
+    {
+        try {
+            $sql = "UPDATE contracts SET 
+                uploader_department = :uploader_department,
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end
+                WHERE id = :contract_id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':uploader_department', $data['uploader_department']);
+            $stmt->bindParam(':contract_name', $data['contract_name']);
+            $stmt->bindParam(':contract_start', $data['contract_start']);
+            $stmt->bindParam(':contract_end', $data['contract_end']);
+            $stmt->bindParam(':contract_id', $data['contract_id']);
+
+            return $stmt->execute(); // returns true if successful
+        } catch (PDOException $e) {
+            // Log error here if needed
+            return false;
+        }
+    }
+
 
 }

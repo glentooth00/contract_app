@@ -12,6 +12,8 @@ use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\UserController;
+use App\Controllers\UserRoleController;
+
 
 $getUser = new UserController();
 $results = $getUser->getAllUsers();
@@ -58,7 +60,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'ISD-HRAD': ?>
+                    case 'ISD': ?>
 
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
@@ -156,8 +158,8 @@ include_once '../../../views/layouts/includes/header.php';
                             $department = $result['department'] ?? '';
                             $badgeColor = match ($department) {
                                 IT => '#0d6efd',
-                                'ISD-HRAD' => '#3F7D58',
-                                CITETD => '#FFB433',
+                                ISD => '#3F7D58',
+                                CITET => '#FFB433',
                                 IASD => '#EB5B00',
                                 'ISD-MSD' => '#6A9C89',
                                 'PSPTD' => '#83B582',
@@ -238,146 +240,153 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <div class="modal-body">
                 <form action="users/save_user.php" method="post" enctype="multipart/form-data">
-                    <div class="col-md-12 d-flex gap-3">
-                        <div class="row col-md-9 d-inline-block gap-3">
-                            <div class="d-inline-flex gap-2">
-                                <div class="col-md-5">
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="badge text-muted form-label">User
-                                            image<span class="text-danger">*</span></label>
-                                        <input type="file" class="form-control" name="user_image"
-                                            id="exampleFormControlInput1" placeholder="name@example.com">
-                                    </div>
+                    <div class="row">
+                        <!-- User Image -->
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label class="badge text-muted form-label">User image <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="user_image" required>
+                            </div>
+                        </div>
+
+                        <!-- User Info -->
+                        <div class="col-md-9">
+                            <!-- Fullname Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Firstname <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="firstname" class="form-control" placeholder="Firstname"
+                                        required>
                                 </div>
-                                <div class="col-md-12 d-flex gap-2">
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1"
-                                            class="badge text-muted form-label">Firstname<span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="firstname" class="form-control" placeholder="firstname"
-                                            required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1"
-                                            class="badge text-muted form-label">Middlename<span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="middlename" class="form-control"
-                                            placeholder="middlename" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1"
-                                            class="badge text-muted form-label">Lastname<span
-                                                class="text-danger">*</span></label>
-                                        <input type="text" name="lastname" class="form-control" placeholder="lastname"
-                                            required>
-                                    </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Middlename <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="middlename" class="form-control" placeholder="Middlename"
+                                        required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Lastname <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="lastname" class="form-control" placeholder="Lastname"
+                                        required>
                                 </div>
                             </div>
 
-
-                            <div class="col-md-12 d-flex align-items-end gap-3 mb-4">
-                                <div class="col-md-3">
-                                    <label class="badge text-muted form-label">Department <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md" name="department" id="department"
-                                        required>
-                                        <option selected hidden>Select Department</option>
-                                        <?php
-                                        $getDept = (new DepartmentController)->getAllDepartments();
-                                        foreach ($getDept as $dept): ?>
-                                        <option value="<?= htmlspecialchars($dept['department_name']) ?>">
-                                            <?= htmlspecialchars($dept['department_name']) ?>
-                                        </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <label class="badge text-muted form-label">Role <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md" name="user_role" id="user_role" required>
-                                        <option selected hidden>Select user role</option>
-                                        <option value="User">User</option>
-                                        <option value="Manager">Manager</option>
-                                        <option value="Admin">Admin</option>
-                                        <option value="Chief">Chief</option>
-                                    </select>
-                                </div>
-
-                                <div class="col-md-3">
+                            <!-- Account Info Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
                                     <label class="badge text-muted form-label">Username <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="username" placeholder="Username"
+                                    <input type="text" name="username" class="form-control" placeholder="Username"
                                         required>
                                 </div>
-
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label class="badge text-muted form-label">Password <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="password" placeholder="Password"
+                                    <input type="text" name="password" class="form-control" placeholder="Password"
                                         required>
                                 </div>
-
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <label class="badge text-muted form-label">Gender <span
                                             class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md" name="gender"
-                                        aria-label=".form-select-lg example">
+                                    <select class="form-select" name="gender" required>
                                         <option selected hidden>Select gender</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
                                 </div>
-
                             </div>
 
-                            <div class="col-12 mb-4">
-                                <label class="badge text-muted mb-2">Contracts</label>
-                                <div class="row">
-                                    <?php foreach ($getAllContractTypes as $getAllContractType): ?>
-                                    <div class="col-md-4 mb-2">
+                            <!-- Department & Role Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Department <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="department" required>
+                                        <option selected hidden>Select Department</option>
                                         <?php
-                                        $type = $getAllContractType['contract_type'] ?? '';
-                                        $badgeColor = match ($type) {
-                                            INFRA => '#328E6E',
-                                            SACC => '#123458',
-                                            GOODS => '#F75A5A',
-                                            EMP_CON => '#DC8686',
-                                            PSC_LONG => '#007bff',
-                                            PSC_SHORT => '#28a745',
-                                            TRANS_RENT => '#003092',
-                                            TEMP_LIGHTING => '#03A791',
-                                            default => '#FAB12F'
-                                        };
-                                        ?>
-                                        <label class="form-check-label d-flex align-items-center gap-2">
-                                            <input type="checkbox" class="form-check-input" name="contract_type[]"
-                                                value="<?= htmlspecialchars($type) ?>">
-                                            <span class="badge text-white"
-                                                style="background-color: <?= $badgeColor ?>; border-radius: 5px; font-size: 11px; padding: 7px;">
-                                                <?= htmlspecialchars($type) ?>
-                                            </span>
-                                        </label>
-                                    </div>
-                                    <?php endforeach; ?>
+                                        $getDept = (new DepartmentController)->getAllDepartments();
+                                        foreach ($getDept as $dept): ?>
+                                            <option value="<?= htmlspecialchars($dept['department_name']) ?>">
+                                                <?= htmlspecialchars($dept['department_name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Role <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="user_role" required>
+                                        <option selected hidden>Select Role</option>
+                                        <?php
+                                        $getDept = (new UserRoleController)->getRoles();
+                                        foreach ($getDept as $dept): ?>
+                                            <option value="<?= htmlspecialchars($dept['user_role']) ?>">
+                                                <?= htmlspecialchars($dept['user_role']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">User Type<span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="user_type" required>
+                                        <option value="" selected hidden>Select User Type</option>
+                                        <option value="Admin">Admin</option>
+                                        <option value="User">User</option>
+                                    </select>
                                 </div>
                             </div>
-
-
                         </div>
-
-
                     </div>
+
+                    <!-- Contracts Section -->
+                    <div class="col-12 mb-4">
+                        <h3 class=" mb-2">Contracts</h3>
+                        <hr>
+                        <div class="row">
+                            <?php foreach ($getAllContractTypes as $getAllContractType): ?>
+                                <?php
+                                $type = $getAllContractType['contract_type'] ?? '';
+                                $badgeColor = match ($type) {
+                                    INFRA => '#328E6E',
+                                    SACC => '#123458',
+                                    GOODS => '#F75A5A',
+                                    EMP_CON => '#DC8686',
+                                    PSC_LONG => '#007bff',
+                                    PSC_SHORT => '#28a745',
+                                    TRANS_RENT => '#003092',
+                                    TEMP_LIGHTING => '#03A791',
+                                    default => '#FAB12F'
+                                };
+                                ?>
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-check-label d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="form-check-input" name="contract_type[]"
+                                            value="<?= htmlspecialchars($type) ?>">
+                                        <span class="badge text-white"
+                                            style="background-color: <?= $badgeColor ?>; border-radius: 5px; font-size: 11px; padding: 7px;">
+                                            <?= htmlspecialchars($type) ?>
+                                        </span>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
                     <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
                         <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
-                            user</button>
+                            user Account</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">

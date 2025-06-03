@@ -23,7 +23,8 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 ?>
 
 <!---- CITETD MODAL ---->
-<div class="modal fade" id="bacModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="InfraGoodsServiceModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header d-flex justify-content-between align-items-center">

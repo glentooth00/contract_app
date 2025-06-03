@@ -52,7 +52,10 @@ include_once '../../../views/layouts/includes/header.php';
         <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
                     aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
+
         <hr>
+
+
 
         <?php
         $start = new DateTime($getContract['contract_start']);
@@ -92,7 +95,7 @@ include_once '../../../views/layouts/includes/header.php';
                 <span id="save" style="float: inline-end;display:none;">
                     <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
                 </span>
-                <?php if ($getContract['department_assigned'] === CITETD): ?>
+                <?php if ($getContract['department_assigned'] === CITET): ?>
 
                 <?php else: ?>
                     <span id="edit" style="float: inline-end;display:inline;">
@@ -106,6 +109,17 @@ include_once '../../../views/layouts/includes/header.php';
         <div class="mt-3 col-md-12 d-flex gap-5">
 
             <div class="row col-md-2">
+                <input type="hidden" id="uploaderDept" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
+                <input type="hidden" id="contractFile" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['contract_file']; ?>" name="contract_file" readonly>
+
+                <input type="hidden" id="contractUploader" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader']; ?>" name="uploader" readonly>
+
+                <input type="hidden" id="uploaderId" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader_id']; ?>" name="uploader_id" readonly>
+
                 <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5"
                     value="<?= $getContract['id']; ?>" name="contract_name" readonly>
                 <div class="mt-3">
@@ -200,7 +214,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                    <input type="text" id="typeContract" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_type']; ?>" name="contract_type" readonly>
                 </div>
             </div>
@@ -737,7 +751,6 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('save').addEventListener('click', function () {
 
-        // Get the relevant DOM elements
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
@@ -745,21 +758,31 @@ include_once '../../../views/layouts/includes/header.php';
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
+        const typeContractInput = document.getElementById('typeContract');
+        const uploader = document.getElementById('contractUploader');
+        const uploader_id = document.getElementById('uploaderId');
+        const uploader_dept = document.getElementById('uploaderDept');
 
-        // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
         const endDateValue = endDate?.value || rentEnd?.value || '';
 
-        // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
-        const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
+        const department = encodeURIComponent(deptSelect?.value || '');
         const contract_id = encodeURIComponent(id?.value || '');
+        const typeContract = encodeURIComponent(typeContractInput?.value || '');
+        const docUploader = encodeURIComponent(uploader?.value || '');
+        const uploaderId = encodeURIComponent(uploader_id?.value || '');
+        const uploaderDept = encodeURIComponent(uploader_dept?.value || '');
 
-        // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+        const url = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}`;
+
+        console.log("Redirecting to:", url); // Debug
+        window.location.href = url;
     });
+
+
 
     function formatDate(dateString) {
         const [year, month, day] = dateString.split('-');
