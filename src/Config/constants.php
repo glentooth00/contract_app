@@ -10,15 +10,16 @@ define('INFRA', 'Infrastructure Contract');
 define('SACC', 'Service and Consultancy Contract');
 define('GOODS', 'Goods Contract');
 
-//Departments
+//users
 define('IT', 'IT');
-define('ISD-HRAD', 'ISD-HRAD');
-define('CITETD', 'CITETD');
+define('ISD', 'ISD');
+define('CITET', 'CITET');
 define('BAC', 'BAC');
 define('ISD-MSD', 'ISD-MSD');
 define('IASD', 'IASD');
 define('FSD', 'FSD');
 define('AOSD', 'AOSD');
+define('CHIEF', 'PSPTD CHIEF');
 
 
 //REQUESTS

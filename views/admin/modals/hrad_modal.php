@@ -9,14 +9,15 @@ $departments = (new DepartmentController)->getAllDepartments();
 
 $getUserInfo = (new UserController)->getUserByDept($department);
 
+echo $uploader = $getUserInfo['firstname'];
 ?>
 <!---- ISD-RAD MODAL ---->
-<div class="modal fade" id="<?= $department ?>Modal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="hradModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Employment Contract</h5>
+                <h5 class="modal-title text-white badge" style="font-size:20px;background-color:#FAB12F"
+                    id="exampleModalLabel">Add Employment Contract</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -78,7 +79,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
                             <div class="mb-3">
                                 <label class="badge text-muted">Department Assigned</label>
-                                <select name="department_assigned" class="form-select" id="">
+                                <select name="department_assigned" class="form-select" id="" required>
                                     <?php foreach ($departments as $department): ?>
                                         <option hidden>Select Department</option>
                                         <option value="<?= $department['department_name'] ?>">
@@ -91,6 +92,8 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                                 <input type="hidden" name="contract_type" value="Employment Contract">
                             </div>
                             <div>
+                                <input type="hidden" name="uploader"
+                                    value="<?= $getUserInfo['firstname'] . ' ' . $getUserInfo['middlename'] . ' ' . $getUserInfo['lastname'] ?>">
                                 <input type="hidden" name="uploader_id" value="<?= $getUserInfo['id'] ?>">
                                 <input type="hidden" name="uploader_department"
                                     value="<?= $getUserInfo['department'] ?>">

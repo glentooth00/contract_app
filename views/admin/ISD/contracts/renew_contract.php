@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $getLastUpdated = (new EmploymentContractController)->insertLastupdatedData($latestContract);
 
+        // var_dump($getLastUpdated);
+
         if ($getLastUpdated) {
 
             $_SESSION['notification'] = [

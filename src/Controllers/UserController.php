@@ -64,6 +64,7 @@ class UserController
                 'middlename' => $user['middlename'],
                 'department' => $user['department'],
                 'contract_types' => $user['contract_types'],
+                'user_role' => $user['user_role']
             ];
 
         } else {
@@ -148,8 +149,8 @@ class UserController
         // }
 
         // Prepare SQL to insert user data (with or without image)
-        $sql = "INSERT INTO $this->table (firstname, middlename, lastname, user_role, department, gender, user_image, username, password, contract_types)
-                VALUES (:firstname, :middlename, :lastname, :user_role, :department, :gender, :user_image, :username, :password, :contract_types)";
+        $sql = "INSERT INTO $this->table (firstname, middlename, lastname, user_role, department, gender, user_image, username, password, contract_types, user_type)
+                VALUES (:firstname, :middlename, :lastname, :user_role, :department, :gender, :user_image, :username, :password, :contract_types, :user_type)";
 
         // Prepare the statement
         $stmt = $this->db->prepare($sql);
@@ -165,6 +166,7 @@ class UserController
         $stmt->bindParam(':username', $data['username'], PDO::PARAM_STR);
         $stmt->bindParam(':password', $data['password'], PDO::PARAM_STR); // Password can be hashed before storing
         $stmt->bindParam(':contract_types', $data['contract_types'], PDO::PARAM_STR);
+        $stmt->bindParam(':user_type', $data['user_type'], PDO::PARAM_STR);
         // Execute the query
         if ($stmt->execute()) {
             return "User has been successfully saved!";
@@ -176,7 +178,7 @@ class UserController
     public function getUserByDept($department)
     {
 
-        $sql = "SELECT id, department FROM users WHERE department = :department";
+        $sql = "SELECT * FROM users WHERE department = :department";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':department', $department, PDO::PARAM_STR);
         $stmt->execute();
