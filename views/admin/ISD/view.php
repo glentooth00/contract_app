@@ -11,7 +11,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
-
+$userid = $_SESSION['id'] ?? null;
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -51,12 +51,23 @@ include_once '../../../views/layouts/includes/header.php';
 
         <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
                     aria-hidden="true"></i></a>
-            <?= $contract_data ?></h2>
+            <?= $contract_data ?>
+
+            <?php if (!empty($getContract['account_no'])): ?>
+                <span class="badge" style="color: #9BA4B5;">(<?= $getContract['account_no'] ?>)</span>
+            <?php endif; ?>
+
+        </h2>
         <hr>
 
         <?php
-        $start = new DateTime($getContract['contract_start']);
-        $end = new DateTime($getContract['contract_end']);
+        if ($getContract['contract_type'] === TRANS_RENT) {
+            $start = new DateTime($getContract['rent_start']);
+            $end = new DateTime($getContract['rent_end']);
+        } else {
+            $start = new DateTime($getContract['contract_start']);
+            $end = new DateTime($getContract['contract_end']);
+        }
         $today = new DateTime();
 
         $interval = $today->diff($end);
@@ -84,17 +95,41 @@ include_once '../../../views/layouts/includes/header.php';
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
 
             <div class="gap-1">
+
+                <?php if ($getContract['contract_status'] === 'Expired') { ?>
+
+                    <?php if($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                        <span id="add" style="float:inline-end;display:inline;" data-bs-toggle="modal"
+                            data-bs-target="#tempLightModal">
+                            <i class="fa fa-plus" aria-hidden="true" style="width:40px;font-size:25px;"></i>
+                        </span>
+                    <?php endif; ?>
+
+                     <?php if($getContract['contract_type'] === TRANS_RENT): ?>
+                        <span id="add" style="float:inline-end;display:inline;" data-bs-toggle="modal"
+                            data-bs-target="#transformerModal">
+                            <i class="fa fa-plus" aria-hidden="true" style="width:40px;font-size:25px;"></i>
+                        </span>
+                    <?php endif; ?>
+
+                <?php } ?>
+
+
                 <span id="close" style="float: inline-end;display:none;">
 
-                    <i class="fa fa-times" style="width:30px;font-size:25px;" aria-hidden="true"></i>
+                    <i class="fa fa-times" style="width:40px;font-size:25px;" aria-hidden="true"></i>
 
                 </span>
+
                 <span id="save" style="float: inline-end;display:none;">
-                    <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
+                    <i class="fa fa-floppy-o" aria-hidden="true" style="width:40px;font-size:25px;" alt=""></i>
                 </span>
+
                 <span id="edit" style="float: inline-end;display:inline;">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:40px;font-size:25px;" alt=""></i>
                 </span>
+
+
             </div>
 
         <?php } ?>
@@ -103,7 +138,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-2">
                 <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5"
-                    value="<?= $getContract['id']; ?>" name="contract_name" readonly>
+                    value="<?= $getContract['id']; ?>" name="id" readonly>
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract Name:</label>
                     <input type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5"
@@ -112,21 +147,50 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <div class="row col-md-2">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+
+                        <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['rent_start']));
+                            ?>
+                            <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
+                                value="<?= $rentstart ?>" name="rent_start" readonly>
+                        <?php endif; ?>
+
+                        <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?>
+                            <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
+                                value="<?= $rentstart ?>" name="contract_end" readonly>
+                        <?php endif; ?>
+
+
                     </div>
                 </div>
             </div>
             <div class="row col-md-2">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Retirement Date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_end']; ?>" name="contract_end" readonly>
+                        <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                            <?php
+                            $rentEnd = date('Y-m-d', strtotime($getContract['rent_end']));
+                            ?>
+                            <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
+                                value="<?= $rentEnd ?>" name="rent_start" readonly>
+                        <?php endif; ?>
+
+                        <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                            <?php
+                            $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
+                                value="<?= $rentEnd ?>" name="contract_end" readonly>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -135,8 +199,14 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
+                    if ($getContract['contract_type'] === TRANS_RENT) {
+                        $start = new DateTime($getContract['rent_start']);
+                        $end = new DateTime($getContract['rent_end']);
+                    } else {
+                        $start = new DateTime($getContract['contract_start']);
+                        $end = new DateTime($getContract['contract_end']);
+                    }
+
                     $today = new DateTime();
 
                     $interval = $today->diff($end);
@@ -196,7 +266,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                    <input type="text" id="contractType" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_type']; ?>" name="contract_type" readonly>
                 </div>
             </div>
@@ -445,6 +515,7 @@ include_once '../../../views/layouts/includes/header.php';
                             <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
                             <th style="text-align: center !important;"><span class="badge text-muted">Contract
                                     File</span></th>
+
                             <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
                             </th>
                             <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
@@ -453,7 +524,7 @@ include_once '../../../views/layouts/includes/header.php';
                         </tr>
                     </thead>
                     <?php
-                    $id = $getContract['id'];
+                   $id = $getContract['account_no'];
                     $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
@@ -462,7 +533,7 @@ include_once '../../../views/layouts/includes/header.php';
                     if ($status === 'Expired') {
 
                         $stat = [
-                            'id' => $getContract['id'],
+                            'id' => $getContract['account_no'],
                             'status' => 'Expired',
                         ];
 
@@ -529,7 +600,9 @@ include_once '../../../views/layouts/includes/header.php';
                                             No file
                                         <?php endif; ?>
                                     </td>
-                                    <td style="text-align: center !important;">
+                                    <?php if($employement_data['contract_type'] === EMP_CON): ?>
+                                          <td style="text-align: center !important;">
+                                        
 
                                         <?php if (!empty($employement_data['date_start'])): ?>
                                             <?php $datestart = new DateTime($employement_data['date_start']); ?>
@@ -547,6 +620,52 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?php endif; ?>
 
                                     </td>
+                                    <?php endif;?>
+
+                                     <?php if($employement_data['contract_type'] === TRANS_RENT): ?>
+                                          <td style="text-align: center !important;">
+                                        
+
+                                        <?php if (!empty($employement_data['rent_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="text-align: center !important;">
+                                        <?php if (!empty($employement_data['rent_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+
+                                    </td>
+                                    <?php endif;?>
+
+                                       <?php if($employement_data['contract_type'] === TEMP_LIGHTING): ?>
+                                          <td style="text-align: center !important;">
+                                        
+
+                                        <?php if (!empty($employement_data['date_start'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td style="text-align: center !important;">
+                                        <?php if (!empty($employement_data['date_end'])): ?>
+                                            <?php $datestart = new DateTime($employement_data['date_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                                        <?php else: ?>
+                                            <span class="badge text-danger">No Start Date</span>
+                                        <?php endif; ?>
+
+                                    </td>
+                                    <?php endif;?>
+                                  
 
                                     <!-- <td style="text-align: center !important;">
 
@@ -577,6 +696,372 @@ include_once '../../../views/layouts/includes/header.php';
 
     </div>
 </div>
+
+<?php
+
+$getUser = (new UserController)->getUserById($getContract['uploader_id']);
+
+?>
+
+
+<!-- Extend Modal -->
+<div class="modal fade" id="extendModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Extend Contract</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="contracts/renew_contract.php" method="POST" enctype="multipart/form-data">
+                    <div class="d-flex col-md-12 gap-3 p-4">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <input type="hidden" id="contract_id" name="contract_id" class="form-control">
+                                <label for="contract_name" class="form-label badge text-muted">Contract
+                                    Name</label>
+                                <input type="text" id="contract_name" name="contract_name" class="form-control"
+                                    value="<?= $getContract['contract_name'] ?>">
+                            </div>
+                            <div class="mb-2">
+                                <label for="start_date" class="form-label badge text-muted">Start
+                                    Date</label>
+                                <input type="date" id="start_date" name="contract_start" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label for="start_date" class="form-label badge text-muted">Contract
+                                    File</label>
+                                <input type="file" id="start_date" name="contract_file" class="form-control">
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <label for="department_assigned" class="form-label badge text-muted">Department
+                                    Assigned</label>
+                                <select id="department_assigned" name="department_assigned" class="form-select">
+                                    <option value="" hidden>Select Department</option>
+                                    <?php foreach ($departments as $dept): ?>
+                                        <option value="<?= $dept['department_name'] ?>">
+                                            <?= $dept['department_name'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+
+                            </div>
+
+                            <div class="mb-2">
+                                <label for="end_date" class="form-label badge text-muted">End Date</label>
+                                <input type="date" id="end_date" name="contract_end" class="form-control">
+                            </div>
+                            <div class="mb-2">
+                                <label for="start_date" class="form-label badge text-muted">Contract
+                                    Type</label>
+                                <input type="text" id="contract_type" name="contract_type" class="form-control">
+                            </div>
+
+                        </div>
+                    </div>
+            </div>
+
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                <button type="submit" class="btn btn-success">Renew Contract</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="transformerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-lg" style="width: 45em;
+    margin-left: -5em;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Transformer Rental Contract</h5>
+                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <?php $department = $_SESSION['department'] ?? null; ?>
+                        <form action="contracts/transformerRent.php" method="post" enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" name="contract_type" value="<?= TRANS_RENT ?>"
+                                readonly>
+                            <div class="col-md-12 d-block gap-2">
+                                <div class="col-md-12 d-flex gap-2 row justify-content-center">
+                                    <div class="col-md-3 p-2" style="width: 13em;">
+                                        <div>
+                                            <input type="hidden" class="form-control" name="uploader_department"
+                                                value="<?= $department ?>" required>
+                                            <lable class="badge text-muted">Contract Name</lable>
+                                            <input type="text" class="form-control"
+                                                value="<?= $getContract['contract_name'] ?>" name="contract_name"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 p-2" style="width: 13em;">
+                                        <div>
+                                            <lable class="badge text-muted">TC No.</lable>
+                                            <input type="text" class="form-control" name="tc_no"
+                                                value="<?= $getContract['tc_no'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 p-2" style="width: 13em;">
+                                        <div>
+                                            <lable class="badge text-muted">Account no.</lable>
+                                            <input type="text" class="form-control"
+                                                value="<?= $getContract['account_no'] ?>" name="account_no" required>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 d-flex gap-5 row justify-content-center">
+
+                                    <div class="col-md-4 p-2" style="width: 15em;">
+                                        <div>
+                                            <lable class="badge text-muted">Installation Date</lable>
+                                            <div class="d-flex">
+                                                <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                    aria-hidden="true"></i>
+                                                <input type="date" id="rent_start" class="form-control"
+                                                    name="rent_start" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 p-2" style="width: 15em;">
+                                        <div>
+                                            <lable class="badge text-muted">Retirement Date</lable>
+                                            <div class="d-flex">
+                                                <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                    aria-hidden="true"></i>
+                                                <input type="date" id="contract_end" class="form-control" name="rent_end"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="col-md-12 d-flex gap-4 row justify-content-center">
+                                    <!-- <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Party of Second Part</lable>
+                                                <input type="text" class="form-control" name="party_of_second_part"
+                                                    required>
+                                            </div>
+                                        </div> -->
+                                    <div class="col-md-5 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Contract file</lable>
+                                            <input id="templighting" type="file" class="form-control"
+                                                name="contract_file" style="width: 16.7em;" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 p-2">
+                                        <div>
+                                            <?php
+                                            $userid;
+                                            $getUser = (new UserController)->getUserById($userid);
+
+                                            // var_dump($getUser['firstname']);
+                                            ?>
+                                            <input type="hidden" id="date_start" class="form-control" name="uploader_id"
+                                                value="<?= $userid ?>">
+                                            <input type="hidden" id="date_start" class="form-control" name="uploader"
+                                                value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
+                                            <input type="hidden" id="date_start" class="form-control"
+                                                name="uploader_dept" value="<?= $department ?>" required>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                            </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="submit" id="submittemplight" class="btn btn-primary" disabled
+                            onmouseover="pointer">Submit New Contract</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+          <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const fileInputt = document.getElementById('templighting');
+    const submitButton = document.getElementById('submittemplight');
+
+    fileInputt.addEventListener('change', function () {
+        submitButton.disabled = fileInputt.files.length === 0;
+    });
+});
+</script>
+
+
+
+<div class="modal fade" id="tempLightModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content modal-lg" style="width: 45em;
+    margin-left: -5em;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Temporary Lighting Contract</h5>
+                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"> -->
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <?php $department = $_SESSION['department'] ?? null; ?>
+                        <form action="contracts/transformerRent.php" method="post" enctype="multipart/form-data">
+                            <input type="hidden" class="form-control" name="contract_type" value="<?= TEMP_LIGHTING ?>"
+                                readonly>
+                            <div class="col-md-12 d-block gap-2">
+                                <div class="col-md-12 d-flex gap-2 row justify-content-center">
+                                    <div class="col-md-3 p-2" style="width: 13em;">
+                                        <div>
+                                            <input type="hidden" class="form-control" name="uploader_department"
+                                                value="<?= $department ?>" required>
+                                            <lable class="badge text-muted">Contract Name</lable>
+                                            <input type="text" class="form-control"
+                                                value="<?= $getContract['contract_name'] ?>" name="contract_name"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 p-2" style="width: 13em;">
+                                        <div>
+                                            <lable class="badge text-muted">TC No.</lable>
+                                            <input type="text" class="form-control" name="tc_no"
+                                                value="<?= $getContract['tc_no'] ?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 p-2" style="width: 13em;">
+                                        <div>
+                                            <lable class="badge text-muted">Account no.</lable>
+                                            <input type="text" class="form-control"
+                                                value="<?= $getContract['account_no'] ?>" name="account_no" required>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 d-flex gap-5 row justify-content-center">
+
+                                    <div class="col-md-4 p-2" style="width: 15em;">
+                                        <div>
+                                            <lable class="badge text-muted">Installation Date</lable>
+                                            <div class="d-flex">
+                                                <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                    aria-hidden="true"></i>
+                                                <input type="date" id="date_start" class="form-control"
+                                                    name="date_start" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 p-2" style="width: 15em;">
+                                        <div>
+                                            <lable class="badge text-muted">Retirement Date/lable>
+                                            <div class="d-flex">
+                                                <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                    aria-hidden="true"></i>
+                                                <input type="date" id="rent_end" class="form-control" name="date_end"
+                                                    required>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="col-md-12 d-flex gap-4 row justify-content-center">
+                                    <!-- <div class="col-md-5 p-2">
+                                            <div>
+                                                <lable class="badge text-muted">Party of Second Part</lable>
+                                                <input type="text" class="form-control" name="party_of_second_part"
+                                                    required>
+                                            </div>
+                                        </div> -->
+                                    <div class="col-md-5 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Contract file</lable>
+                                            <input id="contractFileInput" type="file" class="form-control"
+                                                name="contract_file" style="width: 16.7em;" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 p-2">
+                                        <div>
+                                            <?php
+                                            $userid;
+                                            $getUser = (new UserController)->getUserById($userid);
+
+                                            // var_dump($getUser['firstname']);
+                                            ?>
+                                            <input type="hidden" id="date_start" class="form-control" name="uploader_id"
+                                                value="<?= $userid ?>">
+                                            <input type="hidden" id="date_start" class="form-control" name="uploader"
+                                                value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
+                                            <input type="hidden" id="date_start" class="form-control"
+                                                name="uploader_dept" value="<?= $department ?>" required>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-md-4 p-2">
+                                        <div>
+                                            <lable class="badge text-muted">Date End</lable>
+                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
+                                        </div>
+                                    </div> -->
+                                </div>
+
+                            </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="submit" id="submitButton" class="btn btn-primary" disabled
+                            onmouseover="pointer">Submit New Contract</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+          <script>
+            const fileInput = document.getElementById('contractFileInput');
+            const submitButton = document.getElementById('submitButton');
+
+            fileInput.addEventListener('change', function () {
+
+                if (fileInput.files.length > 0) {
+                    submitButton.disabled = false;
+                } else {
+                    submitButton.disabled = true;
+                }
+
+            });
+
+        </script>
 
 <!-- popup notification ---->
 
@@ -676,6 +1161,10 @@ include_once '../../../views/layouts/includes/header.php';
     }
 
     #close:hover {
+        cursor: pointer;
+    }
+
+    #add:hover {
         cursor: pointer;
     }
 </style>
@@ -780,6 +1269,7 @@ include_once '../../../views/layouts/includes/header.php';
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
+        const contract_type = document.getElementById('contractType');
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -791,9 +1281,10 @@ include_once '../../../views/layouts/includes/header.php';
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
+        const typeContract = encodeURIComponent(contract_type?.value || '');
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}`;
     });
 
     function formatDate(dateString) {

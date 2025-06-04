@@ -556,6 +556,34 @@ class ContractController
         return true;
     }
 
+    public function updateTransRentContract($data)
+    {
+        $sql = "UPDATE contracts 
+                SET 
+                    contract_name = :contract_name,
+                    rent_start = :rent_start,
+                    rent_end = :rent_end,
+                    -- department_assigned = :department_assigned,
+                    updated_at = :updated_at,
+                    contract_status = :contract_status
+                    -- action_status = :action_status
+                WHERE id = :contract_id";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':contract_id', $data['id']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':rent_start', $data['start']);
+        $stmt->bindParam(':rent_end', $data['end']);
+        // $stmt->bindParam(':department_assigned', $data['department_assigned']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+        $stmt->bindParam('contract_status', $data['contract_status']);
+        // $stmt->bindParam('action_status', $data['action_status']);
+
+        $stmt->execute();
+
+        return true;
+    }
     public function updateContract1($data)
     {
         $sql = "UPDATE contracts 
@@ -829,8 +857,8 @@ class ContractController
         $emptyContractEnd = '';
         // $emptyDepartmentAssigned = '';
 
-        $stmt->bindParam(':contract_start', $emptyContractStart);
-        $stmt->bindParam(':contract_end', $emptyContractEnd);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
 
         $stmt->bindParam(':contract_status', $data['contract_status']);
         $stmt->bindParam(':created_at', $data['created_at']);

@@ -86,7 +86,7 @@ class ContractHistoryController
 
     public function getByContractId($id)
     {
-        $sql = "SELECT * FROM contract_history WHERE contract_id = :id";
+        $sql = "SELECT * FROM contract_history WHERE account_no = :id ORDER BY created_at DESC";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -150,7 +150,7 @@ class ContractHistoryController
 
     public function updateStatus($stat)
     {
-        $sql = 'UPDATE contract_history SET status = :status WHERE contract_id = :contract_id';
+        $sql = 'UPDATE contract_history SET status = :status WHERE account_no = :contract_id ';
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':status', $stat['status'], PDO::PARAM_STR);
         $stmt->bindParam(':contract_id', $stat['id']);
