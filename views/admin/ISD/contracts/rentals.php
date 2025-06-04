@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'department_assigned' => 'ISD-MSD',
             'contrasct_status' => 'Active',
             'address' => $_POST['address'],
+            'account_no' => $_POST['account_no'],
 
         ];
 
