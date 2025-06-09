@@ -757,6 +757,7 @@ class ContractController
         $stmt->bindParam(':contract_name', $data['contract_name']);
         $stmt->bindParam(':address', $data['address']);
         $stmt->bindParam(':account_no', $data['account_no']);
+        $stmt->bindParam(':contract_file', $data['contract_file']);
 
         $stmt->execute();
 
@@ -857,8 +858,8 @@ class ContractController
         $emptyContractEnd = '';
         // $emptyDepartmentAssigned = '';
 
-        $stmt->bindParam(':contract_start', $data['contract_start']);
-        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':contract_start', $emptyContractStart);
+        $stmt->bindParam(':contract_end', $emptyContractEnd);
 
         $stmt->bindParam(':contract_status', $data['contract_status']);
         $stmt->bindParam(':created_at', $data['created_at']);

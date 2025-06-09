@@ -711,9 +711,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
         </div>
-
-
-
         <?php
         $remainingDays;
         if ($remainingDays === 0) {
@@ -723,12 +720,11 @@ include_once '../../../views/layouts/includes/header.php';
                 'status' => 'Expired',
             ];
 
-            // var_dump($data);
         
             (new ContractHistoryController)->updateExpiredDays($data);
         }
-
         ?>
+
         <div>
             <div class="mt-1">
 
@@ -751,17 +747,25 @@ include_once '../../../views/layouts/includes/header.php';
                     </thead>
 
                     <?php
+                   $id = $getContract['account_no'];
+                    $status = $getContract['contract_status'];
+                    $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
-                    if ($getContract['contract_type'] === TRANS_RENT) {
-                        // echo 'CONTRACT TYPE is '. TRANS_RENT;
-                        $account_no = $getContract['account_no'];
-                        $contractHist_datas = (new ContractHistoryController)->getByContractIdAccountByAccountNumber($account_no);
 
-                    } else {
-                        $id = $getContract['id'];
-                        $contractHist_datas = (new ContractHistoryController)->getByContractIdAccountById($id);
+
+                    if ($status === 'Expired') {
+
+                        $stat = [
+                            'id' => $getContract['account_no'],
+                            'status' => 'Expired',
+                        ];
+
+                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+
                     }
 
+                    // var_dump($contractHist_datas);
+                    
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>

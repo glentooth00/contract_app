@@ -275,7 +275,7 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
                     ?>
 
-                    <div class="col-md-5 card">
+                    <div class="col-md-6 card">
                         <div class="mt-1 p-3">
                             <h5>Contracts Uploaded</h5>
                             <hr>
@@ -290,12 +290,14 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                         <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract
                                             Type</th>
                                         <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Date
+                                            Uploaded</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
                                     <?php foreach ($getContractsByUsers as $getContractsByUser): ?>
-                                        <tr>
+                                        <>
 
                                             <td style="text-align: center;">
                                                 <?= $getContractsByUser['contract_name'] ?>
@@ -366,15 +368,20 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 
 
                                             </td>
-
-                                        </tr>
-                                    <?php endforeach; ?>
+                                            <td style="text-align: center;">
+                                                <?php
+                                                $dateuploaded = date('M-d-Y', strtotime($getContractsByUser['created_at']))
+                                                    ?>
+                                                <?= $dateuploaded ?>
+                                            </td>
+                                            </tr>
+                                        <?php endforeach; ?>
                                 </tbody>
                             </table>
 
                         </div>
                     </div>
-                    <div class="col-md-5 card">
+                    <div class="col-md-6 card">
 
                         <?php
 
@@ -400,6 +407,8 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                         <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract
                                             Type</th>
                                         <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">File</th>
+                                        <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Date
+                                            Uploaded</th>
                                     </tr>
                                 </thead>
 
@@ -475,6 +484,9 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                                                 <?php endif; ?>
 
 
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <?= $getContractsByUser['created_at'] ?>
                                             </td>
 
                                         </tr>

@@ -1,8 +1,9 @@
 <?php
+
+use App\Controllers\SampleController;
 $session = session_start();
 // unset($_SESSION['login_attempts']); // TEMPORARY RESET
 $page_title = 'Login';
-
 
 ?>
 <?php include_once 'views/layouts/includes/header.php'; ?>
