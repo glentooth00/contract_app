@@ -198,6 +198,9 @@ include_once '../../../views/layouts/includes/header.php';
                                     <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
                                         <i class="fa fa-trash"></i> Delete
                                     </a>
+                                    <a href="#" class="btn btn-warning badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                        <i class="fa fa-plus-square" aria-hidden="true"></i> Extend
+                                    </a>
                                 </div>
                             </td>
                         </tr>
