@@ -35,12 +35,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout ">
 
@@ -99,26 +99,68 @@ include_once '../../../views/layouts/includes/header.php';
                         </button> -->
                     </div>
                     <div class="modal-body">
-                        ...
+                        <form action="contracts/suspend.php" method="post">
+                            <div class="form-group">
+                                <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                                    <input type="hidden" name="contract_start"
+                                        value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+                                <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                                    <input type="hidden" name="rent_start" value="<?= $getContract['rent_start'] ?>">
+                                    <input type="hidden" name="rent_end" value="<?= $getContract['rent_end'] ?>">
+                                <?php endif; ?>
+                                <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
+
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" onclick="showDiv()" type="radio"
+                                            name="type_of_suspension" value="Due to Disaster" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Due to Disaster
+                                        </label>
+                                    </div>
+
+                                    <div onclick="hideDiv()" class="form-check">
+                                        <input class="form-check-input" value="Unsatisfactory performance" type="radio"
+                                            name="type_of_suspension" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Unsatisfactory performance
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class=" form-group mb-3" id="myDiv" style="display: none;">
+                                <label for="suspendReason" class="badge text-muted">Number of suspension days</label>
+                                <input type="number" class="form-control" id="suspendReason" name="no_of_days" rows="3"
+                                    placeholder="Enter reason for suspension">
+                            </div>
+
+
+
+                            <div class=" form-group">
+                                <label for="suspendReason" class="badge text-muted">Reason for Suspension</label>
+                                <textarea class="form-control" id="suspendReason" name="reason" rows="3"
+                                    placeholder="Enter reason for suspension"></textarea>
+
+                            </div>
+                            <div class=" form-group">
+                                <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
+                                <input type="hidden" name="account_no" value="<?= $getContract['account_no'] ?>">
+                                <input type="text" name="contract_type" value="<?= $getContract['contract_type'] ?>">
+                            </div>
+
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script>
-            function myFunction() {
-                var x = document.getElementById("actions");
-                if (x.style.display === "block") {
-                    x.style.display = "none";
-                } else {
-                    x.style.display = "block";
-                }
-            }
-        </script>
 
         <?php
         if ($getContract['contract_type'] === TRANS_RENT) {
@@ -136,7 +178,7 @@ include_once '../../../views/layouts/includes/header.php';
         // Check if the contract is about to expire or already expired
         if ($remainingDays > 0 && $remainingDays <= 15) {
             echo '
-            <div class="alert alert-warning text-center border-danger display-2 p-2" role="alert">
+            <div class="alert alert-info text-center border-info display-2 p-2" role="alert">
                     <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
                     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
                     </svg>
@@ -149,8 +191,27 @@ include_once '../../../views/layouts/includes/header.php';
                     </svg>
                     THIS CONTRACT HAS EXPIRED!
                     </div>';
+        } elseif ($getContract['contract_status'] === 'Suspended') {
+            echo '<div class="alert alert-warning text-center display-2 p-2" role="alert">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-pause-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                    </svg>
+                    THIS CONTRACT HAS BEEN SUSPENDED!
+                    </div>';
         }
         ?>
+
+
+        <div class="card" id="countdown" style="font-size: 24px;
+    font-weight: bold;
+    color: red;
+    background-color: #ebebf7;
+    padding: 20px;
+    position: absolute;
+    margin: 50px 30em 10px 25em;
+    width: 20em;
+    text-align: center;"></div>
+
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
             <div class="gap-1"><?php if ($getContract['contract_status'] === 'Expired') { ?>
                     <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?> <span id="add"
@@ -224,7 +285,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
                 ?>
-                        style="font-size: 15px;">Days Remaining:</label>
+        style="font-size: 15px;">Days Remaining:</label>
                     <div class="d-flex"><input type="text" style="margin-left:7px;" class="form-control"
                             value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly><?php
 
@@ -252,12 +313,19 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Status</label>
                     <div class="d-flex">
                         <?php if (!$getContract['contract_status'] == 'Active' | $getContract['contract_status'] == 'Expired'): ?>
-                            <i class="fa fa-ban p-2" style="color:#BF3131;font-size: 20px;" aria-hidden="true"></i><span
-                                class="alert p-1 alert-warning border-danger text-danger text-center"
-                                style="width: 7em;"><?= $getContract['contract_status']; ?></span><?php else: ?> <i
-                                class="fa fa-check p-2" style="color:green;font-size: 20px;" aria-hidden="true"></i><span
+                            <i class="fa fa-ban p-2" style="color:#BF3131;font-size: 20px;" aria-hidden="true"></i>
+                            <span class="alert p-1 alert-warning border-danger text-danger text-center"
+                                style="width: 7em;"><?= $getContract['contract_status']; ?></span>
+                        <?php elseif ($getContract['contract_status'] == 'Suspended'): ?>
+                            <i class="fa fa-pause-circle p-2" style="color:green;font-size: 30px;margin-top:-6px;"
+                                aria-hidden="true"></i><span
+                                class="alert p-1 alert-warning border-warning text-danger text-center"
+                                style="width: 7em;"><?= $getContract['contract_status']; ?></span>
+                        <?php else: ?>
+                            <i class="fa fa-check p-2" style="color:green;font-size: 20px;" aria-hidden="true"></i><span
                                 class="alert p-1 alert-success border-success text-success text-center"
-                                style="width: 7em;"><?= $getContract['contract_status']; ?></span><?php endif; ?>
+                                style="width: 7em;"><?= $getContract['contract_status']; ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -385,8 +453,9 @@ include_once '../../../views/layouts/includes/header.php';
                                                 type="text" id="contract_name" name="contract_name"
                                                 class="form-control"></div>
                                         <div class="mb-2"><label for="start_date"
-                                                class="form-label badge text-muted">Start Date</label><input type="date"
-                                                id="start_date" name="contract_start" class="form-control"></div>
+                                                class="form-label badge text-muted">Start
+                                                Date</label><input type="date" id="start_date" name="contract_start"
+                                                class="form-control"></div>
                                         <div class="mb-2"><label for="start_date"
                                                 class="form-label badge text-muted">Contract File</label><input
                                                 type="file" id="start_date" name="contract_file" class="form-control">
@@ -960,10 +1029,10 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
 
 <script>
     // When the page finishes loading, hide the spinner
-    window.onload = function () {
-        document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
-        document.getElementById("content").style.display = "block"; // Show the page content
-    };
+    // window.onload = function () {
+    //     document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
+    //     document.getElementById("content").style.display = "block"; // Show the page content
+    // };
 
 
     document.addEventListener("click", function (e) {
@@ -1102,6 +1171,57 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
     });
 
 
+    //suspension button
+    function myFunction() {
+        var x = document.getElementById("actions");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
 
+
+    //show and hide div
+    function showDiv() {
+        var div = document.getElementById("myDiv");
+        div.style.display = "block";
+    }
+
+    function hideDiv() {
+        var div = document.getElementById("myDiv");
+        div.style.display = "none";
+    }
+
+
+    //suspension countdown
+    // Set how many days the suspension lasts
+    const suspensionDays = 3;
+
+    // Get current time
+    const now = new Date();
+
+    // Calculate end time by adding suspensionDays to now
+    const suspensionEnd = new Date(now.getTime() + suspensionDays * 24 * 60 * 60 * 1000);
+
+    // Start the countdown
+    const countdown = setInterval(function () {
+        const current = new Date().getTime();
+        const distance = suspensionEnd - current;
+
+        if (distance <= 0) {
+            clearInterval(countdown);
+            document.getElementById("countdown").innerHTML = "Suspension has ended!";
+        } else {
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML =
+                "Suspension ends in: " +
+                days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+        }
+    }, 1000);
 
 </script>

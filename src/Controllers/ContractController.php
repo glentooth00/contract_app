@@ -436,13 +436,70 @@ class ContractController
 
 
 
-    public function updateContractStatus($contract_id, $contract_status)
+    public function updateContractStatus($data)
     {
 
-        $sql = "UPDATE contracts SET contract_status = :contract_status WHERE id = :contract_id";
+        $sql = "UPDATE contracts SET
+                contract_status = :contract_status,
+                contract_start = :contract_start,
+                contract_end = :contract_end,
+                rent_start = :rent_start,
+                rent_end = :rent_end,
+                updated_at = :updated_at
+                WHERE id = :contract_id";
+
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':contract_id', $contract_id);
-        $stmt->bindParam(':contract_status', $contract_status);
+        $stmt->bindParam(':contract_id', $data['id']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':rent_start', $data['rent_start']);
+        $stmt->bindParam(':rent_end', $data['rent_start']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+
+        $updateStatus = $stmt->execute();
+
+        return $updateStatus;
+
+    }
+
+
+    public function updateTransRentContractStatus($data)
+    {
+
+        $sql = "UPDATE contracts SET
+                contract_status = :contract_status,
+                rent_end = :rent_end,
+                updated_at = :updated_at
+                WHERE id = :contract_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_id', $data['id']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':rent_end', $data['rent_end']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+
+        $updateStatus = $stmt->execute();
+
+        return $updateStatus;
+
+    }
+
+    public function updateTempLightContractStatus($data)
+    {
+
+        $sql = "UPDATE contracts SET
+                contract_status = :contract_status,
+                contract_end = :contract_end,
+                updated_at = :updated_at
+                WHERE id = :contract_id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_id', $data['id']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':updated_at', $data['updated_at']);
+
         $updateStatus = $stmt->execute();
 
         return $updateStatus;
@@ -858,8 +915,9 @@ class ContractController
         $emptyContractEnd = '';
         // $emptyDepartmentAssigned = '';
 
-        $stmt->bindParam(':contract_start', $data['contract_start']);
-        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindValue(':contract_start', $data['contract_start'] ?? null, is_null($data['contract_start']) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':contract_end', $data['contract_end'] ?? null, is_null($data['contract_end']) ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
 
         $stmt->bindParam(':contract_status', $data['contract_status']);
         $stmt->bindParam(':created_at', $data['created_at']);
@@ -1098,6 +1156,26 @@ class ContractController
         $query = "SELECT * FROM contracts 
                   WHERE (uploader_department = ? OR department_assigned = ?) 
                   AND contract_status = 'Expired' 
+                  ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($query);
+
+        // Bind parameters
+        $stmt->bindValue(1, $department, PDO::PARAM_STR);
+        $stmt->bindValue(2, $department, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getArchivedContractsByDepartment($department)
+    {
+        // Corrected SQL query using a single WHERE clause
+        $query = "SELECT * FROM contracts 
+                  WHERE (uploader_department = ? OR department_assigned = ?) 
+                  AND contract_status = 'Suspended' 
                   ORDER BY created_at DESC";
 
         $stmt = $this->db->prepare($query);
