@@ -28,7 +28,7 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                     <div class="row px-3">
                         <!-- Contract Name -->
                         <div class="col-md-6 p-2">
-                            <label class="badge text-muted">Contract Name</label>
+                            <label class="badge text-muted">Customer Name</label>
                             <input type="text" class="form-control" name="contract_name" required>
                         </div>
 

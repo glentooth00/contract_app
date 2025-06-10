@@ -427,7 +427,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                    <input type="text" id="contractType" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_type']; ?>" name="contract_type" readonly>
                 </div>
             </div>
@@ -1110,6 +1110,7 @@ include_once '../../../views/layouts/includes/header.php';
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
         const days_remaining = document.getElementById('remainingDays');
+        const contract_type = document.getElementById('contractType');
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1122,9 +1123,10 @@ include_once '../../../views/layouts/includes/header.php';
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
         const daysRemaining = encodeURIComponent(days_remaining.value).match(/\d+/)[0];
+        const con_type = encodeURIComponent(contract_type?.value || '');
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&daysRemaining=${daysRemaining}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&daysRemaining=${daysRemaining}&type=${con_type}`;
     });
 
 

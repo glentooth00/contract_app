@@ -86,14 +86,15 @@ class ContractHistoryController
 
     public function getByContractId($id)
     {
-        $sql = "SELECT * FROM contract_history WHERE account_no = :id ORDER BY created_at DESC";
+        $sql = "SELECT * FROM contract_history WHERE account_no = :account_id OR contract_id = :contract_id ORDER BY created_at DESC";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':account_id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':contract_id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Fetch the result and return as an array
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Use fetchAll to ensure it returns an array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getByContractIdAccountById($id)
     {

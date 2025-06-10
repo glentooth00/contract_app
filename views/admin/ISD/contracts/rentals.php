@@ -35,23 +35,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         ];
 
-        // var_dump($contractDetails);
+        var_dump($contractDetails);
 
-        $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
+        // $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
 
-        if ($saveContract) {
+        // if ($saveContract) {
 
-            $_SESSION['notification'] = [
-                'message' => 'Contract successfully saved!',
-                'type' => 'success'
-            ];
+        //     $_SESSION['notification'] = [
+        //         'message' => 'Contract successfully saved!',
+        //         'type' => 'success'
+        //     ];
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+        //     header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        }
+        // }
 
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+        // header("Location: " . $_SERVER['HTTP_REFERER']);
 
     }
 }
-header("Location: " . $_SERVER['HTTP_REFERER']);
+// header("Location: " . $_SERVER['HTTP_REFERER']);

@@ -20,7 +20,7 @@ if (!empty($contractTypes)) {
             case GOODS:
                 include_once 'goods_modal.php';
                 break;
-            
+
             case INFRA:
                 include_once 'infra_modal.php';
                 break;
@@ -43,5 +43,3 @@ if (!empty($contractTypes)) {
     }
 }
 ?>
-
-<?php

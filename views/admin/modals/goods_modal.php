@@ -106,17 +106,20 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                     </div>
 
                     <div class="row p-3">
-                        <div class="col-md-4 mb-3">
-                            <label class="badge text-muted">Implementing Department</label>
-                            <select name="implementing_dept" class="form-select">
-                                <option hidden>Select Department</option>
-                                <?php foreach ($departments as $dept): ?>
-                                    <option value="<?= $dept['department_name'] ?>">
-                                        <?= $dept['department_name'] ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+
+                        <?php if ($department === BAC): ?>
+                            <div class="col-md-4 mb-3">
+                                <label class="badge text-muted">Implementing Department</label>
+                                <select name="implementing_dept" class="form-select">
+                                    <option hidden>Select Department</option>
+                                    <?php foreach ($departments as $dept): ?>
+                                        <option value="<?= $dept['department_name'] ?>">
+                                            <?= $dept['department_name'] ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        <?php endif; ?>
                         <div class="col-md-4 mb-3">
                             <label class="badge text-muted">Start Date</label>
                             <div class="input-group">
