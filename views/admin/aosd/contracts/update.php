@@ -25,7 +25,7 @@ if (isset($_GET['id'])) {
 
     // var_dump($data);
 
-    // // Get contract type by ID
+    // Get contract type by ID
     $id = $data['id'];
     $getContractType = (new ContractController)->getContractbyId($id);
 
@@ -42,6 +42,8 @@ if (isset($_GET['id'])) {
             'updated_at' => date('Y-m-d H:i:s') // Add this to match bindParam
 
         ];
+
+        // var_dump($data1);
 
 
         $updateTransRent = (new ContractController)->updateTransRent($data1);
@@ -149,6 +151,6 @@ if (isset($_GET['id'])) {
         header("Location: " . $_SERVER['HTTP_REFERER']);
     }
 
-    // header("Location: " . $_SERVER['HTTP_REFERER']);
+    header("Location: " . $_SERVER['HTTP_REFERER']);
 }
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+header("Location: " . $_SERVER['HTTP_REFERER']);

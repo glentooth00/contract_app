@@ -37,12 +37,12 @@
             <span>Expired Contracts</span>
           </a>
         </li>
-        <!-- <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" href="#">
             <img width="25px" src="../../../public/images/archived.svg">
             <span>Archived Contracts</span>
           </a>
-        </li> -->
+        </li>
       </ul>
     </li>
 

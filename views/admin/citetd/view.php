@@ -291,7 +291,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Uploading Dept:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Uploading Dept: </label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
                 </div>
@@ -305,7 +305,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Uploaded by:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Uploaded by: </label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['uploader']; ?>" name="contract_type" readonly>
                 </div>
@@ -428,10 +428,9 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
         </div>
 
-
         <div>
             <div class="mt-5">
-                <h4>Contract History</h4>
+                <h4>Contract History </h4>
             </div>
             <hr>
             <div>
@@ -449,8 +448,22 @@ include_once '../../../views/layouts/includes/header.php';
                         </tr>
                     </thead>
                     <?php
-                    $id = $getContract['id'];
+                    $id = $getContract['account_no'] ?? $getContract['id'];
+                    $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+                    if ($status === 'Expired') {
+
+                        $stat = [
+                            'id' => $getContract['account_no'],
+                            'status' => 'Expired',
+                        ];
+
+                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+
+                    }
+
+                    // var_dump($contractHist_datas);
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>
