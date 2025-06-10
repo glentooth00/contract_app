@@ -84,12 +84,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;" href="#!" role="button" data-bs-toggle="modal"
-            data-bs-target="#bacModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Add Contract
-        </a>
+        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
 
 
         <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
@@ -118,7 +113,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
-
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
@@ -200,11 +194,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php
-
-include_once '../modals/bac_modal.php';
-
-?>
+<?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
