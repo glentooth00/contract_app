@@ -67,7 +67,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'CITETD': ?>
+                    case 'CITET': ?>
 
                         <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
 
@@ -144,7 +144,7 @@ include_once '../../../views/layouts/includes/header.php';
                             $badgeColor = match ($department) {
                                 IT => '#0d6efd',
                                 'ISD-HRAD' => '#3F7D58',
-                                CITETD => '#FFB433',
+                                CITET => '#FFB433',
                                 IASD => '#EB5B00',
                                 'ISD-MSD' => '#6A9C89',
                                 'PSPTD' => '#83B582',
