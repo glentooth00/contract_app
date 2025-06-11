@@ -2,6 +2,7 @@
 use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
+use App\Controllers\SuspensionController;
 use App\Controllers\UserController;
 session_start();
 
@@ -29,6 +30,8 @@ $page_title = 'View Contract | ' . $getContract['contract_name'];
 $departments = (new DepartmentController)->getAllDepartments();
 
 //-----------------------------------------------------------------------//
+
+$contractId = $getContract['id'];
 
 include_once '../../../views/layouts/includes/header.php';
 
@@ -201,16 +204,33 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
+        <?php
 
-        <div class="card" id="countdown" style="font-size: 24px;
-    font-weight: bold;
-    color: red;
-    background-color: #ebebf7;
-    padding: 20px;
-    position: absolute;
-    margin: 50px 30em 10px 25em;
-    width: 20em;
-    text-align: center;"></div>
+        $id = $getContract['account_no'];
+        $suspended = (new SuspensionController)->getSuspensionByAccount_no($id);
+
+        $num_o_days = $suspended['no_of_days'] ?? 0;
+        $suspension_start = $suspended['created_at'] ?? null;
+
+        // Format created_at for JS (must be in a valid ISO 8601 format)
+        $formattedStart = $suspension_start ? date('Y-m-d\TH:i:s', strtotime($suspension_start)) : null;
+        ?>
+
+        <?php if ($getContract['contract_status'] === 'Suspended'): ?>
+            <div class="card" id="countdown" style="
+                box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+                    font-weight: bold;
+                    color: red;
+                    background-color: #ebebf7;
+                    padding: 40px;
+                    position: absolute;
+                    margin: 3% 5% 7% 11%;
+                    width: 20em;
+                    text-align: center;
+                    font-size: 50px;
+                    z-index: 99;">
+            </div>
+        <?php endif; ?>
 
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
             <div class="gap-1"><?php if ($getContract['contract_status'] === 'Expired') { ?>
@@ -1193,35 +1213,46 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
         div.style.display = "none";
     }
 
+    const suspensionDays = <?= (int) $num_o_days ?>;
+    const suspensionStart = "<?= $formattedStart ?>";
 
-    //suspension countdown
-    // Set how many days the suspension lasts
-    const suspensionDays = 3;
+    if (!suspensionStart || suspensionDays === 0) {
+        document.getElementById("countdown").innerHTML = "No active suspension.";
+    } else {
+        const startDate = new Date(suspensionStart);
+        const suspensionEnd = new Date(startDate.getTime() + suspensionDays * 24 * 60 * 60 * 1000);
 
-    // Get current time
-    const now = new Date();
+        const countdown = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = suspensionEnd - now;
 
-    // Calculate end time by adding suspensionDays to now
-    const suspensionEnd = new Date(now.getTime() + suspensionDays * 24 * 60 * 60 * 1000);
+            if (distance <= 0) {
+                clearInterval(countdown);
+                document.getElementById("countdown").innerHTML = "Suspension has ended!";
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-    // Start the countdown
-    const countdown = setInterval(function () {
-        const current = new Date().getTime();
-        const distance = suspensionEnd - current;
+                document.getElementById("countdown").innerHTML = `
+                Suspension ends in: ${days}D ${hours}H ${minutes}m ${seconds}s
+                <form action="contracts/end_suspension.php" method="post">
+                    <input type="hidden" name="account_no" value="<?= $id ?>">
+                    <input type="hidden" name="remaining_days" value="${days}">
+                    <input type="hidden" name="remaining_hours" value="${hours}">
+                    <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+                    <input type="hidden" name="contract_type" value="<?= $getContract['contract_type'] ?>">
+                    <button type="submit" class="btn btn-sm btn-success fw-bold mt-5" 
+                        style="width:10em; font-size:10px; position:absolute; bottom:10px; right:10px;">
+                        End Suspension
+                    </button>
+                </form>
+            `;
+            }
+        }, 1000);
+    }
 
-        if (distance <= 0) {
-            clearInterval(countdown);
-            document.getElementById("countdown").innerHTML = "Suspension has ended!";
-        } else {
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("countdown").innerHTML =
-                "Suspension ends in: " +
-                days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-        }
-    }, 1000);
 
 </script>

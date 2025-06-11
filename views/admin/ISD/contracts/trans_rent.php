@@ -16,8 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'contract_type' => $_POST['contract_type'],
         'contract_name' => $_POST['contract_name'],
         'contract_file' => $filePath,
-        'contract_start' => $_POST['contract_start'] ?? '',
-        'contract_end' => $_POST['contract_end'] ?? '',
         'tc_no' => $_POST['tc_no'],
         'rent_start' => $_POST['rent_start'],
         'rent_end' => $_POST['rent_end'],

@@ -3,6 +3,7 @@ use App\Controllers\SuspensionController;
 use App\Controllers\ContractController;
 session_start();
 
+date_default_timezone_set('Asia/Manila'); // set this once at the top
 
 
 require_once __DIR__ . '../../../../../src/Config/constants.php';
@@ -23,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'rent_start' => $_POST['rent_start'] ?? null,
         'rent_end' => $_POST['rent_end'] ?? null,
         'contract_type' => $_POST['contract_type'],
+        'contract_status' => 'Suspended'
     ];
 
 
@@ -52,16 +54,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
 
-        $ii = (new ContractController)->updateTransRentContractStatus($transRentData);
+        $iii = (new ContractController)->updateTransRentContractStatus($transRentData);
 
-        if ($ii) {
+        if ($iii) {
 
-            $_SESSION['notification'] = [
-                'message' => 'Contract successfully suspended saved!',
-                'type' => 'success'
-            ];
+            $suspension = (new SuspensionController)->saveSuspension($suspensionData);
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+            if ($suspension) {
+
+                $_SESSION['notification'] = [
+                    'message' => 'Contract successfully suspended saved!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
 
         }
 
@@ -94,18 +102,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'updated_at' => (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('Y-m-d H:i:s')
         ];
 
+        // print_r($transRentData);
+
 
         $ii = (new ContractController)->updateTempLightContractStatus($transRentData);
 
         if ($ii) {
 
-            $_SESSION['notification'] = [
-                'message' => 'Contract successfully suspended saved!',
-                'type' => 'success'
+            $suspensionData = [
+                'type_of_suspension' => $_POST['type_of_suspension'],
+                'no_of_days' => $_POST['no_of_days'] ?? 0,
+                'reason' => $_POST['reason'],
+                'contract_id' => $_POST['contract_id'],
+                'account_no' => $_POST['account_no'],
+                'created_at' => $now = date('Y-m-d H:i:s'),
+                'updated_at' => $now = date('Y-m-d H:i:s'),
+                'contract_start' => $_POST['contract_start'] ?? null,
+                'contract_end' => $_POST['contract_end'] ?? null,
+                'rent_start' => $_POST['rent_start'] ?? null,
+                'rent_end' => $_POST['rent_end'] ?? null,
+                'contract_type' => $_POST['contract_type'],
+                'contract_status' => 'Suspended'
             ];
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+            var_dump($suspensionData);
 
+
+
+            $suspension = (new SuspensionController)->saveSuspension($suspensionData);
+
+            if ($suspension) {
+
+                $_SESSION['notification'] = [
+                    'message' => 'Contract successfully suspended saved!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
         }
 
 

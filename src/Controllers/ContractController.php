@@ -546,6 +546,19 @@ class ContractController
 
     }
 
+    public function getContract($data)
+    {
+
+        $sql = "SELECT * FROM contracts WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('id', $data['contract_id']);
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        return $result;
+
+    }
+
     public function getContractbyIdPending($contract_id)
     {
         $sql = "SELECT * FROM contracts WHERE contract_id = :contract_id";
@@ -873,8 +886,6 @@ class ContractController
                     tc_no, 
                     rent_start, 
                     rent_end, 
-                    contract_start, 
-                    contract_end, 
                     contract_status, 
                     created_at, 
                     updated_at, 
@@ -890,8 +901,6 @@ class ContractController
                     :tc_no, 
                     :rent_start, 
                     :rent_end, 
-                    :contract_start, 
-                    :contract_end, 
                     :contract_status, 
                     :created_at, 
                     :updated_at, 
@@ -910,13 +919,6 @@ class ContractController
         $stmt->bindParam(':tc_no', $data['tc_no']);
         $stmt->bindParam(':rent_start', $data['rent_start']);
         $stmt->bindParam(':rent_end', $data['rent_end']);
-
-        $emptyContractStart = '';
-        $emptyContractEnd = '';
-        // $emptyDepartmentAssigned = '';
-
-        $stmt->bindValue(':contract_start', $data['contract_start'] ?? null, is_null($data['contract_start']) ? PDO::PARAM_NULL : PDO::PARAM_STR);
-        $stmt->bindValue(':contract_end', $data['contract_end'] ?? null, is_null($data['contract_end']) ? PDO::PARAM_NULL : PDO::PARAM_STR);
 
 
         $stmt->bindParam(':contract_status', $data['contract_status']);
@@ -1252,6 +1254,41 @@ class ContractController
         $sql = "UPDATE contracts SET contract_status = :contract_status WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':id', $data['id']);
+
+
+        return $stmt->execute();
+
+    }
+
+    public function updateSuspension($data)
+    {
+
+        $sql = "UPDATE contracts SET 
+                contract_status = :contract_status,
+                contract_end = :contract_end
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':id', $data['id']);
+
+
+        return $stmt->execute();
+
+    }
+
+
+    public function updateTransRentSuspension($data)
+    {
+
+        $sql = "UPDATE contracts SET 
+                contract_status = :contract_status,
+                rent_end = :rent_end
+                WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':rent_end', $data['rent_end']);
         $stmt->bindParam(':id', $data['id']);
 
 

@@ -4,6 +4,10 @@ use App\Controllers\ContractController;
 
 session_start();
 
+date_default_timezone_set('Asia/Manila');
+
+date('Y-m-d H:i:s');
+
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
