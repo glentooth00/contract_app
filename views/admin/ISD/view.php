@@ -128,7 +128,7 @@ include_once '../../../views/layouts/includes/header.php';
                                         <input class="form-check-input" value="Unsatisfactory performance" type="radio"
                                             name="type_of_suspension" id="flexRadioDefault2" checked>
                                         <label class="form-check-label" for="flexRadioDefault2">
-                                            Unsatisfactory performance
+                                            Unsatisfactory Output
                                         </label>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@ include_once '../../../views/layouts/includes/header.php';
                             <div class=" form-group">
                                 <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
                                 <input type="hidden" name="account_no" value="<?= $getContract['account_no'] ?>">
-                                <input type="text" name="contract_type" value="<?= $getContract['contract_type'] ?>">
+                                <input type="hidden" name=" contract_type" value="<?= $getContract['contract_type'] ?>">
                             </div>
 
                     </div>
@@ -217,7 +217,7 @@ include_once '../../../views/layouts/includes/header.php';
         ?>
 
         <?php if ($getContract['contract_status'] === 'Suspended'): ?>
-            <div class="card" id="countdown" style="
+            <div id="draggable" class="card" style="
                 box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
                     font-weight: bold;
                     color: red;
@@ -1046,7 +1046,8 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
         cursor: pointer;
     }
 </style>
-
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 <script>
     // When the page finishes loading, hide the spinner
     // window.onload = function () {
@@ -1217,7 +1218,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
     const suspensionStart = "<?= $formattedStart ?>";
 
     if (!suspensionStart || suspensionDays === 0) {
-        document.getElementById("countdown").innerHTML = "No active suspension.";
+        document.getElementById("draggable").innerHTML = "No active suspension.";
     } else {
         const startDate = new Date(suspensionStart);
         const suspensionEnd = new Date(startDate.getTime() + suspensionDays * 24 * 60 * 60 * 1000);
@@ -1228,14 +1229,14 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
 
             if (distance <= 0) {
                 clearInterval(countdown);
-                document.getElementById("countdown").innerHTML = "Suspension has ended!";
+                document.getElementById("draggable").innerHTML = "Suspension has ended!";
             } else {
                 const days = Math.floor(distance / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                document.getElementById("countdown").innerHTML = `
+                document.getElementById("draggable").innerHTML = `
                 Suspension ends in: ${days}D ${hours}H ${minutes}m ${seconds}s
                 <form action="contracts/end_suspension.php" method="post">
                     <input type="hidden" name="account_no" value="<?= $id ?>">
@@ -1253,6 +1254,8 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
         }, 1000);
     }
 
-
-
+    //for draggable
+    $(function () {
+        $("#draggable").draggable();
+    });
 </script>
