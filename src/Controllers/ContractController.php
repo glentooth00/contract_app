@@ -28,8 +28,6 @@ class ContractController
         return $stmt->fetch(PDO::FETCH_ASSOC); // Fetch a single row instead of all
     }
 
-
-
     public function getAllContracts()
     {
         $query = "SELECT * FROM contracts ORDER BY contract_start DESC";  // Assuming 'contract_start' is the date field

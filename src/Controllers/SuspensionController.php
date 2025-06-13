@@ -52,4 +52,14 @@ class SuspensionController
 
     }
 
+
+        public function getSuspensionById($id)
+    {
+        $sql = "SELECT * FROM tbl_suspension WHERE contract_id = :id AND contract_status = 'Suspended'";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 }

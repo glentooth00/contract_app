@@ -17,7 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'account_no' => $_POST['account_no'],
         'contract_id' => $_POST['contract_id'],
         'contract_type' => $_POST['contract_type'],
+        'type_of_suspension' => $_POST['type_of_suspension'] ?? '',
+        'updated_at' => $_POST['updated_at'],
+        'rent_end' => $_POST['rent_end'] ?? null,
+        'contract_end' => $_POST['contract_end'] ?? null,
     ];
+
+    // var_dump($endSuspensionData);
 
     $type = $endSuspensionData['contract_type'];
 
@@ -61,81 +67,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
 
-    }
+}
 
-    if ($remainingDays == 0) {
+if ($remainingDays == 0) {
 
-        $forDeduction = 1;
+    $forDeduction = 1;
 
-        $getContract = (new ContractController)->getContract($endSuspensionData);
+    $getContract = (new ContractController)->getContract($endSuspensionData);
 
-        $contract_end = date_create($getContract['contract_end'] ?? $getContract['rent_end']);
-        date_sub($contract_end, date_interval_create_from_date_string("$forDeduction days"));
-        $returnDate = $contract_end->format('Y-m-d'); // properly formatted date string
+    $contract_end = date_create($getContract['contract_end'] ?? $getContract['rent_end']);
+    date_sub($contract_end, date_interval_create_from_date_string("$forDeduction days"));
+    $returnDate = $contract_end->format('Y-m-d'); // properly formatted date string
 
-        if ($type === TRANS_RENT) {
+    if ($type === TRANS_RENT) {
 
-            $resumeContractData = [
+        $resumeContractData = [
 
-                'rent_end' => $returnDate,
-                'id' => $endSuspensionData['contract_id'],
-                'contract_status' => 'Active',
-            ];
-
-
-            $resumeContract = (new ContractController)->updateTransRentSuspension($resumeContractData);
-
-            if ($resumeContract) {
-
-                $id = $resumeContractData['id'];
-
-                $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
-
-                if ($deleteSuspension) {
-                    $_SESSION['notification'] = [
-                        'message' => "Contract successfully resumed! Remaining days: $remaining_days",
-                        'type' => 'success'
-                    ];
-
-                    header("Location: " . $_SERVER['HTTP_REFERER']);
-                    exit;
-                }
-
-            }
+            'rent_end' => $returnDate,
+            'id' => $endSuspensionData['contract_id'],
+            'contract_status' => 'Active',
+        ];
 
 
+        $resumeContract = (new ContractController)->updateTransRentSuspension($resumeContractData);
 
-        }
+        if ($resumeContract) {
 
+            $id = $resumeContractData['id'];
 
-        if ($type === TEMP_LIGHTING) {
+            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
 
-            $resumeContractData = [
-                'contract_end' => $returnDate,
-                'id' => $endSuspensionData['contract_id'],
-                'contract_status' => 'Active',
-            ];
+            if ($deleteSuspension) {
+                $_SESSION['notification'] = [
+                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                    'type' => 'success'
+                ];
 
-            $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
-
-            if ($resumeContract) {
-
-                $id = $resumeContractData['id'];
-
-                $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
-
-                if ($deleteSuspension) {
-                    $_SESSION['notification'] = [
-                        'message' => "Contract successfully resumed! Remaining days: $remaining_days",
-                        'type' => 'success'
-                    ];
-
-                    header("Location: " . $_SERVER['HTTP_REFERER']);
-                    exit;
-                }
-
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
             }
 
         }
+
+
+
     }
+
+
+    if ($type === TEMP_LIGHTING) {
+
+        $resumeContractData = [
+            'contract_end' => $returnDate,
+            'id' => $endSuspensionData['contract_id'],
+            'contract_status' => 'Active',
+        ];
+
+        $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
+
+        if ($resumeContract) {
+
+            $id = $resumeContractData['id'];
+
+            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
+
+            if ($deleteSuspension) {
+                $_SESSION['notification'] = [
+                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
+            }
+
+        }
+
+    }
+}
 }
