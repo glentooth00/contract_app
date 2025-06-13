@@ -38,7 +38,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="archived_list.php">
             <img width="25px" src="../../../public/images/archived.svg">
             <span>Archived Contracts</span>
           </a>

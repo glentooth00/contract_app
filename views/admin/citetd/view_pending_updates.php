@@ -548,15 +548,15 @@ include_once '../../../views/layouts/includes/header.php';
                                                                 readonly>
                                                         </div>
                                                         </span>
-                                                        <input type="text" class="form-control" name="id"
+                                                        <input type="hidden" class="form-control" name="id"
                                                             value="<?= $contract['id'] ?>" readonly>
-                                                        <input type="text" class="form-control"
+                                                        <input type="hidden" class="form-control"
                                                             name="uploader_department"
                                                             value="<?= $contract['uploader_department'] ?>"
-                                                            readonly><input type="text" class="form-control"
+                                                            readonly><input type="hidden" class="form-control"
                                                             name="uploader" value="<?= $contract['uploader'] ?>"
                                                             readonly>
-                                                        <input type="text" class="form-control" name="uploader_id"
+                                                        <input type="hidden" class="form-control" name="uploader_id"
                                                             value="<?= $contract['uploader_id'] ?>" readonly>
                                                     </div>
                                                 </div>
