@@ -2,7 +2,7 @@
 session_start();
 
 $department = $_SESSION['department'];
-$page_title = "Users List";
+$page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
@@ -10,23 +10,14 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
-use App\Controllers\DepartmentController;
-use App\Controllers\UserController;
-use App\Controllers\UserRoleController;
 
-$getUser = new UserController();
-$results = $getUser->getAllUsers();
+$contracts = (new ContractController)->getArchivedContractsByDepartment($department);
 
-$getRoles = (new UserRoleController)->getRoles();
-
-
-$contracts = (new ContractController)->getContractsByDepartment($department);
-
-$getAllContractTypes = (new ContractTypeController)->getContractTypes();
+$getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
-    // echo '<script>alert("Latest data inserted")</script>';
+    echo '<script>alert("Latest data inserted")</script>';
 } else {
     // Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
@@ -44,13 +35,12 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 <div class="main-layout">
-
     <?php include_once '../menu/sidebar.php'; ?>
 
 
     <div class="content-area">
 
-        <h1>Users</h1>
+        <h1>Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -67,7 +57,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'CITET': ?>
+                    case 'CITETD': ?>
 
                         <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
 
@@ -88,26 +78,30 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <?php break;
                     case '': ?>
+
                     <?php default: ?>
                         <!-- <span class="badge text-muted">no department assigned</span> -->
                 <?php } ?>
+
             <?php } else { ?>
+
                 <!-- <span class="badge text-muted">no department assigned</span> -->
+
             <?php } ?>
         </span>
         <hr>
 
-        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2 fw-bold"
-            style="width: 10em;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <img style="margin-left: 17px;" width="23px" src="../../../public/images/add_user.svg"></img> Add User
-        </a>
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#powerSupplyModal">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            Add Contract
+        </button> -->
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
 
             <!-- Contract Type Filter -->
-            <!-- <div style="text-align: right;">
+            <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
@@ -119,79 +113,110 @@ include_once '../../../views/layouts/includes/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
-            </div> -->
+            </div>
         </div>
 
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th style="text-align: center !important;">Role</th>
-
-                    <th style="text-align: center !important;">Action</th>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($getRoles as $result) { ?>
-                    <tr>
+                <?php if (!empty($contracts)): ?>
+                    <?php foreach ($contracts as $contract): ?>
+                        <tr>
+                            <td>
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
 
-                        <td style="text-align: center !important;padding:40px;">
-                            <span><?= $result['user_role'] ?></span>
-                        </td>
-                        <!-- <td style="text-align: center !important;padding:40px;">
+                                <?php if (isset($contract['account_no'])): ?>
+                                    <span class="badge account_number">(
+                                        <?= $contract['account_no'] ?> )</span>
+                                <?php endif; ?>
 
-                            <?php
-                            $department = $result['department'] ?? '';
-                            $badgeColor = match ($department) {
-                                IT => '#0d6efd',
-                                'ISD-HRAD' => '#3F7D58',
-                                CITET => '#FFB433',
-                                IASD => '#EB5B00',
-                                'ISD-MSD' => '#6A9C89',
-                                'PSPTD' => '#83B582',
-                                FSD => '#4E6688',
-                                BAC => '#123458',
-                                AOSD => '#03A791',
-                                '' => '', // to handle empty string (optional)
-                                default => ''
-                            };
-                            ?>
 
-                            <?php if (!empty($department) && $badgeColor): ?>
-                                <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
-                                    <?= htmlspecialchars($department) ?>
+                            </td>
+                            <td class="text-center">
+                                <?php
+                                $type = $contract['contract_type'] ?? '';
+                                $badgeColor = match ($type) {
+                                    TRANS_RENT => '#003092',
+                                    TEMP_LIGHTING => '#03A791',
+                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
+                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
+                                    default => '#FAB12F'
+                                };
+                                ?>
+                                <span class="p-2 text-white badge"
+                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
+                                    <?= htmlspecialchars($type) ?>
                                 </span>
-                            <?php else: ?>
-                                <span class="badge text-muted">no department assigned</span>
-                            <?php endif; ?>
+                            </td>
+                            <td class="text-center">
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_start']) ? date('F-d-Y', strtotime($contract['rent_start'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
+                            </td>
+                            <td class="text-center">
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_end']) ? date('F-d-Y', strtotime($contract['rent_end'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
+                            </td>
+                            <td class="text-center">
+                                <span
+                                    class="badge text-white 
+                                    <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' :
+                                        (($contract['contract_status'] ?? '') === 'Suspended' ? 'bg-warning' : 'bg-danger') ?>">
+                                    <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
+                                </span>
 
-
-                        </td> -->
-                        <td style="text-align: center !important;padding:40px;">
-                            <div class="d-flex gap-2" style="margin-left:5em;">
-                                <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i
-                                        class="fa fa-pencil" aria-hidden="true"></i>
-                                    View</a>
-
-                                <form action="users/deleteRole.php" method="POST" style="display:inline;">
-                                    <input type="hidden" name="id" value="<?= $result['id'] ?>">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                    </button>
-                                </form>
-
-                            </div>
-                        </td>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
+                                        class="btn btn-success btn-sm">
+                                        <i class="fa fa-eye"></i> View
+                                    </a>
+                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center">No contracts found.</td>
                     </tr>
-                <?php } ?>
+                <?php endif; ?>
             </tbody>
         </table>
+
+
+
+
+
     </div>
 </div>
 
+<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
-
-
 
 
 <!-- Bootstrap Modal for confirmation -->
@@ -215,31 +240,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<!-- Add New Contract Modal --->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add User Role</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="users/save_role.php" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label>User Role</label>
-                        <input type="text" name="user_role" class="form-control" required>
-                    </div>
 
-                    <!-- Modal Footer -->
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Add
-                            Role</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- popup notification ---->
 
@@ -267,8 +268,7 @@ include_once '../../../views/layouts/includes/header.php';
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
             <use
-                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : '#exclamation-triangle-fill'; ?>" />
-
+                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
         </svg>
         <!-- Message -->
         <div>
@@ -302,6 +302,10 @@ include_once '../../../views/layouts/includes/header.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+
+    .account_number {
+        color: #9BA4B5;
     }
 </style>
 
@@ -368,16 +372,8 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
+
+
+
     //----------------DAtatables
-
-
-    document.getElementById('department').addEventListener('change', function () {
-        const roleSelect = document.getElementById('user_role');
-        if (this.value === 'FSD') {
-            roleSelect.value = 'Manager';
-        } else {
-            roleSelect.value = '';
-        }
-    });
-
 </script>

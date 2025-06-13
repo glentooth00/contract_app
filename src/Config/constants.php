@@ -25,3 +25,7 @@ define('CHIEF', 'PSPTD CHIEF');
 //REQUESTS
 define('POST', 'POST');
 
+
+//suspension type
+define('UNSAS', 'Unsatisfactory Output');
+define('DTD', 'Due to Disaster');

@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+error_reporting(0);
 $department = $_SESSION['department'] ?? null;
 $role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
@@ -348,7 +348,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
+                                                $end = new DateTime($contract['rent_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
 

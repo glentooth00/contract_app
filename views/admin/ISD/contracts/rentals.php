@@ -4,6 +4,10 @@ use App\Controllers\ContractController;
 
 session_start();
 
+date_default_timezone_set('Asia/Manila');
+
+date('Y-m-d H:i:s');
+
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
@@ -35,23 +39,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         ];
 
-        var_dump($contractDetails);
+        // var_dump($contractDetails);
 
-        // $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
+        $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
 
-        // if ($saveContract) {
+        if ($saveContract) {
 
-        //     $_SESSION['notification'] = [
-        //         'message' => 'Contract successfully saved!',
-        //         'type' => 'success'
-        //     ];
+            $_SESSION['notification'] = [
+                'message' => 'Contract successfully saved!',
+                'type' => 'success'
+            ];
 
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
+            header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        // }
+        }
 
-        // header("Location: " . $_SERVER['HTTP_REFERER']);
+        header("Location: " . $_SERVER['HTTP_REFERER']);
 
     }
 }
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+header("Location: " . $_SERVER['HTTP_REFERER']);
