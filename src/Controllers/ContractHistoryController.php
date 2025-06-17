@@ -162,4 +162,16 @@ class ContractHistoryController
     }
 
 
+    public function updateTerminateStatus($data)
+    {
+        $sql = "UPDATE contract_history SET status = :status WHERE contract_id = :id ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $data['status']);
+        $stmt->bindParam(':id', $data['contract_id']);
+
+
+        return $stmt->execute();
+
+    }
+
 }

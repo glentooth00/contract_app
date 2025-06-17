@@ -67,81 +67,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }
 
-}
+    }
 
-if ($remainingDays == 0) {
+    if ($remainingDays == 0) {
 
-    $forDeduction = 1;
+        $forDeduction = 1;
 
-    $getContract = (new ContractController)->getContract($endSuspensionData);
+        $getContract = (new ContractController)->getContract($endSuspensionData);
 
-    $contract_end = date_create($getContract['contract_end'] ?? $getContract['rent_end']);
-    date_sub($contract_end, date_interval_create_from_date_string("$forDeduction days"));
-    $returnDate = $contract_end->format('Y-m-d'); // properly formatted date string
+        $contract_end = date_create($getContract['contract_end'] ?? $getContract['rent_end']);
+        date_sub($contract_end, date_interval_create_from_date_string("$forDeduction days"));
+        $returnDate = $contract_end->format('Y-m-d'); // properly formatted date string
 
-    if ($type === TRANS_RENT) {
+        if ($type === TRANS_RENT) {
 
-        $resumeContractData = [
+            $resumeContractData = [
 
-            'rent_end' => $returnDate,
-            'id' => $endSuspensionData['contract_id'],
-            'contract_status' => 'Active',
-        ];
+                'rent_end' => $returnDate,
+                'id' => $endSuspensionData['contract_id'],
+                'contract_status' => 'Active',
+            ];
 
 
-        $resumeContract = (new ContractController)->updateTransRentSuspension($resumeContractData);
+            $resumeContract = (new ContractController)->updateTransRentSuspension($resumeContractData);
 
-        if ($resumeContract) {
+            if ($resumeContract) {
 
-            $id = $resumeContractData['id'];
+                $id = $resumeContractData['id'];
 
-            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
+                $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
 
-            if ($deleteSuspension) {
-                $_SESSION['notification'] = [
-                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
-                    'type' => 'success'
-                ];
+                if ($deleteSuspension) {
+                    $_SESSION['notification'] = [
+                        'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                        'type' => 'success'
+                    ];
 
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-                exit;
+                    header("Location: " . $_SERVER['HTTP_REFERER']);
+                    exit;
+                }
+
             }
+
+
 
         }
 
 
+        if ($type === TEMP_LIGHTING) {
 
-    }
+            $resumeContractData = [
+                'contract_end' => $returnDate,
+                'id' => $endSuspensionData['contract_id'],
+                'contract_status' => 'Active',
+            ];
 
+            $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
 
-    if ($type === TEMP_LIGHTING) {
+            if ($resumeContract) {
 
-        $resumeContractData = [
-            'contract_end' => $returnDate,
-            'id' => $endSuspensionData['contract_id'],
-            'contract_status' => 'Active',
-        ];
+                $id = $resumeContractData['id'];
 
-        $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
+                $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
 
-        if ($resumeContract) {
+                if ($deleteSuspension) {
+                    $_SESSION['notification'] = [
+                        'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                        'type' => 'success'
+                    ];
 
-            $id = $resumeContractData['id'];
+                    header("Location: " . $_SERVER['HTTP_REFERER']);
+                    exit;
+                }
 
-            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
-
-            if ($deleteSuspension) {
-                $_SESSION['notification'] = [
-                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
-                    'type' => 'success'
-                ];
-
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-                exit;
             }
 
         }
-
     }
-}
 }

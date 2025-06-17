@@ -53,13 +53,39 @@ class SuspensionController
     }
 
 
-        public function getSuspensionById($id)
+    public function getSuspensionById($id)
     {
         $sql = "SELECT * FROM tbl_suspension WHERE contract_id = :id AND contract_status = 'Suspended'";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function updateDocumentColumn($data)
+    {
+        $sql = "UPDATE tbl_suspension SET
+                document = :document,
+                contract_status = :contract_status
+                WHERE contract_id = :contract_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':document', $data['document']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+
+        return $stmt->execute();
+
+    }
+
+    public function getDocuments($id)
+    {
+        $sql = "SELECT document FROM tbl_suspension WHERE contract_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+        $stmt->execute(); // ✅ MUST execute the statement
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Use FETCH_ASSOC to get an associative array
     }
 
 }

@@ -165,11 +165,28 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?php } ?>
                             </td>
                             <td class="text-center">
-                                <span
-                                    class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
-                                    <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
+                                <?php
+                                $status = $contract['contract_status'] ?? '';
+                                $badgeClass = 'bg-secondary'; // default fallback
+                        
+                                switch ($status) {
+                                    case 'Active':
+                                        $badgeClass = 'bg-success';
+                                        break;
+                                    case 'Suspended':
+                                        $badgeClass = 'bg-warning';
+                                        break;
+                                    case 'Contract Terminated':
+                                    case 'Expired':
+                                        $badgeClass = 'bg-danger';
+                                        break;
+                                }
+                                ?>
+                                <span class="badge text-white <?= $badgeClass ?>">
+                                    <?= htmlspecialchars($status) ?>
                                 </span>
                             </td>
+
 
                             <?php
                             $contractType = $contract['contract_type'];
@@ -228,7 +245,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                 </td>';
                                                 }
 
-
                                             }
                                         }
                                         ?>
@@ -240,18 +256,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -261,9 +273,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
                                                     </td>';
-
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -275,18 +285,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -296,9 +302,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
                                                     </td>';
-
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -310,18 +314,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -331,9 +331,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
                                                     </td>';
-
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -345,18 +343,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['rent_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success fw-bold">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -366,9 +360,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
                                                     </td>';
-
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -378,18 +370,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -409,12 +397,10 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
-
                                             }
                                         }
                                         ?>
                                     </span>
-
                                     <?php break;
                                 case INFRA: ?>
                                     <!-- Code for PSC_SHORT -->
@@ -422,18 +408,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -453,7 +435,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -465,18 +446,14 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
-
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
-
                                                 // $diff;
-                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -496,7 +473,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
-
                                             }
                                         }
                                         ?>
@@ -506,7 +482,6 @@ include_once '../../../views/layouts/includes/header.php';
                                     <!-- Code if no match -->
                                     <p>Unknown Contract Type</p>
                             <?php endswitch; ?>
-
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -516,7 +491,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
     </div>
 </div>
 
