@@ -28,19 +28,25 @@
         <li class="nav-item">
           <a class="nav-link" id="contractsLink" href="list.php">
             <img width="25px" src="../../../public/images/active_contracts.svg">
-            <span>Active Contracts</span>
+            <span style="font-size:13px;">Active Contracts</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="expiredLink" href="expired_list.php">
             <img width="25px" src="../../../public/images/expired.svg">
-            <span>Expired Contracts</span>
+            <span style="font-size:13px;">Expired Contracts</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="archived_list.php">
             <img width="25px" src="../../../public/images/archived.svg">
-            <span>Archived Contracts</span>
+            <span style="font-size:13px;">Archived Contracts</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="terminated_list.php">
+            <img width="25px" src="../../../public/images/terminated.svg">
+            <span style="font-size:13px;">Terminated Contracts</span>
           </a>
         </li>
       </ul>

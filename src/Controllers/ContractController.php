@@ -62,7 +62,7 @@ class ContractController
     }
 
     // Upload file and return file path
-    public function uploadFile($file)
+    public function uploadFile($file): bool|string
     {
         $uploadDir = __DIR__ . "/../../admin/uploads/";
         if (!is_dir($uploadDir)) {
@@ -74,6 +74,23 @@ class ContractController
 
         if (move_uploaded_file($file["tmp_name"], $targetFile)) {
             return "admin/uploads/" . $fileName;
+        }
+
+        return false;
+    }
+
+    public function uploadTerminationFile($file): bool|string
+    {
+        $uploadDir = __DIR__ . "/../../admin/termination/";
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
+        $fileName = basename($file["name"]);
+        $targetFile = $uploadDir . $fileName;
+
+        if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+            return "admin/termination/" . $fileName;
         }
 
         return false;
@@ -1112,7 +1129,7 @@ class ContractController
               WHERE (uploader_department = :dept1 
                   OR implementing_dept = :dept2 
                   OR department_assigned = :dept3) 
-              AND contract_status = 'Active' 
+             
               ORDER BY id DESC";
 
         $stmt = $this->db->prepare($query);
@@ -1133,6 +1150,26 @@ class ContractController
                   OR implementing_dept = :dept2 
                   OR department_assigned = :dept3) 
               AND contract_status = 'Active' 
+              ORDER BY id DESC";
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bindParam(':dept1', $department, PDO::PARAM_STR);
+        $stmt->bindParam(':dept2', $department, PDO::PARAM_STR);
+        $stmt->bindParam(':dept3', $department, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getContractsByDepartmentTerminated($department)
+    {
+        $query = "SELECT * FROM contracts 
+              WHERE (uploader_department = :dept1 
+                  OR implementing_dept = :dept2 
+                  OR department_assigned = :dept3) 
+              AND contract_status = 'Contract Terminated' 
               ORDER BY id DESC";
 
         $stmt = $this->db->prepare($query);
@@ -1441,6 +1478,19 @@ class ContractController
             // Log error here if needed
             return false;
         }
+    }
+
+    public function terminateContract($data)
+    {
+
+        $sql = "UPDATE contracts SET
+                    contract_status = :contract_status
+                    WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $data['contract_id']);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        return $stmt->execute();
+
     }
 
 
