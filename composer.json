@@ -3,7 +3,8 @@
     "description": "A PHP application for managing contracts",
     "type": "project",
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.2",
+        "doctrine/dbal": "^4.2",
         "twbs/bootstrap": "5.0"  
     },
     "autoload": {
