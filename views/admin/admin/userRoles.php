@@ -137,35 +137,58 @@ include_once '../../../views/layouts/includes/header.php';
                         <td style="text-align: center !important;padding:40px;">
                             <span><?= $result['user_role'] ?></span>
                         </td>
-                        <!-- <td style="text-align: center !important;padding:40px;">
+                      <!-- <td style="text-align: center !important;padding:40px;">
 
-                            <?php
-                            $department = $result['department'] ?? '';
-                            $badgeColor = match ($department) {
-                                IT => '#0d6efd',
-                                'ISD-HRAD' => '#3F7D58',
-                                CITET => '#FFB433',
-                                IASD => '#EB5B00',
-                                'ISD-MSD' => '#6A9C89',
-                                'PSPTD' => '#83B582',
-                                FSD => '#4E6688',
-                                BAC => '#123458',
-                                AOSD => '#03A791',
-                                '' => '', // to handle empty string (optional)
-                                default => ''
-                            };
-                            ?>
+                        <?php
+                        $department = isset($result['department']) ? $result['department'] : '';
 
-                            <?php if (!empty($department) && $badgeColor): ?>
-                                <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
-                                    <?= htmlspecialchars($department) ?>
-                                </span>
-                            <?php else: ?>
-                                <span class="badge text-muted">no department assigned</span>
-                            <?php endif; ?>
+                        switch ($department) {
+                            case 'IT':
+                                $badgeColor = '#0d6efd';
+                                break;
+                            case 'ISD-HRAD':
+                                $badgeColor = '#3F7D58';
+                                break;
+                            case 'CITET':
+                                $badgeColor = '#FFB433';
+                                break;
+                            case 'IASD':
+                                $badgeColor = '#EB5B00';
+                                break;
+                            case 'ISD-MSD':
+                                $badgeColor = '#6A9C89';
+                                break;
+                            case 'PSPTD':
+                                $badgeColor = '#83B582';
+                                break;
+                            case 'FSD':
+                                $badgeColor = '#4E6688';
+                                break;
+                            case 'BAC':
+                                $badgeColor = '#123458';
+                                break;
+                            case 'AOSD':
+                                $badgeColor = '#03A791';
+                                break;
+                            case '':
+                                $badgeColor = '';
+                                break;
+                            default:
+                                $badgeColor = '';
+                                break;
+                        }
+                        ?>
 
+                        <?php if (!empty($department) && $badgeColor): ?>
+                            <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
+                                <?= htmlspecialchars($department) ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="badge text-muted">no department assigned</span>
+                        <?php endif; ?>
 
                         </td> -->
+
                         <td style="text-align: center !important;padding:40px;">
                             <div class="d-flex gap-2" style="margin-left:5em;">
                                 <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i

@@ -125,15 +125,26 @@ include_once '../../../views/layouts/includes/header.php';
                             <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
                             <td class="text-center">
                                 <?php
-                                $type = $contract['contract_type'] ?? '';
-                                $badgeColor = match ($type) {
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
-                                    default => '#FAB12F'
-                                };
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                switch ($type) {
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case 'Power Suppliers Contract (LONG TERM)':
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case 'Power Suppliers Contract (SHORT TERM)':
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                }
                                 ?>
+
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
@@ -144,7 +155,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
+                                <span class="badge text-secondar    y">
                                     <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
                             </td>
                             <td class="text-center">

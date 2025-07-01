@@ -4,7 +4,8 @@
     "type": "project",
     "require": {
         "php": "^7.4",
-        "twbs/bootstrap": "5.0"  
+        "twbs/bootstrap": "5.0",
+        "doctrine/dbal": "^2.13"  
     },
     "autoload": {
         "psr-4": {

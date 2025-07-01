@@ -176,12 +176,12 @@ class PendingDataController
             ':contract_status' => $data['contract_status'],
             ':contract_type' => $data['contract_type'],
             ':uploader_id' => $data['uploader_id'],
-            ':uploader' => $data['uploader'], // <- fix this line
+            ':uploader' => $data['uploader'],
+            ':data_type' => $data['data_type'],
+            ':uploader_department' => $data['uploader_department'],
             ':status' => $data['status'],
-            'uploader' => $data['uploader'],
-            'data_type' => $data['data_type'],
-            'uploader_department' => $data['uploader_department']
         ]);
+
 
     }
 

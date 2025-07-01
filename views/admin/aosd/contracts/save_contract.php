@@ -35,23 +35,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'uploader' => $_POST['uploader']
         ];
 
-        var_dump($contractData);
+        // var_dump($contractData);
 
         // echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
 
-        //Save contract
-        //     $contractSaved = $contractController->saveContract($contractData);
+        // Save contract
+            $contractSaved = $contractController->saveContract($contractData);
 
-        //     if ($contractSaved) {
-        //         $_SESSION['notification'] = [
-        //             'message' => 'Contract successfully saved!',
-        //             'type' => 'success'
-        //         ];
+            if ($contractSaved) {
+                $_SESSION['notification'] = [
+                    'message' => 'Contract successfully saved!',
+                    'type' => 'success'
+                ];
 
-        //         header("Location: " . $_SERVER['HTTP_REFERER']);
-        //     }
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+            }
 
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
+            header("Location: " . $_SERVER['HTTP_REFERER']);
 
     }
 

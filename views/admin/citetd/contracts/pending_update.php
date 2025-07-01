@@ -32,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     ];
 
+    // var_dump($latestData);
+
     $dataPendingUpdate = (new PendingDataController)->PendingInsert($latestData);
 
     if ($dataPendingUpdate) {
