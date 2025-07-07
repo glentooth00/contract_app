@@ -212,39 +212,38 @@ switch ($user_department) {
                                     ?>
 
                                     <div class="d-flex flex-wrap gap-2">
-                                        <?php
-<?php foreach ($contractTypes as $type):
-    $badgeColor = '';
-    switch ($type) {
-        case INFRA:
-            $badgeColor = '#328E6E';
-            break;
-        case SACC:
-            $badgeColor = '#123458';
-            break;
-        case GOODS:
-            $badgeColor = '#F75A5A';
-            break;
-        case EMP_CON:
-            $badgeColor = '#DC8686';
-            break;
-        case PSC_LONG:
-            $badgeColor = '#007bff';
-            break;
-        case PSC_SHORT:
-            $badgeColor = '#28a745';
-            break;
-        case TRANS_RENT:
-            $badgeColor = '#003092';
-            break;
-        case TEMP_LIGHTING:
-            $badgeColor = '#03A791';
-            break;
-        default:
-            $badgeColor = '#FAB12F';
-            break;
-    }
-?>
+                                        <?php foreach ($contractTypes as $type):
+                                            $badgeColor = '';
+                                            switch ($type) {
+                                                case INFRA:
+                                                    $badgeColor = '#328E6E';
+                                                    break;
+                                                case SACC:
+                                                    $badgeColor = '#123458';
+                                                    break;
+                                                case GOODS:
+                                                    $badgeColor = '#F75A5A';
+                                                    break;
+                                                case EMP_CON:
+                                                    $badgeColor = '#DC8686';
+                                                    break;
+                                                case PSC_LONG:
+                                                    $badgeColor = '#007bff';
+                                                    break;
+                                                case PSC_SHORT:
+                                                    $badgeColor = '#28a745';
+                                                    break;
+                                                case TRANS_RENT:
+                                                    $badgeColor = '#003092';
+                                                    break;
+                                                case TEMP_LIGHTING:
+                                                    $badgeColor = '#03A791';
+                                                    break;
+                                                default:
+                                                    $badgeColor = '#FAB12F';
+                                                    break;
+                                            }
+                                        ?>
                                             <label class="form-check-label">
                                                 <span class="badge text-white"
                                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px; font-size: 14px; padding: 7px;">
