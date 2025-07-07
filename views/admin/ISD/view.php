@@ -284,6 +284,97 @@ include_once '../../../views/layouts/includes/header.php';
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly></div>
             </div>
 
+            <?php if($getContract['contract_type'] === SACC ): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === SACC ): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === INFRA): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === INFRA): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+                        <?php if($getContract['contract_type'] === GOODS): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === GOODS): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+
             <?php if($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -440,13 +531,18 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
                             type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['supplier']; ?>" name="contract_type" readonly></div>
-                </div><?php endif; ?> <?php if ($getContract['contract_type'] === INFRA): ?>
+                </div><?php endif; ?> 
+                <?php if ($getContract['contract_type'] === INFRA): ?>
+                    <?php if(!empty($getContract['implementing_dept'])): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Implementing
                             Department</label><input type="text" id="contractInput" style="margin-left:9px;"
                             class="form-control pl-5" value="<?= $getContract['implementing_dept'] ?>" name="contract_type"
                             readonly></div>
-                </div><?php endif; ?> <?php if ($getContract['contract_type'] === EMP_CON): ?>
+                </div>
+                    <?php endif; ?>
+                <?php endif; ?>
+                 <?php if ($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Assigned
                             Department</label><input type="text" id="deptSelect" style="margin-left:9px;"
@@ -613,13 +709,31 @@ include_once '../../../views/layouts/includes/header.php';
                     }
 
                     if($getContract['contract_type'] === TRANS_RENT){
-                        // $id = $getContract['account_no'];
+                        $id = $getContract['account_no'];
                         $status = $getContract['contract_status'];
                         $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
                     }
 
                     if($getContract['contract_type'] === TEMP_LIGHTING){
-                        // $id = $getContract['account_no'];
+                        $id = $getContract['account_no'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if($getContract['contract_type'] === INFRA){
+                        $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if($getContract['contract_type'] === GOODS){
+                        $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if($getContract['contract_type'] === SACC){
+                        $id = $getContract['id'];
                         $status = $getContract['contract_status'];
                         $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
                     }
@@ -705,7 +819,50 @@ include_once '../../../views/layouts/includes/header.php';
                                                     class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
                                                 <span class="badge text-danger">No Start Date</span><?php endif; ?>
                                         </td><?php endif; ?>
+
                                     <?php if ($employement_data['contract_type'] === TEMP_LIGHTING): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+                                         <?php if ($employement_data['contract_type'] === INFRA): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+                                         <?php if ($employement_data['contract_type'] === GOODS): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+                                        <?php if ($employement_data['contract_type'] === SACC): ?>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['date_start'])): ?>
                                                 <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
