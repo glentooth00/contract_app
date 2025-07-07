@@ -133,21 +133,25 @@ include_once '../../../views/layouts/includes/header.php';
                     <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+                        <input type="date" id="startDate" class="form-control pl-5"
+                            value="<?= date('Y-m-d', strtotime($getContract['contract_start'])); ?>"
+                            name="contract_start" readonly>
                     </div>
                 </div>
             </div>
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                    <div class="d-flex">
-                        <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_end']; ?>" name="contract_end" readonly>
-                    </div>
+
+           <div class="row col-md-2">
+            <div class="mt-3">
+                <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                <div class="d-flex">
+                    <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                    <input type="date" id="endDate" class="form-control pl-5"
+                        value="<?= date('Y-m-d', strtotime($getContract['contract_end'])); ?>"
+                        name="contract_end" readonly>
                 </div>
             </div>
+        </div>
+
             <div class="row col-md-2">
 
                 <div class="mt-3">

@@ -1,3 +1,9 @@
+<?PHP 
+
+require_once __DIR__ . '../../../../src/Config/constants.php';
+
+?>
+
 <nav class="sideBar">
   <div class="logo mb-3 p-2 d-flex align-items-center justify-content-center">
     <div class="me-2">

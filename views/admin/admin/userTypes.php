@@ -152,22 +152,46 @@ include_once '../../../views/layouts/includes/header.php';
                         <td style="text-align: center !important;padding:40px;"><?= $result['user_role'] ?> </td>
                         <td style="text-align: center !important;padding:40px;">
 
-                            <?php
-                            $department = $result['department'] ?? '';
-                            $badgeColor = match ($department) {
-                                IT => '#0d6efd',
-                                'ISD-HRAD' => '#3F7D58',
-                                CITET => '#FFB433',
-                                IASD => '#EB5B00',
-                                'ISD-MSD' => '#6A9C89',
-                                'PSPTD' => '#83B582',
-                                FSD => '#4E6688',
-                                BAC => '#123458',
-                                AOSD => '#03A791',
-                                '' => '', // to handle empty string (optional)
-                                default => ''
-                            };
-                            ?>
+                   <?php
+                    $department = isset($result['department']) ? $result['department'] : '';
+
+                    switch ($department) {
+                        case 'IT':
+                            $badgeColor = '#0d6efd';
+                            break;
+                        case 'ISD-HRAD':
+                            $badgeColor = '#3F7D58';
+                            break;
+                        case 'CITET':
+                            $badgeColor = '#FFB433';
+                            break;
+                        case 'IASD':
+                            $badgeColor = '#EB5B00';
+                            break;
+                        case 'ISD-MSD':
+                            $badgeColor = '#6A9C89';
+                            break;
+                        case 'PSPTD':
+                            $badgeColor = '#83B582';
+                            break;
+                        case 'FSD':
+                            $badgeColor = '#4E6688';
+                            break;
+                        case 'BAC':
+                            $badgeColor = '#123458';
+                            break;
+                        case 'AOSD':
+                            $badgeColor = '#03A791';
+                            break;
+                        case '':
+                            $badgeColor = '';
+                            break;
+                        default:
+                            $badgeColor = '';
+                            break;
+                    }
+                    ?>
+
 
                             <?php if (!empty($department) && $badgeColor): ?>
                                 <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
@@ -332,21 +356,42 @@ include_once '../../../views/layouts/includes/header.php';
                         <h3 class=" mb-2">Contracts</h3>
                         <hr>
                         <div class="row">
-                            <?php foreach ($getAllContractTypes as $getAllContractType): ?>
-                                <?php
-                                $type = $getAllContractType['contract_type'] ?? '';
-                                $badgeColor = match ($type) {
-                                    INFRA => '#328E6E',
-                                    SACC => '#123458',
-                                    GOODS => '#F75A5A',
-                                    EMP_CON => '#DC8686',
-                                    PSC_LONG => '#007bff',
-                                    PSC_SHORT => '#28a745',
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                    default => '#FAB12F'
-                                };
-                                ?>
+                    <?php foreach ($getAllContractTypes as $getAllContractType): ?>
+                        <?php
+                        $type = isset($getAllContractType['contract_type']) ? $getAllContractType['contract_type'] : '';
+
+                        switch ($type) {
+                            case 'INFRA':
+                                $badgeColor = '#328E6E';
+                                break;
+                            case 'SACC':
+                                $badgeColor = '#123458';
+                                break;
+                            case 'GOODS':
+                                $badgeColor = '#F75A5A';
+                                break;
+                            case 'EMP_CON':
+                                $badgeColor = '#DC8686';
+                                break;
+                            case 'PSC_LONG':
+                                $badgeColor = '#007bff';
+                                break;
+                            case 'PSC_SHORT':
+                                $badgeColor = '#28a745';
+                                break;
+                            case 'TRANS_RENT':
+                                $badgeColor = '#003092';
+                                break;
+                            case 'TEMP_LIGHTING':
+                                $badgeColor = '#03A791';
+                                break;
+                            default:
+                                $badgeColor = '#FAB12F';
+                                break;
+                        }
+                        ?>
+                
+
                                 <div class="col-md-4 mb-2">
                                     <label class="form-check-label d-flex align-items-center gap-2">
                                         <input type="checkbox" class="form-check-input" name="contract_type[]"
