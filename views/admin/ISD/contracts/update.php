@@ -189,3 +189,182 @@ if($_GET['type'] === EMP_CON){
     
 }
 
+if($_GET['type'] === INFRA){
+
+    $EmpUpdate = [
+        'id' => $_GET['id'],
+        'contract_name' => $_GET['name'],
+        'start' => $_GET['EmpStart'],
+        'end' => $_GET['ConEmpEnd'],
+        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+        'contract_status' => 'Active'
+    ];
+    
+        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                var_dump($updateContractHistory);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                    'message' => 'Infrastructure Contract has been successfully updated!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                    'message' => 'Infrastructure Contract has been successfully updated!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+
+    
+}
+
+if($_GET['type'] === GOODS){
+
+    $EmpUpdate = [
+        'id' => $_GET['id'],
+        'contract_name' => $_GET['name'],
+        'start' => $_GET['EmpStart'],
+        'end' => $_GET['ConEmpEnd'],
+        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+        'contract_status' => 'Active'
+    ];
+    
+        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                var_dump($updateContractHistory);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                    'message' => 'Goods Contract has been successfully updated!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                    'message' => 'Goods Contract has been successfully updated!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+
+    
+}
+
+if($_GET['type'] === SACC){
+
+    $EmpUpdate = [
+        'id' => $_GET['id'],
+        'contract_name' => $_GET['name'],
+        'start' => $_GET['EmpStart'],
+        'end' => $_GET['ConEmpEnd'],
+        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+        'contract_status' => 'Active'
+    ];
+    
+        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                var_dump($updateContractHistory);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                    'message' => 'Goods Contract has been successfully updated!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                    'message' => 'Goods Contract has been successfully updated!',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+
+    
+}
