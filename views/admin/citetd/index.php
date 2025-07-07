@@ -144,28 +144,28 @@ include_once '../../../views/layouts/includes/header.php';
                             $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
                             switch ($type) {
-                                case 'INFRA':
+                                case INFRA:
                                     $badgeColor = '#328E6E';
                                     break;
-                                case 'SACC':
+                                case SACC:
                                     $badgeColor = '#123458';
                                     break;
-                                case 'GOODS':
+                                case GOODS:
                                     $badgeColor = '#F75A5A';
                                     break;
-                                case 'EMP_CON':
+                                case EMP_CON:
                                     $badgeColor = '#FAB12F';
                                     break;
-                                case 'PSC_LONG':
+                                case PSC_LONG:
                                     $badgeColor = '#007bff';
                                     break;
-                                case 'PSC_SHORT':
+                                case PSC_SHORT:
                                     $badgeColor = '#28a745';
                                     break;
-                                case 'TRANS_RENT':
+                                case TRANS_RENT:
                                     $badgeColor = '#003092';
                                     break;
-                                case 'TEMP_LIGHTING':
+                                case TEMP_LIGHTING:
                                     $badgeColor = '#03A791';
                                     break;
                                 default:

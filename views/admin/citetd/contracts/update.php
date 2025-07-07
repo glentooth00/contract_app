@@ -33,8 +33,6 @@ if ($role === CHIEF) {
 
     ];
 
-    var_dump($latestData);
-
     $saveUpdateData = (new PendingDataController)->PendingInsert($latestData);
 
     if ($saveUpdateData) {
