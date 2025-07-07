@@ -566,9 +566,30 @@ include_once '../../../views/layouts/includes/header.php';
                         </tr>
                     </thead>
                     <?php
-                    $id = $getContract['account_no'];
-                    $status = $getContract['contract_status'];
-                    $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    // $id = $getContract['account_no'];
+                    // $status = $getContract['contract_status'];
+                    // $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+                    if($getContract['contract_type'] === EMP_CON){
+                        echo $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                        
+                    }
+
+                    if($getContract['contract_type'] === TRANS_RENT){
+                        // $id = $getContract['account_no'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                        echo TRANS_RENT;
+                    }
+
+                    if($getContract['contract_type'] === TEMP_LIGHTING){
+                        // $id = $getContract['account_no'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                        echo TEMP_LIGHTING;
+                    }
 
 
 
