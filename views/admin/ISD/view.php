@@ -283,6 +283,8 @@ include_once '../../../views/layouts/includes/header.php';
                         type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly></div>
             </div>
+
+            <?php if($getContract['contract_type'] === TRANS_RENT || $getContract['contract_type'] === TEMP_LIGHTING) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
@@ -301,6 +303,8 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
+            <?php if($getContract['contract_type'] === TRANS_RENT || $getContract['contract_type'] === TEMP_LIGHTING) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Retirement Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
@@ -318,6 +322,7 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
             </div>
+            <?php endif; ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" <?php
 
