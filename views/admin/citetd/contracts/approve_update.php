@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ContractHistoryController;
 use App\Controllers\PendingDataController;
 use App\Controllers\ContractController;
 
@@ -20,7 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
 
+
     if ($updateSuccessful) {
+
         $deletePrevData = (new PendingDataController)->delete($updateData['id']);
 
         if ($deletePrevData) {
@@ -29,10 +32,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'type' => 'success',
             ];
         } else {
-            $_SESSION['notification'] = [
-                'message' => 'Update succeeded approved.',
-                'type' => 'success',
+
+            echo $id = $updateData['contract_id'];
+
+            $getContract = ( new ContractController )->getContractbyId($id);
+
+            $contractHistoryData = [
+                    'id' => $getContract['id'],
+                    'contract_name' => $getContract['contract_name'],
+                    'contract_start' => $getContract['contract_start'],
+                    'contract_end' => $getContract['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s'),
             ];
+            
+
+            $updateConHistory = ( new ContractHistoryController )->updateContractHistoryPowerSupply($contractHistoryData);
+
+            if($updateConHistory){
+
+                $_SESSION['notification'] = [
+                'message' => 'Update has been approved.',
+                'type' => 'success',
+                ];
+
+            }
+
         }
     } else {
         $_SESSION['notification'] = [
@@ -40,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'type' => 'error',
         ];
     }
-
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit;
 }

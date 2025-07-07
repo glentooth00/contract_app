@@ -207,5 +207,28 @@ class ContractHistoryController
          
     }
 
+        public function updateContractHistoryPowerSupply($data){
+
+        $sql = "UPDATE contract_history SET
+                    date_start = :date_start,
+                    date_end = :date_end,
+                    contract_name = :contract_name,
+                    updated_at = :updated_at
+                WHERE contract_id = :contract_id";
+
+                $stmt = $this->db->prepare($sql);
+
+                $stmt->bindParam(':date_start', $data['contract_start']);
+                $stmt->bindParam(':date_end', $data['contract_end']);
+                $stmt->bindParam(':contract_name', $data['contract_name']);
+                $stmt->bindParam(':contract_id', $data['id']);
+                $stmt->bindParam(':updated_at', $data['updated_at']);
+                $stmt->execute();
+
+                return;
+
+         
+    }
+
 
 }
