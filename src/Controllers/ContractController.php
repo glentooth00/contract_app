@@ -557,6 +557,19 @@ class ContractController
 
     }
 
+        public function getContractByIdUpdated($id)
+        {
+
+            $sql = "SELECT * FROM contracts WHERE id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam('id', $id);
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            return $result;
+
+        }
+
     public function getContractbyIdPending($contract_id)
     {
         $sql = "SELECT * FROM contracts WHERE contract_id = :contract_id";
@@ -566,6 +579,8 @@ class ContractController
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // return as array of rows
     }
+
+    
 
 
 

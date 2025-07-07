@@ -291,7 +291,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="startDate" style="margin-left:px;"
+                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -306,7 +306,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="endDate" style="margin-left:px;"
+                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -606,7 +606,7 @@ include_once '../../../views/layouts/includes/header.php';
                     // $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
                     if($getContract['contract_type'] === EMP_CON){
-                        echo $id = $getContract['id'];
+                        $id = $getContract['id'];
                         $status = $getContract['contract_status'];
                         $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
                         
@@ -616,14 +616,12 @@ include_once '../../../views/layouts/includes/header.php';
                         // $id = $getContract['account_no'];
                         $status = $getContract['contract_status'];
                         $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
-                        echo TRANS_RENT;
                     }
 
                     if($getContract['contract_type'] === TEMP_LIGHTING){
                         // $id = $getContract['account_no'];
                         $status = $getContract['contract_status'];
                         $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
-                        echo TEMP_LIGHTING;
                     }
 
 
@@ -1176,6 +1174,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const rentStart = document.getElementById('rent_start');
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
+        const EndDate = document.getElementById('EmpEndDate');
+        const StartDate = document.getElementById('EmpStartDate');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1192,6 +1192,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             deptSelect?.removeAttribute('disabled');
             rentStart?.removeAttribute('readonly');
             rentEnd?.removeAttribute('readonly');
+            EndDate?.removeAttribute('readonly');
+            StartDate?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1247,6 +1249,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
         const contract_type = document.getElementById('contractType');
+        const EmpStart = document.getElementById('EmpStartDate');
+        const EmpEnd = document.getElementById('EmpEndDate');
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1259,9 +1263,13 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
         const typeContract = encodeURIComponent(contract_type?.value || '');
+        const EndEmpCon =  encodeURIComponent(EmpEnd?.Value || '');
+        const StartEmpCon =  encodeURIComponent(EmpStart?.value || '');
+        const EndConEmp = encodeURIComponent(EmpEnd?.value || '');
+
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}`;
     });
 
     function formatDate(dateString) {
