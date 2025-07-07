@@ -284,6 +284,36 @@ include_once '../../../views/layouts/includes/header.php';
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly></div>
             </div>
 
+            <?php if($getContract['contract_type'] === EMP_CON): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?> <input type="date" id="startDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === EMP_CON): ?>
+                <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?> <input type="date" id="endDate" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <?php if($getContract['contract_type'] === TRANS_RENT || $getContract['contract_type'] === TEMP_LIGHTING) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
