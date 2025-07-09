@@ -42,10 +42,7 @@ if (isset($_GET['id'])) {
             'updated_at' => date('Y-m-d H:i:s') // Add this to match bindParam
 
         ];
-
         // var_dump($data1);
-
-
         $updateTransRent = (new ContractController)->updateTransRent($data1);
 
         if ($updateTransRent) {
