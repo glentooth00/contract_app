@@ -115,17 +115,19 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="col-md-2 mt-3">
                 <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                 <div class="input-group">
+                    <?php $startdate =date('Y-m-d', strtotime($getContract['contract_start']));  ?>
                     <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                     <input type="date" id="startDate" class="form-control"
-                        value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+                        value="<?=  $startdate ?>" name="contract_start" readonly>
                 </div>
             </div>
 
             <div class="col-md-2 mt-3">
                 <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                 <div class="input-group">
+                     <?php $Enddate =date('Y-m-d', strtotime($getContract['contract_start']));  ?>
                     <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                    <input type="date" id="endDate" class="form-control" value="<?= $getContract['contract_end']; ?>"
+                    <input type="date" id="endDate" class="form-control" value="<?= $Enddate ?>"
                         name="contract_end" readonly>
                 </div>
             </div>
