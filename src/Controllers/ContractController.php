@@ -757,6 +757,7 @@ class ContractController
         $stmt->bindParam(':contract_name', $data['contract_name']);
         $stmt->bindParam(':address', $data['address']);
         $stmt->bindParam(':account_no', $data['account_no']);
+        $stmt->bindParam(':contract_file', $data['contract_file']);
 
         $stmt->execute();
 

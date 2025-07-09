@@ -429,7 +429,7 @@ include_once '../../../views/layouts/includes/header.php';
                         </tr>
                     </thead>
                     <?php
-                    $id = $getContract['id'];
+                    $id = $getContract['account_no'];
                     $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
