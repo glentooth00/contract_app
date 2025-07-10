@@ -243,6 +243,68 @@ if (isset($_GET['id'])) {
         }
 
     }
+
+
+        if ($type === INFRA) {
+
+        $data = [
+            'id' => $_GET['id'],
+            'contract_name' => $_GET['name'],
+            'contract_start' => $_GET['start'], // 'start' corresponds to rent_start in PHP
+            'contract_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP
+            'updated_at' => date('Y-m-d H:i:s'), // Add this to match bindParam
+            'contract_status' => 'Active',
+            'daysRemaining' => $_GET['daysRemaining'],
+            'contract_type' => $_GET['type'],
+        ];
+
+        // var_dump($data);
+
+
+        $id = $data['id'];
+
+        $updateInfra = (new ContractController)->updateGoodsContract($data);
+
+        if( $updateInfra){
+
+
+            $getLatest =  (new ContractController)->getContractbyId($id);
+
+            $updatedData = [
+                'id' => $getLatest['id'],
+                'contract_status' => 'Active',
+                'contract_name' => $getLatest['contract_name'],
+                'date_start' => $getLatest['contract_start'], // 'start' corresponds to rent_start in PHP
+                'date_end' => $getLatest['contract_end'],     // 'end' corresponds to contract_end in PHP
+                'updated_at' => date('Y-m-d H:i:s') // Add this to match bindParam
+            ];
+
+            var_dump($updatedData);
+
+            $updateInfraHistory = (new ContractHistoryController)->updateContractHistoryGoods($updatedData);
+
+                if($updateInfraHistory){
+
+                    
+                $_SESSION['notification'] = [
+                    'message' => $data['contract_name'] . ' updated!',
+                    'type' => 'success'
+                ];
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                    'message' => $data['contract_name'] . ' updated!',
+                    'type' => 'success'
+                ];
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+
+        }
+
+    }
+
     header("Location: " . $_SERVER['HTTP_REFERER']);
 }
 

@@ -445,8 +445,7 @@ include_once '../../../views/layouts/includes/header.php';
                             'id' => $getContract['id'],
                             'status' => 'Expired',
                         ];
-
-                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+                        $updateStatus = (new ContractHistoryController)->updateStatusBycontract_id($stat);
 
                     }
 
