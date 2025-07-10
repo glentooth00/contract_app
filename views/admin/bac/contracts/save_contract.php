@@ -32,7 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'department_assigned' => $_POST["department_assigned"] ?? 'Missing department_assigned',
             'uploader_id' => $_POST['uploader_id'] ?? 'Missing uploader_id',
             'uploader_department' => $_POST['uploader_department'] ?? 'Missing uploader_department',
-            'uploader' => $_POST['uploader']
+            'uploader' => $_POST['uploader'],
+            'implementing_dept' => $_POST['implementing_dept'],
         ];
 
         // var_dump($contractData);

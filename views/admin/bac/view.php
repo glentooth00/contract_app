@@ -110,8 +110,9 @@ include_once '../../../views/layouts/includes/header.php';
                     <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                            <?php $datestart = date('Y-m-d', strtotime($getContract['contract_start'])); ?>
                         <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+                            value="<?= $datestart ?>" name="contract_start" readonly>
                     </div>
                 </div>
             </div>
@@ -120,8 +121,9 @@ include_once '../../../views/layouts/includes/header.php';
                     <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                         <?php $dateEnd = date('Y-m-d', strtotime($getContract['contract_end'])); ?>
                         <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_end']; ?>" name="contract_end" readonly>
+                            value="<?= $dateEnd  ?>" name="contract_end" readonly>
                     </div>
                 </div>
             </div>
@@ -531,6 +533,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     <td style="text-align: center !important;">
 
                                         <?php if (!empty($employement_data['date_start'])): ?>
+
                                             <?php $datestart = new DateTime($employement_data['date_start']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php else: ?>

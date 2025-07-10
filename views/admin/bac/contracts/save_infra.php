@@ -27,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] === POST) {
         'uploader_department' => $_POST['uploader_department'],
     ];
 
-
     $saveContract = (new ContractController)->storeContract($data);
 
     if ($saveContract) {

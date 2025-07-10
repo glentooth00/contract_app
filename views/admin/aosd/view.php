@@ -49,7 +49,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="list.php" onclick="history.back(); return false;" class="text-dark pt-2"><i
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
         <hr>
@@ -125,7 +125,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="col-md-2 mt-3">
                 <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                 <div class="input-group">
-                     <?php $Enddate =date('Y-m-d', strtotime($getContract['contract_start']));  ?>
+                     <?php $Enddate =date('Y-m-d', strtotime($getContract['contract_end']));  ?>
                     <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                     <input type="date" id="endDate" class="form-control" value="<?= $Enddate ?>"
                         name="contract_end" readonly>
@@ -227,13 +227,17 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <div class="row col-md-2">
+            <?php if(!empty($getContract['implementing_dept'])): ?>
+                 <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                    <input type="text" id="impDept" style="margin-left:9px;" class="form-control pl-5"
+                        value="<?= $getContract['implementing_dept']; ?>" name="contract_type" readonly>
                 </div>
             </div>
+            <?php  endif;?>
+
+           
 
             <div class="row col-md-3">
                 <div class="mt-3">
@@ -431,7 +435,7 @@ include_once '../../../views/layouts/includes/header.php';
                         </tr>
                     </thead>
                     <?php
-                    $id = $getContract['account_no'];
+                    $id = $getContract['id'];
                     $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
 
