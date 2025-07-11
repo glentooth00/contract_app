@@ -78,6 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     case "AOSD":
                         header("Location: views/admin/aosd/index.php");
                         break;
+                    case "BOS":
+                        header("Location: views/admin/bos/index.php");
+                        break;
                     default:
                         $_SESSION['username'] = 'Department not recognized.';
                         header('Location: index.php');
