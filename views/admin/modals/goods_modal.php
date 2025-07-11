@@ -30,8 +30,6 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                 <h5 class="modal-title mb-0 text-white badge" id="exampleModalLabel"
                     style="font-size:20px;background-color:#F75A5A">
                     Goods Contract</h5>
-                <span id="refreshBtn"><span class="text-muted p-2 badge">Clear form</span><img id="refresh" width="22px"
-                        src="../../../public/images/refresh.svg"></span>
             </div>
 
             <div class="modal-body">
