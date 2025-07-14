@@ -49,11 +49,16 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
             <?= $contract_data ?></h2>
-        <hr>
 
+           
+        
+        <hr>
+        <button class="" id="commentBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+            Leave Comment
+        </button>
         <?php
         $start = new DateTime($getContract['contract_start']);
         $end = new DateTime($getContract['contract_end']);
@@ -604,6 +609,34 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
 
 
+        <!-- Off canva ---->
+
+        <div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comment</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+             <hr>
+            <div class="offcanvas-body offcanvas-lg">
+                <div>
+                Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+                </div>
+                <div class="dropdown mt-3">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                    Dropdown button
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                </ul>
+                </div>
+            </div>
+            </div>
+
+
+        <!---- Off canva ----->
+
         <div>
             <div class="mt-5">
                 <h4>Contract History</h4>
@@ -845,6 +878,29 @@ include_once '../../../views/layouts/includes/header.php';
     #close:hover {
         cursor: pointer;
     }
+    #commentBtn{
+        
+                display: inline-block;
+                outline: 0;
+                cursor: pointer;
+                border: 1px solid #007a5a;
+                color: #007a5a;
+                border-color: ;
+                font-weight: 700;
+                background: #fff;
+                padding: 8px;
+                font-size: 15px;
+                border-radius: 4px;
+                height: 36px;
+                transition: all 80ms linear;
+                float: inline-end;
+                margin-top: -5em;
+    }
+    #commentBtn:hover{
+                    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 8%);
+                    background: rgba(248,248,248,1);
+                }
+                
 </style>
 
 <script>
