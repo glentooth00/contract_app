@@ -111,23 +111,201 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
+            <?php if($getContract['contract_type']  ===  INFRA ) :?>
             <div class="col-md-2 mt-3">
                 <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                    <?php 
+                    $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                    ?>
                     <input type="date" id="startDate" class="form-control"
-                        value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+                        value="<?= $start; ?>" name="contract_start" readonly>
                 </div>
             </div>
-
+          
+            
             <div class="col-md-2 mt-3">
                 <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                 <div class="input-group">
+                    <?php 
+                    $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                    ?>
                     <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                    <input type="date" id="endDate" class="form-control" value="<?= $getContract['contract_end']; ?>"
+                    <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
                         name="contract_end" readonly>
                 </div>
             </div>
+
+              <?php endif; ?>
+
+              <?php if($getContract['contract_type']  ===  SACC ) :?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php 
+                        $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control"
+                            value="<?= $start; ?>" name="contract_start" readonly>
+                    </div>
+                </div>
+            
+                
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php 
+                        $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
+                            name="contract_end" readonly>
+                    </div>
+                </div>
+
+                <?php endif; ?>
+
+                <?php if($getContract['contract_type']  ===  GOODS ) :?>
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <?php 
+                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            ?>
+                            <input type="date" id="startDate" class="form-control"
+                                value="<?= $start; ?>" name="contract_start" readonly>
+                        </div>
+                    </div>
+                
+                    
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                        <div class="input-group">
+                            <?php 
+                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            ?>
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
+                                name="contract_end" readonly>
+                        </div>
+                    </div>
+
+                    <?php endif; ?>
+
+                    <?php if($getContract['contract_type']  ===  PSC_LONG ) :?>
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <?php 
+                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            ?>
+                            <input type="date" id="startDate" class="form-control"
+                                value="<?= $start; ?>" name="contract_start" readonly>
+                        </div>
+                    </div>
+                
+                    
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                        <div class="input-group">
+                            <?php 
+                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            ?>
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
+                                name="contract_end" readonly>
+                        </div>
+                    </div>
+
+                    <?php endif; ?>
+
+                    <?php if($getContract['contract_type']  ===  EMP_CON ) :?>
+                        <div class="col-md-2 mt-3">
+                            <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                                <?php 
+                                $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                                ?>
+                                <input type="date" id="startDate" class="form-control"
+                                    value="<?= $start; ?>" name="contract_start" readonly>
+                            </div>
+                        </div>
+                    
+                        
+                        <div class="col-md-2 mt-3">
+                            <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                            <div class="input-group">
+                                <?php 
+                                $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                                ?>
+                                <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                                <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
+                                    name="contract_end" readonly>
+                            </div>
+                        </div>
+
+                        <?php endif; ?>
+
+                         <?php if($getContract['contract_type']  ===  TEMP_LIGHTING ) :?>
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <?php 
+                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            ?>
+                            <input type="date" id="startDate" class="form-control"
+                                value="<?= $start; ?>" name="contract_start" readonly>
+                        </div>
+                    </div>
+                
+                    
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                        <div class="input-group">
+                            <?php 
+                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            ?>
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
+                                name="contract_end" readonly>
+                        </div>
+                    </div>
+
+                    <?php endif; ?>
+
+                     <?php if($getContract['contract_type']  ===  TRANS_RENT ) :?>
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <?php 
+                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            ?>
+                            <input type="date" id="startDate" class="form-control"
+                                value="<?= $start; ?>" name="contract_start" readonly>
+                        </div>
+                    </div>
+                
+                    
+                    <div class="col-md-2 mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                        <div class="input-group">
+                            <?php 
+                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            ?>
+                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
+                                name="contract_end" readonly>
+                        </div>
+                    </div>
+
+                    <?php endif; ?>
 
 
             <div class="row col-md-2">
@@ -238,7 +416,9 @@ include_once '../../../views/layouts/includes/header.php';
                             value="<?= $getContract['implementing_department']; ?>" name="contract_type" readonly>
                     </div>
                 </div>
-            <?php else: ?>
+            <?php endif; ?>
+
+            <?php if (!empty($getContract['department_assigned'])): ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Assigned Department</label>
@@ -810,6 +990,7 @@ include_once '../../../views/layouts/includes/header.php';
     });
 
 
+    
 
 
 </script>
