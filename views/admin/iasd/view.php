@@ -3,6 +3,7 @@ use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
+use App\Controllers\CommentController;
 session_start();
 
 use App\Controllers\ContractController;
@@ -27,6 +28,9 @@ $contract_id = $_GET['contract_id'];
 $getContract = (new ContractController)->getContractbyId($contract_id);
 
 $contract_data = $getContract['contract_name'];
+$contractId = $getContract['id'];
+
+$getComments = (new CommentController)->getCommentsByContractId($contractId);
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
@@ -641,9 +645,16 @@ include_once '../../../views/layouts/includes/header.php';
              <hr>
             
             <div class="offcanvas-body offcanvas-lg">
-
-                <!----comments display here ----->
-
+                <?php foreach ($getComments as $comment): ?>
+                    <div class="comment">
+                        <?php 
+                            $auditID = $comment['audit_id'];
+                            $user = (new UserController)->getUserById($auditID);
+                        ?>
+                        <p><strong><?= htmlspecialchars($user['firstname']) ?>:</strong></p>
+                        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                    </div>
+                <?php endforeach; ?>
             </div>
 
             <form action="comment/comment.php" method="post">
@@ -651,6 +662,7 @@ include_once '../../../views/layouts/includes/header.php';
                 <input type="hidden" id="auditId" name="audit_id">
                 <input type="hidden" id="userId" name="user_id">
                 <input type="hidden" id="userDepartment" name="user_department">
+                <hr>
                 <div class="p-3">
                     <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
                 </div>

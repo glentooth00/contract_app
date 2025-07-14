@@ -3,6 +3,7 @@ use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
+use App\Controllers\CommentController;
 session_start();
 
 use App\Controllers\ContractController;
@@ -19,6 +20,9 @@ $contract_id = $_GET['contract_id'];
 $getContract = (new ContractController)->getContractbyId($contract_id);
 
 $contract_data = $getContract['contract_name'];
+$contractId = $getContract['id'];
+
+$getComments = (new CommentController)->getCommentsByContractId($contractId);
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
@@ -35,12 +39,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout ">
 
@@ -51,7 +55,53 @@ include_once '../../../views/layouts/includes/header.php';
 
         <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?></h2>
+            <?= $contract_data ?>
+        
+            <?php 
+                $contractId = $getContract['id'];
+
+                $hasComment = ( new CommentController )->hasComment($contractId);
+                $hasCommentCount = ( new CommentController )->hasCommentCount($contractId);
+
+                
+            ?>
+            <?php if($hasComment == true): ?>
+                <!-- <span class=""  id="hasComment"><img src="../../../public/images/withComment.svg" width="33px" alt="This Contract has comment!"></span> -->
+                
+                <?php endif; ?>
+
+            <div id="viewComment" class="float-end" style="margin-top:-5px;right: -10em;">
+                
+
+                            </span>
+                        <img 
+                src="../../../public/images/viewComment.svg" 
+                width="33px" 
+                alt="This Contract has comment!" 
+                type="button" 
+                data-bs-toggle="offcanvas" 
+                data-bs-target="#offcanvasExample" 
+                aria-controls="offcanvasExample"
+                data-contract-id="<?= $contract['id'] ?>"
+                class="view-comment-trigger"
+            >
+                            
+                                <span style="background-color: red;
+                                text-align: center;
+                                border-radius: 20px;
+                                font-size: 22px;
+                                color: white;
+                                width: 25px;
+                                position: fixed;
+                                right: 20px;
+                            "
+                            
+                        >
+                    <?= $hasCommentCount; ?>
+            </span>
+            </div>
+        </h2>
+            
         <hr>
 
         <?php
@@ -555,6 +605,48 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+        <!-- Off canvas ---->
+
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+             <hr>
+            
+            <div class="offcanvas-body offcanvas-md">
+                <?php foreach ($getComments as $comment): ?>
+                    <div class="comment">
+                        <?php 
+                            $auditID = $comment['audit_id'];
+                            $user = (new UserController)->getUserById($auditID);
+                        ?>
+                        <p><strong><?= htmlspecialchars($user['firstname']) ?>:</strong></p>
+                        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                    </div>
+                <?php endforeach; ?>
+                <!----comments display here ----->
+
+            </div>
+
+            <form action="comment/comment.php" method="post">
+                <input type="hidden" id="contractID" name="contract_id">
+                <input type="hidden" id="auditId" name="audit_id">
+                <input type="hidden" id="userId" name="user_id">
+                <input type="hidden" id="userDepartment" name="user_department">
+                <hr>
+                <div class="p-3">
+                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
+                </div>
+                <div class="p-3">
+                <button type="submit" class="float-end" id="submitComment">Comment</button> 
+                </div>
+            </form>
+            </div>
+
+
+        <!---- Off canva ----->
+
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -609,6 +701,8 @@ include_once '../../../views/layouts/includes/header.php';
 
 
 
+
+
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
 <style>
@@ -655,6 +749,41 @@ include_once '../../../views/layouts/includes/header.php';
     #close:hover {
         cursor: pointer;
     }
+    #hasComment:hover{
+        cursor: pointer;
+    }
+    #viewComment:hover{
+        cursor: pointer;
+
+    }
+    #submitComment{
+                    display: inline-block;
+                    outline: none;
+                    border-width: 0px;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    font-size: inherit;
+                    font-weight: 500;
+                    max-width: 100%;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+                    background: rgb(0, 82, 204);
+                    cursor: pointer;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0px 12px;
+                    vertical-align: middle;
+                    width: auto;
+                    font-size: 14px;
+                    color: rgb(255, 255, 255);
+    }
+    #submitComment:hover {
+                        background: rgb(0, 101, 255);
+                        text-decoration: inherit;
+                        transition-duration: 0s, 0.15s;
+                        color: rgb(255, 255, 255);
+                    }
 </style>
 
 <script>
@@ -802,7 +931,18 @@ include_once '../../../views/layouts/includes/header.php';
         $('#contract_type').val(contractType);
     });
 
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    const contractId = this.dataset.contractId;
 
+                    // Trigger PHP script without waiting for response
+                    const url = 'comment/update_status.php?contract_id=' + encodeURIComponent(contractId);
+                    const img = new Image(); // lightweight request
+                    img.src = url; // sends GET request to the PHP script
+                });
+            });
+        });
 
 
 </script>
