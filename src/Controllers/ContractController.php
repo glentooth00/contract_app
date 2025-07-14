@@ -1141,6 +1141,21 @@ class ContractController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+        public function getContractsForAudit($department)
+    {
+       $query = "SELECT * FROM contracts WHERE contract_status = 'Active' ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($query);
+
+        // $stmt->bindParam(':dept1', $department, PDO::PARAM_STR);
+        // $stmt->bindParam(':dept2', $department, PDO::PARAM_STR);
+        // $stmt->bindParam(':dept3', $department, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     //could be just temporary to show all contracts by department
         public function getContractsAll()
