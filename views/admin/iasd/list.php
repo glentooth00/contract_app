@@ -12,7 +12,7 @@ use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
 
-$contracts = (new ContractController)->getContractsByDepartment($department);
+$contracts = (new ContractController)->getContractsForAudit($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 

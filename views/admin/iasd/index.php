@@ -10,7 +10,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 
-$contracts = (new ContractController)->getContractsByDepartmentAll($department);
+$contracts = (new ContractController)->getContractsForAudit($department);
 
 // getting the contract types to be compared with the contracts for their expiration
 $contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
