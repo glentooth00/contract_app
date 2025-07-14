@@ -12,6 +12,14 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 
+if($department === IASD){
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}else{
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -21,6 +29,8 @@ $getContract = (new ContractController)->getContractbyId($contract_id);
 $contract_data = $getContract['contract_name'];
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
+
+$contract_id = $getContract['id'];
 
 //-----------------------------------------------------------------------//
 
@@ -56,9 +66,21 @@ include_once '../../../views/layouts/includes/header.php';
            
         
         <hr>
-        <button class="" id="commentBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+
+        <button 
+            id="commentBtn" 
+            type="button" 
+            data-bs-toggle="offcanvas" 
+            data-bs-target="#offcanvasExample" 
+            aria-controls="offcanvasExample"
+            data-contract-id="<?= $getContract['id'] ?>"
+            data-audit-id="<?= $user_id ?>"
+            data-user-id="<?= $user_id ?>"
+            data-department ="<?= $user_department ?>"
+        >
             Leave Comment
         </button>
+
         <?php
         $start = new DateTime($getContract['contract_start']);
         $end = new DateTime($getContract['contract_end']);
@@ -609,35 +631,41 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
 
 
-        <!-- Off canva ---->
+        <!-- Off canvas ---->
 
-        <div class="offcanvas offcanvas-start w-25" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
                 <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comment</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
              <hr>
+            
             <div class="offcanvas-body offcanvas-lg">
-                <div>
-                Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
-                </div>
-                <div class="dropdown mt-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                    Dropdown button
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-                </div>
+
+                <!----comments display here ----->
+
             </div>
+
+            <form action="comment/comment.php" method="post">
+                <input type="hidden" id="contractID" name="contract_id">
+                <input type="hidden" id="auditId" name="audit_id">
+                <input type="hidden" id="userId" name="user_id">
+                <input type="hidden" id="userDepartment" name="user_department">
+                <div class="p-3">
+                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
+                </div>
+                <div class="p-3">
+                <button type="submit" class="float-end" id="submitComment">Comment</button> 
+                </div>
+            </form>
             </div>
 
 
         <!---- Off canva ----->
 
-        <div>
+
+
+            <div>
             <div class="mt-5">
                 <h4>Contract History</h4>
             </div>
@@ -671,7 +699,6 @@ include_once '../../../views/layouts/includes/header.php';
                         $updateStatus = (new ContractHistoryController)->updateStatus($stat);
 
                     }
-
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>
@@ -829,7 +856,37 @@ include_once '../../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    const commentBtn = document.getElementById("commentBtn");
 
+    commentBtn.addEventListener("click", function(){
+        const contractId = commentBtn.dataset.contractId;
+        const auditId = commentBtn.dataset.auditId;
+        const userId = commentBtn.dataset.userId;
+        const userDept = commentBtn.dataset.department;
+
+        console.log("Contract ID:", contractId);
+        console.log("Audit ID:", auditId);
+        console.log("User ID:", userId);
+         console.log("User dept:", userDept);
+
+        const contractInput = document.getElementById("contractID");
+        const auditInput = document.getElementById("auditId");
+        const userInput = document.getElementById("userId");
+        const departmentInput = document.getElementById("user_department");
+
+        console.log("Inputs found:", contractInput, auditInput, userInput);
+
+        // Set values
+        contractInput.value = contractId;
+        auditInput.value = auditId;
+        userInput.value = userId;
+        userDepartment.value = userDept;
+    });
+});
+
+</script>
 
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
@@ -900,6 +957,36 @@ include_once '../../../views/layouts/includes/header.php';
                     box-shadow: 0 1px 3px 0 rgb(0 0 0 / 8%);
                     background: rgba(248,248,248,1);
                 }
+
+    #submitComment{
+                    display: inline-block;
+                    outline: none;
+                    border-width: 0px;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    font-size: inherit;
+                    font-weight: 500;
+                    max-width: 100%;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+                    background: rgb(0, 82, 204);
+                    cursor: pointer;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0px 12px;
+                    vertical-align: middle;
+                    width: auto;
+                    font-size: 14px;
+                    color: rgb(255, 255, 255);
+    }
+    #submitComment:hover {
+                        background: rgb(0, 101, 255);
+                        text-decoration: inherit;
+                        transition-duration: 0s, 0.15s;
+                        color: rgb(255, 255, 255);
+                    }
+                
                 
 </style>
 
@@ -1045,8 +1132,6 @@ include_once '../../../views/layouts/includes/header.php';
         $('#contract_type').val(contractType);
     });
 
-
-    
 
 
 </script>
