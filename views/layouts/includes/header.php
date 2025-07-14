@@ -25,96 +25,104 @@
 
 
     <!-- Custom Styles -->
-    <style>
-        html {
-            width: 100%;
-        }
+<style>
+    html, body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background-color: #37AFE1;
+    }
 
-        body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            background-color: #37AFE1;
-        }
+    .pageContent {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+    }
 
-        .pageContent {
-            display: flex;
-            min-height: 100vh;
-        }
+    .mainContent {
+        background-color: #FFF;
+        width: 100%;
+        padding: 20px;
+    }
 
-        .mainContent {
-            background-color: #FFF;
-            width: 100%;
-            padding: 20px;
-        }
+    .headerDiv {
+        background-color: #FBFBFB;
+        padding: 20px;
+    }
 
-        .headerDiv {
-            background-color: #FBFBFB;
-            padding: 20px;
-        }
+    .main-layout {
+        display: flex;
+        flex-wrap: wrap;
+        min-height: 100vh;
+    }
 
+    .sideBar {
+        width: 220px;
+        background-color: #343a40;
+        padding: 20px;
+        color: white;
+    }
+
+    .content-area {
+        flex: 1;
+        padding: 30px;
+        background-color: #f8f9fa;
+    }
+
+    #statusFilter {
+        width: 100%;
+        max-width: 250px;
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+    /* DataTable spacing */
+    .dataTables_wrapper {
+        margin-top: 20px;
+    }
+
+    label {
+        display: inline-block;
+        margin-bottom: 20px;
+    }
+
+    a.paginate_button.current {
+        padding: 1px !important;
+    }
+
+    /* ✅ RESPONSIVENESS */
+    @media (max-width: 992px) {
         .main-layout {
-            display: flex;
-            min-height: 100vh;
+            flex-direction: column;
         }
 
         .sideBar {
-            width: 220px;
-            background-color: #343a40;
-            padding: 20px;
-            color: white;
+            width: 100%;
+            text-align: center;
         }
 
         .content-area {
-            flex: 1;
-            padding: 30px;
-            background-color: #f8f9fa;
+            padding: 15px;
         }
 
         #statusFilter {
-            width: 250px;
-            display: inline-block;
-            margin-left: 10px;
+            margin-left: 0;
+            margin-top: 10px;
         }
+    }
 
-        <style>.main-layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sideBar {
-            width: 220px;
-            background-color: #343a40;
-            padding: 20px;
-            color: white;
+    @media (max-width: 576px) {
+        .headerDiv, .mainContent {
+            padding: 10px;
         }
 
         .content-area {
-            flex: 1;
-            padding: 30px;
-            background-color: #f8f9fa;
+            padding: 10px;
         }
+    }
+</style>
 
-        #statusFilter {
-            width: 250px;
-            display: inline-block;
-            margin-left: 10px;
-        }
-
-        /* Add margin above the table */
-        .dataTables_wrapper {
-            margin-top: 20px;
-        }
-
-        label {
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        a.paginate_button.current {
-            padding: 1px !important;
-        }
-    </style>
 </head>
 
 <body>
