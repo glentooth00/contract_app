@@ -25,6 +25,8 @@ $contractId = $getContract['id'];
 
 $getComments = (new CommentController)->getCommentsByContractId($contractId);
 
+$comments = (new CommentController)->getComments($contractId);
+
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
 //-----------------------------------------------------------------------//
@@ -92,10 +94,10 @@ include_once '../../../views/layouts/includes/header.php';
                          <span style="background-color: red;
                                 text-align: center;
                                 border-radius: 20px;
-                                font-size: 22px;
+                                font-size: 18px;
                                 color: white;
-                                width: 25px;
-                                position: fixed;
+                                width: 20px;
+                                position: absolute;
                                 right: 20px;
 
                             ">

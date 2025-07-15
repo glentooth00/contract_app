@@ -57,6 +57,16 @@ class CommentController{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+        public function getComments($contractId)
+    {
+        $query = "SELECT * FROM comments WHERE contract_id = :contract_id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':contract_id', $contractId);
+        $stmt->execute();
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function updateCommentStatus($data)
     {
         $query = "UPDATE comments SET status = :status WHERE contract_id = :contract_id";
