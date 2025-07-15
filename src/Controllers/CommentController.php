@@ -56,7 +56,7 @@ class CommentController{
 
     public function getCommentsByContractId($contractId)
     {
-        $query = "SELECT * FROM comments WHERE contract_id = :contract_id AND status = '1'";
+        $query = "SELECT * FROM comments WHERE contract_id = :contract_id ORDER BY created_at ASC";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':contract_id', $contractId);
         $stmt->execute();
