@@ -84,7 +84,7 @@ include_once '../../../views/layouts/includes/header.php';
             data-user-id="<?= $user_id ?>"
             data-department ="<?= $user_department ?>"
         >
-            Leave Comment
+            Comment
         </button>
 
         <?php
