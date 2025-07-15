@@ -49,17 +49,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         $saveComment = ( new CommentController )->saveCommentForUser($commentData);
 
-        // if($saveComment){
+        if($saveComment){
 
             
-        //     $_SESSION['notification'] = [
-        //         'message' => 'Comment submitted successfully!',
-        //         'type' => 'success'
-        //     ];
+            $_SESSION['notification'] = [
+                'message' => 'Comment submitted successfully!',
+                'type' => 'success'
+            ];
 
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
+            header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        // }
+        }
 
     }//end of if user_department is IASD
 
