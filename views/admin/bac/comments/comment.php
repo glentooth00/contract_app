@@ -32,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         }
 
-    }//end of if user_department is IASD
+    }
 
         if(in_array($_POST['user_department'], [IT, ISD, CITET, BAC, FSD, AOSD, CHIEF, 'ISD-MSD', CHIEF])){
         
@@ -61,8 +61,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         }
 
-    }//end of if user_department is IASD
+    }
 
 }
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+
 
