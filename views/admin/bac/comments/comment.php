@@ -36,7 +36,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
         if(in_array($_POST['user_department'], [IT, ISD, CITET, BAC, FSD, AOSD, CHIEF, 'ISD-MSD', CHIEF])){
         
-            // echo 'other dept';
+        
         $commentData = [
             'contract_id' => $_POST['contract_id'],
             'user_id' => $_POST['audit_id'],
