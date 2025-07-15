@@ -125,8 +125,11 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
+                                <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
+                                    style="text-decoration: none; color: black;">
+                                    <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
-
+                                </a>
                                 <?php 
                                     $contractId = $contract['id'];
 
@@ -135,6 +138,8 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?php if($hasComment == true): ?>
                                     <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
                                 <?php endif; ?>
+
+
                             </td>
                             <td class="text-center">
                         <?php
