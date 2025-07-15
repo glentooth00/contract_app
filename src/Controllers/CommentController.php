@@ -25,6 +25,13 @@ class CommentController{
         return $stmt->execute($data);
     }
 
+    public function saveCommentForUser($data)
+    {
+        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status) VALUES (:contract_id, :user_id, :comment, :comment_id, :status)";
+        $stmt = $this->db->prepare($query);
+        return $stmt->execute($data);
+    }
+
     public function hasComment($contractId)
     {
         $query = "SELECT * FROM comments WHERE contract_id = :contract_id AND status = '1'";
@@ -59,11 +66,11 @@ class CommentController{
 
         public function getComments($contractId)
     {
-        $query = "SELECT * FROM comments WHERE contract_id = :contract_id";
+        $query = "SELECT * FROM comments WHERE contract_id = :contract_id ORDER BY created_at ASC";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':contract_id', $contractId);
         $stmt->execute();
-        
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

@@ -13,6 +13,14 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 
+if($department === IASD){
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}else{
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -87,6 +95,9 @@ include_once '../../../views/layouts/includes/header.php';
                     data-bs-target="#offcanvasExample" 
                     aria-controls="offcanvasExample"
                     data-contract-id="<?= $getContract['id'] ?>"
+                    data-audit-id="<?= $user_id ?>"
+                    data-user-id="<?= $user_id ?>"
+                    data-department ="<?= $user_department ?>"
                     class="view-comment-trigger"
                 />
 
@@ -659,25 +670,46 @@ include_once '../../../views/layouts/includes/header.php';
              <hr>
             
             <div class="offcanvas-body offcanvas-md">
-                <?php foreach ($getComments as $comment): ?>
-                    <div class="comment">
-                        <?php 
-                            $auditID = $comment['audit_id'];
-                            $user = (new UserController)->getUserById($auditID);
-                        ?>
-                        <p><strong><?= htmlspecialchars($user['firstname']) ?>:</strong></p>
-                        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                    </div>
-                <?php endforeach; ?>
+              <?php foreach ($comments as $comment): ?>
+    <?php 
+        $auditID = $comment['audit_id'];
+        $userID = $comment['user_id'];
+        $auditName = (new UserController)->getUserById($auditID);
+        $userName = (new UserController)->getUserById($userID);
+    ?>
+    
+    <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        
+        <!-- Left: Audit side -->
+        <?php if($auditName): ?>
+            <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
+                <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Right: User side -->
+        <?php if($userName): ?>
+            <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+        
+    </div>
+<?php endforeach; ?>
+
                 <!----comments display here ----->
 
             </div>
 
-            <form action="comment/comment.php" method="post">
-                <input type="hidden" id="contractID" name="contract_id">
-                <input type="hidden" id="auditId" name="audit_id">
-                <input type="hidden" id="userId" name="user_id">
-                <input type="hidden" id="userDepartment" name="user_department">
+            <form action="comments/comment.php" method="post">
+                <input type="hidden" id="contractID" value="<?= $contractId ?>" name="contract_id">
+                <input type="hidden" id="auditId" value="<?= $user_id ?>" name="audit_id">
+                <input type="hidden" id="userId" value="<?= $user_id ?>" name="user_id">
+                <input type="hidden" id="userDepartment" value="<?= $user_department ?>" name="user_department">
                 <hr>
                 <div class="p-3">
                     <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
@@ -690,6 +722,9 @@ include_once '../../../views/layouts/includes/header.php';
 
 
         <!---- Off canva ----->
+
+
+
 
 <!-- popup notification ---->
 
@@ -741,7 +776,37 @@ include_once '../../../views/layouts/includes/header.php';
     </script>
 <?php endif; ?>
 
+        <script>
+    document.addEventListener("DOMContentLoaded", function(){
+    const commentBtn = document.getElementById("commentBtn");
 
+    commentBtn.addEventListener("click", function(){
+        const contractId = commentBtn.dataset.contractId;
+        const auditId = commentBtn.dataset.auditId;
+        const userId = commentBtn.dataset.userId;
+        const userDept = commentBtn.dataset.department;
+
+        console.log("Contract ID:", contractId);
+        console.log("Audit ID:", auditId);
+        console.log("User ID:", userId);
+         console.log("User dept:", userDept);
+
+        const contractInput = document.getElementById("contractID");
+        const auditInput = document.getElementById("auditId");
+        const userInput = document.getElementById("userId");
+        const departmentInput = document.getElementById("user_department");
+
+        console.log("Inputs found:", contractInput, auditInput, userInput);
+
+        // Set values
+        contractInput.value = contractId;
+        auditInput.value = auditId;
+        userInput.value = userId;
+        userDepartment.value = userDept;
+    });
+});
+
+</script>
 
 
 
@@ -791,6 +856,34 @@ include_once '../../../views/layouts/includes/header.php';
     #close:hover {
         cursor: pointer;
     }
+    #submitComment{
+                    display: inline-block;
+                    outline: none;
+                    border-width: 0px;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    font-size: inherit;
+                    font-weight: 500;
+                    max-width: 100%;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+                    background: rgb(0, 82, 204);
+                    cursor: pointer;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0px 12px;
+                    vertical-align: middle;
+                    width: auto;
+                    font-size: 14px;
+                    color: rgb(255, 255, 255);
+    }
+    #submitComment:hover {
+                        background: rgb(0, 101, 255);
+                        text-decoration: inherit;
+                        transition-duration: 0s, 0.15s;
+                        color: rgb(255, 255, 255);
+                    }
 </style>
 
 <script>
