@@ -868,37 +868,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php endif; ?>
 
 
-<script>
-    document.addEventListener("DOMContentLoaded", function(){
-    const commentBtn = document.getElementById("commentBtn");
 
-    commentBtn.addEventListener("click", function(){
-        const contractId = commentBtn.dataset.contractId;
-        const auditId = commentBtn.dataset.auditId;
-        const userId = commentBtn.dataset.userId;
-        const userDept = commentBtn.dataset.department;
-
-        console.log("Contract ID:", contractId);
-        console.log("Audit ID:", auditId);
-        console.log("User ID:", userId);
-         console.log("User dept:", userDept);
-
-        const contractInput = document.getElementById("contractID");
-        const auditInput = document.getElementById("auditId");
-        const userInput = document.getElementById("userId");
-        const departmentInput = document.getElementById("user_department");
-
-        console.log("Inputs found:", contractInput, auditInput, userInput);
-
-        // Set values
-        contractInput.value = contractId;
-        auditInput.value = auditId;
-        userInput.value = userId;
-        userDepartment.value = userDept;
-    });
-});
-
-</script>
 
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
