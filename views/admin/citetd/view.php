@@ -88,9 +88,8 @@ include_once '../../../views/layouts/includes/header.php';
                     class="view-comment-trigger"
                 />
 
-               
-                
-                                <span style="background-color: red;
+                <?php if($hasCommentCount  > 0): ?>
+                         <span style="background-color: red;
                                 text-align: center;
                                 border-radius: 20px;
                                 font-size: 22px;
@@ -98,31 +97,33 @@ include_once '../../../views/layouts/includes/header.php';
                                 width: 25px;
                                 position: fixed;
                                 right: 20px;
+
                             ">
                     <?= $hasCommentCount; ?>
                     </span>
+                <?php endif; ?>
             </span>
             </div></h2>
 
           <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
-                    img.addEventListener('click', function () {
-                        const contractId = this.dataset.contractId;
+           document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    const contractId = this.dataset.contractId;
 
-                        // Send a GET request to your PHP script
-                        fetch(`comments/update_status.php?contract_id=${contractId}&updateStatus=1`)
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log('PHP script response:', data);
-                                // Optional: show confirmation
-                                // alert('Status updated');
-                            })
-                            .catch(error => {
-                                console.error('Error triggering PHP script:', error);
-                            });
-                    });               });
+                    // Check if this actually hits update_status.php
+                    fetch(`comments/update_status.php?contract_id=${contractId}`)
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log('PHP response:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
             });
+        });
+
             </script></h2>
 
         <hr>
@@ -645,6 +646,48 @@ include_once '../../../views/layouts/includes/header.php';
 
     </div>
 </div>
+
+       <!-- Off canvas ---->
+
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+             <hr>
+            
+            <div class="offcanvas-body offcanvas-md">
+                <?php foreach ($getComments as $comment): ?>
+                    <div class="comment">
+                        <?php 
+                            $auditID = $comment['audit_id'];
+                            $user = (new UserController)->getUserById($auditID);
+                        ?>
+                        <p><strong><?= htmlspecialchars($user['firstname']) ?>:</strong></p>
+                        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                    </div>
+                <?php endforeach; ?>
+                <!----comments display here ----->
+
+            </div>
+
+            <form action="comment/comment.php" method="post">
+                <input type="hidden" id="contractID" name="contract_id">
+                <input type="hidden" id="auditId" name="audit_id">
+                <input type="hidden" id="userId" name="user_id">
+                <input type="hidden" id="userDepartment" name="user_department">
+                <hr>
+                <div class="p-3">
+                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
+                </div>
+                <div class="p-3">
+                <button type="submit" class="float-end" id="submitComment">Comment</button> 
+                </div>
+            </form>
+            </div>
+
+
+        <!---- Off canva ----->
 
 <!-- popup notification ---->
 
