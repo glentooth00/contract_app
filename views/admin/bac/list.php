@@ -137,7 +137,8 @@ include_once '../../../views/layouts/includes/header.php';
                                 ?>
                                 <?php if($hasComment == true): ?>
                                     <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
-                                <?php endif; ?></td>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-center">
                                 <?php
 $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
