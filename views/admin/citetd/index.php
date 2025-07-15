@@ -145,14 +145,15 @@ include_once '../../../views/layouts/includes/header.php';
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
-                         <?php 
+                                <?php 
                                     $contractId = $contract['id'];
 
                                     $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
                                 <?php if($hasComment == true): ?>
                                     <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
-                                <?php endif; ?></td>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-center">
                             <?php
                             $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';

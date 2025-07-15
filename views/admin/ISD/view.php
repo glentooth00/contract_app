@@ -4,6 +4,7 @@ use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\SuspensionController;
 use App\Controllers\UserController;
+use App\Controllers\CommentController;
 session_start();
 
 use App\Controllers\ContractController;
@@ -13,6 +14,14 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
+
+if($department === IASD){
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}else{
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -20,6 +29,10 @@ $contract_id = $_GET['contract_id'];
 $getContract = (new ContractController)->getContractbyId($contract_id);
 
 $contract_data = $getContract['contract_name'];
+
+$contractId = $getContract['id'];
+
+$comments = (new CommentController)->getComments($contractId);
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
@@ -55,17 +68,87 @@ include_once '../../../views/layouts/includes/header.php';
     <div class="content-area">
 
         <div class="d-flex col-md-12 gap-2">
-            <div class="col-md-11">
-                <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
-                            aria-hidden="true"></i></a>
-                    <?= $contract_data ?>
+           <div class="col-md-11">
+    <div class="d-flex justify-content-between align-items-center mt-2">
+        <!-- Left Side: Title + Contract Info -->
+        <div>
+            <h2 class="m-0">
+                <a href="list.php" class="text-dark" style="text-decoration:none">
+                    <i class="fa fa-angle-double-left"></i>
+               </a>
+                <?= $contract_data ?>
 
-                    <?php if (!empty($getContract['account_no'])): ?>
-                        <span class="badge" style="color: #9BA4B5;">(<?= $getContract['account_no'] ?>)</span>
-                    <?php endif; ?>
+                <?php if (!empty($getContract['account_no'])): ?>
+                    <span class="badge" style="color: #9BA4B5;">
+                        (<?= $getContract['account_no'] ?>)
+                    </span>
+                <?php endif; ?> 
+            </h2>
+        </div>
 
-                </h2>
-            </div>
+        <!-- Right Side: Always show image, conditionally show count -->
+        <?php 
+            $contractId = $getContract['id'];
+            $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
+        ?>
+        <div id="viewComment" style="position: relative;">
+            <img
+                src="../../../public/images/viewComment.svg" 
+                width="33px" 
+                alt="This Contract has comment!" 
+                type="button" 
+                data-bs-toggle="offcanvas" 
+                data-bs-target="#offcanvasExample" 
+                aria-controls="offcanvasExample"
+                data-contract-id="<?= $getContract['id'] ?>"
+                data-audit-id="<?= $user_id ?>"
+                data-user-id="<?= $user_id ?>"
+                data-department="<?= $user_department ?>"
+                class="view-comment-trigger"
+            />
+
+            <?php if ($hasCommentCount > 0): ?>
+                <span style="background-color: red;
+                            text-align: center;
+                            border-radius: 20px;
+                            font-size: 14px;
+                            color: white;
+                            width: 20px;
+                            height: 20px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            position: absolute;
+                            top: -5px;
+                            right: -5px;">
+                    <?= $hasCommentCount; ?>
+                </span>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+  <script>
+           document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    const contractId = this.dataset.contractId;
+
+                    // Check if this actually hits update_status.php
+                    fetch(`comments/update_status.php?contract_id=${contractId}`)
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log('PHP response:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        });
+
+            </script>
+
 
             <div class="p-3" id="suspend" onclick="myFunction()" style="margin-left:6em;">
                 <img src="../../../public/images/3dots.svg" width="20px">
@@ -1238,6 +1321,72 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
     </script>
 <?php endif; ?>
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
+
+
+       <!-- Off canvas ---->
+
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+             <hr>
+            
+            <div class="offcanvas-body offcanvas-md">
+              <?php foreach ($comments as $comment): ?>
+    <?php 
+        $auditID = $comment['audit_id'];
+        $userID = $comment['user_id'];
+        $auditName = (new UserController)->getUserById($auditID);
+        $userName = (new UserController)->getUserById($userID);
+    ?>
+    
+    <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        
+        <!-- Left: Audit side -->
+        <?php if($auditName): ?>
+            <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
+                <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Right: User side -->
+        <?php if($userName): ?>
+            <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y h:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+        
+    </div>
+<?php endforeach; ?>
+
+                <!----comments display here ----->
+
+            </div>
+
+            <form action="comments/comment.php" method="post">
+                <input type="hidden" id="contractID" value="<?= $contractId ?>" name="contract_id">
+                <input type="hidden" id="auditId" value="<?= $user_id ?>" name="audit_id">
+                <input type="hidden" id="userId" value="<?= $user_id ?>" name="user_id">
+                <input type="hidden" id="userDepartment" value="<?= $user_department ?>" name="user_department">
+                <hr>
+                <div class="p-3">
+                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
+                </div>
+                <div class="p-3">
+                <button type="submit" class="float-end" id="submitComment">Comment</button> 
+                </div>
+            </form>
+            </div>
+
+
+        <!---- Off canva ----->
+
+
 <style>
     .pageContent {
         display: flex;
