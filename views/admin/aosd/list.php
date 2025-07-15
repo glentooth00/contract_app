@@ -11,6 +11,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
+use App\Controllers\CommentController;
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
@@ -142,6 +143,14 @@ include_once '../../../views/layouts/includes/header.php';
                                         <?= $contract['account_no'] ?> )</span>
                                 <?php endif; ?>
 
+                                <?php 
+                                    $contractId = $contract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                <?php endif; ?>
 
                             </td>
                             <td class="text-center">
