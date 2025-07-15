@@ -625,8 +625,5 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
-
-
-
     //----------------DAtatables
 </script>

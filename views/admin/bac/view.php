@@ -15,6 +15,13 @@ $department = $_SESSION['department'] ?? null;
 
 $contractType = $_GET['type'];
 
+if($department === IASD){
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}else{
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -25,6 +32,7 @@ $contract_data = $getContract['contract_name'];
 $contractId = $getContract['id'];
 
 $getComments = (new CommentController)->getCommentsByContractId($contractId);
+$comments = (new CommentController)->getComments($contractId);
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
@@ -51,7 +59,8 @@ include_once '../../../views/layouts/includes/header.php';
         <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
                     aria-hidden="true"></i></a>
             <?= $contract_data ?>
-              <?php 
+        
+        <?php 
                 $contractId = $getContract['id'];
 
                 $hasComment = ( new CommentController )->hasComment($contractId);
@@ -78,45 +87,50 @@ include_once '../../../views/layouts/includes/header.php';
                     data-bs-target="#offcanvasExample" 
                     aria-controls="offcanvasExample"
                     data-contract-id="<?= $getContract['id'] ?>"
+                    data-audit-id="<?= $user_id ?>"
+                    data-user-id="<?= $user_id ?>"
+                    data-department ="<?= $user_department ?>"
                     class="view-comment-trigger"
                 />
 
-               
-                
-                                <span style="background-color: red;
+                <?php if($hasCommentCount  > 0): ?>
+                         <span style="background-color: red;
                                 text-align: center;
                                 border-radius: 20px;
-                                font-size: 22px;
+                                font-size: 18px;
                                 color: white;
-                                width: 25px;
-                                position: fixed;
+                                width: 20px;
+                                position: absolute;
                                 right: 20px;
+
                             ">
                     <?= $hasCommentCount; ?>
                     </span>
+                <?php endif; ?>
             </span>
             </div></h2>
 
           <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
-                    img.addEventListener('click', function () {
-                        const contractId = this.dataset.contractId;
+           document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    const contractId = this.dataset.contractId;
 
-                        // Send a GET request to your PHP script
-                        fetch(`comments/update_status.php?contract_id=${contractId}&updateStatus=1`)
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log('PHP script response:', data);
-                                // Optional: show confirmation
-                                // alert('Status updated');
-                            })
-                            .catch(error => {
-                                console.error('Error triggering PHP script:', error);
-                            });
-                    });               });
+                    // Check if this actually hits update_status.php
+                    fetch(`comments/update_status.php?contract_id=${contractId}`)
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log('PHP response:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
             });
+        });
+
             </script>
+            </h2>
 
 
 
@@ -654,7 +668,7 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-        <!-- Off canvas ---->
+       <!-- Off canvas ---->
 
         <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
@@ -664,25 +678,46 @@ include_once '../../../views/layouts/includes/header.php';
              <hr>
             
             <div class="offcanvas-body offcanvas-md">
-                <?php foreach ($getComments as $comment): ?>
-                    <div class="comment">
-                        <?php 
-                            $auditID = $comment['audit_id'];
-                            $user = (new UserController)->getUserById($auditID);
-                        ?>
-                        <p><strong><?= htmlspecialchars($user['firstname']) ?>:</strong></p>
-                        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                    </div>
-                <?php endforeach; ?>
+              <?php foreach ($comments as $comment): ?>
+    <?php 
+        $auditID = $comment['audit_id'];
+        $userID = $comment['user_id'];
+        $auditName = (new UserController)->getUserById($auditID);
+        $userName = (new UserController)->getUserById($userID);
+    ?>
+    
+    <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        
+        <!-- Left: Audit side -->
+        <?php if($auditName): ?>
+            <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
+                <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Right: User side -->
+        <?php if($userName): ?>
+            <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y h:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+        
+    </div>
+<?php endforeach; ?>
+
                 <!----comments display here ----->
 
             </div>
 
-            <form action="comment/comment.php" method="post">
-                <input type="hidden" id="contractID" name="contract_id">
-                <input type="hidden" id="auditId" name="audit_id">
-                <input type="hidden" id="userId" name="user_id">
-                <input type="hidden" id="userDepartment" name="user_department">
+            <form action="comments/comment.php" method="post">
+                <input type="hidden" id="contractID" value="<?= $contractId ?>" name="contract_id">
+                <input type="hidden" id="auditId" value="<?= $user_id ?>" name="audit_id">
+                <input type="hidden" id="userId" value="<?= $user_id ?>" name="user_id">
+                <input type="hidden" id="userDepartment" value="<?= $user_department ?>" name="user_department">
                 <hr>
                 <div class="p-3">
                     <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
@@ -796,6 +831,34 @@ include_once '../../../views/layouts/includes/header.php';
     #close:hover {
         cursor: pointer;
     }
+     #submitComment{
+                    display: inline-block;
+                    outline: none;
+                    border-width: 0px;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    font-size: inherit;
+                    font-weight: 500;
+                    max-width: 100%;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+                    background: rgb(0, 82, 204);
+                    cursor: pointer;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0px 12px;
+                    vertical-align: middle;
+                    width: auto;
+                    font-size: 14px;
+                    color: rgb(255, 255, 255);
+    }
+    #submitComment:hover {
+                        background: rgb(0, 101, 255);
+                        text-decoration: inherit;
+                        transition-duration: 0s, 0.15s;
+                        color: rgb(255, 255, 255);
+                    }
 </style>
 
 <script>

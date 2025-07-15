@@ -137,7 +137,8 @@ include_once '../../../views/layouts/includes/header.php';
             });
         });
 
-            </script></h2>
+            </script>
+            </h2>
 
         <hr>
 
