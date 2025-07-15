@@ -104,7 +104,7 @@ include_once '../../../views/layouts/includes/header.php';
                         const contractId = this.dataset.contractId;
 
                         // Send a GET request to your PHP script
-                        fetch(`../comments/update_status.php?contract_id=${contractId}`)
+                        fetch(`comments/update_status.php?contract_id=${contractId}&updateStatus=1`)
                             .then(response => response.text())
                             .then(data => {
                                 console.log('PHP script response:', data);
@@ -114,8 +114,7 @@ include_once '../../../views/layouts/includes/header.php';
                             .catch(error => {
                                 console.error('Error triggering PHP script:', error);
                             });
-                    });
-                });
+                    });               });
             });
             </script>
 

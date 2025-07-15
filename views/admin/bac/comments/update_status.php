@@ -5,8 +5,8 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php'; // corrected path
 
 
-            if (isset($_GET['updateStatus']) && isset($_GET['contract_id'])) {
-                $contractId = $_GET['contract_id'];
+if (isset($_GET['updateStatus']) && isset($_GET['contract_id'])) {
+    $contractId = $_GET['contract_id'];
 
                     $updateStatus = [
                         'contract_id' => $_GET['contract_id'],

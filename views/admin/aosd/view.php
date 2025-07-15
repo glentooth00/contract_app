@@ -65,7 +65,8 @@ include_once '../../../views/layouts/includes/header.php';
 
                 
             ?>
-            <?php if($hasComment == true): ?>
+        
+                    <?php if($hasComment == true): ?>
                 <!-- <span class=""  id="hasComment"><img src="../../../public/images/withComment.svg" width="33px" alt="This Contract has comment!"></span> -->
                 
                 <?php endif; ?>
@@ -73,19 +74,21 @@ include_once '../../../views/layouts/includes/header.php';
             <div id="viewComment" class="float-end" style="margin-top:-5px;right: -10em;">
                 
 
-                            </span>
-                        <img 
-                src="../../../public/images/viewComment.svg" 
-                width="33px" 
-                alt="This Contract has comment!" 
-                type="button" 
-                data-bs-toggle="offcanvas" 
-                data-bs-target="#offcanvasExample" 
-                aria-controls="offcanvasExample"
-                data-contract-id="<?= $contract['id'] ?>"
-                class="view-comment-trigger"
-            >
-                            
+                </span>
+                <img
+                    src="../../../public/images/viewComment.svg" 
+                    width="33px" 
+                    alt="This Contract has comment!" 
+                    type="button" 
+                    data-bs-toggle="offcanvas" 
+                    data-bs-target="#offcanvasExample" 
+                    aria-controls="offcanvasExample"
+                    data-contract-id="<?= $getContract['id'] ?>"
+                    class="view-comment-trigger"
+                />
+
+               
+                
                                 <span style="background-color: red;
                                 text-align: center;
                                 border-radius: 20px;
@@ -94,12 +97,33 @@ include_once '../../../views/layouts/includes/header.php';
                                 width: 25px;
                                 position: fixed;
                                 right: 20px;
-                            "
-                            
-                        >
+                            ">
                     <?= $hasCommentCount; ?>
+                    </span>
             </span>
-            </div>
+            </div></h2>
+
+          <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                    img.addEventListener('click', function () {
+                        const contractId = this.dataset.contractId;
+
+                        // Send a GET request to your PHP script
+                        fetch(`../comments/update_status.php?contract_id=${contractId}`)
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('PHP script response:', data);
+                                // Optional: show confirmation
+                                // alert('Status updated');
+                            })
+                            .catch(error => {
+                                console.error('Error triggering PHP script:', error);
+                            });
+                    });
+                });
+            });
+            </script>
         </h2>
             
         <hr>
