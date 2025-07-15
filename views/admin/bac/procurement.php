@@ -18,88 +18,57 @@ $getAllProcurements = (new ProcurementController)->list();
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-<!-- Loading Spinner - Initially visible -->
 <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
 </div>
-
 <div class="main-layout">
-
     <?php include_once '../menu/sidebar.php'; ?>
-
     <div class="content-area">
-
         <h1>Procurement Modes</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
-
             <?php if (isset($department)) { ?>
-
                 <?php switch ($department) {
                     case 'IT': ?>
-
                         <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'ISD-HRAD': ?>
-
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'CITETD': ?>
-
                         <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'IASD': ?>
-
                         <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'ISD-MSD': ?>
-
                         <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'BAC': ?>
-
                         <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
-
                         <?php break;
                     case '': ?>
-
                     <?php default: ?>
-                        <!-- <span class="badge text-muted">no department assigned</span> -->
                 <?php } ?>
-
             <?php } else { ?>
-
-                <!-- <span class="badge text-muted">no department assigned</span> -->
-
             <?php } ?>
         </span>
         <hr>
-
         <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
             style="width:15%;padding-right:10px;font-size:14px;" href="#!" role="button" data-bs-toggle="modal"
             data-bs-target="#procMode">
             <i class="fa fa-plus-circle" aria-hidden="true"></i>
             Add Procurement mode
         </a>
-
-        <!-- Modal -->
         <div class="modal fade" id="procMode" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Procurement mode</h5>
-                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> -->
                     </div>
                     <div class="modal-body">
                         <form action="procurement/save.php" method="POST">
@@ -117,19 +86,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
         </div>
-
-        <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a> -->
-
-        <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
-
-
-            <!-- Contract Type Filter -->
             <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
@@ -144,7 +101,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
-
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
@@ -157,7 +113,6 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($getAllProcurements as $getAllProcurement): ?>
                         <tr>
                             <td><?= htmlspecialchars($getAllProcurement['procMode'] ?? '') ?></td>
-
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
                                     <!-- <a href="check.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
@@ -180,24 +135,12 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
-
 <?php
-
 include_once '../modals/bac_modal.php';
-
 ?>
-
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
-
-
-<!-- Bootstrap Modal for confirmation -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -217,11 +160,6 @@ include_once '../modals/bac_modal.php';
         </div>
     </div>
 </div>
-
-
-
-<!-- popup notification ---->
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -236,8 +174,6 @@ include_once '../modals/bac_modal.php';
             d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
     </symbol>
 </svg>
-
-
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
