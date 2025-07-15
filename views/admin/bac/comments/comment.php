@@ -7,36 +7,25 @@ require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
-    if($_POST['user_department'] === IASD){
-        
-        $commentData = [
-            'contract_id' => $_POST['contract_id'],
-            'audit_id' => $_POST['audit_id'],
-            'comment' => $_POST['comment'],
-            'comment_id' => $_POST['contract_id'],
-            'status' => '1'
-        ];
-
-        $saveComment = ( new CommentController )->saveComment($commentData);
-
-        if($saveComment){
-
+        if($_POST['user_department'] === IASD){
             
-            $_SESSION['notification'] = [
-                'message' => 'Comment submitted successfully!',
-                'type' => 'success'
+            $commentData = [
+                'contract_id' => $_POST['contract_id'],
+                'audit_id' => $_POST['audit_id'],
+                'comment' => $_POST['comment'],
+                'comment_id' => $_POST['contract_id'],
+                'status' => '1'
             ];
-
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-
+            $saveComment = ( new CommentController )->saveComment($commentData);
+            if($saveComment){
+                $_SESSION['notification'] = [
+                    'message' => 'Comment submitted successfully!',
+                    'type' => 'success'
+                ];
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+            }
         }
-
-    }
-
         if(in_array($_POST['user_department'], [IT, ISD, CITET, BAC, FSD, AOSD, CHIEF, 'ISD-MSD', CHIEF])){
-        
-        
         $commentData = [
             'contract_id' => $_POST['contract_id'],
             'user_id' => $_POST['audit_id'],
@@ -44,25 +33,17 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             'comment_id' => $_POST['contract_id'],
             'status' => '1'
         ];
-
         var_dump($commentData);
-
         $saveComment = ( new CommentController )->saveCommentForUser($commentData);
-
         if($saveComment){
-
             
             $_SESSION['notification'] = [
                 'message' => 'Comment submitted successfully!',
                 'type' => 'success'
             ];
-
             header("Location: " . $_SERVER['HTTP_REFERER']);
-
         }
-
     }
-
 }
 
 
