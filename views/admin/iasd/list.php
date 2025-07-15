@@ -1,4 +1,6 @@
 <?php
+
+use App\Controllers\CommentController;
 session_start();
 $userid = $_SESSION['id'];
 $department = $_SESSION['department'];
@@ -34,12 +36,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout">
 
@@ -156,10 +158,20 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
+
                                 <a style="text-decoration: none;font-weight:600;color:#2A4759;"
                                     href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>">
                                     <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
+
+                                <?php 
+                                    $contractId = $contract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                <?php endif; ?>
 
                             </td>
                             <td class="text-center">
@@ -349,6 +361,10 @@ include_once '../modals/bac_modal.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+    #hasComment:hover{
+        cursor: pointer;
+        opacity: 0.8;
     }
 </style>
 

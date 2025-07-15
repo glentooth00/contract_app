@@ -14,7 +14,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             'contract_id' => $_POST['contract_id'],
             'audit_id' => $_POST['audit_id'],
             'comment' => $_POST['comment'],
-            'comment_id' => $_POST['contract_id']
+            'comment_id' => $_POST['contract_id'],
+            'status' => '1'
         ];
 
         $saveComment = ( new CommentController )->saveComment($commentData);
@@ -30,6 +31,33 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             header("Location: " . $_SERVER['HTTP_REFERER']);
 
         }
+
+    }//end of if user_department is IASD
+
+        if(in_array($_POST['user_department'], [IT, ISD, CITET, BAC, FSD, AOSD, CHIEF, 'ISD-MSD', CHIEF])){
+        
+            echo 'other dept';
+        // $commentData = [
+        //     'contract_id' => $_POST['contract_id'],
+        //     'audit_id' => $_POST['audit_id'],
+        //     'comment' => $_POST['comment'],
+        //     'comment_id' => $_POST['contract_id'],
+        //     'status' => '1'
+        // ];
+
+        // $saveComment = ( new CommentController )->saveComment($commentData);
+
+        // if($saveComment){
+
+            
+        //     $_SESSION['notification'] = [
+        //         'message' => 'Comment submitted successfully!',
+        //         'type' => 'success'
+        //     ];
+
+        //     header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        // }
 
     }//end of if user_department is IASD
 
