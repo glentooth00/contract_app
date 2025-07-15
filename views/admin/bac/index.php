@@ -123,7 +123,12 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                            <td>
+                                 <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>&type=<?= $contract['contract_type'] ?>"
+                                    style="text-decoration: none; color: black;">
+                                    <!-- Use htmlspecialchars to prevent XSS -->
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                </a>
                          <?php 
                                     $contractId = $contract['id'];
 
