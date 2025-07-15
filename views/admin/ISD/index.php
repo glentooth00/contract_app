@@ -10,6 +10,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\CommentController;
 
 $contracts = (new ContractController)->getContractsByDepartmentAll($department);
 
@@ -126,7 +127,15 @@ include_once '../../../views/layouts/includes/header.php';
                             <td><a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
                                     style="text-decoration: none; color: black;">
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
-                                </a></td>
+                                </a>
+                                <?php 
+                                    $contractId = $contract['id'];
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-center">
                                 <?php
                                 $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
