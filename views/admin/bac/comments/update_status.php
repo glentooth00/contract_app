@@ -1,11 +1,13 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 use App\Controllers\CommentController;
 session_start();
-require_once __DIR__ . '../../../../src/Config/constants.php';
-require_once __DIR__ . '../../../../vendor/autoload.php'; // corrected path
+// require_once __DIR__ . '/../../../src/Config/constants.php';
+require_once __DIR__ . '/../../../../vendor/autoload.php'; // corrected path
 
 
-if (isset($_GET['updateStatus']) && isset($_GET['contract_id'])) {
+if (isset($_GET['contract_id'])) {
     $contractId = $_GET['contract_id'];
 
                     $updateStatus = [
