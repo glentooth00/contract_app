@@ -948,23 +948,6 @@ class ContractController
         return $this->db->lastInsertId();
     }
 
-
-
-
-
-
-    // public function getContractsByMSDDepartment($department)
-    // {
-    //     $sql = "SELECT * FROM contracts 
-    //             WHERE uploader_department = 'ISD-MSD'
-    //                OR department_assigned = :department";
-
-    //     $stmt = $this->db->prepare($sql);
-    //     $stmt->bindParam(':department', $department, PDO::PARAM_STR);
-    //     $stmt->execute();
-    //     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    // }
-
     public function getContractsByMSDDepartment($department, $searchQuery = null, $perPage = 10, $currentPage = 1, $contractTypeFilter = null)
     {
         $offset = ($currentPage - 1) * $perPage;
@@ -1173,15 +1156,22 @@ class ContractController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-            public function getContractsAllExpired()
+    public function getContractsAllExpired()
     {
         $query = "SELECT * FROM contracts WHERE contract_status = 'Expired' ORDER BY created_at DESC";
 
         $stmt = $this->db->prepare($query);
 
-        // $stmt->bindParam(':dept1', $department, PDO::PARAM_STR);
-        // $stmt->bindParam(':dept2', $department, PDO::PARAM_STR);
-        // $stmt->bindParam(':dept3', $department, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+        public function getContractsAllArchived()
+    {
+        $query = "SELECT * FROM contracts WHERE contract_status = 'Suspended' ORDER BY created_at DESC";
+
+        $stmt = $this->db->prepare($query);
 
         $stmt->execute();
 
@@ -1207,10 +1197,6 @@ class ContractController
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-
-
-
 
     public function getExpiredContractsByDepartment($department)
     {
