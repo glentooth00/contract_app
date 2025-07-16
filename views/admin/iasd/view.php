@@ -67,12 +67,90 @@ include_once '../../../views/layouts/includes/header.php';
 
         <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i
                     class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?></h2>
+            <?= $contract_data ?>
+        
+            <?php 
+                $contractId = $getContract['id'];
 
+                $hasComment = ( new CommentController )->hasComment($contractId);
+                $hasCommentCount = ( new CommentController )->hasCommentCount($contractId);
+
+                
+            ?>
+        
+                    <?php if($hasComment == true): ?>
+                <!-- <span class=""  id="hasComment"><img src="../../../public/images/withComment.svg" width="33px" alt="This Contract has comment!"></span> -->
+                
+                <?php endif; ?>
+
+            <div id="viewComment" class="float-end" style="margin-top:-5px;right: -10em;">
+                
+
+                </span>
+                <img
+                    src="../../../public/images/viewComment.svg" 
+                    width="33px" 
+                    alt="This Contract has comment!" 
+                    type="button" 
+                    data-bs-toggle="offcanvas" 
+                    data-bs-target="#offcanvasExample" 
+                    aria-controls="offcanvasExample"
+                    data-contract-id="<?= $getContract['id'] ?>"
+                    data-audit-id="<?= $user_id ?>"
+                    data-user-id="<?= $user_id ?>"
+                    data-department ="<?= $user_department ?>"
+                    class="view-comment-trigger"
+                />
+
+              <?php if($hasCommentCount > 0): ?>
+                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
+                        style="background-color: red;
+                            text-align: center;
+                            border-radius: 20px;
+                            font-size: 18px;
+                            color: white;
+                            width: 20px;
+                            position: absolute;
+                            right: 20px;">
+                        <?= $hasCommentCount; ?>
+                    </span>
+                <?php endif; ?>
+            </span>
+            </div></h2>
+
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                    img.addEventListener('click', function () {
+                        const contractId = this.dataset.contractId;
+
+                        fetch(`comments/update_status.php?contract_id=${contractId}`)
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('PHP response:', data);
+
+                                // Hide the badge in real-time
+                                const badge = document.getElementById(`comment-count-badge-${contractId}`);
+                                if (badge) {
+                                    badge.style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    });
+                });
+            });
+            </script>
+        
+
+        </h2>
+
+        dfadsl;fjahlksh
            
         
         <hr>
-
+<!-- 
         <button 
             id="commentBtn" 
             type="button" 
@@ -85,7 +163,7 @@ include_once '../../../views/layouts/includes/header.php';
             data-department ="<?= $user_department ?>"
         >
             Comment
-        </button>
+        </button> -->
 
         <?php
         $start = new DateTime($getContract['contract_start']);
