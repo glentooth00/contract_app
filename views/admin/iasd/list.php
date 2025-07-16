@@ -1,4 +1,6 @@
 <?php
+
+use App\Controllers\CommentController;
 session_start();
 $userid = $_SESSION['id'];
 $department = $_SESSION['department'];
@@ -12,7 +14,7 @@ use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
 
-$contracts = (new ContractController)->getContractsByDepartment($department);
+$contracts = (new ContractController)->getContractsForAudit($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
@@ -34,12 +36,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout">
 
@@ -98,7 +100,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <div class="dropdown">
+        <div class="dropdown mb-3">
             <a class="btn btn-success dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <img width="20px" src="../../../public/images/add.svg">
@@ -156,28 +158,55 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
+
                                 <a style="text-decoration: none;font-weight:600;color:#2A4759;"
                                     href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>">
                                     <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
 
+                                <?php 
+                                    $contractId = $contract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                <?php endif; ?>
+
                             </td>
                             <td class="text-center">
-                                <?php
+                            <?php
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
-                                $type = $contract['contract_type'] ?? '';
-
-                                $badgeColor = match ($type) {
-                                    INFRA => '#328E6E',
-                                    SACC => '#123458',
-                                    GOODS => '#F75A5A',
-                                    EMP_CON => '#FAB12F',
-                                    PSC_LONG => '#007bff',
-                                    PSC_SHORT => '#28a745',
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                // default => '#FAB12F'
-                                };
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F'; // fallback value
+                                        break;
+                                }
                                 ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
@@ -293,7 +322,7 @@ include_once '../modals/bac_modal.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
@@ -332,6 +361,10 @@ include_once '../modals/bac_modal.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+    #hasComment:hover{
+        cursor: pointer;
+        opacity: 0.8;
     }
 </style>
 

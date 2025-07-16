@@ -22,7 +22,7 @@ if ($getOneLatest) {
     //Optional: echo nothing or a silent message
     // echo "No contract data available to insert.";
 }
-
+$contractTypes = $_SESSION['contract_types'];
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
@@ -91,20 +91,8 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#03A791;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#temporaryModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Temporary Lighting Contract
-        </a>
+        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
 
-
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a>
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -233,10 +221,41 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+
 <?php
 
-include_once '../modals/isdmsd_modal.php';
-include_once '../modals/transformer_rental.php';
+$contractTypes = json_decode($_SESSION['contract_types'], true);
+
+if (!empty($contractTypes)) {
+    foreach ($contractTypes as $type) {
+        switch ($type) {
+            case TEMP_LIGHTING:
+                include_once '../modals/isdmsd_modal.php';
+                break;
+
+            case TRANS_RENT:
+                include_once '../modals/transformer_rental.php';
+                break;
+
+            case EMP_CON:
+                include_once '../modals/hrad_modal.php';
+                break;
+            // case "Service and Consultancy Contract":
+            //     // Add other includes if needed
+            //     break 2;
+
+            // case TRANS_RENT:
+            //     include_once __DIR__ . "../../contract_buttons/Transformer_rental_button.php";
+            //     break 2;
+        }
+    }
+}
+?>
+
+<?php
+
+
+
 
 ?>
 
@@ -287,7 +306,7 @@ include_once '../modals/transformer_rental.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">

@@ -12,10 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $middlename = $_POST['middlename'] ?? 'No Middlename';
     $lastname = $_POST['lastname'] ?? 'No Lastname';
     $user_role = $_POST['user_role'] ?? 'No User role';
+    $user_type = $_POST['user_type'] ?? 'No User role';
     $department = $_POST['department'] ?? 'No Department';
     $gender = $_POST['gender'] ?? 'No Gender';
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? ''; // You should hash this password before storing it
+    $contractTypes = $_POST['contract_type'] ?? [];
+
+    $jsonContractTypes = json_encode($contractTypes);
 
     // Collect all form data into an array
     $data = [
@@ -23,29 +27,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'middlename' => $middlename,
         'lastname' => $lastname,
         'user_role' => $user_role,
+        'user_type' => $user_type,
         'department' => $department,
         'gender' => $gender,
         'username' => $username,
         'password' => $password,
+        'contract_types' => $jsonContractTypes
     ];
 
     // Call the storeUser method to save the user data
     $result = $userController->storeUser($data);
 
-    // Check if the user was created successfully
-    if ($result == true) {
+    //Check if the user was created successfully
+    if ($result) {
         $_SESSION['notification'] = [
-            'message' => 'Created User successfully!',
-            'type' => 'success'
+            'type' => 'success',
+            'message' => 'User Account created successfully',
+            'title' => 'User Creation',
+            'icon' => 'check-circle',
         ];
-
-        // Redirect to users page
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '/'));
         exit;
     } else {
-        // Handle the error (e.g., display an error message)
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+        header("Location: " . ($_SERVER['HTTP_REFERER'] ?? '/'));
+        exit;
     }
+
 }
+
 
 ?>

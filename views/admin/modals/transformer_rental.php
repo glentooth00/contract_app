@@ -10,145 +10,98 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
 ?>
 
-<div class="modal fade" id="transformerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Transformer Rental</h5>
-        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button> -->
-      </div>
-      <div class="modal-body">
-        <form action="contracts/trans_rent.php" method="post" enctype="multipart/form-data">
-             <div class="col-md-12 d-flex gap-2 p-3">
-                 <div class="col-md-12 p-2">
-                    <input type="hidden" class="form-control" name="contract_type"
-                                    value="<?= TRANS_RENT ?>" readonly>
-                                      <div class="col-md-12 d-block gap-2">
-                                    <div class="col-md-12 d-flex gap-2 row justify-content-center">
-                                        <div class="col-md-3 p-2">
-                                            <div>
-                                                <input type="hidden" class="form-control" name="uploader_department"
-                                                    value="<?= $department ?>" required>
-                                                <lable class="badge text-muted">Contract Name</lable>
-                                                <input type="text" class="form-control" name="contract_name" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 p-2">
-                                            <div>
-                                                <lable class="badge text-muted">TC No.</lable>
-                                                <input type="text" class="form-control" name="tc_no" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3 p-2">
-                                            <div>
-                                                <lable class="badge text-muted">Account no.</lable>
-                                                <input type="text" class="form-control" name="account_no" required>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="col-md-4 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <div class="d-flex">
-                                                <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                                <input type="date" id="date_end" class="form-control" name="contract_end" required>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                        <!-- <div class="col-md-4 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
-                                        </div>
-                                    </div> -->
-                                    </div>
-                                    <div class="col-md-12 d-flex gap-5 row justify-content-center">
+<div class="modal fade" id="transformerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Transformer Rental</h5>
+            </div>
+            <div class="modal-body">
+                <form action="contracts/trans_rent.php" method="post" enctype="multipart/form-data">
+                    <div class="col-md-12 d-flex gap-2 p-3">
+                        <div class="col-md-12 p-2">
+                            <input type="hidden" class="form-control" name="contract_type" value="<?= TRANS_RENT ?>"
+                                readonly>
 
-                                        <div class="col-md-4 p-2">
-                                            <div>
-                                                <lable class="badge text-muted">Rent Start</lable>
-                                                <div class="d-flex">
-                                                    <i class="fa fa-calendar p-2" style="font-size: 20px;"
-                                                        aria-hidden="true"></i>
-                                                    <input type="date" id="rent_start" class="form-control"
-                                                        name="rent_start" required>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 p-2">
-                                            <div>
-                                                <lable class="badge text-muted">Rent End</lable>
-                                                <div class="d-flex">
-                                                    <i class="fa fa-calendar p-2" style="font-size: 20px;"
-                                                        aria-hidden="true"></i>
-                                                    <input type="date" id="rent_end" class="form-control"
-                                                        name="rent_end" required>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- <div class="col-md-4 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
-                                        </div>
-                                    </div> -->
-                                    </div>
-                                    <div class="col-md-12 d-flex gap-4 row justify-content-center">
-                                        <!-- <div class="col-md-5 p-2">
-                                            <div>
-                                                <lable class="badge text-muted">Party of Second Part</lable>
-                                                <input type="text" class="form-control" name="party_of_second_part"
-                                                    required>
-                                            </div>
-                                        </div> -->
-                                        <div class="col-md-5 p-2">
-                                            <div>
-                                                <lable class="badge text-muted">Contract file</lable>
-                                                <input type="file" class="form-control" name="contract_file"
-                                                    style="width: 16.7em;" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 p-2">
-                                            <div>
-                                                <?php
-                                               $userid;
-                                                $getUser = (new UserController)->getUserById($userid);
-
-                                                // var_dump($getUser['firstname']);
-                                                ?>
-                                                <input type="hidden" id="date_start" class="form-control"
-                                                    name="uploader_id" value="<?= $userid ?>">
-                                                <input type="hidden" id="date_start" class="form-control"
-                                                    name="uploader"
-                                                    value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
-                                                <input type="hidden" id="date_start" class="form-control"
-                                                    name="uploader_dept" value="<?= $department ?>" required>
-                                            </div>
-                                        </div>
-                                        <!-- <div class="col-md-4 p-2">
-                                        <div>
-                                            <lable class="badge text-muted">Date End</lable>
-                                            <input type="date" id="date_end" class="form-control" name="contract_end" required>
-                                        </div>
-                                    </div> -->
+                            <div class="col-md-12 d-block gap-2">
+                                <div class="col-md-12 d-flex gap-2 row justify-content-center">
+                                    <div class="col-md-3 p-2">
+                                        <label class="badge text-muted">Customer Name</label>
+                                        <input type="hidden" name="uploader_department" value="<?= $department ?>"
+                                            required>
+                                        <input type="text" class="form-control" name="contract_name" required>
                                     </div>
 
+                                    <div class="col-md-3 p-2">
+                                        <label class="badge text-muted">TC No.</label>
+                                        <input type="text" class="form-control" name="tc_no" required>
+                                    </div>
+
+                                    <div class="col-md-3 p-2">
+                                        <label class="badge text-muted">Account No.</label>
+                                        <input type="text" class="form-control" name="account_no" required>
+                                    </div>
                                 </div>
-                 </div>
 
-                </div>
+                                <div class="col-md-12 d-flex gap-5 row justify-content-center">
+                                    <div class="col-md-4 p-2">
+                                        <label class="badge text-muted">Installation Date</label>
+                                        <div class="d-flex">
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                aria-hidden="true"></i>
+                                            <input type="date" id="rent_start" class="form-control" name="rent_start"
+                                                required>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 p-2">
+                                        <label class="badge text-muted">Retirement Date</label>
+                                        <div class="d-flex">
+                                            <i class="fa fa-calendar p-2" style="font-size: 20px;"
+                                                aria-hidden="true"></i>
+                                            <input type="date" id="rent_end" class="form-control" name="rent_end"
+                                                required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 d-flex gap-4 row justify-content-center">
+                                    <div class="col-md-5 p-2">
+                                        <label class="badge text-muted">Contract File</label>
+                                        <input type="file" class="form-control" name="contract_file" required>
+                                    </div>
+
+                                    <!-- 👉 New Address Field -->
+                                    <div class="col-md-5 p-2">
+                                        <label class="badge text-muted">Address</label>
+                                        <input type="text" class="form-control" name="address"
+                                            placeholder="Enter address" required>
+                                    </div>
+
+                                    <div class="col-md-4 p-2">
+                                        <?php
+                                        $userid;
+                                        $getUser = (new UserController)->getUserById($userid);
+                                        ?>
+                                        <input type="hidden" name="uploader_id" value="<?= $userid ?>">
+                                        <input type="hidden" name="uploader"
+                                            value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname'] ?>">
+                                        <input type="hidden" name="uploader_dept" value="<?= $department ?>" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Save changes</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success">Save changes</button>
-        </form>
-      </div>
     </div>
-  </div>
 </div>
+
 
 
 
@@ -176,23 +129,23 @@ $getUserInfo = (new UserController)->getUserByDept($department);
     // });
 
 
-document.addEventListener("DOMContentLoaded", function () {
-    const rentStartInput = document.getElementById('rent_start');
-    const rentEndInput = document.getElementById('rent_end');
+    document.addEventListener("DOMContentLoaded", function () {
+        const rentStartInput = document.getElementById('rent_start');
+        const rentEndInput = document.getElementById('rent_end');
 
-    if (rentStartInput && rentEndInput) {
-        rentStartInput.addEventListener('change', function () {
-            const startDate = new Date(this.value);
-            if (!isNaN(startDate)) {
-                startDate.setDate(startDate.getDate() + 90);
-                const year = startDate.getFullYear();
-                const month = String(startDate.getMonth() + 1).padStart(2, '0');
-                const day = String(startDate.getDate()).padStart(2, '0');
-                const formattedDate = `${year}-${month}-${day}`;
-                rentEndInput.value = formattedDate;
-            }
-        });
-    }
-});
+        if (rentStartInput && rentEndInput) {
+            rentStartInput.addEventListener('change', function () {
+                const startDate = new Date(this.value);
+                if (!isNaN(startDate)) {
+                    startDate.setDate(startDate.getDate() + 90);
+                    const year = startDate.getFullYear();
+                    const month = String(startDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(startDate.getDate()).padStart(2, '0');
+                    const formattedDate = `${year}-${month}-${day}`;
+                    rentEndInput.value = formattedDate;
+                }
+            });
+        }
+    });
 
 </script>

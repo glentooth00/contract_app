@@ -7,7 +7,7 @@ $userid = $_SESSION['id'];
 
 $user_department = (new UserController)->getUserById($userid);
 
-$department = ($user_department['department']) ? 'IASD' : $user_department['department'];
+$department = ($user_department['department']);
 
 $id = $user_department['id'];
 
@@ -19,7 +19,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
 ?>
 
 <!---- CITETD MODAL ---->
-<div class="modal fade" id="powerSupplyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="powerSupplyShortModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -41,7 +41,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                     placeholder="name@example.com">
                             </div>
                             <div class="mb-3">
-                                <?php if( $department === CITETD ) : ?>
+                                <?php if( $department === CITET ) : ?>
                                     <label class="badge text-muted">Power Supply Contract type</label>
                                         <select class="form-select form-select-md mb-3" name="contract_type">
                                         <option value="" hidden>Select Power Supply contract type</option>
@@ -49,7 +49,7 @@ $name = $user_department['firstname'].' '. $user_department['middlename'].' '. $
                                                 <option value="<?= $contract_type['contract_type'] ?>"><?= $contract_type['contract_type'] ?></option>
                                             <?php endforeach; ?>
                                     </select>
-                                <?php elseif( $department === IASD ) : ?>
+                                <?php elseif( $department === IASD || $department === 'PSPTD') : ?>
                                     <label class="badge text-muted">Power Supply Contract type</label>
                                         <select class="form-select form-select-md mb-3" name="contract_type">
                                         <option value="" hidden>Select Power Supply contract type</option>

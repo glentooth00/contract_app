@@ -3,6 +3,7 @@ use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
+use App\Controllers\CommentController;
 session_start();
 
 use App\Controllers\ContractController;
@@ -12,6 +13,14 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 
+if($department === IASD){
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}else{
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
@@ -19,6 +28,12 @@ $contract_id = $_GET['contract_id'];
 $getContract = (new ContractController)->getContractbyId($contract_id);
 
 $contract_data = $getContract['contract_name'];
+
+$contractId = $getContract['id'];
+
+$getComments = (new CommentController)->getCommentsByContractId($contractId);
+
+$comments = (new CommentController)->getComments($contractId);
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
@@ -49,10 +64,85 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?></h2>
+        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i class="fa fa-angle-double-left"
+                    aria-hidden="true"></i></a>
+            <?= $contract_data ?>
+        
+        <?php 
+                $contractId = $getContract['id'];
+
+                $hasComment = ( new CommentController )->hasComment($contractId);
+                $hasCommentCount = ( new CommentController )->hasCommentCount($contractId);
+
+                
+            ?>
+        
+                    <?php if($hasComment == true): ?>
+                <!-- <span class=""  id="hasComment"><img src="../../../public/images/withComment.svg" width="33px" alt="This Contract has comment!"></span> -->
+                
+                <?php endif; ?>
+
+            <div id="viewComment" class="float-end" style="margin-top:-5px;right: -10em;">
+                
+
+                </span>
+                <img
+                    src="../../../public/images/viewComment.svg" 
+                    width="33px" 
+                    alt="This Contract has comment!" 
+                    type="button" 
+                    data-bs-toggle="offcanvas" 
+                    data-bs-target="#offcanvasExample" 
+                    aria-controls="offcanvasExample"
+                    data-contract-id="<?= $getContract['id'] ?>"
+                    data-audit-id="<?= $user_id ?>"
+                    data-user-id="<?= $user_id ?>"
+                    data-department ="<?= $user_department ?>"
+                    class="view-comment-trigger"
+                />
+
+                <?php if($hasCommentCount  > 0): ?>
+                         <span style="background-color: red;
+                                text-align: center;
+                                border-radius: 20px;
+                                font-size: 18px;
+                                color: white;
+                                width: 20px;
+                                position: absolute;
+                                right: 20px;
+
+                            ">
+                    <?= $hasCommentCount; ?>
+                    </span>
+                <?php endif; ?>
+            </span>
+            </div></h2>
+
+          <script>
+           document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    const contractId = this.dataset.contractId;
+
+                    // Check if this actually hits update_status.php
+                    fetch(`comments/update_status.php?contract_id=${contractId}`)
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log('PHP response:', data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                });
+            });
+        });
+
+            </script>
+            </h2>
+
         <hr>
+
+
 
         <?php
         $start = new DateTime($getContract['contract_start']);
@@ -81,7 +171,7 @@ include_once '../../../views/layouts/includes/header.php';
         }
         ?>
 
-        <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned']) { ?>
+        <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
 
             <div class="gap-1">
                 <span id="close" style="float: inline-end;display:none;">
@@ -92,9 +182,13 @@ include_once '../../../views/layouts/includes/header.php';
                 <span id="save" style="float: inline-end;display:none;">
                     <i class="fa fa-floppy-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
                 </span>
-                <span id="edit" style="float: inline-end;display:inline;">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
-                </span>
+                <?php if ($getContract['department_assigned'] === CITET): ?>
+
+                <?php else: ?>
+                    <span id="edit" style="float: inline-end;display:inline;">
+                        <i class="fa fa-pencil-square-o" aria-hidden="true" style="width:30px;font-size:25px;" alt=""></i>
+                    </span>
+                <?php endif; ?>
             </div>
 
         <?php } ?>
@@ -102,6 +196,17 @@ include_once '../../../views/layouts/includes/header.php';
         <div class="mt-3 col-md-12 d-flex gap-5">
 
             <div class="row col-md-2">
+                <input type="hidden" id="uploaderDept" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
+                <input type="hidden" id="contractFile" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['contract_file']; ?>" name="contract_file" readonly>
+
+                <input type="hidden" id="contractUploader" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader']; ?>" name="uploader" readonly>
+
+                <input type="hidden" id="uploaderId" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader_id']; ?>" name="uploader_id" readonly>
+
                 <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5"
                     value="<?= $getContract['id']; ?>" name="contract_name" readonly>
                 <div class="mt-3">
@@ -115,21 +220,25 @@ include_once '../../../views/layouts/includes/header.php';
                     <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                     <div class="d-flex">
                         <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="startDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_start']; ?>" name="contract_start" readonly>
+                        <input type="date" id="startDate" class="form-control pl-5"
+                            value="<?= date('Y-m-d', strtotime($getContract['contract_start'])); ?>"
+                            name="contract_start" readonly>
                     </div>
                 </div>
             </div>
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                    <div class="d-flex">
-                        <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
-                        <input type="date" id="endDate" style="margin-left:px;" class="form-control pl-5"
-                            value="<?= $getContract['contract_end']; ?>" name="contract_end" readonly>
-                    </div>
+
+           <div class="row col-md-2">
+            <div class="mt-3">
+                <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                <div class="d-flex">
+                    <i class="fa fa-calendar p-2" style="font-size: 20px;" aria-hidden="true"></i>
+                    <input type="date" id="endDate" class="form-control pl-5"
+                        value="<?= date('Y-m-d', strtotime($getContract['contract_end'])); ?>"
+                        name="contract_end" readonly>
                 </div>
             </div>
+        </div>
+
             <div class="row col-md-2">
 
                 <div class="mt-3">
@@ -196,21 +305,23 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                    <input type="text" id="typeContract" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_type']; ?>" name="contract_type" readonly>
                 </div>
             </div>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+            <?php if ($getContract['contractPrice'] === True): ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
-            <?php if (!$getContract['supplier']): ?>
-
+            <?php if (empty($getContract['supplier'])): ?>
             <?php else: ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
@@ -221,14 +332,18 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Implementing
-                        Department</label>
-                    <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['department_assigned']; ?>" name="department_assigned" readonly>
+            <?php if (empty($getContract['implementing_dept'])): ?>
+            <?php else: ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Implementing
+                            Department</label>
+                        <input type="text" id="deptSelect" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['implementing_dept']; ?>" name="department_assigned" readonly>
+                    </div>
                 </div>
-            </div>
+            <?php endif; ?>
 
             <div class="row col-md-3">
                 <div class="mt-3">
@@ -267,7 +382,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Uploading Dept:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Uploading Dept: </label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
                 </div>
@@ -281,10 +396,9 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3">
                 <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Uploaded by:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">Uploaded by: </label>
                     <input type="text" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname']; ?>"
-                        name="contract_type" readonly>
+                        value="<?= $getContract['uploader']; ?>" name="contract_type" readonly>
                 </div>
             </div>
 
@@ -405,10 +519,9 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
         </div>
 
-
         <div>
             <div class="mt-5">
-                <h4>Contract History</h4>
+                <h4>Contract History </h4>
             </div>
             <hr>
             <div>
@@ -426,8 +539,22 @@ include_once '../../../views/layouts/includes/header.php';
                         </tr>
                     </thead>
                     <?php
-                    $id = $getContract['id'];
+                    $id = $getContract['account_no'] ?? $getContract['id'];
+                    $status = $getContract['contract_status'];
                     $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+                    if ($status === 'Expired') {
+
+                        $stat = [
+                            'id' => $getContract['account_no'],
+                            'status' => 'Expired',
+                        ];
+
+                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+
+                    }
+
+                    // var_dump($contractHist_datas);
                     ?>
                     <tbody class="">
                         <?php if (!empty($contractHist_datas)): ?>
@@ -534,6 +661,72 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+       <!-- Off canvas ---->
+
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+             <hr>
+            
+            <div class="offcanvas-body offcanvas-md">
+              <?php foreach ($comments as $comment): ?>
+    <?php 
+        $auditID = $comment['audit_id'];
+        $userID = $comment['user_id'];
+        $auditName = (new UserController)->getUserById($auditID);
+        $userName = (new UserController)->getUserById($userID);
+    ?>
+    
+    <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+        
+        <!-- Left: Audit side -->
+        <?php if($auditName): ?>
+            <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
+                <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+
+        <!-- Right: User side -->
+        <?php if($userName): ?>
+            <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-D-Y h:i A', strtotime($comment['created_at'])); ?></small></span>
+            </div>
+        <?php endif; ?>
+        
+    </div>
+<?php endforeach; ?>
+
+                <!----comments display here ----->
+
+            </div>
+
+            <form action="comments/comment.php" method="post">
+                <input type="hidden" id="contractID" value="<?= $contractId ?>" name="contract_id">
+                <input type="hidden" id="auditId" value="<?= $user_id ?>" name="audit_id">
+                <input type="hidden" id="userId" value="<?= $user_id ?>" name="user_id">
+                <input type="hidden" id="userDepartment" value="<?= $user_department ?>" name="user_department">
+                <hr>
+                <div class="p-3">
+                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
+                </div>
+                <div class="p-3">
+                <button type="submit" class="float-end" id="submitComment">Comment</button> 
+                </div>
+            </form>
+            </div>
+
+
+        <!---- Off canva ----->
+
+
+
+
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -555,7 +748,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
@@ -584,7 +777,37 @@ include_once '../../../views/layouts/includes/header.php';
     </script>
 <?php endif; ?>
 
+        <script>
+    document.addEventListener("DOMContentLoaded", function(){
+    const commentBtn = document.getElementById("commentBtn");
 
+    commentBtn.addEventListener("click", function(){
+        const contractId = commentBtn.dataset.contractId;
+        const auditId = commentBtn.dataset.auditId;
+        const userId = commentBtn.dataset.userId;
+        const userDept = commentBtn.dataset.department;
+
+        console.log("Contract ID:", contractId);
+        console.log("Audit ID:", auditId);
+        console.log("User ID:", userId);
+         console.log("User dept:", userDept);
+
+        const contractInput = document.getElementById("contractID");
+        const auditInput = document.getElementById("auditId");
+        const userInput = document.getElementById("userId");
+        const departmentInput = document.getElementById("user_department");
+
+        console.log("Inputs found:", contractInput, auditInput, userInput);
+
+        // Set values
+        contractInput.value = contractId;
+        auditInput.value = auditId;
+        userInput.value = userId;
+        userDepartment.value = userDept;
+    });
+});
+
+</script>
 
 
 
@@ -634,6 +857,34 @@ include_once '../../../views/layouts/includes/header.php';
     #close:hover {
         cursor: pointer;
     }
+    #submitComment{
+                    display: inline-block;
+                    outline: none;
+                    border-width: 0px;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    font-size: inherit;
+                    font-weight: 500;
+                    max-width: 100%;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+                    background: rgb(0, 82, 204);
+                    cursor: pointer;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0px 12px;
+                    vertical-align: middle;
+                    width: auto;
+                    font-size: 14px;
+                    color: rgb(255, 255, 255);
+    }
+    #submitComment:hover {
+                        background: rgb(0, 101, 255);
+                        text-decoration: inherit;
+                        transition-duration: 0s, 0.15s;
+                        color: rgb(255, 255, 255);
+                    }
 </style>
 
 <script>
@@ -728,7 +979,6 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('save').addEventListener('click', function () {
 
-        // Get the relevant DOM elements
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
@@ -736,21 +986,31 @@ include_once '../../../views/layouts/includes/header.php';
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
+        const typeContractInput = document.getElementById('typeContract');
+        const uploader = document.getElementById('contractUploader');
+        const uploader_id = document.getElementById('uploaderId');
+        const uploader_dept = document.getElementById('uploaderDept');
 
-        // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
         const endDateValue = endDate?.value || rentEnd?.value || '';
 
-        // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
-        const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
+        const department = encodeURIComponent(deptSelect?.value || '');
         const contract_id = encodeURIComponent(id?.value || '');
+        const typeContract = encodeURIComponent(typeContractInput?.value || '');
+        const docUploader = encodeURIComponent(uploader?.value || '');
+        const uploaderId = encodeURIComponent(uploader_id?.value || '');
+        const uploaderDept = encodeURIComponent(uploader_dept?.value || '');
 
-        // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+        const url = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}`;
+
+        console.log("Redirecting to:", url); // Debug
+        window.location.href = url;
     });
+
+
 
     function formatDate(dateString) {
         const [year, month, day] = dateString.split('-');

@@ -1,27 +1,34 @@
 <?php
+
+use App\Controllers\SampleController;
 $session = session_start();
-
+// unset($_SESSION['login_attempts']); // TEMPORARY RESET
 $page_title = 'Login';
-
 
 ?>
 <?php include_once 'views/layouts/includes/header.php'; ?>
 
-<p class="">
-    <?php if (isset($_SESSION['username'])): ?>
-        <span id="notification" class="notification"><?= $_SESSION['username']; ?> <button type="button"
-                onclick="this.parentElement.style.display='none'"
-                style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button></span>
-        <?php unset($_SESSION['username']); ?>
-    <?php endif; ?>
+<?php if (isset($_SESSION['username'])): ?>
+    <span class="notification" id="notification">
+        <?= $_SESSION['username']; ?>
+        <?php if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] < 5): ?>
+            <br>You have <?= 5 - $_SESSION['login_attempts']; ?> attempt(s) left.
+        <?php endif; ?>
+        <button type="button" onclick="this.parentElement.style.display='none'"
+            style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button>
+    </span>
+    <?php unset($_SESSION['username']); ?>
+<?php endif; ?>
 
-    <?php if (isset($_SESSION['password'])): ?>
-        <span id="notification" class="notification"><?= $_SESSION['password']; ?> <button type="button"
-                onclick="this.parentElement.style.display='none'"
-                style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button></span>
-        <?php unset($_SESSION['password']); ?>
-    <?php endif; ?>
-</p>
+
+<?php if (isset($_SESSION['username'])): ?>
+    <span id="notification" class="notification"><?= $_SESSION['username']; ?>
+        <button type="button" onclick="this.parentElement.style.display='none'"
+            style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button>
+    </span>
+    <?php unset($_SESSION['username']); ?>
+<?php endif; ?>
+
 
 <div class="container d-flex justify-content-center" style="margin-top: 11em;margin-bottom:20em;">
     <div class="formHolder card col-md-3 bg-white p-4 rounded mt-5">

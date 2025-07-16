@@ -86,14 +86,15 @@ class ContractHistoryController
 
     public function getByContractId($id)
     {
-        $sql = "SELECT * FROM contract_history WHERE contract_id = :id";
+        $sql = "SELECT * FROM contract_history WHERE account_no = :account_id OR contract_id = :contract_id ORDER BY created_at DESC";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':account_id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':contract_id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
-        // Fetch the result and return as an array
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Use fetchAll to ensure it returns an array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getByContractIdAccountById($id)
     {
@@ -148,6 +149,119 @@ class ContractHistoryController
         $stmt->execute();
     }
 
+    public function updateStatus($stat)
+    {
+        $sql = 'UPDATE contract_history SET status = :status WHERE account_no = :contract_id ';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $stat['status'], PDO::PARAM_STR);
+        $stmt->bindParam(':contract_id', $stat['id']);
+        $stmt->execute();
+
+        return;
+
+    }
+
+        public function updateStatusBycontract_id($stat)
+    {
+        $sql = 'UPDATE contract_history SET status = :status WHERE contract_id = :contract_id ';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $stat['status'], PDO::PARAM_STR);
+        $stmt->bindParam(':contract_id', $stat['id']);
+        $stmt->execute();
+
+        return;
+
+    }
+
+    public function updateContractHistory($data){
+
+        $sql = "UPDATE contract_history SET
+                    date_start = :date_start,
+                    date_end = :date_end,
+                    contract_name = :contract_name,
+                    updated_at = :updated_at
+                WHERE contract_id = :contract_id";
+
+                $stmt = $this->db->prepare($sql);
+
+                $stmt->bindParam(':date_start', $data['date_start']);
+                $stmt->bindParam(':date_end', $data['date_end']);
+                $stmt->bindParam(':contract_name', $data['contract_name']);
+                $stmt->bindParam(':contract_id', $data['id']);
+                $stmt->bindParam(':updated_at', $data['updated_at']);
+                $stmt->execute();
+
+                return;
+
+         
+    }
+
+        public function updateContractHistoryTransRent($data){
+
+        $sql = "UPDATE contract_history SET
+                    rent_start = :date_start,
+                    rent_end = :date_end,
+                    contract_name = :contract_name,
+                    updated_at = :updated_at
+                WHERE contract_id = :contract_id";
+
+                $stmt = $this->db->prepare($sql);
+
+                $stmt->bindParam(':date_start', $data['date_start']);
+                $stmt->bindParam(':date_end', $data['date_end']);
+                $stmt->bindParam(':contract_name', $data['contract_name']);
+                $stmt->bindParam(':contract_id', $data['id']);
+                $stmt->bindParam(':updated_at', $data['updated_at']);
+                $stmt->execute();
+
+                return;
+
+         
+    }
+
+        public function updateContractHistoryPowerSupply($data){
+
+        $sql = "UPDATE contract_history SET
+                    date_start = :date_start,
+                    date_end = :date_end,
+                    contract_name = :contract_name,
+                    updated_at = :updated_at
+                WHERE contract_id = :contract_id";
+
+                $stmt = $this->db->prepare($sql);
+
+                $stmt->bindParam(':date_start', $data['contract_start']);
+                $stmt->bindParam(':date_end', $data['contract_end']);
+                $stmt->bindParam(':contract_name', $data['contract_name']);
+                $stmt->bindParam(':contract_id', $data['id']);
+                $stmt->bindParam(':updated_at', $data['updated_at']);
+                $stmt->execute();
+
+                return;
+
+    }
+
+            public function updateContractHistoryGoods($data){
+
+        $sql = "UPDATE contract_history SET
+                    date_start = :date_start,
+                    date_end = :date_end,
+                    contract_name = :contract_name,
+                    updated_at = :updated_at
+                WHERE contract_id = :contract_id";
+
+                $stmt = $this->db->prepare($sql);
+
+                $stmt->bindParam(':date_start', $data['date_start']);
+                $stmt->bindParam(':date_end', $data['date_end']);
+                $stmt->bindParam(':contract_name', $data['contract_name']);
+                $stmt->bindParam(':contract_id', $data['id']);
+                $stmt->bindParam(':updated_at', $data['updated_at']);
+                $stmt->execute();
+
+                return;
+
+    }
 
 
 }

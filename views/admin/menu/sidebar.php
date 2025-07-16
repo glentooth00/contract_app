@@ -1,3 +1,9 @@
+<?PHP 
+
+require_once __DIR__ . '../../../../src/Config/constants.php';
+
+?>
+
 <nav class="sideBar">
   <div class="logo mb-3 p-2 d-flex align-items-center justify-content-center">
     <div class="me-2">
@@ -32,13 +38,13 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="expired_list.php">
+          <a class="nav-link" id="expiredLink" href="expired_list.php">
             <img width="25px" src="../../../public/images/expired.svg">
             <span>Expired Contracts</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="archived_list.php">
             <img width="25px" src="../../../public/images/archived.svg">
             <span>Archived Contracts</span>
           </a>
@@ -46,12 +52,14 @@
       </ul>
     </li>
 
-
     <?php
+    use App\Controllers\NotificationController;
+    use App\Controllers\PendingDataController;
     use App\Controllers\UserController;
 
     $logged_user = null;
     $usersLink = 'admin/users.php';
+    $role = $_SESSION['user_role'] ?? null;
 
     if (isset($_SESSION['data']['id'])) {
       $id = $_SESSION['data']['id'];
@@ -61,9 +69,21 @@
       $currentDir = basename(dirname($_SERVER['PHP_SELF']));
       if ($currentDir === 'admin') {
         $usersLink = 'users.php';
+        $usersTypes = 'userTypes.php';
+        $usersRoles = 'userRoles.php';
       }
     }
     ?>
+    <?php if ($logged_user === 'Admin'): ?>
+      <li class="nav-item">
+        <a class="nav-link" id="users" href="<?php echo $usersLink; ?>">
+          <img width="27px" src="../../../public/images/user.svg">
+          <span>Users</span>
+        </a>
+      </li>
+    <?php endif; ?>
+
+
 
 
     <li class="nav-item">
@@ -81,7 +101,7 @@
         </li> -->
         <?php if ($department === 'BAC'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="procurement.php">
+            <a class="nav-link" id="mop" href="procurement.php">
               <img width="27px" src="../../../public/images/mop.svg">
               <span>Mode Of Procurement</span>
             </a>
@@ -90,31 +110,72 @@
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo $usersLink; ?>">
-              <img width="27px" src="../../../public/images/user.svg">
-              <span>Users</span>
+            <a class="nav-link" id="userRoles" href="<?php echo $usersRoles; ?>">
+              <img width="27px" src="../../../public/images/userRole.svg">
+              <span>User Roles</span>
             </a>
           </li>
         <?php endif; ?>
-
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="reset_password.php">
+            <a class="nav-link" id="userTypes" href="<?php echo $usersTypes; ?>">
+              <img width="27px" src="../../../public/images/userTypes.svg">
+              <span>User Types</span>
+            </a>
+          </li>
+        <?php endif; ?>
+        <?php if ($department === CITET): ?>
+          <?php if ($role === 'Manager'): ?>
+            <li class="nav-item">
+              <a class="nav-link" id="changepass" href="view_pending_updates.php">
+                <img width="27px" src="../../../public/images/bell.svg">
+                <span>Notifications
+                  <span>
+                    <?php
+
+                    $getLatestActivities = (new NotificationController)->checkRecentUpdates();
+
+
+                    // var_dump($getPendingData);
+                
+
+
+                    ?>
+
+
+                    <?php if (!empty($getLatestActivities)): ?>
+                      <span class="badge bg-danger">
+                        <?= $getLatestActivities ?>
+                      </span>
+                    <?php endif; ?>
+
+
+
+                    <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
+                  </span>
+                </span>
+              </a>
+            </li>
+          <?php endif; ?>
+        <?php endif; ?>
+        <?php if ($logged_user === 'Admin'): ?>
+          <li class="nav-item">
+            <a class="nav-link" id="changepass" href="reset_password.php">
               <img width="27px" src="../../../public/images/managePassword.svg">
-              <span>Manage Passwords</span>
+              <span>Change Password</span>
             </a>
           </li>
         <?php endif; ?>
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" href="department.php">
+            <a class="nav-link" id="department" href="department.php">
               <img width="27px" src="../../../public/images/departments.svg"></i>
               <span>Departments</span>
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="contract_types.php">
+            <a class="nav-link" id="types" href="contract_types.php">
               <img width="27px" src="../../../public/images/contract-types.svg"></i></i><span>Contract Types</span>
             </a>
           </li>
@@ -245,8 +306,46 @@
     if (currentUrl.includes('index.php')) {
       $('#dashboardLink').addClass('active');
     }
+
     if (currentUrl.includes('list.php')) {
       $('#contractsLink').addClass('active');
+    }
+
+    if (currentUrl.includes('expired_list.php')) {
+      $('#expiredLink').addClass('active');
+      $('#contractsLink').removeClass('active');
+    }
+
+    if (currentUrl.includes('procurement.php')) {
+      $('#mop').addClass('active');
+    }
+
+    if (currentUrl.includes('users.php')) {
+      $('#users').addClass('active');
+      $('#changepass').removeClass('active');
+    }
+
+    if (currentUrl.includes('userRoles.php')) {
+      $('#userRoles').addClass('active');
+      $('#changepass').removeClass('active');
+    }
+
+    if (currentUrl.includes('userTypes.php')) {
+      $('#userTypes').addClass('active');
+      $('#changepass').removeClass('active');
+    }
+
+    if (currentUrl.includes('department.php')) {
+      $('#users').removeClass('active');
+      $('#changepass').removeClass('active');
+      $('#department').addClass('active');
+    }
+
+    if (currentUrl.includes('contract_types.php')) {
+      $('#users').removeClass('active');
+      $('#changepass').removeClass('active');
+      $('#department').removeClass('active');
+      $('#types').addClass('active');
     }
 
     $('#contractsDropdown').click(function (e) {

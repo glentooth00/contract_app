@@ -203,11 +203,11 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="badge text-muted">Start Date</label>
-                                    <input type="date" class="form-control" name="contract_start">
+                                    <input type="date" id="startDate" class="form-control" name="contract_start">
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="badge text-muted">End Date</label>
-                                    <input type="date" class="form-control" name="contract_end">
+                                    <input type="date" id="endDate" class="form-control" name="contract_end">
                                 </div>
 
                                 <!-- Hidden Inputs -->

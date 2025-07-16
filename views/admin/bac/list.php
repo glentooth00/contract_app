@@ -10,6 +10,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
+use App\Controllers\CommentController;
 
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
@@ -28,82 +29,41 @@ include_once '../../../views/layouts/includes/header.php';
 
 
 <div class="main-layout">
-
     <?php include_once '../menu/sidebar.php'; ?>
-
     <div class="content-area">
-
         <h1>Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
-
             <?php if (isset($department)) { ?>
-
                 <?php switch ($department) {
                     case 'IT': ?>
-
                         <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'ISD-HRAD': ?>
-
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'CITETD': ?>
-
                         <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'IASD': ?>
-
                         <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'ISD-MSD': ?>
-
                         <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
-
                         <?php break;
                     case 'BAC': ?>
-
                         <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
-
                         <?php break;
                     case '': ?>
-
                     <?php default: ?>
                         <!-- <span class="badge text-muted">no department assigned</span> -->
                 <?php } ?>
-
             <?php } else { ?>
-
-                <!-- <span class="badge text-muted">no department assigned</span> -->
-
             <?php } ?>
         </span>
         <hr>
-
-        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;" href="#!" role="button" data-bs-toggle="modal"
-            data-bs-target="#bacModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Add Contract
-        </a>
-
-
-        <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a> -->
-
-        <!-- Wrap both search and filter in a flex container -->
+        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
-
-
-            <!-- Contract Type Filter -->
             <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
@@ -118,7 +78,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
-
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
@@ -134,24 +93,48 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                <?php 
+                                    $contractId = $contract['id'];
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-center">
                                 <?php
-
-                                $type = $contract['contract_type'] ?? '';
-
-                                $badgeColor = match ($type) {
-                                    INFRA => '#328E6E',
-                                    SACC => '#123458',
-                                    GOODS => '#F75A5A',
-                                    EMP_CON => '#FAB12F',
-                                    PSC_LONG => '#007bff',
-                                    PSC_SHORT => '#28a745',
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                // default => '#FAB12F'
-                                };
-                                ?>
+                                    $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                    switch ($type) {
+                                        case INFRA:
+                                            $badgeColor = '#328E6E';
+                                            break;
+                                        case SACC:
+                                            $badgeColor = '#123458';
+                                            break;
+                                        case GOODS:
+                                            $badgeColor = '#F75A5A';
+                                            break;
+                                        case EMP_CON:
+                                            $badgeColor = '#FAB12F';
+                                            break;
+                                        case PSC_LONG:
+                                            $badgeColor = '#007bff';
+                                            break;
+                                        case PSC_SHORT:
+                                            $badgeColor = '#28a745';
+                                            break;
+                                        case TRANS_RENT:
+                                            $badgeColor = '#003092';
+                                            break;
+                                        case TEMP_LIGHTING:
+                                            $badgeColor = '#03A791';
+                                            break;
+                                        default:
+                                            $badgeColor = '#FAB12F';
+                                            break;
+                                    }
+                                    ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
@@ -177,15 +160,12 @@ include_once '../../../views/layouts/includes/header.php';
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
-
                                     <?php if ($department === BAC): ?>
-
                                     <?php else: ?>
                                         <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
                                             <i class="fa fa-trash"></i> Delete
                                         </a>
                                     <?php endif; ?>
-
                                 </div>
                             </td>
                         </tr>
@@ -199,17 +179,9 @@ include_once '../../../views/layouts/includes/header.php';
         </table>
     </div>
 </div>
-
-<?php
-
-include_once '../modals/bac_modal.php';
-
-?>
-
+<?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
-
-<!-- Bootstrap Modal for confirmation -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -230,10 +202,6 @@ include_once '../modals/bac_modal.php';
     </div>
 </div>
 
-
-
-<!-- popup notification ---->
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -249,11 +217,10 @@ include_once '../modals/bac_modal.php';
     </symbol>
 </svg>
 
-
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
@@ -291,12 +258,10 @@ include_once '../modals/bac_modal.php';
 
     #statusFilter {
         width: 200px;
-        /* Adjust width as needed */
     }
 </style>
 
 <script>
-    // When the page finishes loading, hide the spinner
     window.onload = function () {
         document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
         document.getElementById("content").style.display = "block"; // Show the page content
@@ -309,29 +274,22 @@ include_once '../modals/bac_modal.php';
         if (deleteBtn) {
             e.preventDefault();
 
-            // Get contract ID from data attribute
             selectedContractId = deleteBtn.getAttribute('data-id');
 
-            // Show modal using Bootstrap 5
             const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
             confirmModal.show();
         }
     });
 
-    // Handle Confirm Delete button click
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
-            // Redirect to deletion endpoint (adjust URL to match your backend)
             window.location.href = 'procurement/delete_contract.php?id=' + selectedContractId;
         }
     });
 
-    //----------------DAtatables --------------------------------//
 
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
-
-        // Check if the table has at least one data row (excluding the "No contracts found" message)
         if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
             // Initialize DataTable
             var table = $('#table').DataTable({
@@ -342,23 +300,17 @@ include_once '../modals/bac_modal.php';
                 "ordering": false,
                 "info": true
             });
-
-            // Append the contract type filter next to the search input
-            var searchInput = $('#table_filter input'); // DataTables search input field
-            var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
-            searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
-
-            // Apply filter based on contract type selection
+            var searchInput = $('#table_filter input'); 
+            var filterDiv = $('#statusFilter').closest('div'); 
+            searchInput.closest('div').append(filterDiv);
             $('#statusFilter').change(function () {
                 var filterValue = $(this).val();
                 if (filterValue) {
-                    table.column(1).search(filterValue).draw(); // Column 1 is for contract type
+                    table.column(1).search(filterValue).draw(); 
                 } else {
-                    table.column(1).search('').draw(); // Reset filter
+                    table.column(1).search('').draw(); 
                 }
             });
         }
     });
-
-    //----------------DAtatables --------------------------------//
 </script>

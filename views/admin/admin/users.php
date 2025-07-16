@@ -2,7 +2,7 @@
 session_start();
 
 $department = $_SESSION['department'];
-$page_title = "List - $department";
+$page_title = "Users List";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
@@ -12,13 +12,15 @@ use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\UserController;
+use App\Controllers\UserRoleController;
+
 
 $getUser = new UserController();
 $results = $getUser->getAllUsers();
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
-$getAllContractType = (new ContractTypeController)->getContractTypes();
+$getAllContractTypes = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
 if ($getOneLatest) {
@@ -58,7 +60,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'ISD-HRAD': ?>
+                    case 'ISD': ?>
 
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
@@ -152,50 +154,53 @@ include_once '../../../views/layouts/includes/header.php';
                         <td style="text-align: center !important;padding:40px;"><?= $result['user_role'] ?> </td>
                         <td style="text-align: center !important;padding:40px;">
 
-                            <?php if (isset($result['department'])) { ?>
+                            <?php
+                                $department = isset($result['department']) ? $result['department'] : '';
 
-                                <?php switch ($result['department']) {
-                                    case 'IT': ?>
-
-                                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'ISD-HRAD': ?>
-
-                                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'CITETD': ?>
-
-                                        <span class="badge p-2" style="background-color: #FFB433;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'IASD': ?>
-
-                                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'ISD-MSD': ?>
-
-                                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case 'BAC': ?>
-
-                                        <span class="badge p-2" style="background-color: #3B6790;"><?= $result['department'] ?></span>
-
-                                        <?php break;
-                                    case '': ?>
-
-                                    <?php default: ?>
-                                        <span class="badge text-muted">no department assigned</span>
-                                <?php } ?>
-
-                            <?php } else { ?>
-
+                                switch ($department) {
+                                    case IT:
+                                        $badgeColor = '#0d6efd';
+                                        break;
+                                    case ISD:
+                                        $badgeColor = '#3F7D58';
+                                        break;
+                                    case CITET:
+                                        $badgeColor = '#FFB433';
+                                        break;
+                                    case IASD:
+                                        $badgeColor = '#EB5B00';
+                                        break;
+                                    case 'ISD-MSD':
+                                        $badgeColor = '#6A9C89';
+                                        break;
+                                    case 'PSPTD':
+                                        $badgeColor = '#83B582';
+                                        break;
+                                    case FSD:
+                                        $badgeColor = '#4E6688';
+                                        break;
+                                    case BAC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case AOSD:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case '':
+                                        $badgeColor = '';
+                                        break;
+                                    default:
+                                        $badgeColor = '';
+                                        break;
+                                }
+                                ?>
+                            <?php if (!empty($department) && $badgeColor): ?>
+                                <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
+                                    <?= htmlspecialchars($department) ?>
+                                </span>
+                            <?php else: ?>
                                 <span class="badge text-muted">no department assigned</span>
+                            <?php endif; ?>
 
-                            <?php } ?>
 
                         </td>
                         <td style="text-align: center !important;padding:40px;">
@@ -249,7 +254,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 <!-- Add New Contract Modal --->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add User Account</h5>
@@ -257,91 +262,169 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <div class="modal-body">
                 <form action="users/save_user.php" method="post" enctype="multipart/form-data">
-                    <div class="col-md-12 d-flex gap-2">
-                        <div class="p-2">
+                    <div class="row">
+                        <!-- User Image -->
+                        <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="badge text-muted">User image <span class="text-danger">*</span></label>
+                                <label class="badge text-muted form-label">User image <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" class="form-control" name="user_image" required>
+                            </div>
+                        </div>
 
-                                <input type="file" name="user_image" class="form-control" required>
-                                <span class="badge" style="color:#4C585B;">(suggested image size : 216 x 234
-                                    pixels)</span>
+                        <!-- User Info -->
+                        <div class="col-md-9">
+                            <!-- Fullname Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Firstname <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="firstname" class="form-control" placeholder="Firstname"
+                                        required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Middlename <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="middlename" class="form-control" placeholder="Middlename"
+                                        required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Lastname <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="lastname" class="form-control" placeholder="Lastname"
+                                        required>
+                                </div>
+                            </div>
 
-                            </div>
-                            <div class="d-flex gap-2">
-                                <div class="mb-3">
-                                    <label class="badge text-muted">First name <span
+                            <!-- Account Info Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Username <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="firstname" id="floatingInput"
-                                        placeholder="Firstname" required>
+                                    <input type="text" name="username" class="form-control" placeholder="Username"
+                                        required>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="badge text-muted">Middle name <span
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Password <span
                                             class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="middlename" id="floatingInput"
-                                        placeholder="Middlename" required>
+                                    <input type="text" name="password" class="form-control" placeholder="Password"
+                                        required>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="badge text-muted">Last name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" name="lastname" id="floatingInput"
-                                        placeholder="Lastname" required>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Gender <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="gender" required>
+                                        <option selected hidden>Select gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">Gender<span class="text-danger">*</span></label>
-                                <select class="form-select form-select-md mb-3" name="gender"
-                                    aria-label=".form-select-lg example">
-                                    <option selected hidden>Select gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            <hr>
-                            <div class="col-md-12 gap-2 d-flex">
-                                <div class="mb-3 col-md-6">
-                                    <label class="badge text-muted">Department<span class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md mb-3" name="department"
-                                        aria-label=".form-select-lg example">
+
+                            <!-- Department & Role Row -->
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Department <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="department" required>
                                         <option selected hidden>Select Department</option>
                                         <?php
                                         $getDept = (new DepartmentController)->getAllDepartments();
-                                        ?>
-                                        <?php foreach ($getDept as $dept): ?>
-                                        <option value="<?= $dept['department_name'] ?>">
-                                            <?= $dept['department_name'] ?>
-                                        </option>
+                                        foreach ($getDept as $dept): ?>
+                                            <option value="<?= htmlspecialchars($dept['department_name']) ?>">
+                                                <?= htmlspecialchars($dept['department_name']) ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <div class="mb-3 col-md-6">
-                                    <label class="badge text-muted">Role <span class="text-danger">*</span></label>
-                                    <select class="form-select form-select-md mb-3" name="user_role"
-                                        aria-label=".form-select-lg example">
-                                        <option selected hidden>Select user role</option>
-                                        <option value="User">User</option>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">Role <span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="user_role" required>
+                                        <option selected hidden>Select Role</option>
+                                        <?php
+                                        $getDept = (new UserRoleController)->getRoles();
+                                        foreach ($getDept as $dept): ?>
+                                            <option value="<?= htmlspecialchars($dept['user_role']) ?>">
+                                                <?= htmlspecialchars($dept['user_role']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="badge text-muted form-label">User Type<span
+                                            class="text-danger">*</span></label>
+                                    <select class="form-select" name="user_type" required>
+                                        <option value="" selected hidden>Select User Type</option>
                                         <option value="Admin">Admin</option>
+                                        <option value="User">User</option>
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="mb-3">
-                                <label class="badge text-muted">Username <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="username" id="floatingInput"
-                                    placeholder="Username" required>
-                            </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">Password <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="password" id="floatingInput"
-                                    placeholder="Password" required>
-                            </div>
                         </div>
                     </div>
+
+                    <!-- Contracts Section -->
+                    <div class="col-12 mb-4">
+                        <h3 class=" mb-2">Contracts</h3>
+                        <hr>
+                        <div class="row">
+                            <?php foreach ($getAllContractTypes as $getAllContractType): ?>
+                                <?php
+                                $type = isset($getAllContractType['contract_type']) ? $getAllContractType['contract_type'] : '';
+
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#DC8686';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                }
+                                ?>
+
+                                <div class="col-md-4 mb-2">
+                                    <label class="form-check-label d-flex align-items-center gap-2">
+                                        <input type="checkbox" class="form-check-input" name="contract_type[]"
+                                            value="<?= htmlspecialchars($type) ?>">
+                                        <span class="badge text-white"
+                                            style="background-color: <?= $badgeColor ?>; border-radius: 5px; font-size: 11px; padding: 7px;">
+                                            <?= htmlspecialchars($type) ?>
+                                        </span>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
+                            user Account</button>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Create
-                    user</button>
-            </div>
-            </form>
         </div>
     </div>
 </div>
@@ -367,12 +450,13 @@ include_once '../../../views/layouts/includes/header.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
             <use
-                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
+                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : '#exclamation-triangle-fill'; ?>" />
+
         </svg>
         <!-- Message -->
         <div>
@@ -472,8 +556,16 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
-
-
-
     //----------------DAtatables
+
+
+    document.getElementById('department').addEventListener('change', function () {
+        const roleSelect = document.getElementById('user_role');
+        if (this.value === 'FSD') {
+            roleSelect.value = 'Manager';
+        } else {
+            roleSelect.value = '';
+        }
+    });
+
 </script>
