@@ -74,7 +74,6 @@ include_once '../../../views/layouts/includes/header.php';
                     </span>
                 <?php endif; ?> 
 
-                <span class="dot"></span>
         
         <?php 
                 $contractId = $getContract['id'];
@@ -226,11 +225,11 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
 
             <?php if($getContract['account_no']): ?>
-            <div class="row col-md-2">
+            <div class="row col-md-1">
                    <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Account No:</label>
+                    <label class="badge text-muted" style="font-size: 15px;">TC No:</label>
                     <input type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['account_no']; ?>" name="contract_name" readonly>
+                        value="<?= $getContract['tc_no']; ?>" name="contract_name" readonly>
                 </div>
             </div>
             <?php endif; ?>
@@ -259,7 +258,7 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
         </div>
 
-            <div class="row col-md-1">
+            <div class="row w-10">
 
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
@@ -330,6 +329,17 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
+            <?php if ($getContract['department_assigned']): ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Mode of Procurement</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['department_assigned']; ?>" name="contract_type" readonly>
+                    </div>
+                </div>
+            <?php endif; ?>
+
             <?php if ($getContract['procurementMode']): ?>
 
                 <div class="row col-md-2">
@@ -337,6 +347,17 @@ include_once '../../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">Mode of Procurement</label>
                         <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['procurementMode']; ?>" name="contract_type" readonly>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($getContract['address']): ?>
+
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Address</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['address']; ?>" name="contract_type" readonly>
                     </div>
                 </div>
             <?php endif; ?>
