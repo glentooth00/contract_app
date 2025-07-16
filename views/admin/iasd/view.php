@@ -113,10 +113,10 @@ include_once '../../../views/layouts/includes/header.php';
                 <div id="dropMenu">
                     <ul>
                         <li>
-                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small>Suspend Contract</small></a>
+                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
                         </li>
                          <li>
-                            <a href=""><img src="../../../public/images/flagContract.svg" width="25px"><small>Flag Contract</small></a>
+                            <span><img src="../../../public/images/flagContract.svg" width="25px"><small data-toggle="modal" data-target="#flagModal" id="flagContract">Flag Contract</small></span>
                         </li>
                     </ul>
                 </div>
@@ -125,6 +125,49 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
     </div>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Set Flag to this Document</h5>
+      </div>
+      <div class="modal-body">
+        <form id="actionForm" action="flag/flag_contract.php">
+            <div class="d-flex col-md-12">
+                <input type="hidden" name="contract_id" value="<?= $contractId ?>" >
+                <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="attention" id="flexCheckDefault">
+                        <img src="../../../public/images/withComment.svg" width="25px">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            Needs Attention
+                        </label>
+                    </div>
+                </div>
+                    <div class="col-md-6">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="review" id="flexCheckDefault2">
+                        <img src="../../../public/images/underReview.svg" width="25px">
+                        <label class="form-check-label" for="flexCheckDefault2">
+                            Under Review
+                        </label>
+                    </div>
+                </div>
+            </div>
+        
+      </div>
+      <div class="modal-footer">
+        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+        <button type="submit" class="btn btn-success">Apply Flag</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
             <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -717,35 +760,35 @@ include_once '../../../views/layouts/includes/header.php';
             
             <div class="offcanvas-body offcanvas-md">
               <?php foreach ($comments as $comment): ?>
-    <?php 
-        $auditID = $comment['audit_id'];
-        $userID = $comment['user_id'];
-        $auditName = (new UserController)->getUserById($auditID);
-        $userName = (new UserController)->getUserById($userID);
-    ?>
-    
-    <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        
-        <!-- Left: Audit side -->
-        <?php if($auditName): ?>
-            <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
-                <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
-                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-            </div>
-        <?php endif; ?>
+                <?php 
+                    $auditID = $comment['audit_id'];
+                    $userID = $comment['user_id'];
+                    $auditName = (new UserController)->getUserById($auditID);
+                    $userName = (new UserController)->getUserById($userID);
+                ?>
+                
+                <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    
+                    <!-- Left: Audit side -->
+                    <?php if($auditName): ?>
+                        <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
+                            <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
+                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+                        </div>
+                    <?php endif; ?>
 
-        <!-- Right: User side -->
-        <?php if($userName): ?>
-            <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
-                <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
-                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-            </div>
-        <?php endif; ?>
-        
-    </div>
-<?php endforeach; ?>
+                    <!-- Right: User side -->
+                    <?php if($userName): ?>
+                        <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                            <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+                        </div>
+                    <?php endif; ?>
+                    
+                </div>
+            <?php endforeach; ?>
 
                 <!----comments display here ----->
 
