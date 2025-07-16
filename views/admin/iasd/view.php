@@ -61,31 +61,100 @@ include_once '../../../views/layouts/includes/header.php';
 <div class="main-layout ">
 
     <?php include_once '../menu/sidebar.php'; ?>
-
-
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?></h2>
+<div class="row align-items-center">
+    <div class="col-10 col-sm-11">
+        <h2 class="mt-2" >
+            <a href="list.php" class="text-dark pt-2" style="text-decoration: none;">
+                <i class="fa fa-angle-double-left"></i>
+            </a>
+            <?= $contract_data ?>
+        </h2>
+    </div>
 
-           
+    <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
+        <?php 
+            $contractId = $getContract['id'];
+            $hasComment = (new CommentController)->hasComment($contractId);
+            $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
+        ?>
+
+        <div class="d-flex align-items-center gap-2">
+            <!-- Comment icon with badge -->
+            <div id="viewComment" class="position-relative">
+                <?php if ($hasCommentCount > 0): ?>
+                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style="font-size: 14px;">
+                        <?= $hasCommentCount; ?>
+                    </span>
+                <?php endif; ?>
+
+                <img
+                    src="../../../public/images/viewComment.svg"
+                    width="33px"
+                    alt="This Contract has comment!"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasWithBothOptions"
+                    aria-controls="offcanvasWithBothOptions"
+                    data-contract-id="<?= $getContract['id'] ?>"
+                    data-audit-id="<?= $user_id ?>"
+                    data-user-id="<?= $user_id ?>"
+                    data-department="<?= $user_department ?>"
+                    class="view-comment-trigger"
+                />
+            </div>
+
+            <!-- Three-dot dropdown -->
+            <div class="dotMenu" onclick="toggleView()" id="dotMenu">
+                <img src="../../../public/images/dotMenu.svg" width="25px">
+                <div id="dropMenu">
+                    <ul>
+                        <li>
+                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small>Suspend Contract</small></a>
+                        </li>
+                         <li>
+                            <a href=""><img src="../../../public/images/flagContract.svg" width="25px"><small>Flag Contract</small></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                    img.addEventListener('click', function () {
+                        const contractId = this.dataset.contractId;
+
+                        fetch(`comments/update_status.php?contract_id=${contractId}`)
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('PHP response:', data);
+
+                                // Hide the badge in real-time
+                                const badge = document.getElementById(`comment-count-badge-${contractId}`);
+                                if (badge) {
+                                    badge.style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    });
+                });
+            });
+            </script>
+        
+
+        </h2>           
         
         <hr>
-
-        <button 
-            id="commentBtn" 
-            type="button" 
-            data-bs-toggle="offcanvas" 
-            data-bs-target="#offcanvasExample" 
-            aria-controls="offcanvasExample"
-            data-contract-id="<?= $getContract['id'] ?>"
-            data-audit-id="<?= $user_id ?>"
-            data-user-id="<?= $user_id ?>"
-            data-department ="<?= $user_department ?>"
-        >
-            Comment
-        </button>
 
         <?php
         $start = new DateTime($getContract['contract_start']);
@@ -639,9 +708,9 @@ include_once '../../../views/layouts/includes/header.php';
 
        <!-- Off canvas ---->
 
-        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
              <hr>
@@ -993,8 +1062,31 @@ include_once '../../../views/layouts/includes/header.php';
                         transition-duration: 0s, 0.15s;
                         color: rgb(255, 255, 255);
                     }
-                
-                
+    .dotMenu:hover{
+        cursor: pointer;
+    }
+    #dropMenu{
+    text-align: left;
+    color: black;
+    position: absolute;
+    right: 43px;
+    background-color: #ffffff;
+    z-index: 1;
+    width: 13em;
+    padding: 15px 0px 0px 0px;
+    border-radius: 10px 0px 10px 10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    display:none;
+    font-weight: 500;
+    font-size: 16px;
+        a{
+            text-decoration: none;
+            color: #393E46;
+            margin-bottom: 15px;
+
+        }
+
+    }
 </style>
 
 <script>
@@ -1139,6 +1231,13 @@ include_once '../../../views/layouts/includes/header.php';
         $('#contract_type').val(contractType);
     });
 
-
+    function toggleView(){
+        var div = document.getElementById("dropMenu");
+        if(div.style.display === "block"){
+            div.style.display = "none";
+        }else{
+            div.style.display = "block"  
+            }
+        }
 
 </script>
