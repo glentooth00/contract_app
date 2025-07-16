@@ -27,7 +27,7 @@ class CommentController{
 
     public function saveCommentForUser($data)
     {
-        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status) VALUES (:contract_id, :user_id, :comment, :comment_id, :status)";
+        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status, department) VALUES (:contract_id, :user_id, :comment, :comment_id, :status, :department)";
         $stmt = $this->db->prepare($query);
         return $stmt->execute($data);
     }

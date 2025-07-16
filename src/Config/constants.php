@@ -20,6 +20,7 @@ define('IASD', 'IASD');
 define('FSD', 'FSD');
 define('AOSD', 'AOSD');
 define('CHIEF', 'PSPTD CHIEF');
+define('GM', 'OGM');
 
 
 //REQUESTS

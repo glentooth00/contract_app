@@ -108,43 +108,47 @@ include_once '../../../views/layouts/includes/header.php';
                     class="view-comment-trigger"
                 />
 
-                <?php if($hasCommentCount  > 0): ?>
-                         <span style="background-color: red;
-                                text-align: center;
-                                border-radius: 20px;
-                                font-size: 18px;
-                                color: white;
-                                width: 20px;
-                                position: absolute;
-                                right: 20px;
-
-                            ">
-                    <?= $hasCommentCount; ?>
+              <?php if($hasCommentCount > 0): ?>
+                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
+                        style="background-color: red;
+                            text-align: center;
+                            border-radius: 20px;
+                            font-size: 18px;
+                            color: white;
+                            width: 20px;
+                            position: absolute;
+                            right: 20px;">
+                        <?= $hasCommentCount; ?>
                     </span>
                 <?php endif; ?>
             </span>
             </div></h2>
 
-          <script>
-           document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
-                img.addEventListener('click', function () {
-                    const contractId = this.dataset.contractId;
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
+                    img.addEventListener('click', function () {
+                        const contractId = this.dataset.contractId;
 
-                    // Check if this actually hits update_status.php
-                    fetch(`comments/update_status.php?contract_id=${contractId}`)
-                        .then(response => response.text())
-                        .then(data => {
-                            console.log('PHP response:', data);
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
+                        fetch(`comments/update_status.php?contract_id=${contractId}`)
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('PHP response:', data);
+
+                                // Hide the badge in real-time
+                                const badge = document.getElementById(`comment-count-badge-${contractId}`);
+                                if (badge) {
+                                    badge.style.display = 'none';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                    });
                 });
             });
-        });
-
             </script>
+
             </h2>
 
         <hr>
