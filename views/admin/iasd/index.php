@@ -9,6 +9,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\FlagController;
 
 $contracts = (new ContractController)->getContractsForAudit($department);
 
@@ -126,7 +127,30 @@ include_once '../../../views/layouts/includes/header.php';
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
-                                </a></td>
+                                </a>
+                            
+                                <?php if(isset($contract['id'])): ?>
+                                <span class="p-3">
+                                    <?php
+                                        $id = $contract['id'];
+                                        $getFlag = ( new FlagController )->getFlag($id);
+                                    ?>
+
+                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
+                                        
+                                         <?php if($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
+                                            <?php endif;  ?>
+
+                                            <?php if($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
+                                            <?php endif;  ?>
+                                        
+                                    <?php endif; ?>
+                                </span>
+                            <?php endif; ?>
+
+                            </td>
                             <td class="text-center">
                                  <?php
                                 $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
@@ -650,6 +674,9 @@ include_once '../../../views/layouts/includes/header.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+    #attention, #review:hover{
+        cursor: pointer;
     }
 </style>
 

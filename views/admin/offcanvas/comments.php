@@ -17,6 +17,7 @@ use App\Controllers\UserController;
                 <?php 
                     $auditID = $comment['audit_id'];
                     $userID = $comment['user_id'];
+                   echo  $userDept = $comment['department'];
                     $auditName = (new UserController)->getUserById($auditID);
                     $userName = (new UserController)->getUserById($userID);
                 ?>
@@ -34,7 +35,7 @@ use App\Controllers\UserController;
 
                     <!-- Right: User side -->
                     <?php if($userName): ?>
-                        <div style="flex: 1;text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                        <div style="flex: 1;<?php $userDept = ( $department ) ?  ?>text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
                             <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
                             <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
                             <span class="badge text-muted"><small><?= date('M-D-Y h:i A', strtotime($comment['created_at'])); ?></small></span>
