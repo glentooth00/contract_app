@@ -4,6 +4,7 @@ use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
 use App\Controllers\CommentController;
+use App\Controllers\FlagController;
 session_start();
 
 use App\Controllers\ContractController;
@@ -64,13 +65,16 @@ include_once '../../../views/layouts/includes/header.php';
     <div class="content-area">
 
 <div class="row align-items-center">
-    <div class="col-10 col-sm-11">
+    <div class="col-10 col-sm-11 d-flex">
         <h2 class="mt-2" >
             <a href="list.php" class="text-dark pt-2" style="text-decoration: none;">
                 <i class="fa fa-angle-double-left"></i>
             </a>
             <?= $contract_data ?>
         </h2>
+
+    <?php include_once('../flags/flags.php'); ?>
+
     </div>
 
     <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
@@ -126,48 +130,44 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Set Flag to this Document</h5>
-      </div>
-      <div class="modal-body">
-        <form id="actionForm" action="flag/flag_contract.php">
+    <!-- Modal -->
+    <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set Flag to this Document</h5>
+        </div>
+        <div class="modal-body">
+           <form action="flag/flag_contract.php" method="POST">
             <div class="d-flex col-md-12">
-                <input type="hidden" name="contract_id" value="<?= $contractId ?>" >
+                <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+
                 <div class="col-md-6">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="attention" id="flexCheckDefault">
-                        <img src="../../../public/images/withComment.svg" width="25px">
-                        <label class="form-check-label" for="flexCheckDefault">
-                            Needs Attention
-                        </label>
-                    </div>
+                <div class="form-check">
+
+                    <input class="form-check-input" type="checkbox" id="attention" name="attention">
+                    <img src="../../../public/images/withComment.svg" width="25px">
+                    <label class="form-check-label" for="attention">Needs Attention</label>
                 </div>
-                    <div class="col-md-6">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="review" id="flexCheckDefault2">
-                        <img src="../../../public/images/underReview.svg" width="25px">
-                        <label class="form-check-label" for="flexCheckDefault2">
-                            Under Review
-                        </label>
-                    </div>
+                </div>
+
+                <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="review" name="review">
+                    <img src="../../../public/images/underReview.svg" width="25px">
+                    <label class="form-check-label" for="review">Under Review</label>
+                </div>
                 </div>
             </div>
-        
-      </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-        <button type="submit" class="btn btn-success">Apply Flag</button>
-        </form>
-      </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Apply Flag</button>
+            </div>
+            </form>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
-
-
+    </div>
 
             <script>
             document.addEventListener("DOMContentLoaded", function () {
@@ -193,8 +193,7 @@ include_once '../../../views/layouts/includes/header.php';
                 });
             });
             </script>
-        
-
+    
         </h2>           
         
         <hr>
