@@ -30,3 +30,7 @@ define('POST', 'POST');
 //suspension type
 define('UNSAS', 'Unsatisfactory Output');
 define('DTD', 'Due to Disaster');
+
+//Flags
+define('UR', 'Under Review');
+define('NA', 'Needs Attention');

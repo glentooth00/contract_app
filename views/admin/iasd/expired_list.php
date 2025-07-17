@@ -11,7 +11,7 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
-$contracts = (new ContractController)->getExpiredContractsByDepartment($department);
+$contracts = (new ContractController)->getContractsAllExpired();
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
