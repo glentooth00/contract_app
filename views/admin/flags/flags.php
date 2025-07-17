@@ -36,7 +36,7 @@ use App\Controllers\FlagController;
                 </ul>
             </div>
             <form action="../flags/removeFlag.php" method="POST">
-                <input type="text"  name="contract_id"  value="<?=  $getContract['id'] ?>">
+                <input type="hidden"  name="contract_id"  value="<?=  $getContract['id'] ?>">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button type="submit" class="btn btn-primary">Remove flag</button>
