@@ -185,6 +185,9 @@ include_once '../../../views/layouts/includes/header.php';
                                     case AOSD:
                                         $badgeColor = '#03A791';
                                         break;
+                                    case GM:
+                                        $badgeColor = '#A2D5C6';
+                                        break;
                                     case '':
                                         $badgeColor = '';
                                         break;
@@ -192,6 +195,7 @@ include_once '../../../views/layouts/includes/header.php';
                                         $badgeColor = '';
                                         break;
                                 }
+                                
                                 ?>
                             <?php if (!empty($department) && $badgeColor): ?>
                                 <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">

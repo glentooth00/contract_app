@@ -11,6 +11,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     if($_POST['user_department'] === IASD){
         
         $commentData = [
+            'department' => $_POST['user_department'],
             'contract_id' => $_POST['contract_id'],
             'audit_id' => $_POST['audit_id'],
             'comment' => $_POST['comment'],

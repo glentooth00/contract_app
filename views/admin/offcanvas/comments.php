@@ -1,13 +1,13 @@
 <?php 
 
 use App\Controllers\UserController;
-
+$department = $_SESSION['department'] ?? null;
 ?>
 <!-- Off canvas ---->
 
         <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments <?php echo $department; ?></h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
              <hr>
@@ -35,7 +35,8 @@ use App\Controllers\UserController;
 
                     <!-- Right: User side -->
                     <?php if($userName): ?>
-                        <div style="flex: 1;<?php $userDept = ( $department ) ?  ?>text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                        
+                        <div style="flex: 1;text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
                             <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
                             <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
                             <span class="badge text-muted"><small><?= date('M-D-Y h:i A', strtotime($comment['created_at'])); ?></small></span>
