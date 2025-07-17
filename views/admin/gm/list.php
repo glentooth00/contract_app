@@ -12,6 +12,7 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 use App\Controllers\CommentController;
+use App\Controllers\FlagController;
 
 $contracts = (new ContractController)->getContractsAll();
 
@@ -92,23 +93,14 @@ include_once '../../../views/layouts/includes/header.php';
 
                     <?php break;
                 case '': ?>
-
                 <?php default: ?>
                     <!-- <span class="badge text-muted">no department assigned</span> -->
             <?php } ?>
-
             <!-- <span class="badge text-muted">no department assigned</span> -->
-
         </span>
         <hr>
-
         <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
-
-        <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
-
-
-            <!-- Contract Type Filter -->
             <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
@@ -123,7 +115,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
-
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
@@ -140,25 +131,39 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
-                                 <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
+                                <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
-                        
                             <?php 
                                     $contractId = $contract['id'];
-
                                     $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
                                 <?php if($hasComment == true): ?>
                                     <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
                                 <?php endif; ?>
+                                <?php if(isset($contractId)): ?>
+                                <span class="p-3">
+                                    <?php
+                                        $id = $contractId;
+                                        $getFlag = ( new FlagController )->getFlag($id);
+                                    ?>
+                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
+                                        
+                                        <?php if($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
+                                            <?php endif;  ?>
+                                            <?php if($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
+                                            <?php endif;  ?>
+                                    <?php endif; ?>
+                                </span>
+                            <?php endif; ?>
                         </td>
                             <td class="text-center">
-                               <?php
+                            <?php
                                     $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
-
                                     switch ($type) {
                                         case INFRA:
                                             $badgeColor = '#328E6E';
@@ -189,7 +194,6 @@ include_once '../../../views/layouts/includes/header.php';
                                             break;
                                     }
                                     ?>
-
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
@@ -229,11 +233,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
 
@@ -325,6 +324,9 @@ include_once '../../../views/layouts/includes/header.php';
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+    #attention, #review:hover{
+        cursor: pointer;
     }
 </style>
 
