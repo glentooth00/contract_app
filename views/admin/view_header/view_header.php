@@ -56,7 +56,7 @@ use App\Controllers\CommentController;
                 <div id="dropMenu">
                     <ul>
                         <li>
-                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
+                            <a href="" class="w-100" data-toggle="modal" data-target="#suspendModal"><img  src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
                         </li>
                         <?php if($department === IASD): ?>
                         <li>
@@ -94,4 +94,7 @@ use App\Controllers\CommentController;
                         });
                     });
                 });
+                
             </script>
+
+

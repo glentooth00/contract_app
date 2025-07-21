@@ -62,21 +62,6 @@ include_once '../../../views/layouts/includes/header.php';
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
         <hr>
-        <div class="card" id="actions" style="position: absolute;
-            right: 0;
-            top: 0;
-            margin-right: 1.8em;
-            margin-top:3em;
-            background-color: #FFFFFF;
-            width: 8em;
-            height: 6em;
-            padding: 5px;
-            z-index: 10;
-            display: none;">
-            <button type="button" class="btn btn-warning mb-2 w-100" data-toggle="modal"
-                data-target="#suspendModal">Suspend</button>
-            <button type="button" class="btn btn-primary mb-2 w-100">Extend</button>
-        </div>
 
         <!-- Modal -->
         <div class="modal fade" id="suspendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
