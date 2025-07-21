@@ -56,7 +56,10 @@ use App\Controllers\CommentController;
                 <div id="dropMenu">
                     <ul>
                         <li>
-                            <a href="" class="w-100" data-toggle="modal" data-target="#suspendModal"><img  src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
+                            <a href="" class="w-100" data-toggle="modal" data-target="#suspendModal"><img  src="../../../public/images/suspendFile.svg" width="20px"><small id="" class="p-2 mb-5">Suspend Contract</small></a>
+                        </li>
+                         <li>
+                            <a href="" class="w-100" data-toggle="modal" data-target="#suspendModal"><img  src="../../../public/images/bell.svg" width="20px"><small id=""  class="p-2 mb-5">Notification</small></a>
                         </li>
                         <?php if($department === IASD): ?>
                         <li>
