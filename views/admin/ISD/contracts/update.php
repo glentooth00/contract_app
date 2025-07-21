@@ -312,8 +312,6 @@ if($_GET['type'] === GOODS){
 
 
         }
-
-    
 }
 
 if($_GET['type'] === SACC){

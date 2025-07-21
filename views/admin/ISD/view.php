@@ -494,6 +494,31 @@ include_once '../../../views/layouts/includes/header.php';
                 </div><?php endif; ?> <?php if (!empty($getContract['contractPrice'])): ?>
 
                 <div class="row col-md-2">
+
+                <script>
+
+                    //peso format
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('ttc');
+
+    // Remove ₱ and commas on focus so user can type a clean number
+    input.addEventListener('focus', function () {
+        let rawValue = input.value.replace(/[₱,]/g, '').trim();
+        input.value = rawValue;
+    });
+
+    // Format input on keyup
+    input.addEventListener('input', function () {
+        let value = input.value.replace(/[₱,]/g, '').trim();
+
+        if (!isNaN(value) && value !== "") {
+            input.value = '₱' + Number(value).toLocaleString();
+        } else if (value === "") {
+            input.value = "";
+        }
+    });
+});
+                </script>
                     
                 <?php if(!empty($getContract['contractPrice'])): ?>
                     <div class="mt-3">
@@ -1766,5 +1791,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             div.style.display = "block"  
             }
         }
+
+
 
 </script>
