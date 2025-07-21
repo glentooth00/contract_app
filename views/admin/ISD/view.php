@@ -500,7 +500,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">Total Contract
                             cost</label>
                             <input type="text" id="ttc" style="margin-left:9px;"
-                            class="form-control pl-5" value="<?= '₱ ' . $getContract['contractPrice']; ?>"
+                            class="form-control pl-5" value="₱<?=  $getContract['contractPrice']; ?>"
                             name="contract_type" readonly>
                         </div>
                 </div>
