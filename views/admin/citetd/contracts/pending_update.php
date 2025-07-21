@@ -29,10 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         'uploader_id' => $_GET['uploader_id'],
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
+        'updated_by' => $_GET['user']
 
     ];
 
-    // var_dump($latestData);
 
     $dataPendingUpdate = (new PendingDataController)->PendingInsert($latestData);
 

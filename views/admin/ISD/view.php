@@ -6,6 +6,7 @@ use App\Controllers\SuspensionController;
 use App\Controllers\UserController;
 use App\Controllers\CommentController;
 session_start();
+date_default_timezone_set('Asia/Manila');
 use App\Controllers\ContractController;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
@@ -18,6 +19,8 @@ if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
 }
+$User = $_SESSION['firstname'].' '.$_SESSION['middlename'].' '.$_SESSION['lastname'];
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 $contract_id = $_GET['contract_id'];
 $getContract = (new ContractController)->getContractbyId($contract_id);
@@ -38,6 +41,9 @@ include_once '../../../views/layouts/includes/header.php';
 <div class="main-layout ">
     <?php include_once '../menu/sidebar.php'; ?>
     <div class="content-area">
+        <input type="hidden" id="loggedInUser" value="<?= $User ?>">
+        <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
+        <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
         <hr>
         <!-- Modal -->
@@ -206,6 +212,8 @@ include_once '../../../views/layouts/includes/header.php';
                         type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly></div>
             </div>
+
+
             <?php if($getContract['contract_type'] === SACC ): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -213,7 +221,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                            ?> <input type="date" id="saccStartDate" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -227,12 +235,14 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                            ?> <input type="date" id="saccEndDate" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
                 </div>
             </div>
+
+
             <?php endif; ?>
             <?php if($getContract['contract_type'] === INFRA): ?>
                 <div class="row col-md-2">
@@ -511,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <div class="mt-3 col-md-12 d-flex gap-5">
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Uploading Dept:</label><input
-                        type="text" style="margin-left:9px;" class="form-control pl-5"
+                        type="text" style="margin-left:9px;" class="form-control pl-5" id="uploadingDept"
                         value="<?= $getContract['uploader_department']; ?>" name="contract_type" readonly></div>
             </div><?php
 
@@ -521,6 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="row col-md-3">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Uploaded by:</label><input
                         type="text" style="margin-left:9px;" class="form-control pl-5"
+                        id = "uploadedBy"
                         value="<?= $getUser['firstname'] . ' ' . $getUser['middlename'] . ' ' . $getUser['lastname']; ?>"
                         name="contract_type" readonly></div>
             </div>
@@ -1443,6 +1454,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
         const totalCost = document.getElementById('ttc');
+        const saccStart = document.getElementById('saccStartDate');
+        const saccEnd = document.getElementById('saccEndDate');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1464,6 +1477,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             empStart?.removeAttribute('readonly');
             empEnd?.removeAttribute('readonly');
             totalCost?.removeAttribute('disabled');
+            saccStart?.removeAttribute('readonly');
+            saccEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1497,6 +1512,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
         const totalCost = document.getElementById('ttc');
+         const saccStart = document.getElementById('saccStartDate');
+        const saccEnd = document.getElementById('saccEndDate');
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
@@ -1511,6 +1528,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         empStart?.setAttribute('readonly', true);
         empEnd?.setAttribute('readonly', true);
         totalCost?.setAttribute('disabled', true);
+        saccStart?.setAttribute('readonly',true);
+        saccEnd?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1532,6 +1551,13 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const EmpStart = document.getElementById('EmpStartDate');
         const EmpEnd = document.getElementById('EmpEndDate');
         const totalCost = document.getElementById('ttc');
+        const uploader_dept = document.getElementById('uploadingDept');
+        const loginUser = document.getElementById('loggedInUser');
+        const uploaded_by = document.getElementById('uploadedBy');
+        const uploaderId = document.getElementById('uploader_id');
+        const deptUploader = document.getElementById('uploader_dept');
+        const saccStart =  document.getElementById('saccStartDate');
+        const saccEnd = document.getElementById('saccEndDate');
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1539,8 +1565,10 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
+
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
+
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
         const typeContract = encodeURIComponent(contract_type?.value || '');
@@ -1548,10 +1576,16 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const StartEmpCon =  encodeURIComponent(EmpStart?.value || '');
         const EndConEmp = encodeURIComponent(EmpEnd?.value || '');
         const Cost = encodeURIComponent(totalCost?. value || '');
-
+        const deptUpload = encodeURIComponent(uploader_dept?. value || '');
+        const updatedby = encodeURIComponent(loginUser?.  value || '');
+        const uploadedBy = encodeURIComponent(uploaded_by?. value || '');
+        const uploadId = encodeURIComponent(uploaderId?. value || '');
+        const dept_uploader = encodeURIComponent(deptUploader?. value || '');
+        const saccDate_Start = encodeURIComponent(saccStart?. value || '');
+        const saccDate_End = encodeURIComponent(saccEnd?. value || '');
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}`;
     });
 
     function formatDate(dateString) {
