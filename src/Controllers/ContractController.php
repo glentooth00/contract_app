@@ -40,8 +40,8 @@ class ContractController
     public function saveContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned, implementing_dept, uploader) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned, :implementing_dept, :uploader)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned, implementing_dept, uploader, contractPrice) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned, :implementing_dept, :uploader, :contractPrice)";
 
         $stmt = $this->db->prepare($query);
 
@@ -57,6 +57,7 @@ class ContractController
             ':uploader_department' => $data['uploader_department'],
             ':department_assigned' => $data['department_assigned'] ?? null,
             ':implementing_dept' => $data['implementing_dept'] ?? null,
+             ':contractPrice' => $data['contractPrice'] ?? null,
 
         ]);
     }
@@ -619,8 +620,8 @@ class ContractController
                     contract_end = :contract_end,
                     -- department_assigned = :department_assigned,
                     updated_at = :updated_at,
-                    contract_status = :contract_status
-                    -- action_status = :action_status
+                    contract_status = :contract_status,
+                    contractPrice = :contractPrice
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -632,6 +633,7 @@ class ContractController
         // $stmt->bindParam(':department_assigned', $data['department_assigned']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam('contract_status', $data['contract_status']);
+        $stmt->bindParam('contractPrice', $data['contractPrice']);
         // $stmt->bindParam('action_status', $data['action_status']);
 
         $stmt->execute();
