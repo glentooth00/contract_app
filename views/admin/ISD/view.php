@@ -492,12 +492,21 @@ include_once '../../../views/layouts/includes/header.php';
                             type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['address']; ?>" name="address" readonly></div>
                 </div><?php endif; ?> <?php if (!empty($getContract['contractPrice'])): ?>
+
                 <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Total Contract
-                            cost</label><input type="text" id="contractInput" style="margin-left:9px;"
+                    
+                <?php if(!empty($getContract['contractPrice'])): ?>
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract
+                            cost</label>
+                            <input type="text" id="ttc" style="margin-left:9px;"
                             class="form-control pl-5" value="<?= '₱ ' . $getContract['contractPrice']; ?>"
-                            name="contract_type" readonly></div>
-                </div>` <?php endif; ?> <?php if (!$getContract['supplier']): ?> <?php else: ?>
+                            name="contract_type" readonly>
+                        </div>
+                </div>
+                <?php endif; ?>
+
+                <?php endif; ?> <?php if (!$getContract['supplier']): ?> <?php else: ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
                             type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
@@ -1487,6 +1496,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const StartDate = document.getElementById('EmpStartDate');
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
+        const totalCost = document.getElementById('ttc');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1507,6 +1517,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             StartDate?.removeAttribute('readonly');
             empStart?.removeAttribute('readonly');
             empEnd?.removeAttribute('readonly');
+            totalCost?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1539,6 +1550,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const closeBtn = document.getElementById('close');
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
+        const totalCost = document.getElementById('ttc');
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
@@ -1552,6 +1564,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         infraEnd?.setAttribute('readonly', true);
         empStart?.setAttribute('readonly', true);
         empEnd?.setAttribute('readonly', true);
+        totalCost?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1572,6 +1585,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const contract_type = document.getElementById('contractType');
         const EmpStart = document.getElementById('EmpStartDate');
         const EmpEnd = document.getElementById('EmpEndDate');
+        const totalCost = document.getElementById('ttc');
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1587,10 +1601,11 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const EndEmpCon =  encodeURIComponent(EmpEnd?.Value || '');
         const StartEmpCon =  encodeURIComponent(EmpStart?.value || '');
         const EndConEmp = encodeURIComponent(EmpEnd?.value || '');
+        const Cost = encodeURIComponent(totalCost?. value || '');
 
 
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}`;
     });
 
     function formatDate(dateString) {

@@ -191,15 +191,18 @@ if($_GET['type'] === EMP_CON){
 
 if($_GET['type'] === INFRA){
 
+    $price = str_replace('₱', '',$_GET['ttc']);
+
     $EmpUpdate = [
         'id' => $_GET['id'],
         'contract_name' => $_GET['name'],
         'start' => $_GET['EmpStart'],
         'end' => $_GET['ConEmpEnd'],
         'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_status' => 'Active',
+        'contractPrice' => $price
     ];
-    
+
         $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
 
         if ($contractUpdate) {
@@ -215,12 +218,13 @@ if($_GET['type'] === INFRA){
                     'contract_name' => $getCurrenData['contract_name'],
                     'date_start' => $getCurrenData['contract_start'],
                     'date_end' => $getCurrenData['contract_end'],
-                    'updated_at' => date('Y-m-d H:i:s')
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'contractPrice' =>  $price
                 ];
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                var_dump($updateContractHistory);
+             
 
                 if($updateContractHistory){
 
@@ -251,13 +255,16 @@ if($_GET['type'] === INFRA){
 
 if($_GET['type'] === GOODS){
 
+    $price = str_replace('₱', '',$_GET['ttc']);
+
     $EmpUpdate = [
         'id' => $_GET['id'],
         'contract_name' => $_GET['name'],
         'start' => $_GET['EmpStart'],
         'end' => $_GET['ConEmpEnd'],
         'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_status' => 'Active',
+        'contractPrice' => $price
     ];
     
         $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
@@ -311,13 +318,16 @@ if($_GET['type'] === GOODS){
 
 if($_GET['type'] === SACC){
 
+    $price = str_replace('₱', '',$_GET['ttc']);
+
     $EmpUpdate = [
         'id' => $_GET['id'],
         'contract_name' => $_GET['name'],
         'start' => $_GET['EmpStart'],
         'end' => $_GET['ConEmpEnd'],
         'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_status' => 'Active',
+        'contractPrice' => $price
     ];
     
         $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
