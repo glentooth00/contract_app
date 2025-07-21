@@ -13,6 +13,8 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 
+$User = $_SESSION['firstname'].' '.$_SESSION['middlename'].' '.$_SESSION['lastname'];
+
 if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
@@ -120,7 +122,7 @@ include_once '../../../views/layouts/includes/header.php';
         <?php } ?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
-
+                <input type="hidden" id="loggedInUser" value="<?= $User ?>">
             <div class="row col-md-2">
                 <input type="hidden" id="uploaderDept" style="margin-left:9px;" class="form-control pl-5"
                     value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
@@ -323,7 +325,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-3">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Uploaded by: </label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5"
+                    <input type="text" style="margin-left:9px;" id="uploader" class="form-control pl-5"
                         value="<?= $getContract['uploader']; ?>" name="contract_type" readonly>
                 </div>
             </div>
@@ -1031,6 +1033,7 @@ include_once '../../../views/layouts/includes/header.php';
         const uploader = document.getElementById('contractUploader');
         const uploader_id = document.getElementById('uploaderId');
         const uploader_dept = document.getElementById('uploaderDept');
+        const loggedUser = document.getElementById('loggedInUser');
 
         const startDateValue = startDate?.value || rentStart?.value || '';
         const endDateValue = endDate?.value || rentEnd?.value || '';
@@ -1044,8 +1047,9 @@ include_once '../../../views/layouts/includes/header.php';
         const docUploader = encodeURIComponent(uploader?.value || '');
         const uploaderId = encodeURIComponent(uploader_id?.value || '');
         const uploaderDept = encodeURIComponent(uploader_dept?.value || '');
+        const user = encodeURIComponent(loggedUser?. value || '');
 
-        const url = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}`;
+        const url = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}`;
 
         console.log("Redirecting to:", url); // Debug
         window.location.href = url;
