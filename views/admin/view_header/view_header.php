@@ -11,22 +11,20 @@ $account_no = $getContract['account_no'];
                 <i class="fa fa-angle-double-left"></i>
             </a>
             <?= $contract_data ?>
-            <span id="account_no">
+            <?php if(!empty($account_no)): ?>
+                <span id="account_no">
                 (<?= $account_no ?>)
             </span>
+            <?php endif; ?>
         </h2>
-
     <?php include_once('../flags/flags.php'); ?>
-
     </div>
-
     <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
         <?php 
             $contractId = $getContract['id'];
             $hasComment = (new CommentController)->hasComment($contractId);
             $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
         ?>
-
         <div class="d-flex align-items-center gap-2">
             <!-- Comment icon with badge -->
             <div id="viewComment" class="position-relative">
@@ -37,7 +35,6 @@ $account_no = $getContract['account_no'];
                         <?= $hasCommentCount; ?>
                     </span>
                 <?php endif; ?>
-
                 <img
                     src="../../../public/images/viewComment.svg"
                     width="33px"
@@ -53,7 +50,6 @@ $account_no = $getContract['account_no'];
                     class="view-comment-trigger"
                 />
             </div>
-
             <!-- Three-dot dropdown -->
             <div class="dotMenu" onclick="toggleView()" id="dotMenu">
                 <img src="../../../public/images/dotMenu.svg" width="25px">
@@ -62,7 +58,7 @@ $account_no = $getContract['account_no'];
                         <li>
                             <a href="" class="w-100" data-toggle="modal" data-target="#suspendModal"><img  src="../../../public/images/suspendFile.svg" width="20px"><small id="" class="p-2 mb-5">Suspend Contract</small></a>
                         </li>
-                         <li>
+                        <li>
                             <a href="" class="w-100" data-toggle="modal" data-target="#suspendModal"><img  src="../../../public/images/bell.svg" width="20px"><small id=""  class="p-2 mb-5">Notification</small></a>
                         </li>
                         <?php if($department === IASD): ?>
@@ -73,7 +69,6 @@ $account_no = $getContract['account_no'];
                     </ul>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
