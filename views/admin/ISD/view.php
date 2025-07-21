@@ -353,8 +353,8 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                            ?> <input type="date" id="empConStart" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" id="" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
                 </div>
@@ -368,8 +368,8 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
+                            ?> <input type="date" id="empConEnd" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>"  name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
                 </div>
@@ -1485,6 +1485,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const deptSelect = document.getElementById('deptSelect');
         const EndDate = document.getElementById('EmpEndDate');
         const StartDate = document.getElementById('EmpStartDate');
+        const empStart = document.getElementById('empConStart');
+        const empEnd = document.getElementById('empConEnd');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1503,6 +1505,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             rentEnd?.removeAttribute('readonly');
             EndDate?.removeAttribute('readonly');
             StartDate?.removeAttribute('readonly');
+            empStart?.removeAttribute('readonly');
+            empEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1533,6 +1537,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
         const closeBtn = document.getElementById('close');
+        const empStart = document.getElementById('empConStart');
+        const empEnd = document.getElementById('empConEnd');
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
@@ -1544,6 +1550,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         deptSelect?.setAttribute('disabled', true);
         infraStart?.setAttribute('readonly', true);
         infraEnd?.setAttribute('readonly', true);
+        empStart?.setAttribute('readonly', true);
+        empEnd?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
