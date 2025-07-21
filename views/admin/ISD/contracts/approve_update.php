@@ -10,14 +10,17 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $updateData = [
-        'id' => $_POST['id'],
-        'contract_id' => $_POST['contract_id'],
-        'uploader_department' => $_POST['uploader_department'],
-        'contract_name' => $_POST['contract_name'],
-        'contract_start' => $_POST['contract_start'],
-        'contract_end' => $_POST['contract_end'],
-    ];
+$contract_start = !empty($_POST['contract_start']) ? date('Y-m-d', strtotime($_POST['contract_start'])) : null;
+$contract_end = !empty($_POST['contract_end']) ? date('Y-m-d', strtotime($_POST['contract_end'])) : null;
+
+$updateData = [
+    'id' => $_POST['id'],
+    'contract_id' => $_POST['contract_id'],
+    'uploader_department' => $_POST['uploader_department'],
+    'contract_name' => $_POST['contract_name'],
+    'contract_start' => $contract_start,
+    'contract_end' => $contract_end,
+];;
 
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
@@ -34,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
         } else {
 
-            echo $id = $updateData['contract_id'];
+            $id = $updateData['contract_id'];
 
             $getContract = ( new ContractController )->getContractbyId($id);
 
@@ -69,5 +72,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// header("Location: " . $_SERVER['HTTP_REFERER']);
-// exit;
+header("Location: " . $_SERVER['HTTP_REFERER']);
+exit;

@@ -1488,7 +1488,7 @@ class ContractController
 
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
-            // Log error here if needed
+            echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
             return false;
         }
     }

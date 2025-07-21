@@ -212,13 +212,8 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <h5>Current Data</h5>
                                                         <hr>
                                                         <?php
-
                                                         $contract_id = $contract['contract_id'];
-
                                                         $getContractFromContracts = (new ContractController)->getContractbyId($contract_id);
-
-                                                        // var_dump($getContractFromContracts); 
-                                            
                                                         ?>
 
                                                         <div class="col-md-12">
@@ -247,7 +242,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                         <?php 
                                                                             $start = date('Y-d-M', strtotime($getContractFromContracts['contract_start']));
                                                                         ?>
-                                                                        <input type="text"
+                                                                        <input type="date"
                                                                             value="<?= $start ?>"
                                                                             class="form-control" readonly>
                                                                     </div>
@@ -270,7 +265,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                             </svg>
                                                                         </span>
-                                                                        <input type="text"
+                                                                        <input type="date"
                                                                             value="<?= $end ?>"
                                                                             class="form-control" readonly>
                                                                     </div>
@@ -290,8 +285,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
                                                             <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract
-                                                                    name</label>
+                                                                <label class="badge text-muted float-start">Remaining days</label>
                                                                 <input type="text" value="<?= $remainingDays ?> Days"
                                                                     class="form-control" readonly>
                                                             </div>
@@ -327,13 +321,13 @@ include_once '../../../views/layouts/includes/header.php';
                                                                         <form action="contracts/approve_update.php" method="POST">
                                                                             <div class="mb-3">
 
-                                                                                <input type="text" name="uploader_department"
+                                                                                <input type="hidden" name="uploader_department"
                                                                                     value="<?= $getPendingUpdate['uploader_department'] ?>"
                                                                                     class="form-control" readonly>
-                                                                                <input type="text" name="id"
+                                                                                <input type="hidden" name="id"
                                                                                     value="<?= $getPendingUpdate['id'] ?>"
                                                                                     class="form-control" readonly>
-                                                                                <input type="text" name="contract_id"
+                                                                                <input type="hidden" name="contract_id"
                                                                                     value="<?= $getPendingUpdate['contract_id'] ?>"
                                                                                     class="form-control" readonly>
                                                                                 <label class="badge text-muted">Contract
@@ -383,9 +377,9 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                         <?php 
                                                                                             $endPending = date('Y-d-M', strtotime($getContractFromContracts['contract_end']));
                                                                                         ?>
-                                                                                        <input type="text" name="contract_end"
+                                                                                        <input type="date" name="contract_end"
                                                                                             value="<?= $endPending ?>"
-                                                                                            class="form-control">
+                                                                                            class="form-control" readonly>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -398,15 +392,10 @@ include_once '../../../views/layouts/includes/header.php';
 
                                                                                 $interval = $today->diff($end);
                                                                                 $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-
-
-
                                                                                 ?>
-
                                                                                 <div class="mb-3">
                                                                                     <label
-                                                                                        class="badge text-muted float-start">Contract
-                                                                                        name</label>
+                                                                                        class="badge text-muted float-start">Remaining days</label>
                                                                                     <input type="text"
                                                                                         value="<?= $remainingDays ?> Days"
                                                                                         class="form-control" readonly>
