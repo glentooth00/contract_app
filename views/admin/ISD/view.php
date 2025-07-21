@@ -6,15 +6,11 @@ use App\Controllers\SuspensionController;
 use App\Controllers\UserController;
 use App\Controllers\CommentController;
 session_start();
-
 use App\Controllers\ContractController;
-
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
-
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
-
 if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
@@ -23,46 +19,27 @@ if($department === IASD){
     $user_department = $_SESSION['department'];
 }
 //------------------------- GET CONTRACT NAME ---------------------------//
-
 $contract_id = $_GET['contract_id'];
-
 $getContract = (new ContractController)->getContractbyId($contract_id);
-
 $contract_data = $getContract['contract_name'];
-
 $contractId = $getContract['id'];
-
 $comments = (new CommentController)->getComments($contractId);
-
 $page_title = 'View Contract | ' . $getContract['contract_name'];
-
 //-----------------------------------------------------------------------//
-
 //------------------------- GET Departments ----------------------------//
-
 $departments = (new DepartmentController)->getAllDepartments();
-
 //-----------------------------------------------------------------------//
 date_default_timezone_set('Asia/Manila');
 $contractId = $getContract['id'];
 $contractEnding = $getContract['contract_end'] ?? null;
 $rentEnding = $getContract['rent_end'] ?? null;
-
 include_once '../../../views/layouts/includes/header.php';
-
 ?>
-
 <div class="main-layout ">
-
     <?php include_once '../menu/sidebar.php'; ?>
-
-
     <div class="content-area">
-
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
-
         <hr>
-
         <!-- Modal -->
         <div class="modal fade" id="suspendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
@@ -87,7 +64,6 @@ include_once '../../../views/layouts/includes/header.php';
                                     <input type="hidden" name="rent_end" value="<?= $getContract['rent_end'] ?>">
                                 <?php endif; ?>
                                 <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
-
                                 <div class="d-flex">
                                     <div class="form-check me-3">
                                         <input class="form-check-input" onclick="showDiv()" type="radio"
@@ -96,7 +72,6 @@ include_once '../../../views/layouts/includes/header.php';
                                             Due to Disaster
                                         </label>
                                     </div>
-
                                     <div onclick="hideDiv()" class="form-check">
                                         <input class="form-check-input" value="Unsatisfactory Output" type="radio"
                                             name="type_of_suspension" id="flexRadioDefault2" checked>
@@ -106,27 +81,21 @@ include_once '../../../views/layouts/includes/header.php';
                                     </div>
                                 </div>
                             </div>
-
                             <div class=" form-group mb-3" id="myDiv" style="display: none;">
                                 <label for="suspendReason" class="badge text-muted">Number of suspension days</label>
                                 <input type="number" class="form-control" id="suspendReason" name="no_of_days" rows="3"
                                     placeholder="Enter reason for suspension">
                             </div>
-
-
-
                             <div class=" form-group">
                                 <label for="suspendReason" class="badge text-muted">Reason for Suspension</label>
                                 <textarea class="form-control" id="suspendReason" name="reason" rows="3"
                                     placeholder="Enter reason for suspension"></textarea>
-
                             </div>
                             <div class=" form-group">
                                 <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
                                 <input type="hidden" name="account_no" value="<?= $getContract['account_no'] ?>">
                                 <input type="hidden" name=" contract_type" value="<?= $getContract['contract_type'] ?>">
                             </div>
-
                     </div>
                     <div class="modal-footer">
                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
@@ -136,8 +105,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
         </div>
-
-
         <?php
         if ($getContract['contract_type'] === TRANS_RENT) {
             $start = new DateTime($getContract['rent_start']);
@@ -147,10 +114,8 @@ include_once '../../../views/layouts/includes/header.php';
             $end = new DateTime($getContract['contract_end']);
         }
         $today = new DateTime();
-
         $interval = $today->diff($end);
         $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-
         // Check if the contract is about to expire or already expired
         if ($remainingDays > 0 && $remainingDays <= 15) {
             echo '
@@ -158,7 +123,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <svg xmlns="http://www.w3.org/2000/svg" width="90" height="90" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
                     <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
                     </svg>
-                   This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
+                This contract is expiring in ' . $remainingDays . ' day' . ($remainingDays === 1 ? '' : 's') . '.
                     </div>';
         } elseif ($getContract['contract_status'] === 'Expired') {
             echo '<div class="alert alert-danger text-center display-2 p-2" role="alert">
@@ -176,24 +141,17 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>';
         }
         ?>
-
         <?php
-
         $id = $getContract['account_no'];
         $suspended = (new SuspensionController)->getSuspensionByAccount_no($id);
-
         $num_o_days = $suspended['no_of_days'] ?? 0;
         $suspension_start = $suspended['created_at'] ?? null;
         $suspensionType = $suspended['type_of_suspension'] ?? '';
-
         // Format created_at for JS (must be in a valid ISO 8601 format)
         $formattedStart = $suspension_start ? date('Y-m-d\TH:i:s', strtotime($suspension_start)) : null;
         ?>
-
         <?php if ($getContract['contract_status'] === 'Suspended'): ?>
-
             <?php if ($suspensionType === DTD): ?>
-
                 <div id="draggable" class="card" style="
                     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
                         font-weight: bold;
@@ -207,11 +165,8 @@ include_once '../../../views/layouts/includes/header.php';
                         font-size: 50px;
                         z-index: 99;">
                 </div>
-
             <?php endif; ?>
-
             <?php if ($suspensionType === UNSAS): ?>
-
                 <div id="draggable" class="card display" style="
                     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
                         font-weight: bold;
@@ -225,11 +180,8 @@ include_once '../../../views/layouts/includes/header.php';
                         font-size: 50px;
                         z-index: 99;">
                 </div>
-
             <?php endif; ?>
-
         <?php endif; ?>
-
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
             <div class="gap-1"><?php if ($getContract['contract_status'] === 'Expired') { ?>
                     <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?> <span id="add"
@@ -254,7 +206,6 @@ include_once '../../../views/layouts/includes/header.php';
                         type="text" id="contractName" style="margin-left:9px;" class="form-control pl-5"
                         value="<?= $getContract['contract_name']; ?>" name="contract_name" readonly></div>
             </div>
-
             <?php if($getContract['contract_type'] === SACC ): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -269,7 +220,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
             <?php if($getContract['contract_type'] === SACC ): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
@@ -284,7 +234,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
             <?php if($getContract['contract_type'] === INFRA): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -299,7 +248,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
             <?php if($getContract['contract_type'] === INFRA): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
@@ -314,7 +262,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
                         <?php if($getContract['contract_type'] === GOODS): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -329,7 +276,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
             <?php if($getContract['contract_type'] === GOODS): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
@@ -344,8 +290,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
-
             <?php if($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -360,7 +304,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
             <?php if($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -375,7 +318,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-
             <?php if($getContract['contract_type'] === TRANS_RENT || $getContract['contract_type'] === TEMP_LIGHTING) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
@@ -417,7 +359,6 @@ include_once '../../../views/layouts/includes/header.php';
             <?php endif; ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" <?php
-
                 if ($getContract['contract_type'] === TRANS_RENT) {
                     $start = new DateTime($getContract['rent_start']);
                     $end = new DateTime($getContract['rent_end']);
@@ -425,37 +366,23 @@ include_once '../../../views/layouts/includes/header.php';
                     $start = new DateTime($getContract['contract_start']);
                     $end = new DateTime($getContract['contract_end']);
                 }
-
                 $today = new DateTime();
-
                 $interval = $today->diff($end);
                 $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-
-
-
                 ?>
                         style="font-size: 15px;">Days Remaining:</label>
                     <div class="d-flex"><input type="text" style="margin-left:7px;" class="form-control"
                             value=" <?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly><?php
-
-                                       $remainingDays;
-                                       // echo $id = $getContract['id'];
-                                       
-                                       if ($remainingDays === 0) {
-
-                                           $data = [
-                                               'id' => $getContract['id'],
-                                               'contract_status' => 'Expired',
-                                           ];
-
-                                           (new ContractController)->updateStatusExpired($data);
-
-                                       } else {
-                                           // echo 'contract still active';
-                                       }
-
-
-                                       ?> </div>
+                                $remainingDays;
+                                if ($remainingDays === 0) {
+                                    $data = [
+                                        'id' => $getContract['id'],
+                                        'contract_status' => 'Expired',
+                                        ];
+                                    (new ContractController)->updateStatusExpired($data);
+                            } else {
+                        }
+                    ?> </div>
                 </div>
             </div>
             <div class="row col-md-2">
@@ -1162,12 +1089,6 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                                         value="<?= $department ?>" required>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-4 p-2">
-                            <div>
-                                <lable class="badge text-muted">Date End</lable><input type="date" id="date_end"
-                                    class="form-control" name="contract_end" required>
-                            </div>
-            </div>-->
                         </div>
                     </div>
             </div>
