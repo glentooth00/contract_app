@@ -526,7 +526,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             cost</label>
                             <input type="text" id="ttc" style="margin-left:9px;"
                             class="form-control pl-5" value="₱<?=  $getContract['contractPrice']; ?>"
-                            name="contract_type" readonly>
+                            name="contract_type" disabled>
                         </div>
                 </div>
                 <?php endif; ?>
@@ -1542,7 +1542,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             StartDate?.removeAttribute('readonly');
             empStart?.removeAttribute('readonly');
             empEnd?.removeAttribute('readonly');
-            totalCost?.removeAttribute('readonly');
+            totalCost?.removeAttribute('disabled');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1589,7 +1589,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         infraEnd?.setAttribute('readonly', true);
         empStart?.setAttribute('readonly', true);
         empEnd?.setAttribute('readonly', true);
-        totalCost?.setAttribute('readonly', true);
+        totalCost?.setAttribute('disabled', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
