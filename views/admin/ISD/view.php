@@ -67,96 +67,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <div class="d-flex col-md-12 gap-2">
-           <div class="col-md-11">
-    <div class="d-flex justify-content-between align-items-center mt-2">
-        <!-- Left Side: Title + Contract Info -->
-        <div>
-            <h2 class="m-0">
-                <a href="list.php" class="text-dark" style="text-decoration:none">
-                    <i class="fa fa-angle-double-left"></i>
-               </a>
-                <?= $contract_data ?>
-
-                <?php if (!empty($getContract['account_no'])): ?>
-                    <span class="badge" style="color: #9BA4B5;">
-                        (<?= $getContract['account_no'] ?>)
-                    </span>
-                <?php endif; ?> 
-            </h2>
-        </div>
-
-        <!-- Right Side: Always show image, conditionally show count -->
-        <?php 
-            $contractId = $getContract['id'];
-            $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
-        ?>
-        <div id="viewComment" style="position: relative;">
-            <img
-                src="../../../public/images/viewComment.svg" 
-                width="33px" 
-                alt="This Contract has comment!" 
-                type="button" 
-                data-bs-toggle="offcanvas" 
-                data-bs-target="#offcanvasExample" 
-                aria-controls="offcanvasExample"
-                data-contract-id="<?= $getContract['id'] ?>"
-                data-audit-id="<?= $user_id ?>"
-                data-user-id="<?= $user_id ?>"
-                data-department="<?= $user_department ?>"
-                class="view-comment-trigger"
-            />
-
-            <?php if ($hasCommentCount > 0): ?>
-                <span style="background-color: red;
-                            text-align: center;
-                            border-radius: 20px;
-                            font-size: 14px;
-                            color: white;
-                            width: 20px;
-                            height: 20px;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            position: absolute;
-                            top: -5px;
-                            right: -5px;">
-                    <?= $hasCommentCount; ?>
-                </span>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
-  <script>
-           document.addEventListener("DOMContentLoaded", function () {
-            document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
-                img.addEventListener('click', function () {
-                    const contractId = this.dataset.contractId;
-
-                    // Check if this actually hits update_status.php
-                    fetch(`comments/update_status.php?contract_id=${contractId}`)
-                        .then(response => response.text())
-                        .then(data => {
-                            console.log('PHP response:', data);
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                });
-            });
-        });
-
-            </script>
-
-
-            <div class="p-3" id="suspend" onclick="myFunction()" style="margin-left:6em;">
-                <img src="../../../public/images/3dots.svg" width="20px">
-
-            </div>
-
-
-        </div>
+    <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
         <hr>
         <div class="card" id="actions" style="position: absolute;
@@ -1325,44 +1236,134 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
 
        <!-- Off canvas ---->
 
-        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Comments</h5>
+                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
              <hr>
             
             <div class="offcanvas-body offcanvas-md">
               <?php foreach ($comments as $comment): ?>
-    <?php 
-        $auditID = $comment['audit_id'];
-        $userID = $comment['user_id'];
-        $auditName = (new UserController)->getUserById($auditID);
-        $userName = (new UserController)->getUserById($userID);
-    ?>
-    
-    <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-        
-        <!-- Left: Audit side -->
-        <?php if($auditName): ?>
-            <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
-                <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
-                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-            </div>
-        <?php endif; ?>
+                <?php 
+                    $userID = $comment['audit_id'] ?? $comment['user_id'];
+                    // $userID = $comment['user_id'] ?? '';
+                    // $auditName = (new UserController)->getUserById( $userID);
+                    $userName = (new UserController)->getUserById( $userID);
+                    // var_dump($userName);
+                ?>
+                
+                <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <?php 
+                        $department= $_SESSION['department']  ;
+                        $i = $userName['department'] ?? '';
+                    ?>
+                    <?php if( $department ==  $i ?? ''): ?>
+                       <?php
+                            $badgeColor = '';
 
-        <!-- Right: User side -->
-        <?php if($userName): ?>
-            <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
-                <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
-                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                <span class="badge text-muted"><small><?= date('M-D-Y h:i A', strtotime($comment['created_at'])); ?></small></span>
-            </div>
-        <?php endif; ?>
-        
+                            if ($department === $userName['department']) {
+                                switch ($department) {
+                                    case 'IT':
+                                        $badgeColor = '#0d6efd';
+                                        break;
+                                    case 'ISD':
+                                        $badgeColor = '#3F7D58';
+                                        break;
+                                    case 'CITET':
+                                        $badgeColor = '#ffb43373';
+                                        break;
+                                    case 'IASD':
+                                        $badgeColor = '#eb5b0047';
+                                        break;
+                                    case 'ISD-MSD':
+                                        $badgeColor = '#6A9C89';
+                                        break;
+                                    case 'PSPTD':
+                                        $badgeColor = '#83B582';
+                                        break;
+                                    case 'FSD':
+                                        $badgeColor = '#4E6688';
+                                        break;
+                                    case 'BAC':
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case 'AOSD':
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case GM:
+                                        $badgeColor = '#A2D5C6';
+                                        break;
+                                    default:
+                                        $badgeColor = '';
+                                        break;
+                                }
+                            }
+
+                            $userDivStyle = "flex: 1; text-align: right; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
+                            ?>
+
+                        <div style="<?= $userDivStyle ?>">
+                            <p><strong class="badge text-dark"><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
+                        </div>
+                    <?php else: ?>
+    <?php
+        $dept = $comment['department'];
+        $userDept = $userName['department'] ?? '';
+        $isLoggedIn = ($dept == $userDept);
+
+        $badgeColor = '';
+        if ($isLoggedIn) {
+            switch ($dept) {
+                case 'IT':
+                    $badgeColor = '#0d6efd';
+                    break;
+                case 'ISD':
+                    $badgeColor = '#3F7D58';
+                    break;
+                case 'CITET':
+                    $badgeColor = '#ffb43373';
+                    break;
+                case 'IASD':
+                    $badgeColor = '#eb5b0047';
+                    break;
+                case 'ISD-MSD':
+                    $badgeColor = '#6A9C89';
+                    break;
+                case 'PSPTD':
+                    $badgeColor = '#83B582';
+                    break;
+                case 'FSD':
+                    $badgeColor = '#4E6688';
+                    break;
+                case 'BAC':
+                    $badgeColor = '#123458';
+                    break;
+                case 'AOSD':
+                    $badgeColor = '#03A791';
+                    break;
+                case GM:
+                    $badgeColor = '#A2D5C6';
+                    break;
+                default:
+                    $badgeColor = '';
+                    break;
+            }
+        }
+
+        $userDivStyle = "flex: 1; text-align:left; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
+    ?>
+    <div style="<?= $userDivStyle ?>">
+        <p><strong class="badge text-dark"><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+        <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])) ?></small></span>
     </div>
-<?php endforeach; ?>
+<?php endif; ?>
+
+                </div>
+            <?php endforeach; ?>
 
                 <!----comments display here ----->
 
@@ -1438,6 +1439,31 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
 
     #suspend:hover {
         cursor: pointer;
+    }
+        .dotMenu:hover{
+        cursor: pointer;
+    }
+    #dropMenu{
+    text-align: left;
+    color: black;
+    position: absolute;
+    right: 43px;
+    background-color: #ffffff;
+    z-index: 1;
+    width: 13em;
+    padding: 15px 0px 0px 0px;
+    border-radius: 10px 0px 10px 10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    display:none;
+    font-weight: 500;
+    font-size: 16px;
+        a{
+            text-decoration: none;
+            color: #393E46;
+            margin-bottom: 15px;
+
+        }
+
     }
 </style>
 <?php
@@ -1732,6 +1758,13 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
     renderDraggableBox();
     setInterval(renderDraggableBox, 1000);
 
-
+    function toggleView(){
+        var div = document.getElementById("dropMenu");
+        if(div.style.display === "block"){
+            div.style.display = "none";
+        }else{
+            div.style.display = "block"  
+            }
+        }
 
 </script>
