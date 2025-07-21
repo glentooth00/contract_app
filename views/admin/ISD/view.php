@@ -53,9 +53,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Suspend Contract</h5>
-                        <!-- <button type="btn" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> -->
                     </div>
                     <div class="modal-body">
                         <form action="contracts/suspend.php" method="post">
