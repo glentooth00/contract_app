@@ -45,6 +45,18 @@ class NotificationController
 
     }
 
+        public function displayAllPendingUpdatesForISD($department)
+    {
+        $sql = "SELECT * FROM pending_data WHERE uploader_department = :uploader_dept AND status = 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':uploader_dept',$department);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+
+
+    }
+
     public function getPendingDatabyId($id)
     {
 
