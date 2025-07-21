@@ -46,6 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['department'] = $userData['department'];
                 $_SESSION['user_role'] = $userData['user_role'];
                 $_SESSION['contract_types'] = $userData['contract_types'];
+                $_SESSION['firstname'] = $userData['firstname'];
+                $_SESSION['middlename'] = $userData['middlename'];
+                $_SESSION['lastname'] = $userData['lastname'];
 
                 switch ($_SESSION['department']) {
                     case "IT":
