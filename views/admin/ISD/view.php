@@ -1678,10 +1678,10 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
                Contract is Under Review.
             </div>
             <div class="text-center fw-bold text-danger fs-5 mb-3">
-                Last updated: ${timeElapsed} ago
+                ${timeElapsed}
             </div>
 
-            <form action="contracts/end.php" method="post">
+            <form action="ontracts/end.php" method="post">
                 <input type="hidden" name="account_no" value="<?= $id ?>">
                 <input type="hidden" name="contract_id" value="<?= $contractId ?>">
                 <input type="hidden" name="contract_type" value="<?= $getContract['contract_type'] ?>">
