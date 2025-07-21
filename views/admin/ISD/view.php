@@ -434,7 +434,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                            ?> <input type="date" id="" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -449,7 +449,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                            ?> <input type="date" id="" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -465,7 +465,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                            ?> <input type="date" id="" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -480,7 +480,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                            ?> <input type="date" id="" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -1525,6 +1525,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
         const deptSelect = document.getElementById('deptSelect');
+        const infraStart =  document.getElementById('EmpStartDate');
+        const infraEnd =  document.getElementById('EmpEndDate');
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
         const closeBtn = document.getElementById('close');
@@ -1537,6 +1539,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         startDate?.setAttribute('readonly', true);
         endDate?.setAttribute('readonly', true);
         deptSelect?.setAttribute('disabled', true);
+        infraStart?.setAttribute('readonly', true);
+        infraEnd?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
