@@ -748,7 +748,7 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
 
 
-       <!-- Off canvas ---->
+             <!-- Off canvas ---->
 
         <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
             <div class="offcanvas-header">
@@ -760,32 +760,122 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="offcanvas-body offcanvas-md">
               <?php foreach ($comments as $comment): ?>
                 <?php 
-                    $auditID = $comment['audit_id'];
-                    $userID = $comment['user_id'];
-                    $auditName = (new UserController)->getUserById($auditID);
-                    $userName = (new UserController)->getUserById($userID);
+                    $userID = $comment['audit_id'] ?? $comment['user_id'];
+                    // $userID = $comment['user_id'] ?? '';
+                    // $auditName = (new UserController)->getUserById( $userID);
+                    $userName = (new UserController)->getUserById( $userID);
+                    // var_dump($userName);
                 ?>
                 
                 <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    
-                    <!-- Left: Audit side -->
-                    <?php if($auditName): ?>
-                        <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
-                            <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
-                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-                        </div>
-                    <?php endif; ?>
+                    <?php 
+                        $department= $_SESSION['department']  ;
+                        $i = $userName['department'] ?? '';
+                    ?>
+                    <?php if( $department ==  $i ?? ''): ?>
+                       <?php
+                            $badgeColor = '';
 
-                    <!-- Right: User side -->
-                    <?php if($userName): ?>
-                        <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
+                            if ($department === $userName['department']) {
+                                switch ($department) {
+                                    case 'IT':
+                                        $badgeColor = '#0d6efd';
+                                        break;
+                                    case 'ISD':
+                                        $badgeColor = '#3F7D58';
+                                        break;
+                                    case 'CITET':
+                                        $badgeColor = '#FFB433';
+                                        break;
+                                    case IASD:
+                                        $badgeColor = '#eb5b0047';
+                                        break;
+                                    case 'ISD-MSD':
+                                        $badgeColor = '#6A9C89';
+                                        break;
+                                    case 'PSPTD':
+                                        $badgeColor = '#83B582';
+                                        break;
+                                    case 'FSD':
+                                        $badgeColor = '#4E6688';
+                                        break;
+                                    case 'BAC':
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case 'AOSD':
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case GM:
+                                        $badgeColor = '#A2D5C6';
+                                        break;
+                                    default:
+                                        $badgeColor = '';
+                                        break;
+                                }
+                            }
+
+                            $userDivStyle = "flex: 1; text-align: right; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
+                            ?>
+
+                        <div style="<?= $userDivStyle ?>">
                             <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
                             <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
                             <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
                         </div>
-                    <?php endif; ?>
-                    
+                    <?php else: ?>
+    <?php
+        $dept = $comment['department'];
+        $userDept = $userName['department'] ?? '';
+        $isLoggedIn = ($dept == $userDept);
+
+        $badgeColor = '';
+        if ($isLoggedIn) {
+            switch ($dept) {
+                case 'IT':
+                    $badgeColor = '#0d6efd';
+                    break;
+                case 'ISD':
+                    $badgeColor = '#3F7D58';
+                    break;
+                case 'CITET':
+                    $badgeColor = '#ffb43373';
+                    break;
+                case IASD:
+                    $badgeColor = '#eb5b0047';
+                    break;
+                case 'ISD-MSD':
+                    $badgeColor = '#6A9C89';
+                    break;
+                case 'PSPTD':
+                    $badgeColor = '#83B582';
+                    break;
+                case 'FSD':
+                    $badgeColor = '#4E6688';
+                    break;
+                case 'BAC':
+                    $badgeColor = '#123458';
+                    break;
+                case 'AOSD':
+                    $badgeColor = '#03A791';
+                    break;
+                case GM:
+                    $badgeColor = '#A2D5C6';
+                    break;
+                default:
+                    $badgeColor = '';
+                    break;
+            }
+        }
+
+        $userDivStyle = "flex: 1; text-align:left; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
+    ?>
+    <div style="<?= $userDivStyle ?>">
+        <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+        <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])) ?></small></span>
+    </div>
+<?php endif; ?>
+
                 </div>
             <?php endforeach; ?>
 
