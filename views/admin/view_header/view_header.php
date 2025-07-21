@@ -58,9 +58,11 @@ use App\Controllers\CommentController;
                         <li>
                             <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
                         </li>
-                         <li>
+                        <?php if($department === IASD): ?>
+                        <li>
                             <span><img src="../../../public/images/flagContract.svg" width="25px"><small data-toggle="modal" data-target="#flagModal" id="flagContract">Flag Contract</small></span>
                         </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
