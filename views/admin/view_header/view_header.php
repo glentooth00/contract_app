@@ -1,6 +1,7 @@
 <?php 
 use App\Controllers\CommentController;
 
+$account_no = $getContract['account_no'];
 ?>
 
 <div class="row align-items-center">
@@ -10,6 +11,9 @@ use App\Controllers\CommentController;
                 <i class="fa fa-angle-double-left"></i>
             </a>
             <?= $contract_data ?>
+            <span id="account_no">
+                (<?= $account_no ?>)
+            </span>
         </h2>
 
     <?php include_once('../flags/flags.php'); ?>
@@ -101,3 +105,9 @@ use App\Controllers\CommentController;
             </script>
 
 
+<style>
+    #account_no{
+        color: grey;
+        font-size: 25px;
+    }
+</style>

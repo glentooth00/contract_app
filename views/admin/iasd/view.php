@@ -31,6 +31,8 @@ $getContract = (new ContractController)->getContractbyId($contract_id);
 $contract_data = $getContract['contract_name'];
 $contractId = $getContract['id'];
 
+
+
 $getComments = (new CommentController)->getCommentsByContractId($contractId);
 
 $comments = (new CommentController)->getComments($contractId);
@@ -71,6 +73,8 @@ include_once '../../../views/layouts/includes/header.php';
                 <i class="fa fa-angle-double-left"></i>
             </a>
             <?= $contract_data ?>
+
+            
         </h2>
 
     <?php include_once('../flags/flags.php'); ?>
