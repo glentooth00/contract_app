@@ -248,7 +248,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="EmpStartDate" style="margin-left:px;"
+                            ?> <input type="date" id="infraStart" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -262,7 +262,7 @@ include_once '../../../views/layouts/includes/header.php';
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="EmpEndDate" style="margin-left:px;"
+                            ?> <input type="date" id="infraEnd" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
                     </div>
@@ -1484,6 +1484,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
+        const infra_start = document.getElementById('infraStart');
+        const infra_end = document.getElementById('infraEnd');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1509,6 +1511,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             saccEnd?.removeAttribute('readonly');
             startGoods?.removeAttribute('readonly');
             endGoods?.removeAttribute('readonly');
+            infra_start?.removeAttribute('readonly');
+            infra_end?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1546,6 +1550,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
+        const start_infra = document.getElementById('infraStart');
+        const end_infra = document.getElementById('infraEnd');
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
@@ -1564,6 +1570,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         saccEnd?.setAttribute('readonly', true);
         startGoods?.setAttribute('readonly', true);
         endGoods?.setAttribute('readonly', true);
+        start_infra?.setAttribute('readonly', true);
+        end_infra?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1594,6 +1602,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
+        const infra_start  = document.getElementById('infraStart');
+        const infra_end = document.getElementById('infraEnd');
+
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1621,10 +1632,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const saccDate_End = encodeURIComponent(saccEnd?. value || '');
         const goods_start = encodeURIComponent(startGoods?. value || '');
         const goods_end = encodeURIComponent(endGoods?. value || '');
+        const infraStart = encodeURIComponent(infra_start?. value || '');
+        const infraEnd = encodeURIComponent(infra_end?. value || '');
 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}`;
     });
 
     function formatDate(dateString) {

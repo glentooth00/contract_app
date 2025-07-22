@@ -191,25 +191,34 @@ if($_GET['type'] === EMP_CON){
     
 }
 
+
+//update done
 if($_GET['type'] === INFRA){
 
     $price = str_replace('₱', '',$_GET['ttc']);
 
     $EmpUpdate = [
-        'id' => $_GET['id'],
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['EmpStart'],
-        'end' => $_GET['ConEmpEnd'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+        'contract_start' => $_GET['infraStart'],
+        'contract_end' => $_GET['infraEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
         'contract_status' => 'Active',
-        'contractPrice' => $price
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
     ];
 
-        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
 
-            $id = $EmpUpdate['id'];
+            $id = $EmpUpdate['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
@@ -255,8 +264,7 @@ if($_GET['type'] === INFRA){
     
 }
 
-
-//Done 
+//update done
 if($_GET['type'] === GOODS){
 
     $price = str_replace('₱', '',$_GET['ttc']);
@@ -327,7 +335,7 @@ if($_GET['type'] === GOODS){
 }
 
 
-//DONE WITH SACC
+//update done
 if($_GET['type'] === SACC){
 
     $price = str_replace('₱', '',$_GET['ttc']);
