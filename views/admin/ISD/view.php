@@ -47,6 +47,7 @@ include_once '../../../views/layouts/includes/header.php';
         <input type="hidden" id="loggedInUser" value="<?= $User ?>">
         <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
         <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
+        
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
         <hr>
         <!-- Modal -->
@@ -355,6 +356,35 @@ include_once '../../../views/layouts/includes/header.php';
                             $rentEnd = date('Y-m-d', strtotime($getContract['rent_end']));
                             ?>
                         <input type="date" id="endTransRent" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_start" readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="date" id="tempLightStart" style="margin-left:px;"
+                                class="form-control pl-5" value="<?= $rentstart ?>" name="contract_start"
+                                readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+            <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Retirement Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                            <?php
+                            $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?>
+                        <input type="date" id="tempLightEnd" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="contract_start" readonly><?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1414,7 +1444,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_start = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const start_rent = document.getElementById('startTransRent');
-        const end_rent = document.getElementById('endTransRent')
+        const end_rent = document.getElementById('endTransRent');
+        const tempStart =  document.getElementById('startTransRent');
+        const tempEnd = document.getElementById('endTransRent');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1444,6 +1476,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             infra_end?.removeAttribute('readonly');
             start_rent?.removeAttribute('readonly');
             end_rent?.removeAttribute('readonly');
+            tempStart?.removeAttribute('readonly');
+            tempEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
