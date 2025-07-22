@@ -342,9 +342,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                             </svg>
                                                                                         </span>
                                                                                         <?php 
-                                                                                            $startPending = date('Y-d-M', strtotime($getContractFromContracts['contract_start']));
+                                                                                            $startPending = date('Y-d-M', strtotime($getPendingUpdate['contract_start']));
                                                                                         ?>
-                                                                                        <input type="text" name="contract_start"
+                                                                                        <input type="hidden" name="contract_start"
+                                                                                            value="<?= $getPendingUpdate['contract_start'] ?>"
+                                                                                            class="form-control">
+                                                                                        <input type="text" name=""
                                                                                             value="<?= $startPending ?>"
                                                                                             class="form-control">
                                                                                     </div>
@@ -364,9 +367,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                             </svg>
                                                                                         </span>
                                                                                         <?php 
-                                                                                            $endPending = date('Y-d-M', strtotime($getContractFromContracts['contract_end']));
+                                                                                            $endPending = date('Y-d-M', strtotime($getPendingUpdate['contract_end']));
                                                                                         ?>
-                                                                                        <input type="text" name="contract_end"
+                                                                                           <input type="hidden" name="contract_end"
+                                                                                            value="<?= $getPendingUpdate['contract_end'] ?>"
+                                                                                            class="form-control">
+                                                                                        <input type="text"
                                                                                             value="<?= $endPending ?>"
                                                                                             class="form-control" readonly>
                                                                                     </div>
