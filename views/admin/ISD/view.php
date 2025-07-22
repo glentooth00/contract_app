@@ -1227,7 +1227,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                 background-color: {$badgeColor};
                 padding: 10px;
                 border-radius: 10px;
-                max-width: 80%;
+                width: 100%;
                 text-align: {$textAlign};
             ";
 
