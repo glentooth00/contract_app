@@ -132,25 +132,13 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
                 <span>Notifications
                   <span>
                     <?php
-
                     $getLatestActivities = (new NotificationController)->checkRecentUpdates();
-
-
-                    // var_dump($getPendingData);
-                
-
-
                     ?>
-
-
                     <?php if (!empty($getLatestActivities)): ?>
                       <span class="badge bg-danger">
                         <?= $getLatestActivities ?>
                       </span>
                     <?php endif; ?>
-
-
-
                     <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
                   </span>
                 </span>
