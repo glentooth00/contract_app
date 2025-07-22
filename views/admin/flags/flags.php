@@ -32,7 +32,7 @@ use App\Controllers\FlagController;
             </div>
             <div class="modal-body">
                 <ul>
-                    <li>Did you made the necessary changes?</li>
+                    <li>This operation assumes completion of necessary adjustments. Are you certain all items have been addressed?</li>
                 </ul>
             </div>
             <form action="../flags/removeFlag.php" method="POST">
