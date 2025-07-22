@@ -199,8 +199,8 @@ include_once '../../../views/layouts/includes/header.php';
         <hr>
 
         <?php
-        $start = new DateTime($getContract['contract_start']);
-        $end = new DateTime($getContract['contract_end']);
+        $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
+        $end = new DateTime($getContract['contract_end']  ?? $getContract['rent_end']);
         $today = new DateTime();
 
         $interval = $today->diff($end);
@@ -429,7 +429,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                             <?php 
-                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            $start = date('Y-m-d',strtotime($getContract['rent_start']));
                             ?>
                             <input type="date" id="startDate" class="form-control"
                                 value="<?= $start; ?>" name="contract_start" readonly>
@@ -441,7 +441,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                         <div class="input-group">
                             <?php 
-                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            $end = date('Y-m-d',strtotime($getContract['rent_end']));
                             ?>
                             <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                             <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
@@ -457,8 +457,8 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
+                    $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
+                    $end = new DateTime($getContract['contract_end'] ?? $getContract['rent_end']);
                     $today = new DateTime();
 
                     $interval = $today->diff($end);
@@ -748,158 +748,7 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
 
 
-       <!-- Off canvas ---->
 
-        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-             <hr>
-            
-            <div class="offcanvas-body offcanvas-md">
-              <?php foreach ($comments as $comment): ?>
-                <?php 
-                    $userID = $comment['audit_id'] ?? $comment['user_id'];
-                    // $userID = $comment['user_id'] ?? '';
-                    // $auditName = (new UserController)->getUserById( $userID);
-                    $userName = (new UserController)->getUserById( $userID);
-                    // var_dump($userName);
-                ?>
-                
-                <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    <?php 
-                        $department= $_SESSION['department']  ;
-                        $i = $userName['department'] ?? '';
-                    ?>
-                    <?php if( $department ==  $i ?? ''): ?>
-                       <?php
-                            $badgeColor = '';
-
-                            if ($department === $userName['department']) {
-                                switch ($department) {
-                                    case 'IT':
-                                        $badgeColor = '#0d6efd';
-                                        break;
-                                    case 'ISD':
-                                        $badgeColor = '#3F7D58';
-                                        break;
-                                    case 'CITET':
-                                        $badgeColor = '#ffb43373';
-                                        break;
-                                    case 'IASD':
-                                        $badgeColor = '#eb5b0047';
-                                        break;
-                                    case 'ISD-MSD':
-                                        $badgeColor = '#6A9C89';
-                                        break;
-                                    case 'PSPTD':
-                                        $badgeColor = '#83B582';
-                                        break;
-                                    case 'FSD':
-                                        $badgeColor = '#4E6688';
-                                        break;
-                                    case 'BAC':
-                                        $badgeColor = '#123458';
-                                        break;
-                                    case 'AOSD':
-                                        $badgeColor = '#03A791';
-                                        break;
-                                    case GM:
-                                        $badgeColor = '#A2D5C6';
-                                        break;
-                                    default:
-                                        $badgeColor = '';
-                                        break;
-                                }
-                            }
-
-                            $userDivStyle = "flex: 1; text-align: right; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
-                            ?>
-
-                        <div style="<?= $userDivStyle ?>">
-                            <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
-                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-                        </div>
-                    <?php else: ?>
-    <?php
-        $dept = $comment['department'];
-        $userDept = $userName['department'] ?? '';
-        $isLoggedIn = ($dept == $userDept);
-
-        $badgeColor = '';
-        if ($isLoggedIn) {
-            switch ($dept) {
-                case 'IT':
-                    $badgeColor = '#0d6efd';
-                    break;
-                case 'ISD':
-                    $badgeColor = '#3F7D58';
-                    break;
-                case 'CITET':
-                    $badgeColor = '#ffb43373';
-                    break;
-                case 'IASD':
-                    $badgeColor = '#eb5b0047';
-                    break;
-                case 'ISD-MSD':
-                    $badgeColor = '#6A9C89';
-                    break;
-                case 'PSPTD':
-                    $badgeColor = '#83B582';
-                    break;
-                case 'FSD':
-                    $badgeColor = '#4E6688';
-                    break;
-                case 'BAC':
-                    $badgeColor = '#123458';
-                    break;
-                case 'AOSD':
-                    $badgeColor = '#03A791';
-                    break;
-                case GM:
-                    $badgeColor = '#A2D5C6';
-                    break;
-                default:
-                    $badgeColor = '';
-                    break;
-            }
-        }
-
-        $userDivStyle = "flex: 1; text-align:left; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
-    ?>
-    <div style="<?= $userDivStyle ?>">
-        <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
-        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-        <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])) ?></small></span>
-    </div>
-<?php endif; ?>
-
-                </div>
-            <?php endforeach; ?>
-
-                <!----comments display here ----->
-
-            </div>
-
-            <form action="comments/comment.php" method="post">
-                <input type="hidden" id="contractID" value="<?= $contractId ?>" name="contract_id">
-                <input type="hidden" id="auditId" value="<?= $user_id ?>" name="audit_id">
-                <input type="hidden" id="userId" value="<?= $user_id ?>" name="user_id">
-                <input type="hidden" id="userDepartment" value="<?= $user_department ?>" name="user_department">
-                <hr>
-                <div class="p-3">
-                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
-                </div>
-                <div class="p-3">
-                <button type="submit" class="float-end" id="submitComment">Comment</button> 
-                </div>
-            </form>
-            </div>
-
-
-        <!---- Off canva ----->
 
 
             <div>
@@ -1041,6 +890,91 @@ include_once '../../../views/layouts/includes/header.php';
 
     </div>
 </div>
+
+
+ <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+
+<div class="offcanvas-body offcanvas-md">
+    <?php foreach ($comments as $comment): ?>
+        <?php 
+            $commentUserId = $comment['user_id'] ?? $comment['audit_id'];
+            $loggedInUserId = $user_id;
+
+            // Get commenter user info
+            $commentUser = (new UserController)->getUserById($commentUserId);
+
+            // Logged-in user info (for department match)
+            $loggedInUser = (new UserController)->getUserById($loggedInUserId);
+
+            // Check if this is the logged-in user's comment
+            $isOwnComment = ($commentUserId == $loggedInUserId);
+
+            // Compare departments
+            $sameDepartment = ( $commentUser['department'] === $loggedInUser['department']);
+
+            // Set badge color by department
+            $department = $commentUser['department'];
+            switch ($department) {
+                case 'IT': $badgeColor = '#0d6efd'; break;
+                case 'ISD': $badgeColor = '#79d39d'; break;
+                case 'CITET': $badgeColor = '#FFB433'; break;
+                case 'IASD': $badgeColor = '#eb5b0047'; break;
+                case 'ISD-MSD': $badgeColor = '#6A9C89'; break;
+                case 'PSPTD': $badgeColor = '#83B582'; break;
+                case 'FSD': $badgeColor = '#4E6688'; break;
+                case 'BAC': $badgeColor = '#123458'; break;
+                case 'AOSD': $badgeColor = '#03A791'; break;
+                case 'GM': $badgeColor = '#A2D5C6'; break;
+                default: $badgeColor = '#e0e0e0'; break;
+            }
+
+            // Alignment and style
+            $alignment = $isOwnComment ? "flex-end" : "flex-start";
+            $textAlign = $isOwnComment ? "right" : "left";
+
+            $bubbleStyle = "
+                background-color: {$badgeColor};
+                padding: 10px;
+                border-radius: 10px;
+                max-width: 80%;
+                text-align: {$textAlign};
+            ";
+
+            $user = $commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname'];
+
+        ?>
+
+        <div class="d-flex" style="justify-content: <?= $alignment ?>; margin-bottom: 10px;padding:5px;width:20em;">
+            <div style="<?= $bubbleStyle ?>">
+                <p style="font-size: 13px;"><strong><?= htmlspecialchars($commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname']) ?>:</strong></p>
+                <p style="font-size: 15px;"><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-d-Y h:i A', strtotime($comment['created_at'])) ?></small></span>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+
+    <form action="comments/comment.php" method="post">
+        <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+        <input type="hidden" name="audit_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_department" value="<?= $user_department ?>">
+        <hr>
+        <div class="p-3">
+            <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
+        </div>
+        <div class="p-3">
+            <button type="submit" class="float-end">Comment</button>
+        </div>
+    </form>
+</div>
+
 
 <!-- popup notification ---->
 
