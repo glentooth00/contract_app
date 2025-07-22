@@ -395,7 +395,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <?php endif; ?>
 
-                         <?php if($getContract['contract_type']  ===  TEMP_LIGHTING ) :?>
+                <?php if($getContract['contract_type']  ===  TEMP_LIGHTING ) :?>
                     <div class="col-md-2 mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                         <div class="input-group">
@@ -423,7 +423,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                     <?php endif; ?>
 
-                     <?php if($getContract['contract_type']  ===  TRANS_RENT ) :?>
+                    <?php if($getContract['contract_type']  ===  TRANS_RENT ) :?>
                     <div class="col-md-2 mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                         <div class="input-group">
@@ -435,8 +435,6 @@ include_once '../../../views/layouts/includes/header.php';
                                 value="<?= $start; ?>" name="contract_start" readonly>
                         </div>
                     </div>
-                
-                    
                     <div class="col-md-2 mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                         <div class="input-group">
@@ -448,12 +446,8 @@ include_once '../../../views/layouts/includes/header.php';
                                 name="contract_end" readonly>
                         </div>
                     </div>
-
                     <?php endif; ?>
-
-
             <div class="row col-md-2">
-
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
@@ -463,8 +457,6 @@ include_once '../../../views/layouts/includes/header.php';
 
                     $interval = $today->diff($end);
                     $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-
-
 
                     ?> style="font-size: 15px;">Days Remaining:</label>
                     <div class="d-flex">
@@ -487,8 +479,6 @@ include_once '../../../views/layouts/includes/header.php';
                         } else {
                             // echo 'contract still active';
                         }
-
-
                         ?>
 
                     </div>
@@ -946,9 +936,7 @@ include_once '../../../views/layouts/includes/header.php';
             ";
 
             $user = $commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname'];
-
         ?>
-
         <div class="d-flex" style="justify-content: <?= $alignment ?>; margin-bottom: 10px;padding:5px;width:20em;">
             <div style="<?= $bubbleStyle ?>">
                 <p style="font-size: 13px;"><strong><?= htmlspecialchars($commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname']) ?>:</strong></p>
@@ -958,8 +946,6 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
     <?php endforeach; ?>
 </div>
-
-
     <form action="comments/comment.php" method="post">
         <input type="hidden" name="contract_id" value="<?= $contractId ?>">
         <input type="hidden" name="audit_id" value="<?= $user_id ?>">
@@ -970,12 +956,10 @@ include_once '../../../views/layouts/includes/header.php';
             <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
         </div>
         <div class="p-3">
-            <button type="submit" class="float-end">Comment</button>
+            <button type="submit" class="float-end" id="submitComment">Comment</button>
         </div>
     </form>
 </div>
-
-
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
