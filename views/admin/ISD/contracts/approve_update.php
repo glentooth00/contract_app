@@ -24,7 +24,7 @@ $updateData = [
 
 
 
-    $updateSuccessful = (new ContractController)->managerUpdate($updateData);
+    $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);
 
 
     if ($updateSuccessful) {
