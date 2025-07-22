@@ -256,7 +256,7 @@ if($_GET['type'] === INFRA){
 }
 
 
-
+//Done 
 if($_GET['type'] === GOODS){
 
     $price = str_replace('₱', '',$_GET['ttc']);
@@ -280,7 +280,6 @@ if($_GET['type'] === GOODS){
 
     ];
 
-    var_dump($EmpUpdate);
     
     $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
@@ -301,8 +300,6 @@ if($_GET['type'] === GOODS){
                 ];
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
-
-                var_dump($updateContractHistory);
 
                 if($updateContractHistory){
 
@@ -328,7 +325,6 @@ if($_GET['type'] === GOODS){
 
         }
 }
-
 
 
 //DONE WITH SACC
