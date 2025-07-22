@@ -246,15 +246,20 @@ include_once '../../../views/layouts/includes/header.php';
 
                                                                         <?php if( $contract_type === TRANS_RENT):  ?>
                                                                              <?php 
-                                                                                $start = date('Y-d-M', strtotime($getContractFromContracts['rent_start']));
+                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
                                                                             ?>
-                                                                            <input type="text" value="<?= $start ?>" class="form-control" readonly>
-                                                                        <?php else: ?>
+                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
+                                                                     
+                                                                        <?php endif; ?>
 
-                                                                            <?php 
-                                                                                $start = date('Y-d-M', strtotime($getContractFromContracts['contract_start']));
+                                                                         <?php if( $contract_type === TEMP_LIGHTING):  ?>
+                                                                            
+                                                                             <?php 
+                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
                                                                             ?>
-                                                                            <input type="text" value="<?= $start ?>" class="form-control" readonly>
+                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
+                                                                        
+                                                                          
 
                                                                         <?php endif; ?>
                                                                     </div>
@@ -283,12 +288,17 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                 $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
                                                                             ?>
                                                                             <input type="text" value="<?= $end ?>" class="form-control" readonly>
-                                                                        <?php else: ?>
+                                                                     
+                                                                        <?php endif; ?>
 
-                                                                            <?php 
-                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['contract_end']));
+                                                                         <?php if( $contract_type === TEMP_LIGHTING):  ?>
+                                                                            
+                                                                             <?php 
+                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
                                                                             ?>
-                                                                            <input type="text" value="<?= $start ?>" class="form-control" readonly>
+                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
+                                                                        
+                                                                          
 
                                                                         <?php endif; ?>
                                                                     </div>

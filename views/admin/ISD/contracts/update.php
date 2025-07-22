@@ -138,10 +138,7 @@ if ($_GET['type'] === TEMP_LIGHTING) {
                 ];
 
                 header("Location: " . $_SERVER['HTTP_REFERER']);
-
             }
-
-
         }
 
 }
