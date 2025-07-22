@@ -81,21 +81,28 @@ if ($_GET['type'] === TRANS_RENT) {
 
 if ($_GET['type'] === TEMP_LIGHTING) {
 
-    $transrentData = [
-        'id' => $_GET['id'], // Changed from 'contract_id'
+    $EmpUpdate = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['start'], // Changed from 'contract_start'
-        'end' => $_GET['end'],     // Changed from 'contract_end'
-        // 'department_assigned' => $_GET['dept'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_start' => $_GET['tempLightStart'],
+        'contract_end' => $_GET['tempLightEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
     ];
 
-    $updateTransRent = (new ContractController)->updateContract($transrentData);
+    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
-    if ($updateTransRent) {
+    if ($contractUpdate) {
 
-            $id = $transrentData['id'];
+            $id = $EmpUpdate['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
