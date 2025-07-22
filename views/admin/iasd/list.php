@@ -192,6 +192,7 @@ include_once '../../../views/layouts/includes/header.php';
                                             <?php endif;  ?>
                                         
                                     <?php endif; ?>
+                                    
                                 </span>
                             <?php endif; ?>
 
