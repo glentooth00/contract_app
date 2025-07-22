@@ -18,9 +18,10 @@ $updateData = [
     'contract_id' => $_POST['contract_id'],
     'uploader_department' => $_POST['uploader_department'],
     'contract_name' => $_POST['contract_name'],
-    'contract_start' => $contract_start,
-    'contract_end' => $contract_end,
-];;
+    'contract_start' => $_POST['contract_start'],
+    'contract_end' => $_POST['contract_end']
+];
+
 
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
