@@ -215,7 +215,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                         $contract_id = $contract['contract_id'];
                                                         $getContractFromContracts = (new ContractController)->getContractbyId($contract_id);
                                                         ?>
-
                                                         <div class="col-md-12">
                                                             <div class="mb-3">
                                                                 <label class="badge text-muted float-start">Contract
@@ -242,7 +241,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                         <?php 
                                                                             $start = date('Y-d-M', strtotime($getContractFromContracts['contract_start']));
                                                                         ?>
-                                                                        <input type="date"
+                                                                        <input type="text"
                                                                             value="<?= $start ?>"
                                                                             class="form-control" readonly>
                                                                     </div>
@@ -265,7 +264,8 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                             </svg>
                                                                         </span>
-                                                                        <input type="date"
+                                                                        
+                                                                        <input type="text"
                                                                             value="<?= $end ?>"
                                                                             class="form-control" readonly>
                                                                     </div>
@@ -289,18 +289,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                 <input type="text" value="<?= $remainingDays ?> Days"
                                                                     class="form-control" readonly>
                                                             </div>
-
-
                                                         </div>
-
-
-
-
-                                                        <!-- <p><strong>Row ID:</strong> <span id="modal-id"></span></p>
-                            <p><strong>Contract ID:</strong> <span id="modal-contract-id"></span></p>
-                            <p><strong>Contract Name:</strong> <span id="modal-contract-name"></span></p>
-                            <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
-                            <p><strong>End Date:</strong> <span id="modal-end-date"></span></p> -->
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 card p-3" style="background-color: #E8F9FF;">
@@ -377,7 +366,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                         <?php 
                                                                                             $endPending = date('Y-d-M', strtotime($getContractFromContracts['contract_end']));
                                                                                         ?>
-                                                                                        <input type="date" name="contract_end"
+                                                                                        <input type="text" name="contract_end"
                                                                                             value="<?= $endPending ?>"
                                                                                             class="form-control" readonly>
                                                                                     </div>
@@ -510,17 +499,9 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-
-
                                                                     </div>
 
-                                                                    <!---FILE MODAL --->
-
-
-
-
-
-
+                                                <!---FILE MODAL --->
                                                     </div>
 
                                                     <div class="p-2 col-md-6">
@@ -575,30 +556,9 @@ include_once '../../../views/layouts/includes/header.php';
 
                                     <?php endif; ?>
 
-
-
-
-
-
-
-
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Delete
+                                    <a href="#" class="btn btn-warning badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                        <i class="fa fa-trash"></i> Cancel
                                     </a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                                 </div>
                             </td>
@@ -611,21 +571,8 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
-
-
-
-
-
-
-
-
 
 <?php include '../modals/power_supply.php'; ?>
 
