@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === POST) {
     var_dump($data);
 
 
-    // $saveContract = (new ContractController)->storeContract($data);
+    $saveContract = (new ContractController)->storeContract($data);
 
     if ($saveContract) {
 
