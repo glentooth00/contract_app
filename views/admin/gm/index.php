@@ -128,6 +128,10 @@ include_once '../../../views/layouts/includes/header.php';
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
+                                   <?php if (isset($contract['account_no'])): ?>
+                                    <span class="badge account_number">(
+                                        <?= $contract['account_no'] ?> )</span>
+                                <?php endif; ?>
                             
                                 <?php if(isset($contract['id'])): ?>
                                 <span class="p-3">
@@ -677,6 +681,9 @@ include_once '../../../views/layouts/includes/header.php';
     }
     #attention, #review:hover{
         cursor: pointer;
+    }
+            .account_number {
+        color: #9BA4B5;
     }
 </style>
 

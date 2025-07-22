@@ -50,7 +50,6 @@ $departments = (new DepartmentController)->getAllDepartments();
 include_once '../../../views/layouts/includes/header.php';
 
 ?>
-
 <!-- Loading Spinner - Initially visible -->
 <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
@@ -64,71 +63,7 @@ include_once '../../../views/layouts/includes/header.php';
     <?php include_once '../menu/sidebar.php'; ?>
     <div class="content-area">
 
-<div class="row align-items-center">
-    <div class="col-10 col-sm-11 d-flex">
-        <h2 class="mt-2" >
-            <a href="list.php" class="text-dark pt-2" style="text-decoration: none;">
-                <i class="fa fa-angle-double-left"></i>
-            </a>
-            <?= $contract_data ?>
-        </h2>
-
-    <?php include_once('../flags/flags.php'); ?>
-
-    </div>
-
-    <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
-        <?php 
-            $contractId = $getContract['id'];
-            $hasComment = (new CommentController)->hasComment($contractId);
-            $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
-        ?>
-
-        <div class="d-flex align-items-center gap-2">
-            <!-- Comment icon with badge -->
-            <div id="viewComment" class="position-relative">
-                <?php if ($hasCommentCount > 0): ?>
-                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style="font-size: 14px;">
-                        <?= $hasCommentCount; ?>
-                    </span>
-                <?php endif; ?>
-
-                <img
-                    src="../../../public/images/viewComment.svg"
-                    width="33px"
-                    alt="This Contract has comment!"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasWithBothOptions"
-                    aria-controls="offcanvasWithBothOptions"
-                    data-contract-id="<?= $getContract['id'] ?>"
-                    data-audit-id="<?= $user_id ?>"
-                    data-user-id="<?= $user_id ?>"
-                    data-department="<?= $user_department ?>"
-                    class="view-comment-trigger"
-                />
-            </div>
-
-            <!-- Three-dot dropdown -->
-            <div class="dotMenu" onclick="toggleView()" id="dotMenu">
-                <img src="../../../public/images/dotMenu.svg" width="25px">
-                <div id="dropMenu">
-                    <ul>
-                        <li>
-                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
-                        </li>
-                         <li>
-                            <span><img src="../../../public/images/flagContract.svg" width="25px"><small data-toggle="modal" data-target="#flagModal" id="flagContract">Flag Contract</small></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
+<?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
     <!-- Modal -->
     <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -193,11 +128,10 @@ include_once '../../../views/layouts/includes/header.php';
                 });
             });
             </script>
-    
+
         </h2>           
         
         <hr>
-
         <?php
         $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
         $end = new DateTime($getContract['contract_end']  ?? $getContract['rent_end']);
