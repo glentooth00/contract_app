@@ -4,6 +4,7 @@ session_start();
 $department = $_SESSION['department'] ?? null;
 $role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
+$userid = $_SESSION['id'] ?? null;
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
@@ -204,12 +205,45 @@ include_once '../../../views/layouts/includes/header.php';
                                 </span>
                             </td>
                             <td class="text-center">
+
+                            <?php if($contract['contract_type'] === TRANS_RENT): ?>
+                                <?php
+                                    $rentStart = date('M-d-Y', strtotime($contract['rent_start']));    
+                                ?>
                                 <span class="badge text-secondary">
+                                    <?= $rentStart ?>
+                                </span>
+                                
+                            <?php else: ?>
+
+                                
+
+ <span class="badge text-secondary">
                                     <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
-                            </td>
+                            <?php endif; ?>
+
+                               
+                            
+                                </td>
+
                             <td class="text-center">
+
+
+                                  <?php if($contract['contract_type'] === TRANS_RENT): ?>
+                                <?php
+                                    $rentStart = date('M-d-Y', strtotime($contract['rent_end']));    
+                                ?>
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                                    <?= $rentStart ?>
+                                </span>
+                                
+                            <?php else: ?>
+
+                            <span class="badge text-secondary">
+                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                            </span>
+                            
+                            <?php endif; ?>
                             </td>
                             <td class="text-center">
                                 <span
