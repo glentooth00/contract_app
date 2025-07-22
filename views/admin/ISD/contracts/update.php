@@ -359,13 +359,11 @@ if($_GET['type'] === SACC){
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                var_dump($updateContractHistory);
-
                 if($updateContractHistory){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Goods Contract has been successfully updated!',
+                    'message' => 'Contract update is for approval!',
                     'type' => 'success'
                 ];
 
@@ -374,7 +372,7 @@ if($_GET['type'] === SACC){
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Goods Contract has been successfully updated!',
+                    'message' => 'Contract update is for approval!',
                     'type' => 'success'
                 ];
 
