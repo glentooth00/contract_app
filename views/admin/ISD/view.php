@@ -329,45 +329,38 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === TRANS_RENT || $getContract['contract_type'] === TEMP_LIGHTING) : ?>
+
+            
+            <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === TRANS_RENT): ?>
                             <?php
                             $rentstart = date('Y-m-d', strtotime($getContract['rent_start']));
-                            ?> <input type="date" id="startDate" style="margin-left:px;"
+                            ?> 
+                            <input type="date" id="startTransRent" style="margin-left:px;"
                                 class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
                                 readonly><?php endif; ?>
-                        <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
-                            <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="startDate"
-                                style="margin-left:px;" class="form-control pl-5" value="<?= $rentstart ?>"
-                                name="contract_end" readonly><?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === TRANS_RENT || $getContract['contract_type'] === TEMP_LIGHTING) : ?>
+            <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Retirement Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === TRANS_RENT): ?>
                             <?php
                             $rentEnd = date('Y-m-d', strtotime($getContract['rent_end']));
-                            ?> <input type="date" id="endDate" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_start" readonly><?php endif; ?>
-                        <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
-                            <?php
-                            $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="endDate"
-                                style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>"
-                                name="contract_end" readonly><?php endif; ?>
+                            ?>
+                        <input type="date" id="endTransRent" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_start" readonly><?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
+
+            
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" <?php
                 if ($getContract['contract_type'] === TRANS_RENT) {
@@ -1420,6 +1413,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endGoods = document.getElementById('goodsEnd');
         const infra_start = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
+        const start_rent = document.getElementById('startTransRent');
+        const end_rent = document.getElementById('endTransRent')
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1447,6 +1442,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             endGoods?.removeAttribute('readonly');
             infra_start?.removeAttribute('readonly');
             infra_end?.removeAttribute('readonly');
+            start_rent?.removeAttribute('readonly');
+            end_rent?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1486,6 +1483,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endGoods = document.getElementById('goodsEnd');
         const start_infra = document.getElementById('infraStart');
         const end_infra = document.getElementById('infraEnd');
+        const start_rent = document.getElementById('startTransRent');
+        const end_rent = document.getElementById('endTransRent')
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
@@ -1506,6 +1505,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         endGoods?.setAttribute('readonly', true);
         start_infra?.setAttribute('readonly', true);
         end_infra?.setAttribute('readonly', true);
+        start_rent?.setAttribute('readonly', true);
+        end_rent?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1538,6 +1539,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endGoods = document.getElementById('goodsEnd');
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
+        const rent_start =  document.getElementById('startTransRent');
+        const rent_end = document.getElementById('endTransRent');
 
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
@@ -1568,10 +1571,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const goods_end = encodeURIComponent(endGoods?. value || '');
         const infraStart = encodeURIComponent(infra_start?. value || '');
         const infraEnd = encodeURIComponent(infra_end?. value || '');
+        const startRent = encodeURIComponent(rent_start?. value || '');
+        const endRent =  encodeURIComponent(rent_end?. value || '');
 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}`;
     });
 
     function formatDate(dateString) {

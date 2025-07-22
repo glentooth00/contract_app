@@ -214,6 +214,11 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <?php
                                                         $contract_id = $contract['contract_id'];
                                                         $getContractFromContracts = (new ContractController)->getContractbyId($contract_id);
+
+                                                        $contract_type = $getContractFromContracts['contract_type'];
+                                                        $rent_start = $getContractFromContracts['rent_start'];
+                                                        $rent_rend = $getContractFromContracts['rent_end'];
+
                                                         ?>
                                                         <div class="col-md-12">
                                                             <div class="mb-3">
@@ -238,12 +243,20 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                             </svg>
                                                                         </span>
-                                                                        <?php 
-                                                                            $start = date('Y-d-M', strtotime($getContractFromContracts['contract_start']));
-                                                                        ?>
-                                                                        <input type="text"
-                                                                            value="<?= $start ?>"
-                                                                            class="form-control" readonly>
+
+                                                                        <?php if( $contract_type === TRANS_RENT):  ?>
+                                                                             <?php 
+                                                                                $start = date('Y-d-M', strtotime($getContractFromContracts['rent_start']));
+                                                                            ?>
+                                                                            <input type="text" value="<?= $start ?>" class="form-control" readonly>
+                                                                        <?php else: ?>
+
+                                                                            <?php 
+                                                                                $start = date('Y-d-M', strtotime($getContractFromContracts['contract_start']));
+                                                                            ?>
+                                                                            <input type="text" value="<?= $start ?>" class="form-control" readonly>
+
+                                                                        <?php endif; ?>
                                                                     </div>
                                                                 </div>
 
@@ -265,9 +278,19 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             </svg>
                                                                         </span>
                                                                         
-                                                                        <input type="text"
-                                                                            value="<?= $end ?>"
-                                                                            class="form-control" readonly>
+                                                                        <?php if( $contract_type === TRANS_RENT):  ?>
+                                                                             <?php 
+                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
+                                                                            ?>
+                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
+                                                                        <?php else: ?>
+
+                                                                            <?php 
+                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['contract_end']));
+                                                                            ?>
+                                                                            <input type="text" value="<?= $start ?>" class="form-control" readonly>
+
+                                                                        <?php endif; ?>
                                                                     </div>
                                                                 </div>
                                                             </div>
