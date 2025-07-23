@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'contract_start' => $_POST["contract_start"] ?? 'Missing contract_start',
             'contract_end' => $_POST["contract_end"] ?? 'Missing contract_end',
             'contract_file' => $filePath,
+            'contractPrice' => $_POST['contractPrice'],
             'contract_status' => 'Active',
             'department_assigned' => $_POST["department_assigned"] ?? 'Missing department_assigned',
             'uploader_id' => $_POST['uploader_id'] ?? 'Missing uploader_id',

@@ -50,7 +50,6 @@ $departments = (new DepartmentController)->getAllDepartments();
 include_once '../../../views/layouts/includes/header.php';
 
 ?>
-
 <!-- Loading Spinner - Initially visible -->
 <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
@@ -64,71 +63,7 @@ include_once '../../../views/layouts/includes/header.php';
     <?php include_once '../menu/sidebar.php'; ?>
     <div class="content-area">
 
-<div class="row align-items-center">
-    <div class="col-10 col-sm-11 d-flex">
-        <h2 class="mt-2" >
-            <a href="list.php" class="text-dark pt-2" style="text-decoration: none;">
-                <i class="fa fa-angle-double-left"></i>
-            </a>
-            <?= $contract_data ?>
-        </h2>
-
-    <?php include_once('../flags/flags.php'); ?>
-
-    </div>
-
-    <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
-        <?php 
-            $contractId = $getContract['id'];
-            $hasComment = (new CommentController)->hasComment($contractId);
-            $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
-        ?>
-
-        <div class="d-flex align-items-center gap-2">
-            <!-- Comment icon with badge -->
-            <div id="viewComment" class="position-relative">
-                <?php if ($hasCommentCount > 0): ?>
-                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style="font-size: 14px;">
-                        <?= $hasCommentCount; ?>
-                    </span>
-                <?php endif; ?>
-
-                <img
-                    src="../../../public/images/viewComment.svg"
-                    width="33px"
-                    alt="This Contract has comment!"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasWithBothOptions"
-                    aria-controls="offcanvasWithBothOptions"
-                    data-contract-id="<?= $getContract['id'] ?>"
-                    data-audit-id="<?= $user_id ?>"
-                    data-user-id="<?= $user_id ?>"
-                    data-department="<?= $user_department ?>"
-                    class="view-comment-trigger"
-                />
-            </div>
-
-            <!-- Three-dot dropdown -->
-            <div class="dotMenu" onclick="toggleView()" id="dotMenu">
-                <img src="../../../public/images/dotMenu.svg" width="25px">
-                <div id="dropMenu">
-                    <ul>
-                        <li>
-                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
-                        </li>
-                         <li>
-                            <span><img src="../../../public/images/flagContract.svg" width="25px"><small data-toggle="modal" data-target="#flagModal" id="flagContract">Flag Contract</small></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
+<?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
     <!-- Modal -->
     <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -193,14 +128,13 @@ include_once '../../../views/layouts/includes/header.php';
                 });
             });
             </script>
-    
+
         </h2>           
         
         <hr>
-
         <?php
-        $start = new DateTime($getContract['contract_start']);
-        $end = new DateTime($getContract['contract_end']);
+        $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
+        $end = new DateTime($getContract['contract_end']  ?? $getContract['rent_end']);
         $today = new DateTime();
 
         $interval = $today->diff($end);
@@ -395,7 +329,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <?php endif; ?>
 
-                         <?php if($getContract['contract_type']  ===  TEMP_LIGHTING ) :?>
+                <?php if($getContract['contract_type']  ===  TEMP_LIGHTING ) :?>
                     <div class="col-md-2 mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                         <div class="input-group">
@@ -423,48 +357,40 @@ include_once '../../../views/layouts/includes/header.php';
 
                     <?php endif; ?>
 
-                     <?php if($getContract['contract_type']  ===  TRANS_RENT ) :?>
+                    <?php if($getContract['contract_type']  ===  TRANS_RENT ) :?>
                     <div class="col-md-2 mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                             <?php 
-                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            $start = date('Y-m-d',strtotime($getContract['rent_start']));
                             ?>
                             <input type="date" id="startDate" class="form-control"
                                 value="<?= $start; ?>" name="contract_start" readonly>
                         </div>
                     </div>
-                
-                    
                     <div class="col-md-2 mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                         <div class="input-group">
                             <?php 
-                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            $end = date('Y-m-d',strtotime($getContract['rent_end']));
                             ?>
                             <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                             <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
                                 name="contract_end" readonly>
                         </div>
                     </div>
-
                     <?php endif; ?>
-
-
             <div class="row col-md-2">
-
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
+                    $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
+                    $end = new DateTime($getContract['contract_end'] ?? $getContract['rent_end']);
                     $today = new DateTime();
 
                     $interval = $today->diff($end);
                     $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-
-
 
                     ?> style="font-size: 15px;">Days Remaining:</label>
                     <div class="d-flex">
@@ -487,8 +413,6 @@ include_once '../../../views/layouts/includes/header.php';
                         } else {
                             // echo 'contract still active';
                         }
-
-
                         ?>
 
                     </div>
@@ -748,68 +672,6 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
 
 
-       <!-- Off canvas ---->
-
-        <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-            <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
-                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-             <hr>
-            
-            <div class="offcanvas-body offcanvas-md">
-              <?php foreach ($comments as $comment): ?>
-                <?php 
-                    $auditID = $comment['audit_id'];
-                    $userID = $comment['user_id'];
-                    $auditName = (new UserController)->getUserById($auditID);
-                    $userName = (new UserController)->getUserById($userID);
-                ?>
-                
-                <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    
-                    <!-- Left: Audit side -->
-                    <?php if($auditName): ?>
-                        <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
-                            <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
-                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Right: User side -->
-                    <?php if($userName): ?>
-                        <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
-                            <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
-                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-                        </div>
-                    <?php endif; ?>
-                    
-                </div>
-            <?php endforeach; ?>
-
-                <!----comments display here ----->
-
-            </div>
-
-            <form action="comments/comment.php" method="post">
-                <input type="hidden" id="contractID" value="<?= $contractId ?>" name="contract_id">
-                <input type="hidden" id="auditId" value="<?= $user_id ?>" name="audit_id">
-                <input type="hidden" id="userId" value="<?= $user_id ?>" name="user_id">
-                <input type="hidden" id="userDepartment" value="<?= $user_department ?>" name="user_department">
-                <hr>
-                <div class="p-3">
-                    <textarea class="form-control" name="comment" id="commentTextArea" rows="3" placeholder="Leave a comment..."></textarea>
-                </div>
-                <div class="p-3">
-                <button type="submit" class="float-end" id="submitComment">Comment</button> 
-                </div>
-            </form>
-            </div>
-
-
-        <!---- Off canva ----->
 
 
 
@@ -953,6 +815,85 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+
+ <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+
+<div class="offcanvas-body offcanvas-md">
+    <?php foreach ($comments as $comment): ?>
+        <?php 
+            $commentUserId = $comment['user_id'] ?? $comment['audit_id'];
+            $loggedInUserId = $user_id;
+
+            // Get commenter user info
+            $commentUser = (new UserController)->getUserById($commentUserId);
+
+            // Logged-in user info (for department match)
+            $loggedInUser = (new UserController)->getUserById($loggedInUserId);
+
+            // Check if this is the logged-in user's comment
+            $isOwnComment = ($commentUserId == $loggedInUserId);
+
+            // Compare departments
+            $sameDepartment = ( $commentUser['department'] === $loggedInUser['department']);
+
+            // Set badge color by department
+            $department = $commentUser['department'];
+            switch ($department) {
+                case 'IT': $badgeColor = '#0d6efd'; break;
+                case 'ISD': $badgeColor = '#79d39d'; break;
+                case 'CITET': $badgeColor = '#FFB433'; break;
+                case 'IASD': $badgeColor = '#eb5b0047'; break;
+                case 'ISD-MSD': $badgeColor = '#6A9C89'; break;
+                case 'PSPTD': $badgeColor = '#83B582'; break;
+                case 'FSD': $badgeColor = '#4E6688'; break;
+                case 'BAC': $badgeColor = '#123458'; break;
+                case 'AOSD': $badgeColor = '#03A791'; break;
+                case 'GM': $badgeColor = '#A2D5C6'; break;
+                default: $badgeColor = '#e0e0e0'; break;
+            }
+
+            // Alignment and style
+            $alignment = $isOwnComment ? "flex-end" : "flex-start";
+            $textAlign = $isOwnComment ? "right" : "left";
+
+            $bubbleStyle = "
+                background-color: {$badgeColor};
+                padding: 10px;
+                border-radius: 10px;
+                max-width: 80%;
+                text-align: {$textAlign};
+            ";
+
+            $user = $commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname'];
+        ?>
+        <div class="d-flex" style="justify-content: <?= $alignment ?>; margin-bottom: 10px;padding:5px;width:20em;">
+            <div style="<?= $bubbleStyle ?>">
+                <p style="font-size: 13px;"><strong><?= htmlspecialchars($commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname']) ?>:</strong></p>
+                <p style="font-size: 15px;"><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+                <span class="badge text-muted"><small><?= date('M-d-Y h:i A', strtotime($comment['created_at'])) ?></small></span>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</div>
+    <form action="comments/comment.php" method="post">
+        <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+        <input type="hidden" name="audit_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_department" value="<?= $user_department ?>">
+        <hr>
+        <div class="p-3">
+            <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
+        </div>
+        <div class="p-3">
+            <button type="submit" class="float-end" id="submitComment">Comment</button>
+        </div>
+    </form>
+</div>
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">

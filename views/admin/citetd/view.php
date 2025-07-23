@@ -13,6 +13,8 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
 
+$User = $_SESSION['firstname'].' '.$_SESSION['middlename'].' '.$_SESSION['lastname'];
+
 if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
@@ -64,96 +66,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-    <div class="row align-items-center">
-    <div class="col-10 col-sm-11 d-flex">
-        <h2 class="mt-2" >
-            <a href="list.php" class="text-dark pt-2" style="text-decoration: none;">
-                <i class="fa fa-angle-double-left"></i>
-            </a>
-            <?= $contract_data ?>
-        </h2>
-
-    <?php include_once('../flags/flags.php'); ?>
-
-    </div>
-
-    <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
-        <?php 
-            $contractId = $getContract['id'];
-            $hasComment = (new CommentController)->hasComment($contractId);
-            $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
-        ?>
-
-        <div class="d-flex align-items-center gap-2">
-            <!-- Comment icon with badge -->
-            <div id="viewComment" class="position-relative">
-                <?php if ($hasCommentCount > 0): ?>
-                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style="font-size: 14px;">
-                        <?= $hasCommentCount; ?>
-                    </span>
-                <?php endif; ?>
-
-                <img
-                    src="../../../public/images/viewComment.svg"
-                    width="33px"
-                    alt="This Contract has comment!"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasWithBothOptions"
-                    aria-controls="offcanvasWithBothOptions"
-                    data-contract-id="<?= $getContract['id'] ?>"
-                    data-audit-id="<?= $user_id ?>"
-                    data-user-id="<?= $user_id ?>"
-                    data-department="<?= $user_department ?>"
-                    class="view-comment-trigger"
-                />
-            </div>
-
-            <!-- Three-dot dropdown -->
-            <div class="dotMenu" onclick="toggleView()" id="dotMenu">
-                <img src="../../../public/images/dotMenu.svg" width="25px">
-                <div id="dropMenu">
-                    <ul>
-                        <li>
-                            <a href=""><img src="../../../public/images/suspendFile.svg" width="25px"><small id="">Suspend Contract</small></a>
-                        </li>
-                         <li>
-                            <span><img src="../../../public/images/flagContract.svg" width="25px"><small data-toggle="modal" data-target="#flagModal" id="flagContract">Flag Contract</small></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-            <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
-                        img.addEventListener('click', function () {
-                            const contractId = this.dataset.contractId;
-
-                            fetch(`comments/update_status.php?contract_id=${contractId}`)
-                                .then(response => response.text())
-                                .then(data => {
-                                    console.log('PHP response:', data);
-
-                                    // Hide the badge in real-time
-                                    const badge = document.getElementById(`comment-count-badge-${contractId}`);
-                                    if (badge) {
-                                        badge.style.display = 'none';
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error:', error);
-                                });
-                        });
-                    });
-                });
-            </script>
+        <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
         <hr>
 
@@ -209,7 +122,7 @@ include_once '../../../views/layouts/includes/header.php';
         <?php } ?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
-
+                <input type="hidden" id="loggedInUser" value="<?= $User ?>">
             <div class="row col-md-2">
                 <input type="hidden" id="uploaderDept" style="margin-left:9px;" class="form-control pl-5"
                     value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
@@ -412,7 +325,7 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="row col-md-3">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Uploaded by: </label>
-                    <input type="text" style="margin-left:9px;" class="form-control pl-5"
+                    <input type="text" style="margin-left:9px;" id="uploader" class="form-control pl-5"
                         value="<?= $getContract['uploader']; ?>" name="contract_type" readonly>
                 </div>
             </div>
@@ -688,32 +601,122 @@ include_once '../../../views/layouts/includes/header.php';
             <div class="offcanvas-body offcanvas-md">
               <?php foreach ($comments as $comment): ?>
                 <?php 
-                    $auditID = $comment['audit_id'];
-                    $userID = $comment['user_id'];
-                    $auditName = (new UserController)->getUserById($auditID);
-                    $userName = (new UserController)->getUserById($userID);
+                    $userID = $comment['audit_id'] ?? $comment['user_id'];
+                    // $userID = $comment['user_id'] ?? '';
+                    // $auditName = (new UserController)->getUserById( $userID);
+                    $userName = (new UserController)->getUserById( $userID);
+                    // var_dump($userName);
                 ?>
                 
                 <div class="comment" style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    
-                    <!-- Left: Audit side -->
-                    <?php if($auditName): ?>
-                        <div style="flex: 1; text-align: left;background-color: #cefbc7;padding: 10px;border-radius: 10px;">
-                            <p><strong><?= htmlspecialchars($auditName['firstname'].' '.$auditName['middlename'].' '.$auditName['lastname']) ?>:</strong></p>
-                            <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                            <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
-                        </div>
-                    <?php endif; ?>
+                    <?php 
+                        $department= $_SESSION['department']  ;
+                        $i = $userName['department'] ?? '';
+                    ?>
+                    <?php if( $department ==  $i ?? ''): ?>
+                       <?php
+                            $badgeColor = '';
 
-                    <!-- Right: User side -->
-                    <?php if($userName): ?>
-                        <div style="flex: 1; text-align: right;background-color: #ffcf6d7d;padding: 10px;border-radius: 10px;"">
-                            <p><strong><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+                            if ($department === $userName['department']) {
+                                switch ($department) {
+                                    case 'IT':
+                                        $badgeColor = '#0d6efd';
+                                        break;
+                                    case 'ISD':
+                                        $badgeColor = '#3F7D58';
+                                        break;
+                                    case 'CITET':
+                                        $badgeColor = '#ffb43373';
+                                        break;
+                                    case 'IASD':
+                                        $badgeColor = '#eb5b0047';
+                                        break;
+                                    case 'ISD-MSD':
+                                        $badgeColor = '#6A9C89';
+                                        break;
+                                    case 'PSPTD':
+                                        $badgeColor = '#83B582';
+                                        break;
+                                    case 'FSD':
+                                        $badgeColor = '#4E6688';
+                                        break;
+                                    case 'BAC':
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case 'AOSD':
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case GM:
+                                        $badgeColor = '#A2D5C6';
+                                        break;
+                                    default:
+                                        $badgeColor = '';
+                                        break;
+                                }
+                            }
+
+                            $userDivStyle = "flex: 1; text-align: right; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
+                            ?>
+
+                        <div style="<?= $userDivStyle ?>">
+                            <p><strong class="badge text-dark"><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
                             <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
                             <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])); ?></small></span>
                         </div>
-                    <?php endif; ?>
-                    
+                    <?php else: ?>
+    <?php
+        $dept = $comment['department'];
+        $userDept = $userName['department'] ?? '';
+        $isLoggedIn = ($dept == $userDept);
+
+        $badgeColor = '';
+        if ($isLoggedIn) {
+            switch ($dept) {
+                case 'IT':
+                    $badgeColor = '#0d6efd';
+                    break;
+                case 'ISD':
+                    $badgeColor = '#3F7D58';
+                    break;
+                case 'CITET':
+                    $badgeColor = '#ffb43373';
+                    break;
+                case 'IASD':
+                    $badgeColor = '#eb5b0047';
+                    break;
+                case 'ISD-MSD':
+                    $badgeColor = '#6A9C89';
+                    break;
+                case 'PSPTD':
+                    $badgeColor = '#83B582';
+                    break;
+                case 'FSD':
+                    $badgeColor = '#4E6688';
+                    break;
+                case 'BAC':
+                    $badgeColor = '#123458';
+                    break;
+                case 'AOSD':
+                    $badgeColor = '#03A791';
+                    break;
+                case GM:
+                    $badgeColor = '#A2D5C6';
+                    break;
+                default:
+                    $badgeColor = '';
+                    break;
+            }
+        }
+
+        $userDivStyle = "flex: 1; text-align:left; background-color: {$badgeColor}; padding: 10px; border-radius: 10px;";
+    ?>
+    <div style="<?= $userDivStyle ?>">
+        <p><strong class="badge text-dark"><?= htmlspecialchars($userName['firstname'].' '.$userName['middlename'].' '.$userName['lastname']) ?>:</strong></p>
+        <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
+        <span class="badge text-muted"><small><?= date('M-D-Y H:i A', strtotime($comment['created_at'])) ?></small></span>
+    </div>
+<?php endif; ?>
+
                 </div>
             <?php endforeach; ?>
 
@@ -1030,6 +1033,7 @@ include_once '../../../views/layouts/includes/header.php';
         const uploader = document.getElementById('contractUploader');
         const uploader_id = document.getElementById('uploaderId');
         const uploader_dept = document.getElementById('uploaderDept');
+        const loggedUser = document.getElementById('loggedInUser');
 
         const startDateValue = startDate?.value || rentStart?.value || '';
         const endDateValue = endDate?.value || rentEnd?.value || '';
@@ -1043,8 +1047,9 @@ include_once '../../../views/layouts/includes/header.php';
         const docUploader = encodeURIComponent(uploader?.value || '');
         const uploaderId = encodeURIComponent(uploader_id?.value || '');
         const uploaderDept = encodeURIComponent(uploader_dept?.value || '');
+        const user = encodeURIComponent(loggedUser?. value || '');
 
-        const url = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}`;
+        const url = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}`;
 
         console.log("Redirecting to:", url); // Debug
         window.location.href = url;

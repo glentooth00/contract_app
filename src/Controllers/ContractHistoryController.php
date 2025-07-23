@@ -193,10 +193,9 @@ class ContractHistoryController
 
                 return;
 
-         
     }
 
-        public function updateContractHistoryTransRent($data){
+        public function updateHistoryTransRent($data){
 
         $sql = "UPDATE contract_history SET
                     rent_start = :date_start,
@@ -215,6 +214,28 @@ class ContractHistoryController
                 $stmt->execute();
 
                 return;
+
+    }
+
+        public function updateContractHistoryTransRent($data){
+
+        $sql = "UPDATE contract_history SET
+                    rent_start = :date_start,
+                    rent_end = :date_end,
+                    contract_name = :contract_name,
+                    updated_at = :updated_at
+                WHERE contract_id = :contract_id";
+
+                $stmt = $this->db->prepare($sql);
+
+                $stmt->bindParam(':date_start', $data['rent_start']);
+                $stmt->bindParam(':date_end', $data['rent_end']);
+                $stmt->bindParam(':contract_name', $data['contract_name']);
+                $stmt->bindParam(':contract_id', $data['id']);
+                $stmt->bindParam(':updated_at', $data['updated_at']);
+               
+
+                return  $stmt->execute();;
 
          
     }

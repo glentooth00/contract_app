@@ -90,7 +90,7 @@ class PendingDataController
 
     public function getNewData($id)
     {
-        $sql = "SELECT * FROM pending_data WHERE id = :id";
+        $sql = "SELECT * FROM pending_data WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -99,12 +99,11 @@ class PendingDataController
 
     public function delete($id)
     {
-        $sql = "DELETE FROM pending_data WHERE id = :id";
+        $sql = "DELETE FROM pending_data WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
 
-        return;
+        return $stmt->execute();
     }
 
     public function PendingUpdate($data)
@@ -147,7 +146,8 @@ class PendingDataController
                 uploader,
                 data_type,
                 uploader_department,
-                status
+                status,
+                updated_by
             ) VALUES (
                 :contract_id,
                 :contract_name,
@@ -161,7 +161,8 @@ class PendingDataController
                 :uploader,
                 :data_type,
                 :uploader_department,
-                :status
+                :status,
+                :updated_by
             )";
 
         $stmt = $this->db->prepare($sql);
@@ -180,8 +181,36 @@ class PendingDataController
             ':data_type' => $data['data_type'],
             ':uploader_department' => $data['uploader_department'],
             ':status' => $data['status'],
+            ':updated_by' => $data['updated_by']
         ]);
 
+
+    }
+
+
+    public function updatedInfraData($data)
+    {
+
+        $sql = "INSERT INTO pending_data (
+                    contract_id,
+                    contract_name,
+                    contract_start,
+                    contract_end,
+                    contract_type,
+                    contract_file,
+                    created_at,
+                    updated_at,
+                    uploader_id,
+                    contract_status,
+                    uploader_department,
+                    uploader,
+                    approval_status,
+                    status,
+                    data_type,
+                    updated_by
+                ) VALUES (
+
+                )";
 
     }
 

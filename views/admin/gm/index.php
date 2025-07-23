@@ -2,18 +2,16 @@
 session_start();
 
 $department = $_SESSION['department'] ?? null;
-$role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
-
+$expired = 'Expired';
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
-use App\Controllers\CommentController;
 use App\Controllers\FlagController;
 
-$contracts = (new ContractController)->getContractsAll();
+$contracts = (new ContractController)->getContractsForAudit($department);
 
 // getting the contract types to be compared with the contracts for their expiration
 $contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
@@ -23,16 +21,17 @@ foreach ($contractTypes as $row) {
     $EmpErt = $row['contract_ert'];
 
 }
+
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center"
+<div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div> -->
+</div>
 
 <div class="main-layout">
     <?php include_once '../menu/sidebar.php'; ?>
@@ -43,53 +42,37 @@ include_once '../../../views/layouts/includes/header.php';
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
-            <a href="view_pending_updates.php" style="text-decoration: none;">
-                <div style="position: relative; display: inline-block; margin-right: 30px;">
-                    <?php if (!empty($getLatestActivities)): ?>
-                        <span class="badge bg-danger" style="position: absolute; top: -10px; right: -10px;
-                display: inline-flex; justify-content: center; align-items: center;
-                border-radius: 50%; width: 20px; height: 20px; font-size: 12px;">
-                            <?= $getLatestActivities ?>
-                        </span>
-                    <?php endif; ?>
-                    <img width="25px" src="../../../public/images/bell.svg" alt="Activities need attention">
-                </div>
-            </a>
-
-
-
             <?php if (isset($department)) { ?>
-
 
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'ISD': ?>
+                    case 'ISD-HRAD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'CITET': ?>
+                    case 'CITETD': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
 
                         <?php break;
                     case '': ?>
@@ -140,21 +123,16 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td>
-                                <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
+                            <td> <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
-                                <?php 
-                                    $contractId = $contract['id'];
-
-                                    $hasComment = ( new CommentController )->hasComment($contractId);
-                                ?>
-                                <?php if($hasComment == true): ?>
-                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                   <?php if (isset($contract['account_no'])): ?>
+                                    <span class="badge account_number">(
+                                        <?= $contract['account_no'] ?> )</span>
                                 <?php endif; ?>
-
+                            
                                 <?php if(isset($contract['id'])): ?>
                                 <span class="p-3">
                                     <?php
@@ -175,55 +153,70 @@ include_once '../../../views/layouts/includes/header.php';
                                     <?php endif; ?>
                                 </span>
                             <?php endif; ?>
+
                             </td>
                             <td class="text-center">
-                            <?php
-                            $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                 <?php
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
-                            switch ($type) {
-                                case INFRA:
-                                    $badgeColor = '#328E6E';
-                                    break;
-                                case SACC:
-                                    $badgeColor = '#123458';
-                                    break;
-                                case GOODS:
-                                    $badgeColor = '#F75A5A';
-                                    break;
-                                case EMP_CON:
-                                    $badgeColor = '#FAB12F';
-                                    break;
-                                case PSC_LONG:
-                                    $badgeColor = '#007bff';
-                                    break;
-                                case PSC_SHORT:
-                                    $badgeColor = '#28a745';
-                                    break;
-                                case TRANS_RENT:
-                                    $badgeColor = '#003092';
-                                    break;
-                                case TEMP_LIGHTING:
-                                    $badgeColor = '#03A791';
-                                    break;
-                                default:
-                                    $badgeColor = '#FAB12F';
-                                    break;
-                            }
-                            ?>
-
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                }
+                                ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
                                 </span>
                             </td>
+
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_start']) ? date('F-d-Y', strtotime($contract['rent_start'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
                             <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                                <?php if ($contract['contract_type'] === TRANS_RENT) { ?>
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['rent_end']) ? date('F-d-Y', strtotime($contract['rent_end'])) : '' ?>
+                                    <?php } else { ?>
+                                        <span class="badge text-secondary">
+                                            <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                        </span>
+                                    <?php } ?>
                             </td>
+
                             <td class="text-center">
                                 <span
                                     class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
@@ -293,9 +286,51 @@ include_once '../../../views/layouts/includes/header.php';
                                         ?>
                                     </span>
                                     <?php break;
+                                case TRANS_RENT: ?>
+                                    <?php
+                                    $contractType = $contract['contract_type'];
+                                    $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
+                                    // var_dump($getFromContractType);
+                    
+                                    foreach ($getFromContractType as $row) {
+                                        if ($contractType === $row['contract_type']) {
+                                            $end = new DateTime($contract['rent_end']);
+                                            $now = new DateTime();
+                                            $ert = $row['contract_ert'];
+
+                                            $interval = $now->diff($end);
+                                            $diff = $interval->days;
+
+                                            // Ensure rent_end is not in the past
+                                            if ($contract['contract_status'] === 'Expired') {
+                                                echo '
+                                                        <td class="text-center table-danger">
+                                                            <span class="text-danger fw-bold">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                                                    <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+                                                                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                                                </svg>
+                                                                Expired
+                                                            </span>
+                                                        </td>';
+                                            } elseif ($diff >= $ert) {
+                                                echo '
+                                                        <td class="text-center table-success">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining</span>
+                                                        </td>';
+                                            } else {
+                                                echo '
+                                                        <td class="text-center table-danger">
+                                                            <span class="text-danger fw-bold">' . $diff . ' days remaining</span>
+                                                        </td>';
+                                            }
+                                        }
+                                    }
+                                    ?>
+                                    <?php break;
                                 case PSC_LONG: ?>
-                                    <!-- Code for PSC_LONG -->
-                                    <!-- Code for EMP_CON -->
+
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
@@ -336,61 +371,24 @@ include_once '../../../views/layouts/includes/header.php';
                                         ?>
                                     </span>
                                     <?php break;
-                                case TEMP_LIGHTING: ?>
-                                    <!-- Code for PSC_LONG -->
-                                    <!-- Code for EMP_CON -->
-                                    <span>
-                                        <?php
-                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                                        foreach ($getFromContractType as $row) {
-                                            if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
-                                                $now = new DateTime();
-                                                $ert = $row['contract_ert'];
-
-                                                $interval = $now->diff($end);
-                                                $diff = $interval->days;
-
-                                                $expired = 'Expired';
-
-                                                if ($diff >= $ert) {
-                                                    echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                                } elseif ($contract['contract_status'] === 'Expired') {
-                                                    echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                                } else {
-                                                    echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </td>';
-                                                }
-                                            }
-                                        }
-                                        ?>
-                                    </span>
-                                    <?php break;
                                 case PSC_SHORT: ?>
                                     <!-- Code for PSC_SHORT -->
                                     <!-- Code for EMP_CON -->
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
+
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
+
+                                                // $diff;
+                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -399,7 +397,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     echo '
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold"> 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
                                                         <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                                                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                                         </svg> ' . $expired . '</span>
@@ -410,6 +408,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
+
                                             }
                                         }
                                         ?>
@@ -419,13 +418,18 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
+
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
+
+                                                // $diff;
+                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -434,7 +438,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     echo '
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold"> 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
                                                         <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                                                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                                         </svg> ' . $expired . '</span>
@@ -445,22 +449,31 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
+
                                             }
                                         }
                                         ?>
                                     </span>
+
                                     <?php break;
                                 case INFRA: ?>
+                                    <!-- Code for PSC_SHORT -->
+                                    <!-- Code for EMP_CON -->
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
+
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
+
+                                                // $diff;
+                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -469,7 +482,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     echo '
                                                     <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold"> 
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
                                                         <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                                                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                                         </svg> ' . $expired . '</span>
@@ -480,6 +493,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
+
                                             }
                                         }
                                         ?>
@@ -489,13 +503,61 @@ include_once '../../../views/layouts/includes/header.php';
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
                                         foreach ($getFromContractType as $row) {
                                             if ($contractType === $row['contract_type']) {
                                                 $end = new DateTime($contract['contract_end']);
                                                 $now = new DateTime();
                                                 $ert = $row['contract_ert'];
+
                                                 $interval = $now->diff($end);
                                                 $diff = $interval->days;
+
+                                                // $diff;
+                        
+                                                if ($diff >= $ert) {
+                                                    echo '<td class="text-center table-success">
+                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
+                                                        </td>';
+                                                } elseif ($contract['contract_status'] === 'Expired') {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold"> 
+                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
+                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
+                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                                                        </svg> ' . $expired . '</span>
+                                                    </td>';
+                                                } else {
+                                                    echo '
+                                                    <td class="text-center table-danger">
+                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
+                                                    </td>';
+                                                }
+
+                                            }
+                                        }
+                                        ?>
+                                    </span>
+                                    <?php break;
+                                case TEMP_LIGHTING: ?>
+                                    <!-- Code for PSC_SHORT -->
+                                    <!-- Code for EMP_CON -->
+                                    <span>
+                                        <?php
+                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+
+                                        foreach ($getFromContractType as $row) {
+                                            if ($contractType === $row['contract_type']) {
+                                                $end = new DateTime($contract['contract_end']);
+                                                $now = new DateTime();
+                                                $ert = $row['contract_ert'];
+
+                                                $interval = $now->diff($end);
+                                                $diff = $interval->days;
+
+                                                // $diff;
+                        
                                                 if ($diff >= $ert) {
                                                     echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold">' . $diff . ' days remaining </span>
@@ -521,6 +583,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     </span>
                                     <?php break;
                                 default: ?>
+                                    <!-- Code if no match -->
                                     <p>Unknown Contract Type</p>
                             <?php endswitch; ?>
                         </tr>
@@ -536,7 +599,6 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
-
 
 <!-- Bootstrap Modal for confirmation -->
 <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
@@ -558,10 +620,7 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
     </div>
 </div>
-
-
 <!-- popup notification ---->
-
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -577,11 +636,10 @@ include_once '../../../views/layouts/includes/header.php';
     </symbol>
 </svg>
 
-
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
@@ -616,9 +674,16 @@ include_once '../../../views/layouts/includes/header.php';
         align-items: center;
         gap: 10px;
     }
+
     #statusFilter {
         width: 200px;
         /* Adjust width as needed */
+    }
+    #attention, #review:hover{
+        cursor: pointer;
+    }
+            .account_number {
+        color: #9BA4B5;
     }
 </style>
 
@@ -628,18 +693,23 @@ include_once '../../../views/layouts/includes/header.php';
         document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
         document.getElementById("content").style.display = "block"; // Show the page content
     };
+
     let selectedContractId = null;
+
     document.addEventListener("click", function (e) {
         const deleteBtn = e.target.closest('.delete-btn');
         if (deleteBtn) {
             e.preventDefault();
+
             // Get contract ID from data attribute
             selectedContractId = deleteBtn.getAttribute('data-id');
+
             // Show modal using Bootstrap 5
             const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
             confirmModal.show();
         }
     });
+
     // Handle Confirm Delete button click
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
@@ -647,9 +717,11 @@ include_once '../../../views/layouts/includes/header.php';
             window.location.href = 'contracts/delete.php?id=' + selectedContractId;
         }
     });
-    
+
+    //----------------DAtatables
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
+
         // Check if the table has at least one data row (excluding the "No contracts found" message)
         if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
             // Initialize DataTable
@@ -661,9 +733,13 @@ include_once '../../../views/layouts/includes/header.php';
                 "ordering": false,
                 "info": true
             });
+
+            // Append the contract type filter next to the search input
             var searchInput = $('#table_filter input'); // DataTables search input field
             var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
             searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
+
+            // Apply filter based on contract type selection
             $('#statusFilter').change(function () {
                 var filterValue = $(this).val();
                 if (filterValue) {
@@ -674,4 +750,5 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
+    //----------------DAtatables
 </script>

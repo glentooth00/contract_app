@@ -2,8 +2,10 @@
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractHistoryController;
+use App\Controllers\PendingDataController;
 
 session_start();
+
 
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
@@ -11,21 +13,29 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_GET['type'] === TRANS_RENT) {
 
-    $transrentData = [
-        'id' => $_GET['id'], // Changed from 'contract_id'
+    $transRentData = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['start'], // Changed from 'contract_start'
-        'end' => $_GET['end'],     // Changed from 'contract_end'
-        // 'department_assigned' => $_GET['dept'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_start' => $_GET['transRentStart'],
+        'contract_end' => $_GET['transRentEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
     ];
 
-    $updateTransRent = (new ContractController)->updateTransRentContract($transrentData);
 
-    if ($updateTransRent) {
+    $contractUpdate = (new PendingDataController )->PendingInsert($transRentData);
 
-            $id = $transrentData['id'];
+        if ($contractUpdate) {
+
+            $id = $transRentData['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
@@ -36,18 +46,17 @@ if ($_GET['type'] === TRANS_RENT) {
                     'contract_name' => $getCurrenData['contract_name'],
                     'date_start' => $getCurrenData['rent_start'],
                     'date_end' => $getCurrenData['rent_end'],
-                    'updated_at' => date('Y-m-d H:i:s')
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'contractPrice' =>  $price ?? ''
                 ];
 
-                $updateContractHistory = ( new ContractHistoryController )->updateContractHistoryTransRent($currentData);
-
-                var_dump($updateContractHistory);
+                $updateContractHistory = ( new ContractHistoryController )->updateHistoryTransRent($currentData);
 
                 if($updateContractHistory){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Employment Contract has been successfully updated!',
+                    'message' => 'Infrastructure Contract has been successfully updated!',
                     'type' => 'success'
                 ];
 
@@ -56,7 +65,7 @@ if ($_GET['type'] === TRANS_RENT) {
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Employment Contract has been successfully updated!',
+                    'message' => 'Infrastructure Contract has been successfully updated!',
                     'type' => 'success'
                 ];
 
@@ -67,25 +76,33 @@ if ($_GET['type'] === TRANS_RENT) {
 
         }
 
+
 }
 
 if ($_GET['type'] === TEMP_LIGHTING) {
 
-    $transrentData = [
-        'id' => $_GET['id'], // Changed from 'contract_id'
+    $EmpUpdate = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['start'], // Changed from 'contract_start'
-        'end' => $_GET['end'],     // Changed from 'contract_end'
-        // 'department_assigned' => $_GET['dept'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_start' => $_GET['tempLightStart'],
+        'contract_end' => $_GET['tempLightEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
     ];
 
-    $updateTransRent = (new ContractController)->updateContract($transrentData);
+    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
-    if ($updateTransRent) {
+    if ($contractUpdate) {
 
-            $id = $transrentData['id'];
+            $id = $EmpUpdate['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
@@ -121,10 +138,7 @@ if ($_GET['type'] === TEMP_LIGHTING) {
                 ];
 
                 header("Location: " . $_SERVER['HTTP_REFERER']);
-
             }
-
-
         }
 
 }
@@ -189,22 +203,33 @@ if($_GET['type'] === EMP_CON){
     
 }
 
+//update done
 if($_GET['type'] === INFRA){
 
+    $price = str_replace('₱', '',$_GET['ttc']);
+
     $EmpUpdate = [
-        'id' => $_GET['id'],
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['EmpStart'],
-        'end' => $_GET['ConEmpEnd'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_start' => $_GET['infraStart'],
+        'contract_end' => $_GET['infraEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
     ];
-    
-        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
 
-            $id = $EmpUpdate['id'];
+            $id = $EmpUpdate['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
@@ -215,12 +240,13 @@ if($_GET['type'] === INFRA){
                     'contract_name' => $getCurrenData['contract_name'],
                     'date_start' => $getCurrenData['contract_start'],
                     'date_end' => $getCurrenData['contract_end'],
-                    'updated_at' => date('Y-m-d H:i:s')
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'contractPrice' =>  $price
                 ];
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                var_dump($updateContractHistory);
+             
 
                 if($updateContractHistory){
 
@@ -249,22 +275,36 @@ if($_GET['type'] === INFRA){
     
 }
 
+//update done
 if($_GET['type'] === GOODS){
 
+    $price = str_replace('₱', '',$_GET['ttc']);
+
     $EmpUpdate = [
-        'id' => $_GET['id'],
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['EmpStart'],
-        'end' => $_GET['ConEmpEnd'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_start' => $_GET['goodsStart'],
+        'contract_end' => $_GET['goodsEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+
+
     ];
+
     
-        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
 
-            $id = $EmpUpdate['id'];
+            $id = $EmpUpdate['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
@@ -279,8 +319,6 @@ if($_GET['type'] === GOODS){
                 ];
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
-
-                var_dump($updateContractHistory);
 
                 if($updateContractHistory){
 
@@ -305,26 +343,39 @@ if($_GET['type'] === GOODS){
 
 
         }
-
-    
 }
 
+
+//update done
 if($_GET['type'] === SACC){
 
+    $price = str_replace('₱', '',$_GET['ttc']);
+
     $EmpUpdate = [
-        'id' => $_GET['id'],
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'start' => $_GET['EmpStart'],
-        'end' => $_GET['ConEmpEnd'],
-        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'contract_start' => $_GET['saccDateStart'],
+        'contract_end' => $_GET['saccDateEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+
+
     ];
+
     
-        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
 
-            $id = $EmpUpdate['id'];
+            $id = $EmpUpdate['contract_id'];
 
             $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
@@ -340,13 +391,11 @@ if($_GET['type'] === SACC){
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                var_dump($updateContractHistory);
-
                 if($updateContractHistory){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Goods Contract has been successfully updated!',
+                    'message' => 'Contract update is for approval!',
                     'type' => 'success'
                 ];
 
@@ -355,7 +404,7 @@ if($_GET['type'] === SACC){
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Goods Contract has been successfully updated!',
+                    'message' => 'Contract update is for approval!',
                     'type' => 'success'
                 ];
 

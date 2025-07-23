@@ -24,13 +24,23 @@ class FlagController {
 
     public function getFlag($id){
 
-        $sql = "SELECT flag_type, status, contract_id FROM flags WHERE contract_id = :id";
+        $sql = "SELECT flag_type, status, contract_id FROM flags WHERE contract_id = :id AND status = 1";
         $stmt =  $this->db->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $result = $stmt->fetch();
         
         return $result;
+
+    }
+
+    public function updateStatus($data){
+
+        $sql = "UPDATE flags SET flag_type = :flag_type, status = :status  WHERE contract_id = :contract_id ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($data);
+
+        return;
 
     }
 
