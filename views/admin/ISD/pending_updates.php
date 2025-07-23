@@ -183,423 +183,10 @@ include_once '../../../views/layouts/includes/header.php';
                                 </span>
                             </td> -->
                             <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-
-                                    <?php if ($contract['data_type'] === 'Update'): ?>
-
-                                        <a href="view_pending_updates.php" class="btn btn-success btn-sm view-btn"
-                                            data-toggle="modal" data-target="#exampleModal" data-id="<?= $contract['id'] ?>"
-                                            data-contract-id="<?= $contract['id'] ?>" data-name=" <?= $contract['contract_name'] ?>"
-                                            data-start="<?= $contract['contract_start'] ?>"
-                                            data-end="<?= $contract['contract_end'] ?>">
-                                            <i class="fa fa-eye"></i> View
-                                        </a>
-
-
-                                        <!----update modal ------->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-xl" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Compare Changes</h5></span>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="col-md-12 d-flex gap-1">
-                                                <div class="col-md-6 card p-3" style="background-color: #ECFAE5;">
-                                                    <div>
-
-                                                        <h5>Current Data</h5>
-                                                        <hr>
-                                                        <?php
-                                                        $contract_id = $contract['contract_id'];
-                                                        $getContractFromContracts = (new ContractController)->getContractbyId($contract_id);
-
-                                                        $contract_type = $getContractFromContracts['contract_type'];
-                                                        $rent_start = $getContractFromContracts['rent_start'];
-                                                        $rent_rend = $getContractFromContracts['rent_end'];
-
-                                                        ?>
-                                                        <div class="col-md-12">
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract
-                                                                    name</label>
-                                                                <input type="text"
-                                                                    value="<?= $getContractFromContracts['contract_name'] ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <div class="col-md-6">
-                                                                    <label class="badge text-muted float-start">Date
-                                                                        Start</label>
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-text">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="16" height="16"
-                                                                                fill="currentColor"
-                                                                                class="bi bi-calendar"
-                                                                                viewBox="0 0 16 16">
-                                                                                <path
-                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                            </svg>
-                                                                        </span>
-
-                                                                        <?php if( $contract_type === TRANS_RENT):  ?>
-                                                                             <?php 
-                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
-                                                                            ?>
-                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
-                                                                     
-                                                                        <?php endif; ?>
-
-                                                                         <?php if( $contract_type === TEMP_LIGHTING):  ?>
-                                                                            
-                                                                             <?php 
-                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
-                                                                            ?>
-                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
-                                                                        
-                                                                          
-
-                                                                        <?php endif; ?>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="col-md-6">
-                                                                     <?php 
-                                                                            $end = date('Y-d-M', strtotime($getContractFromContracts['contract_end']));
-                                                                        ?>
-                                                                    <label class="badge text-muted float-start">Date
-                                                                        End</label>
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-text">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="16" height="16"
-                                                                                fill="currentColor"
-                                                                                class="bi bi-calendar"
-                                                                                viewBox="0 0 16 16">
-                                                                                <path
-                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                            </svg>
-                                                                        </span>
-                                                                        
-                                                                        <?php if( $contract_type === TRANS_RENT):  ?>
-                                                                             <?php 
-                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
-                                                                            ?>
-                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
-                                                                     
-                                                                        <?php endif; ?>
-
-                                                                         <?php if( $contract_type === TEMP_LIGHTING):  ?>
-                                                                            
-                                                                             <?php 
-                                                                                $end = date('Y-d-M', strtotime($getContractFromContracts['rent_end']));
-                                                                            ?>
-                                                                            <input type="text" value="<?= $end ?>" class="form-control" readonly>
-                                                                        
-                                                                          
-
-                                                                        <?php endif; ?>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="mt-3">
-                                                            </div>
-                                                            <?php
-                                                            $start = new DateTime($getContractFromContracts['contract_start']);
-                                                            $end = new DateTime($getContractFromContracts['contract_end']);
-                                                            $today = new DateTime();
-
-                                                            $interval = $today->diff($end);
-                                                            $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-                                                            ?>
-
-
-
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Remaining days</label>
-                                                                <input type="text" value="<?= $remainingDays ?> Days"
-                                                                    class="form-control" readonly>
-                                                            </div>
-                                                        </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6 card p-3" style="background-color: #E8F9FF;">
-                                                                <div>
-                                                                    <h5>Pending Changes</h5>
-                                                                    <hr>
-                                                                    <?php
-
-                                                                    $contract_id = $contract['contract_id'];
-
-                                                                    $getPendingUpdate = (new NotificationController)->getPendingDatabyId($contract_id);
-
-                                                                    // var_dump($getContractFromContracts);
-                                                        
-
-                                                                    ?>
-                                                                    <div class="col-md-12">
-                                                                        <form action="contracts/approve_update.php" method="POST">
-                                                                            <div class="mb-3">
-
-                                                                                <input type="hidden" name="uploader_department"
-                                                                                    value="<?= $getPendingUpdate['uploader_department'] ?>"
-                                                                                    class="form-control" readonly>
-                                                                                <input type="hidden" name="id"
-                                                                                    value="<?= $getPendingUpdate['id'] ?>"
-                                                                                    class="form-control" readonly>
-                                                                                <input type="hidden" name="contract_id"
-                                                                                    value="<?= $getPendingUpdate['contract_id'] ?>"
-                                                                                    class="form-control" readonly>
-                                                                                <label class="badge text-muted">Contract
-                                                                                    name</label>
-                                                                                <input type="text" name="contract_name"
-                                                                                    value="<?= $getPendingUpdate['contract_name'] ?>"
-                                                                                    class="form-control">
-                                                                            </div>
-                                                                            <div class="d-flex gap-2">
-                                                                                <div class="col-md-6">
-                                                                                    
-                                                                                    <label class="badge text-muted">Date
-                                                                                        Start</label>
-                                                                                    <div class="input-group">
-                                                                                        <span class="input-group-text">
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                                width="16" height="16"
-                                                                                                fill="currentColor"
-                                                                                                class="bi bi-calendar"
-                                                                                                viewBox="0 0 16 16">
-                                                                                                <path
-                                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                                            </svg>
-                                                                                        </span>
-                                                                                        <?php 
-                                                                                            $startPending = date('Y-d-M', strtotime($getPendingUpdate['contract_start']));
-                                                                                        ?>
-                                                                                        <input type="hidden" name="contract_start"
-                                                                                            value="<?= $getPendingUpdate['contract_start'] ?>"
-                                                                                            class="form-control">
-                                                                                        <input type="text" name=""
-                                                                                            value="<?= $startPending ?>"
-                                                                                            class="form-control">
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="col-md-6">
-                                                                                    <label class="badge text-muted">Date End</label>
-                                                                                    <div class="input-group">
-                                                                                        <span class="input-group-text">
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                                width="16" height="16"
-                                                                                                fill="currentColor"
-                                                                                                class="bi bi-calendar"
-                                                                                                viewBox="0 0 16 16">
-                                                                                                <path
-                                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                                            </svg>
-                                                                                        </span>
-                                                                                        <?php 
-                                                                                            $endPending = date('Y-d-M', strtotime($getPendingUpdate['contract_end']));
-                                                                                        ?>
-                                                                                           <input type="hidden" name="contract_end"
-                                                                                            value="<?= $getPendingUpdate['contract_end'] ?>"
-                                                                                            class="form-control">
-                                                                                        <input type="text"
-                                                                                            value="<?= $endPending ?>"
-                                                                                            class="form-control" readonly>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="mt-2">
-                                                                                <?php
-
-                                                                                $start = new DateTime($getPendingUpdate['contract_start']);
-                                                                                $end = new DateTime($getPendingUpdate['contract_end']);
-                                                                                $today = new DateTime();
-
-                                                                                $interval = $today->diff($end);
-                                                                                $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-                                                                                ?>
-                                                                                <div class="mb-3">
-                                                                                    <label
-                                                                                        class="badge text-muted float-start">Remaining days</label>
-                                                                                    <input type="text"
-                                                                                        value="<?= $remainingDays ?> Days"
-                                                                                        class="form-control" readonly>
-                                                                                </div>
-                                                                            </div>
-                                                                    </div>
-
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                                                        <button type="submit" class="btn btn-primary">Approve Update</button>
-                                                    </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    <?php else: ?>
-                                        <a href="view_pending_updates.php?id=<?= $contract['id'] ?>" class="btn btn-success btn-sm"
-                                            data-toggle="modal" data-target="#newData">
-                                            <i class="fa fa-eye"></i> View New Data
-                                        </a>
-
-
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="newData" tabindex="-1" role="dialog"
-                                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                            <div class="modal-dialog modal-lg" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLongTitle">New Data for Approval
-                                                        </h5>
-                                                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button> -->
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <?php
-                                                        $id = $contract['id'];
-
-                                                        $getPendingDatas = (new PendingDataController)->getNewData($id);
-                                                        ?>
-                                                        <form action="contracts/approve.php" method="POST"
-                                                            enctype="multipart/form-data">
-                                                            <div class="col-md-12 d-flex">
-
-                                                                <div class="p-2 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="badge text-dark float-start">Contract
-                                                                            Name</label>
-                                                                        <input type="text" class="form-control" name="contract_name"
-                                                                            value="<?= $contract['contract_name'] ?>" readonly>
-                                                                    </div>
-                                                                    <div class="mb-3 col-md-12">
-                                                                        <label class="badge text-dark float-start">Contract
-                                                                            Start</label>
-                                                                        <div class="input-group">
-                                                                            <span class="input-group-text">
-                                                                                <i class="bi bi-calendar-date"></i>
-                                                                            </span>
-                                                                            <input type="date" class="form-control"
-                                                                                name="contract_start"
-                                                                                value="<?= $contract['contract_start'] ?>" readonly>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="mb-3">
-                                                                        <label class="badge text-dark float-start">Contract
-                                                                            file</label><br>
-                                                                        <span id="file" class="badge bg-primary fs-6"
-                                                                            data-toggle="modal" data-target="#testModal">View
-                                                                            File</span>
-                                                                        <input type="text" name="contract_file"
-                                                                            value="<?= $contract['contract_file'] ?>">
-
-
-                                                                        <!-- Modal -->
-                                                                        <div class="modal fade" id="testModal" tabindex="-1"
-                                                                            role="dialog" aria-labelledby="exampleModalLabel"
-                                                                            aria-hidden="true">
-                                                                            <div class="modal-dialog modal-xl" role="document">
-                                                                                <div class="modal-content">
-                                                                                    <div class="modal-header">
-                                                                                        <h5 class="modal-title"
-                                                                                            id="exampleModalLabel">
-                                                                                            Modal title</h5>
-                                                                                        <!-- <button type="button" class="close"
-                                                                                        data-dismiss="modal" aria-label="Close">
-                                                                                        <span aria-hidden="true">&times;</span>
-                                                                                    </button> -->
-                                                                                    </div>
-                                                                                    <div class="modal-body">
-                                                                                        <iframe
-                                                                                            src="<?= htmlspecialchars("../../../" . $contract['contract_file']) ?>"
-                                                                                            width="100%" style="height: 80vh;"
-                                                                                            frameborder="0"></iframe>
-                                                                                    </div>
-                                                                                    <div class="modal-footer">
-                                                                                        <button type="button"
-                                                                                            class="btn btn-secondary"
-                                                                                            data-dismiss="modal">Close</button>
-                                                                                        <button type="button"
-                                                                                            class="btn btn-primary">Save
-                                                                                            changes</button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                <!---FILE MODAL --->
-                                                    </div>
-
-                                                    <div class="p-2 col-md-6">
-                                                        <div class="mb-3">
-                                                            <label class="badge text-dark float-start">Contract
-                                                                type</label>
-                                                            <input type="text" class="form-control" name="contract_type"
-                                                                value="<?= $contract['contract_type'] ?>" readonly>
-                                                        </div>
-                                                        <div class="mb-3 col-md-12">
-                                                            <label class="badge text-dark float-start">Contract
-                                                                End</label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text">
-                                                                    <i class="bi bi-calendar-date"></i>
-                                                                </span>
-                                                                <input type="date" class="form-control"
-                                                                    name="contract_end"
-                                                                    value="<?= $contract['contract_end'] ?>" readonly>
-                                                            </div>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label class="badge text-dark float-start">Creation
-                                                                Date</label>
-                                                            <input type="date" class="form-control" name="created_at"
-                                                                value="<?= date('Y-m-d', strtotime($contract['created_at'])) ?>"
-                                                                readonly>
-                                                        </div>
-                                                        </span>
-                                                        <input type="hidden" class="form-control" name="id"
-                                                            value="<?= $contract['id'] ?>" readonly>
-                                                        <input type="hidden" class="form-control"
-                                                            name="uploader_department"
-                                                            value="<?= $contract['uploader_department'] ?>"
-                                                            readonly><input type="hidden" class="form-control"
-                                                            name="uploader" value="<?= $contract['uploader'] ?>"
-                                                            readonly>
-                                                        <input type="hidden" class="form-control" name="uploader_id"
-                                                            value="<?= $contract['uploader_id'] ?>" readonly>
-                                                    </div>
-                                                </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <!-- <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button> -->
-                                                        <button type="submit" class="btn btn-success">Approve</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    <?php endif; ?>
-
-                                    <a href="#" class="btn btn-warning badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Cancel
-                                    </a>
-
-                                </div>
+                                <button class="btn btn-success btn-sm view-btn" data-id="<?= $contract['contract_id'] ?>"
+                                    data-toggle="modal" data-target="#exampleModal">
+                                    <i class="fa fa-eye"></i> View
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -612,6 +199,23 @@ include_once '../../../views/layouts/includes/header.php';
         </table>
     </div>
 </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Compare Data</h5>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- AJAX-loaded content goes here -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <?php include '../modals/power_supply.php'; ?>
 
@@ -783,21 +387,21 @@ include_once '../../../views/layouts/includes/header.php';
     //----------------DAtatables
 
 
-    $(document).ready(function () {
-        $('.view-btn').on('click', function () {
-            const id = $(this).data('id');
-            const contractId = $(this).data('contract-id');
-            const name = $(this).data('name').trim(); // remove leading space
-            const start = $(this).data('start');
-            const end = $(this).data('end');
 
-            $('#modal-id').text(id);
-            $('#modal-contract-id').text(contractId);
-            $('#modal-contract-name').text(name);
-            $('#modal-start-date').text(start);
-            $('#modal-end-date').text(end);
+    $(document).ready(function () {
+        $('.view-btn').click(function () {
+            const contractId = $(this).data('id');
+
+            $.ajax({
+                url: 'contracts/fetch_contract_comparison.php',
+                type: 'POST',
+                data: { contract_id: contractId },
+                success: function (response) {
+                    $('#modal-body-content').html(response);
+                    $('#exampleModal').modal('show');
+                }
+            });
         });
     });
-
 
 </script>
