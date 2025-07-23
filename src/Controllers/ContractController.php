@@ -1523,7 +1523,8 @@ class ContractController
                 uploader_department = :uploader_department,
                 contract_name = :contract_name,
                 rent_start = :rent_start,
-                rent_end = :rent_end
+                rent_end = :rent_end,
+                status = :status
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':uploader_department', $data['uploader_department']);
@@ -1531,6 +1532,7 @@ class ContractController
             $stmt->bindParam(':rent_start', $data['rent_start']);
             $stmt->bindParam(':rent_end', $data['rent_end']);
             $stmt->bindParam(':contract_id', $data['contract_id']);
+            $stmt->bindParam(':status', $data['status']);
 
             $success = $stmt->execute();
 

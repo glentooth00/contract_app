@@ -250,6 +250,7 @@ class ContractHistoryController
                     rent_end = :rent_end,
                     contract_name = :contract_name,
                     updated_at = :updated_at,
+                    status = :status
                 WHERE contract_id = :contract_id";
 
                 $stmt = $this->db->prepare($sql);
@@ -259,7 +260,7 @@ class ContractHistoryController
                 $stmt->bindParam(':contract_name', $data['contract_name']);
                 $stmt->bindParam(':contract_id', $data['contract_id']);
                 $stmt->bindParam(':updated_at', $data['updated_at']);
-               
+                $stmt->bindParam(':status', $data['contract_status']);
 
                 $stmt->execute();
 
