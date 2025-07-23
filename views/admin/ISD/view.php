@@ -47,6 +47,7 @@ include_once '../../../views/layouts/includes/header.php';
         <input type="hidden" id="loggedInUser" value="<?= $User ?>">
         <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
         <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
+        
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
         <hr>
         <!-- Modal -->
@@ -345,6 +346,7 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
             <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
             <div class="row col-md-2">
@@ -355,6 +357,33 @@ include_once '../../../views/layouts/includes/header.php';
                             $rentEnd = date('Y-m-d', strtotime($getContract['rent_end']));
                             ?>
                         <input type="date" id="endTransRent" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_start" readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                            <?php
+                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="date" id="tempLightStart" style="margin-left:px;" class="form-control pl-5" value="<?= $rentstart ?>" name="contract_start" readonly><?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+            <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Retirement Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                            <?php
+                            $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                            ?>
+                        <input type="date" id="tempLightEnd" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="contract_start" readonly><?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1414,7 +1443,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_start = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const start_rent = document.getElementById('startTransRent');
-        const end_rent = document.getElementById('endTransRent')
+        const end_rent = document.getElementById('endTransRent');
+        const tempStart =  document.getElementById('tempLightStart');
+        const tempEnd = document.getElementById('tempLightEnd');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1444,6 +1475,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             infra_end?.removeAttribute('readonly');
             start_rent?.removeAttribute('readonly');
             end_rent?.removeAttribute('readonly');
+            tempStart?.removeAttribute('readonly');
+            tempEnd?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1484,7 +1517,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const start_infra = document.getElementById('infraStart');
         const end_infra = document.getElementById('infraEnd');
         const start_rent = document.getElementById('startTransRent');
-        const end_rent = document.getElementById('endTransRent')
+        const end_rent = document.getElementById('endTransRent');
+        const tempStart =  document.getElementById('tempLightStart');
+        const tempEnd = document.getElementById('tempLightEnd');
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
@@ -1507,6 +1542,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         end_infra?.setAttribute('readonly', true);
         start_rent?.setAttribute('readonly', true);
         end_rent?.setAttribute('readonly', true);
+        tempStart?.setAttribute('readonly', true);
+        tempEnd?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1541,6 +1578,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_end = document.getElementById('infraEnd');
         const rent_start =  document.getElementById('startTransRent');
         const rent_end = document.getElementById('endTransRent');
+        const tempStart =  document.getElementById('tempLightStart');
+        const tempEnd = document.getElementById('tempLightEnd');
 
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
@@ -1573,10 +1612,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infraEnd = encodeURIComponent(infra_end?. value || '');
         const startRent = encodeURIComponent(rent_start?. value || '');
         const endRent =  encodeURIComponent(rent_end?. value || '');
+        const startTemplight = encodeURIComponent(tempStart?. value || '');
+        const endTemplight = encodeURIComponent(tempEnd?. value || '');
 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}`;
     });
 
     function formatDate(dateString) {

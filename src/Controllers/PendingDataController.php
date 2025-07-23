@@ -90,7 +90,7 @@ class PendingDataController
 
     public function getNewData($id)
     {
-        $sql = "SELECT * FROM pending_data WHERE id = :id";
+        $sql = "SELECT * FROM pending_data WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -99,12 +99,11 @@ class PendingDataController
 
     public function delete($id)
     {
-        $sql = "DELETE FROM pending_data WHERE id = :id";
+        $sql = "DELETE FROM pending_data WHERE contract_id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
 
-        return;
+        return $stmt->execute();
     }
 
     public function PendingUpdate($data)
@@ -189,7 +188,8 @@ class PendingDataController
     }
 
 
-    public function updatedInfraData($data){
+    public function updatedInfraData($data)
+    {
 
         $sql = "INSERT INTO pending_data (
                     contract_id,
