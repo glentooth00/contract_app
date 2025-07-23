@@ -23,6 +23,7 @@ use App\Controllers\FlagController;
     </span>
 <?php endif; ?>
 
+    <?php if($department === IASD): ?>
         <!-- Modal -->
         <div class="modal fade" id="removeFlagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -45,6 +46,8 @@ use App\Controllers\FlagController;
             </div>
         </div>
         </div>
+    <?php endif; ?>
+
 
 <style>
     #attention, #review:hover{
