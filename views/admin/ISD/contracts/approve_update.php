@@ -13,10 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if($_POST['contract_type'] === TEMP_LIGHTING){
 
-
-        $contract_start = !empty($_POST['contract_start']) ? date('Y-m-d', strtotime($_POST['contract_start'])) : null;
-        $contract_end = !empty($_POST['contract_end']) ? date('Y-m-d', strtotime($_POST['contract_end'])) : null;
-
         $updateData = [
             'contract_id' => $_POST['contract_id'],
             'uploader_department' => $_POST['uploader_department'],
@@ -29,9 +25,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
 
             if( $updateSuccessful ){
-                echo 'update successful';
-            }else{
-                echo 'update failed';
+               $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
+
+                    if( $deletePrevData ){
+
+                            $updateContractData = (new ContractHistoryController )->updateHistoryTempLight($updateData);
+
+                            if($updateContractData){
+
+                            $_SESSION['notification'] = [
+                            'message' => 'Update has been approved.',
+                            'type' => 'success',
+                            ];
+
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
+
+                            }
+
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
+
+                    }
             }
 
     }
@@ -57,31 +72,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     if( $deletePrevData ){
 
-                        $updatedData = [
-                                'contract_id' => $updateSuccessful['id'],
-                                'rent_start' => $updateSuccessful['rent_start'],
-                                'rent_end' => $updateSuccessful['rent_end'],
-                                'contract_name' => $updateSuccessful['contract_name'],
-                            ];
-
-                            // var_dump($updatedData);
-
                             $updateContractData = (new ContractHistoryController )->updateContractHistoryTransRent($updateData);
 
-                            // if($updateContractData){
+                            if($updateContractData){
 
-                            // $_SESSION['notification'] = [
-                            // 'message' => 'Update has been approved.',
-                            // 'type' => 'success',
-                            // ];
+                            $_SESSION['notification'] = [
+                            'message' => 'Update has been approved.',
+                            'type' => 'success',
+                            ];
 
-                            // header("Location: " . $_SERVER['HTTP_REFERER']);
-                            // exit;
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
 
-                            // }
+                            }
 
-                            // header("Location: " . $_SERVER['HTTP_REFERER']);
-                            // exit;
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
 
                     }
 
