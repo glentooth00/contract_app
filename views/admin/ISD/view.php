@@ -799,6 +799,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                                     class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
                                                 <span class="badge text-danger">No Start Date</span><?php endif; ?>
                                         </td><?php endif; ?>
+                                        
 
                                          <?php if ($employement_data['contract_type'] === INFRA): ?>
                                         <td style="text-align: center !important;">
