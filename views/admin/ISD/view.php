@@ -61,15 +61,23 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="modal-body">
                         <form action="contracts/suspend.php" method="post">
                             <div class="form-group">
+                                
                                 <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
                                     <input type="hidden" name="contract_start"
                                         value="<?= $getContract['contract_start'] ?>">
                                     <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
+
                                 <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
                                     <input type="hidden" name="rent_start" value="<?= $getContract['rent_start'] ?>">
                                     <input type="hidden" name="rent_end" value="<?= $getContract['rent_end'] ?>">
                                 <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === EMP_CON): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
                                 <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
                                 <div class="d-flex">
                                     <div class="form-check me-3">
@@ -113,7 +121,7 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
         </div>
         <?php
-        if ($getContract['contract_type'] === TRANS_RENT) {
+        if ($getContract['contract_type'] === TRANS_RENT ) {
             $start = new DateTime($getContract['rent_start']);
             $end = new DateTime($getContract['rent_end']);
         } else {
@@ -148,8 +156,9 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>';
         }
         ?>
+        
         <?php
-        $id = $getContract['account_no'];
+        $id = $getContract['account_no'] ?? $getContract['id'];
         $suspended = (new SuspensionController)->getSuspensionByAccount_no($id);
         $num_o_days = $suspended['no_of_days'] ?? 0;
         $suspension_start = $suspended['created_at'] ?? null;
@@ -158,6 +167,7 @@ include_once '../../../views/layouts/includes/header.php';
         $formattedStart = $suspension_start ? date('Y-m-d\TH:i:s', strtotime($suspension_start)) : null;
         ?>
         <?php if ($getContract['contract_status'] === 'Suspended'): ?>
+            
             <?php if ($suspensionType === DTD): ?>
                 <div id="draggable" class="card" style="
                     box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
@@ -189,6 +199,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
         <?php endif; ?>
+        
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
             <div class="gap-1"><?php if ($getContract['contract_status'] === 'Expired') { ?>
                     <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?> <span id="add"
@@ -1748,7 +1759,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
                 ${timeElapsed}
             </div>
 
-            <form action="ontracts/end.php" method="post">
+            <form action="contracts/end.php" method="post">
                 <input type="hidden" name="account_no" value="<?= $id ?>">
                 <input type="hidden" name="contract_id" value="<?= $contractId ?>">
                 <input type="hidden" name="contract_type" value="<?= $getContract['contract_type'] ?>">
