@@ -255,8 +255,8 @@ class ContractHistoryController
 
                 $stmt = $this->db->prepare($sql);
 
-                $stmt->bindParam(':contract_start', $data['contract_start']);
-                $stmt->bindParam(':contract_end', $data['contract_end']);
+                $stmt->bindParam(':rent_start', $data['rent_start']);
+                $stmt->bindParam(':rent_end', $data['rent_end']);
                 $stmt->bindParam(':contract_name', $data['contract_name']);
                 $stmt->bindParam(':contract_id', $data['contract_id']);
                 $stmt->bindParam(':updated_at', $data['updated_at']);
