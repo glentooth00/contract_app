@@ -69,6 +69,13 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
+                     <?php if($current['contract_type'] === INFRA ): ?> 
+                        <div class="input-group">
+                            <input type="text" value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
 
                 <!-- End Date -->
@@ -91,6 +98,13 @@ if (isset($_POST['contract_id'])) {
                     <?php if($current['contract_type'] === GOODS ): ?> 
                         <div class="input-group">
                             <input type="text" value="<?= date('M d, Y', strtotime($current['rent_end'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if($current['contract_type'] === INFRA ): ?> 
+                        <div class="input-group">
+                            <input type="text" value="<?= date('M d, Y', strtotime($current['contract_end'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
@@ -146,6 +160,14 @@ if (isset($_POST['contract_id'])) {
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
+
+                     <?php if($pending['contract_type'] === INFRA ): ?> 
+                        <div class="input-group">
+                            <input type="text" name="contract_start" value="<?= date('M d, Y', strtotime($pending['contract_start'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
                 </div>
 
                 <!-- End Date -->
@@ -165,7 +187,14 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
-                     <?php if($pending['contract_type'] === GOODS ): ?> 
+                    <?php if($pending['contract_type'] === GOODS ): ?> 
+                        <div class="input-group">
+                            <input type="text" name="contract_end" value="<?= date('M d, Y', strtotime($pending['contract_end'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if($pending['contract_type'] === INFRA ): ?> 
                         <div class="input-group">
                             <input type="text" name="contract_end" value="<?= date('M d, Y', strtotime($pending['contract_end'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
