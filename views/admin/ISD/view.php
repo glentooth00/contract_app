@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <?php if(!empty($getContract['implementing_dept'])): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Implementing
-                            Department</label><input type="text" id="contractInput" style="margin-left:9px;"
+                            Department</label><input type="text" id="impDept" style="margin-left:9px;"
                             class="form-control pl-5" value="<?= $getContract['implementing_dept'] ?>" name="contract_type"
                             readonly></div>
                 </div>
@@ -1602,6 +1602,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const rent_end = document.getElementById('endTransRent');
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
+        const implementing_dept = document.getElementById('impDept');
 
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
@@ -1636,10 +1637,11 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endRent =  encodeURIComponent(rent_end?. value || '');
         const startTemplight = encodeURIComponent(tempStart?. value || '');
         const endTemplight = encodeURIComponent(tempEnd?. value || '');
+        const impDept = encodeURIComponent(implementing_dept?. value || '');
 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}`;
     });
 
     function formatDate(dateString) {
