@@ -35,9 +35,10 @@ class SuspensionController
 
     public function getSuspensionByAccount_no($id)
     {
-        $sql = "SELECT * FROM tbl_suspension WHERE account_no = :id AND contract_status = 'Suspended'";
+        $sql = "SELECT * FROM tbl_suspension WHERE ( account_no = :account_no OR contract_id = :contract_id ) AND contract_status = 'Suspended'";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':account_no', $id);
+        $stmt->bindParam(':contract_id', $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
