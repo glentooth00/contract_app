@@ -157,6 +157,14 @@ class NotificationController
 
     }
 
+    public function getNotifications(){
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM pending_data WHERE status = '1'");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
+
+
 
 
 }
