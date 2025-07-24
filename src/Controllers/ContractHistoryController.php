@@ -234,7 +234,7 @@ class ContractHistoryController
                     $stmt->bindParam(':contract_name', $data['contract_name']);
                     $stmt->bindParam(':contract_id', $data['contract_id']);
                     $stmt->bindParam(':updated_at', $data['updated_at']);
-                    $stmt->bindParam(':status', $data['status']);
+                    $stmt->bindParam(':status', $data['contract_status']);
                     $stmt->execute();
 
                     return;
