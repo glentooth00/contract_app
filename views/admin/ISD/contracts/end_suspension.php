@@ -206,5 +206,37 @@ if ($remainingDays == 0) {
         }
 
     }
+
+        if ($type === INFRA) {
+
+        $resumeContractData = [
+            'contract_end' => $returnDate,
+            'id' => $endSuspensionData['contract_id'],
+            'contract_status' => 'Active',
+        ];
+
+        // var_dump($resumeContractData);
+
+        $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
+
+        if ($resumeContract) {
+
+            $id = $resumeContractData['id'];
+
+            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
+
+            if ($deleteSuspension) {
+                $_SESSION['notification'] = [
+                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
+            }
+
+        }
+
+    }
 }
 }
