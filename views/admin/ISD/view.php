@@ -78,6 +78,11 @@ include_once '../../../views/layouts/includes/header.php';
                                     <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
+                                 <?php if ($getContract['contract_type'] === GOODS): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
                                 <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
                                 <div class="d-flex">
                                     <div class="form-check me-3">

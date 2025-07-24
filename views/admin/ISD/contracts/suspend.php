@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_status' => 'Suspended'
     ];
 
+    var_dump($suspensionData );
+
 
     if ($suspensionData['contract_type'] === TRANS_RENT) {
 
@@ -237,6 +239,131 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ];
 
             // print_r($transRentData);
+
+
+            $ii = (new ContractController)->updateTempLightContractStatus($transRentData);
+
+            if ($ii) {
+
+                $suspensionData = [
+                    'type_of_suspension' => $_POST['type_of_suspension'],
+                    'no_of_days' => $_POST['no_of_days'] ?? 0,
+                    'reason' => $_POST['reason'],
+                    'contract_id' => $_POST['contract_id'],
+                    'account_no' => $_POST['account_no'],
+                    'created_at' => $now = date('Y-m-d H:i:s'),
+                    'updated_at' => $now = date('Y-m-d H:i:s'),
+                    'contract_start' => $_POST['contract_start'] ?? null,
+                    'contract_end' => $_POST['contract_end'] ?? null,
+                    'rent_start' => $_POST['rent_start'] ?? null,
+                    'rent_end' => $_POST['rent_end'] ?? null,
+                    'contract_type' => $_POST['contract_type'],
+                    'contract_status' => 'Suspended'
+                ];
+
+                var_dump($suspensionData);
+
+
+
+                $suspension = (new SuspensionController)->saveSuspension($suspensionData);
+
+                if ($suspension) {
+
+                    $_SESSION['notification'] = [
+                        'message' => 'Contract successfully suspended saved!',
+                        'type' => 'success'
+                    ];
+
+                    header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+            }
+
+        }// END FOR DTD
+
+        if ($typeSus === UNSAS) {
+
+            $transRentData = [
+                'contract_status' => 'Suspended',
+                'id' => $_POST['contract_id'],
+                'contract_end' => $_POST['contract_end'],
+                'updated_at' => (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('Y-m-d H:i:s')
+            ];
+
+            $o = (new ContractController)->updateTempLightContractStatus($transRentData);
+
+            if ($o) {
+
+                $suspensionData = [
+                    'type_of_suspension' => $_POST['type_of_suspension'],
+                    'no_of_days' => $_POST['no_of_days'] ?? 0,
+                    'reason' => $_POST['reason'],
+                    'contract_id' => $_POST['contract_id'],
+                    'account_no' => $_POST['account_no'],
+                    'created_at' => $now = date('Y-m-d H:i:s'),
+                    'updated_at' => $now = date('Y-m-d H:i:s'),
+                    'contract_start' => $_POST['contract_start'] ?? null,
+                    'contract_end' => $_POST['contract_end'] ?? null,
+                    'rent_start' => $_POST['rent_start'] ?? null,
+                    'rent_end' => $_POST['rent_end'] ?? null,
+                    'contract_type' => $_POST['contract_type'],
+                    'contract_status' => 'Suspended'
+                ];
+
+                $suspension = (new SuspensionController)->saveSuspension($suspensionData);
+
+                if ($suspension) {
+
+                    $_SESSION['notification'] = [
+                        'message' => 'Contract successfully suspended saved!',
+                        'type' => 'success'
+                    ];
+
+                    header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+            }
+
+        }
+
+        if (isset($_POST['end_suspension'])) {
+            echo 'end suspension button clicked';
+    }
+        
+    }
+
+    if ($suspensionData['contract_type'] === GOODS ) {
+
+        $typeSus = $suspensionData['type_of_suspension'];
+
+        if ($typeSus === DTD) {
+
+            echo $newEndString = $suspensionData['contract_end'];
+
+            $addTodate = !empty($suspensionData['no_of_days']) ? (int) $suspensionData['no_of_days'] : 0;
+
+            if (!empty($newEndString)) {
+                try {
+                    $newEnd = new DateTime($newEndString);
+                    $newEnd->add(new DateInterval("P{$addTodate}D"));
+                    $newContract_End = $newEnd->format("Y-m-d");
+                    $newContract_End;
+                } catch (Exception $e) {
+                    echo "Error: " . $e->getMessage();
+                }
+            } else {
+                echo "Invalid contract end date.";
+            }
+
+            $transRentData = [
+                'contract_status' => 'Suspended',
+                'id' => $_POST['contract_id'],
+                'contract_end' => $newContract_End ?? null,
+                'updated_at' => (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('Y-m-d H:i:s')
+            ];
+
+            print_r($transRentData);
 
 
             $ii = (new ContractController)->updateTempLightContractStatus($transRentData);
