@@ -306,7 +306,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <div class="input-group">
                             <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                             <?php 
-                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                            $start = date('Y-m-d',strtotime($getContract['rent_start']));
                             ?>
                             <input type="date" id="startDate" class="form-control"
                                 value="<?= $start; ?>" name="contract_start" readonly>
@@ -318,7 +318,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                         <div class="input-group">
                             <?php 
-                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                            $end = date('Y-m-d',strtotime($getContract['rent_end']));
                             ?>
                             <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
                             <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
@@ -334,8 +334,8 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
 
-                    $start = new DateTime($getContract['contract_start']);
-                    $end = new DateTime($getContract['contract_end']);
+                    $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
+                    $end = new DateTime($getContract['contract_end'] ?? $getContract['rent_end']);
                     $today = new DateTime();
 
                     $interval = $today->diff($end);
@@ -720,15 +720,20 @@ include_once '../../../views/layouts/includes/header.php';
                                             <?php $datestart = new DateTime($employement_data['date_start']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php else: ?>
-                                            <span class="badge text-danger">No Start Date</span>
+                                           <?php $datestart = new DateTime($employement_data['rent_start']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php endif; ?>
+
+                                        
+
                                     </td>
                                     <td style="text-align: center !important;">
                                         <?php if (!empty($employement_data['date_end'])): ?>
                                             <?php $datestart = new DateTime($employement_data['date_end']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php else: ?>
-                                            <span class="badge text-danger">No Start Date</span>
+                                             <?php $datestart = new DateTime($employement_data['rent_end']); ?>
+                                            <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php endif; ?>
 
                                     </td>
