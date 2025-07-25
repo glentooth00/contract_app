@@ -12,6 +12,7 @@ use App\Controllers\ContractController;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
+$user_name = $_SESSION['firstname'].' '. $_SESSION['firstname'] .' '.$_SESSION['lastname'];
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
 
