@@ -13,6 +13,11 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 $department = $_SESSION['department'] ?? null;
+$userid = $_SESSION['id'] ?? null;
+
+if($userid){
+    $isLoggedIn = $userid;
+}
 
 if($department === IASD){
     $user_id = $_SESSION['id'];
@@ -816,86 +821,7 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 
- <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <hr>
-
-<div class="offcanvas-body offcanvas-md">
-    <?php foreach ($comments as $comment): ?>
-        <?php 
-            $commentUserId = $comment['user_id'] ?? $comment['audit_id'];
-            $loggedInUserId = $user_id;
-
-            // Get commenter user info
-            $commentUser = (new UserController)->getUserById($commentUserId);
-
-            // Logged-in user info (for department match)
-            $loggedInUser = (new UserController)->getUserById($loggedInUserId);
-
-            // Check if this is the logged-in user's comment
-            $isOwnComment = ($commentUserId == $loggedInUserId);
-
-            // Compare departments
-            $sameDepartment = ( $commentUser['department'] === $loggedInUser['department']);
-
-            // Set badge color by department
-            $department = $commentUser['department'];
-            switch ($department) {
-                case 'IT': $badgeColor = '#0d6efd'; break;
-                case 'ISD': $badgeColor = '#79d39d'; break;
-                case 'CITET': $badgeColor = '#FFB433'; break;
-                case 'IASD': $badgeColor = '#eb5b0047'; break;
-                case 'ISD-MSD': $badgeColor = '#6A9C89'; break;
-                case 'PSPTD': $badgeColor = '#83B582'; break;
-                case 'FSD': $badgeColor = '#4E6688'; break;
-                case 'BAC': $badgeColor = '#123458'; break;
-                case 'AOSD': $badgeColor = '#03A791'; break;
-                case 'GM': $badgeColor = '#A2D5C6'; break;
-                default: $badgeColor = '#e0e0e0'; break;
-            }
-
-            // Alignment and style
-            $alignment = $isOwnComment ? "flex-end" : "flex-start";
-            $textAlign = $isOwnComment ? "right" : "left";
-
-            $bubbleStyle = "
-                background-color: {$badgeColor};
-                padding: 10px;
-                border-radius: 10px;
-                max-width: 80%;
-                text-align: {$textAlign};
-            ";
-
-            $user = $commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname'];
-        ?>
-        <div class="d-flex" style="justify-content: <?= $alignment ?>; margin-bottom: 10px;padding:5px;width:20em;">
-            <div style="<?= $bubbleStyle ?>">
-                <p style="font-size: 13px;"><strong><?= htmlspecialchars($commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname']) ?>:</strong></p>
-                <p style="font-size: 15px;"><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                <span class="badge text-muted"><small><?= date('M-d-Y h:i A', strtotime($comment['created_at'])) ?></small></span>
-            </div>
-        </div>
-    <?php endforeach; ?>
-</div>
-    <form action="comments/comment.php" method="post">
-        <input type="hidden" name="contract_id" value="<?= $contractId ?>">
-        <input type="hidden" name="audit_id" value="<?= $user_id ?>">
-        <input type="hidden" name="user_id" value="<?= $user_id ?>">
-        <input type="hidden" name="user_department" value="<?= $user_department ?>">
-        <hr>
-        <div class="p-3">
-            <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
-        </div>
-        <div class="p-3">
-            <button type="submit" class="float-end" id="submitComment">Comment</button>
-        </div>
-    </form>
-</div>
-<!-- popup notification ---->
-
+ 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -944,7 +870,102 @@ include_once '../../../views/layouts/includes/header.php';
     </script>
 <?php endif; ?>
 
+<!----- off canva for comments ------->
 
+<div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+
+<div class="offcanvas-body offcanvas-md">
+    <div id="comment-container">
+
+    </div>
+        <script>
+
+        const loggedInUserId = <?= json_encode($isLoggedIn); ?>;
+
+            function fetchNotificationCount() {
+                // const userId = 123; // Replace with dynamic value (e.g., from PHP)
+                const contractId = <?= json_encode($contract_id) ?>;
+                console.log(contractId);
+                fetch('contracts/get_messages.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contract_id: contractId
+                    })
+                    })
+                    .then(response => response.json())
+
+
+                    .then(data => {
+                        console.log('Fetched comments:', data);
+
+                        const container = document.getElementById('comment-container');
+                        container.innerHTML = ''; // Clear previous content
+
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(comment => {
+                                const div = document.createElement('div');
+                                div.className = 'comment-box';
+
+                                // Check if the comment belongs to the logged-in user
+                                const isMine = comment.user_id  == loggedInUserId || comment.audit_id  == loggedInUserId;
+                                
+                                div.style.textAlign = isMine ? 'right' : 'left'; // align text based on ownership
+                                div.style.backgroundColor = isMine ? '#d1ffd6' : '#f0f0f0'; // optional styling
+                                div.style.padding = '10px';
+                                div.style.borderRadius = '10px';
+                                div.style.marginBottom = '10px';
+
+                                div.innerHTML = `
+                                    <p><strong>${comment.username}:</strong></p>
+                                    <p>${comment.comment}</p>
+                                    <hr>
+                                    <p><small>${comment.created_at}</small></p>
+                                `;
+                                
+                                container.appendChild(div);
+                            });
+
+                        } else {
+                            container.innerHTML = '<p>No comments found.</p>';
+                        }
+                    })
+
+                }
+            // Call the function
+            fetchNotificationCount();
+
+
+            // Repeat every 10 seconds
+            setInterval(fetchNotificationCount, 10000);
+        </script>
+
+</div>
+
+
+    <form action="comments/comment.php" method="post">
+        <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+        <input type="hidden" name="audit_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_department" value="<?= $user_department ?>">
+        <input type="hidden" name="user_name" value="<?= $user_name ?>">
+        <hr>
+        <div class="p-3">
+            <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
+        </div>
+        <div class="p-3">
+            <button type="submit" class="float-end" id="submitComment">Comment</button>
+        </div>
+    </form>
+</div>
+<!----- off canva for comments ------->
 
 
 
