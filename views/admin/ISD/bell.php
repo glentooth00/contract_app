@@ -19,12 +19,15 @@ function fetchNotificationCount() {
         .then(response => response.json())
         .then(data => {
             const badge = document.getElementById('notification-count');
+
             if (data.count > 0) {
                 badge.textContent = data.count;
                 badge.style.display = 'inline-block';
             } else {
                 badge.style.display = 'none';
             }
+
+            
         })
         .catch(error => {
             console.error('Error fetching notification count:', error);
