@@ -15,6 +15,12 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
 
+$user_name = $_SESSION['firstname'].' '. $_SESSION['firstname'] .' '.$_SESSION['lastname'];
+
+if($userid){
+    $isLoggedIn = $userid;
+}
+
 if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
@@ -1222,6 +1228,8 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
 
+<!----- off canva for comments ------->
+
 <div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
@@ -1230,63 +1238,71 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
     <hr>
 
 <div class="offcanvas-body offcanvas-md">
-    <?php foreach ($comments as $comment): ?>
-        <?php 
-            $commentUserId = $comment['user_id'] ?? $comment['audit_id'];
-            $loggedInUserId = $user_id;
+    <div id="comment-container">
 
-            // Get commenter user info
-            $commentUser = (new UserController)->getUserById($commentUserId);
+    </div>
+        <script>
 
-            // Logged-in user info (for department match)
-            $loggedInUser = (new UserController)->getUserById($loggedInUserId);
+        const loggedInUserId = <?= json_encode($isLoggedIn); ?>;
 
-            // Check if this is the logged-in user's comment
-            $isOwnComment = ($commentUserId == $loggedInUserId);
+            function fetchNotificationCount() {
+                // const userId = 123; // Replace with dynamic value (e.g., from PHP)
+                const contractId = <?= json_encode($contractId) ?>;
+                console.log(contractId);
+                fetch('contracts/get_messages.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contract_id: contractId
+                    })
+                    })
+                    .then(response => response.json())
 
-            // Compare departments
-            $sameDepartment = ( $commentUser['department'] === $loggedInUser['department']);
 
-            // Set badge color by department
-            $department = $commentUser['department'];
-            switch ($department) {
-                case 'IT': $badgeColor = '#0d6efd'; break;
-                case 'ISD': $badgeColor = '#79d39d'; break;
-                case 'CITET': $badgeColor = '#FFB433'; break;
-                case 'IASD': $badgeColor = '#eb5b0047'; break;
-                case 'ISD-MSD': $badgeColor = '#6A9C89'; break;
-                case 'PSPTD': $badgeColor = '#83B582'; break;
-                case 'FSD': $badgeColor = '#4E6688'; break;
-                case 'BAC': $badgeColor = '#123458'; break;
-                case 'AOSD': $badgeColor = '#03A791'; break;
-                case 'GM': $badgeColor = '#A2D5C6'; break;
-                default: $badgeColor = '#e0e0e0'; break;
-            }
+                    .then(data => {
+                        console.log('Fetched comments:', data);
 
-            // Alignment and style
-            $alignment = $isOwnComment ? "flex-end" : "flex-start";
-            $textAlign = $isOwnComment ? "right" : "left";
+                        const container = document.getElementById('comment-container');
+                        container.innerHTML = ''; // Clear previous content
 
-            $bubbleStyle = "
-                background-color: {$badgeColor};
-                padding: 10px;
-                border-radius: 10px;
-                width: 100%;
-                text-align: {$textAlign};
-            ";
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(comment => {
+                                const div = document.createElement('div');
+                                div.className = 'comment-box';
 
-            $user = $commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname'];
+                                // Check if the comment belongs to the logged-in user
+                                const isMine = comment.user_id == loggedInUserId;
+                                
+                                div.style.textAlign = isMine ? 'right' : 'left'; // align text based on ownership
+                                div.style.backgroundColor = isMine ? '#d1ffd6' : '#f0f0f0'; // optional styling
+                                div.style.padding = '10px';
+                                div.style.borderRadius = '10px';
+                                div.style.marginBottom = '10px';
 
-        ?>
+                                div.innerHTML = `
+                                    <p><strong>${comment.username}:</strong></p>
+                                    <p>${comment.comment}</p>
+                                    <hr>
+                                    <p><small>${comment.created_at}</small></p>
+                                `;
+                                
+                                container.appendChild(div);
+                            });
 
-        <div class="d-flex" style="justify-content: <?= $alignment ?>; margin-bottom: 10px;">
-            <div style="<?= $bubbleStyle ?>">
-                <p><strong><?= htmlspecialchars($commentUser['firstname'] . ' ' . $commentUser['middlename'] . ' ' . $commentUser['lastname']) ?>:</strong></p>
-                <p><?= nl2br(htmlspecialchars($comment['comment'])) ?></p>
-                <span class="badge text-muted"><small><?= date('M-d-Y h:i A', strtotime($comment['created_at'])) ?></small></span>
-            </div>
-        </div>
-    <?php endforeach; ?>
+                        } else {
+                            container.innerHTML = '<p>No comments found.</p>';
+                        }
+                    })
+
+                }
+            // Call the function
+            fetchNotificationCount();
+            // Repeat every 10 seconds
+            setInterval(fetchNotificationCount, 10000);
+        </script>
+
 </div>
 
 
@@ -1295,6 +1311,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
         <input type="hidden" name="audit_id" value="<?= $user_id ?>">
         <input type="hidden" name="user_id" value="<?= $user_id ?>">
         <input type="hidden" name="user_department" value="<?= $user_department ?>">
+        <input type="hidden" name="user_name" value="<?= $user_name ?>">
         <hr>
         <div class="p-3">
             <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
@@ -1304,7 +1321,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
         </div>
     </form>
 </div>
-
+<!----- off canva for comments ------->
 
 
 <style>
