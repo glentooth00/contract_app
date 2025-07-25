@@ -83,5 +83,11 @@ class CommentController{
         return $stmt->execute();
     }
 
+    public function getNotifications(){
+        $stmt = $this->db->prepare("SELECT COUNT(*) as comment_count FROM comments WHERE status = '1'");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
 
 }

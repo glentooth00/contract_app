@@ -73,7 +73,8 @@ $account_no = $getContract['account_no'];
         <?php include_once 'bell.php'; ?>
 
             <!-- Comment icon with badge -->
-            <div id="viewComment" class="position-relative">
+             <?php include_once 'message.php'; ?>
+            <!-- <div id="viewComment" class="position-relative">
                 <?php if ($hasCommentCount > 0): ?>
                     <span id="comment-count-badge-<?= $getContract['id'] ?>"
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -95,7 +96,7 @@ $account_no = $getContract['account_no'];
                     data-department="<?= $user_department ?>"
                     class="view-comment-trigger"
                 />
-            </div>
+            </div> -->
             <!-- Three-dot dropdown -->
             <div class="dotMenu" onclick="toggleView()" id="dotMenu">
                 <img src="../../../public/images/dotMenu.svg" width="25px">
