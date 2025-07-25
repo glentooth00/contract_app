@@ -103,11 +103,6 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <!-- <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#powerSupplyModal">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            Add Contract
-        </button> -->
-
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
