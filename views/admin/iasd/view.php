@@ -400,6 +400,13 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
+            <?php if (!empty($getContract['address'])): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
+                            type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['address']; ?>" name="address" readonly></div>
+                </div><?php endif; ?>
+
 
             <?php if (!$getContract['contractPrice']): ?>
 
