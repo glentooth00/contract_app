@@ -17,7 +17,7 @@ $department = $_SESSION['department'] ?? null;
                 <?php 
                     $auditID = $comment['audit_id'];
                     $userID = $comment['user_id'];
-                   echo  $userDept = $comment['department'];
+                    $userDept = $comment['department'];
                     $auditName = (new UserController)->getUserById($auditID);
                     $userName = (new UserController)->getUserById($userID);
                 ?>
