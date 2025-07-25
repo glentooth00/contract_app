@@ -20,14 +20,14 @@ class CommentController{
 
     public function saveComment($data)
     {
-        $query = "INSERT INTO comments (contract_id, audit_id, comment, comment_id, status, department) VALUES (:contract_id, :audit_id, :comment, :comment_id, :status , :department)";
+        $query = "INSERT INTO comments (contract_id, audit_id, comment, comment_id, status, department, username) VALUES (:contract_id, :audit_id, :comment, :comment_id, :status , :department, :username)";
         $stmt = $this->db->prepare($query);
         return $stmt->execute($data);
     }
 
     public function saveCommentForUser($data)
     {
-        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status, department) VALUES (:contract_id, :user_id, :comment, :comment_id, :status, :department)";
+        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status, department, username) VALUES (:contract_id, :user_id, :comment, :comment_id, :status , :department, :username)";
         $stmt = $this->db->prepare($query);
         return $stmt->execute($data);
     }
