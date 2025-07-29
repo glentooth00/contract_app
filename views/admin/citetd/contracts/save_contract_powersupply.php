@@ -48,9 +48,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+          $_SESSION['notification'] = [
+                'message' => 'Power supply Contract successfully added waiting for approval!',
+                'type' => 'success'
+            ];
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit;
 
 
     }
+
+      $_SESSION['notification'] = [
+                'message' => 'Power supply Contract successfully added waiting for approval!',
+                'type' => 'success'
+            ];
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit;
 
 
 
