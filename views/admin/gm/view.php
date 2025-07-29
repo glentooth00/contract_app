@@ -5,6 +5,7 @@ use App\Controllers\EmploymentContractController;
 use App\Controllers\UserController;
 use App\Controllers\CommentController;
 use App\Controllers\FlagController;
+
 session_start();
 
 use App\Controllers\ContractController;
@@ -12,7 +13,8 @@ use App\Controllers\ContractController;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
-$user_name = $_SESSION['firstname'].' '. $_SESSION['firstname'] .' '.$_SESSION['lastname'];
+$user_name = $_SESSION['firstname'].' '. $_SESSION['middlename'] .' '.$_SESSION['lastname'];
+$User = $_SESSION['firstname'].' '.$_SESSION['middlename'].' '.$_SESSION['lastname'];
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
 
@@ -27,7 +29,6 @@ if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
 }
-
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_GET['contract_id'];
