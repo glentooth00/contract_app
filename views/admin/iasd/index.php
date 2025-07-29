@@ -10,6 +10,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\FlagController;
+use App\Controllers\CommentController;
 
 $contracts = (new ContractController)->getContractsForAudit($department);
 
@@ -128,6 +129,17 @@ include_once '../../../views/layouts/includes/header.php';
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
+
+                                 <?php 
+                                    $contractId = $contract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment">
+                                         <?php include_once 'message.php'; ?> 
+                                    </span>
+                                <?php endif; ?>
                             
                                 <?php if(isset($contract['id'])): ?>
                                 <span class="p-3">

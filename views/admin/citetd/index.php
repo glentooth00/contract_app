@@ -4,7 +4,7 @@ session_start();
 $department = $_SESSION['department'] ?? null;
 $role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
-
+$userid = $_SESSION['id'] ?? null;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
@@ -153,7 +153,9 @@ include_once '../../../views/layouts/includes/header.php';
                                     $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
                                 <?php if($hasComment == true): ?>
-                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                    <span class="float-end">
+                                        <?php include_once 'message.php'; ?> 
+                                    </span>
                                 <?php endif; ?>
 
                                   <?php if(isset($contract['id'])): ?>
