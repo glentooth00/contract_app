@@ -19,6 +19,17 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 $userid = $_SESSION['id'] ?? null;
 // $type = $_SESSION['TEMP_LIGHTING'];
 
+if($department === IASD){
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}else{
+    $user_id = $_SESSION['id'];
+    $user_department = $_SESSION['department'];
+}
+if($userid){
+    $isLoggedIn = $userid;
+}
+
 //------------------------- GET CONTRACT NAME ---------------------------//
 
 $contract_id = $_SESSION['contract_id'];
@@ -46,60 +57,8 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="" onclick="history.back(); return false;" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?> 
-            
-            <?php if(!empty($getContract['account_no'])): ?>
-                 <span class="badge" style="color: #9BA4B5;">(<?= $getContract['account_no'] ?>)</span>
-            <?php endif; ?>
+        <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
-
-             <?php 
-                $contractId = $getContract['id'];
-
-                $hasComment = ( new CommentController )->hasComment($contractId);
-                $hasCommentCount = ( new CommentController )->hasCommentCount($contractId);
-
-                
-            ?>
-            <?php if($hasComment == true): ?>
-                <!-- <span class=""  id="hasComment"><img src="../../../public/images/withComment.svg" width="33px" alt="This Contract has comment!"></span> -->
-                
-                <?php endif; ?>
-
-            <div id="viewComment" class="float-end" style="margin-top:-5px;right: -10em;">
-                
-
-                            </span>
-                        <img 
-                src="../../../public/images/viewComment.svg" 
-                width="33px" 
-                alt="This Contract has comment!" 
-                type="button" 
-                data-bs-toggle="offcanvas" 
-                data-bs-target="#offcanvasExample" 
-                aria-controls="offcanvasExample"
-                data-contract-id="<?= $contract['id'] ?>"
-                class="view-comment-trigger"
-            >
-                            
-                                <span style="background-color: red;
-                                text-align: center;
-                                border-radius: 20px;
-                                font-size: 22px;
-                                color: white;
-                                width: 25px;
-                                position: fixed;
-                                right: 20px;
-                            "
-                            
-                        >
-                    <?= $hasCommentCount; ?>
-           
-            </div>
-           
-        </h2>
         <hr>
 
         <?php
@@ -1048,6 +1007,104 @@ include_once '../../../views/layouts/includes/header.php';
     </script>
 <?php endif; ?>
 
+
+
+<!----- off canva for comments ------->
+
+<div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <hr>
+
+<div class="offcanvas-body offcanvas-md">
+    <div id="comment-container">
+
+    </div>
+        <script>
+
+        const loggedInUserId = <?= json_encode($isLoggedIn); ?>;
+
+            function fetchNotificationCount() {
+                // const userId = 123; // Replace with dynamic value (e.g., from PHP)
+                const contractId = <?= json_encode($contractId) ?>;
+                console.log(contractId);
+                fetch('contracts/get_messages.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contract_id: contractId
+                    })
+                    })
+                    .then(response => response.json())
+
+
+                    .then(data => {
+                        console.log('Fetched comments:', data);
+
+                        const container = document.getElementById('comment-container');
+                        container.innerHTML = ''; // Clear previous content
+
+                        if (Array.isArray(data) && data.length > 0) {
+                            data.forEach(comment => {
+                                const div = document.createElement('div');
+                                div.className = 'comment-box';
+
+                                // Check if the comment belongs to the logged-in user
+                                const isMine = comment.user_id == loggedInUserId;
+                                
+                                div.style.textAlign = isMine ? 'right' : 'left'; // align text based on ownership
+                                div.style.backgroundColor = isMine ? '#d1ffd6' : '#f0f0f0'; // optional styling
+                                div.style.padding = '10px';
+                                div.style.borderRadius = '10px';
+                                div.style.marginBottom = '10px';
+
+                                div.innerHTML = `
+                                    <p><strong>${comment.username}:</strong></p>
+                                    <p>${comment.comment}</p>
+                                    <hr>
+                                    <p><small>${comment.created_at}</small></p>
+                                `;
+                                
+                                container.appendChild(div);
+                            });
+
+                        } else {
+                            container.innerHTML = '<p>No comments found.</p>';
+                        }
+                    })
+
+                }
+            // Call the function
+            fetchNotificationCount();
+            // Repeat every 10 seconds
+            setInterval(fetchNotificationCount, 10000);
+        </script>
+
+</div>
+
+
+    <form action="comments/comment.php" method="post">
+        <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+        <input type="hidden" name="audit_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_department" value="<?= $user_department ?>">
+        <input type="hidden" name="user_name" value="<?= $user_name ?>">
+        <hr>
+        <div class="p-3">
+            <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
+        </div>
+        <div class="p-3">
+            <button type="submit" class="float-end" id="submitComment">Comment</button>
+        </div>
+    </form>
+</div>
+<!----- off canva for comments ------->
+
+
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 <style>
     .pageContent {
@@ -1103,6 +1160,59 @@ include_once '../../../views/layouts/includes/header.php';
     #add:hover {
         cursor: pointer;
     }
+     #submitComment{
+                    display: inline-block;
+                    outline: none;
+                    border-width: 0px;
+                    border-radius: 3px;
+                    box-sizing: border-box;
+                    font-size: inherit;
+                    font-weight: 500;
+                    max-width: 100%;
+                    text-align: center;
+                    text-decoration: none;
+                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+                    background: rgb(0, 82, 204);
+                    cursor: pointer;
+                    height: 32px;
+                    line-height: 32px;
+                    padding: 0px 12px;
+                    vertical-align: middle;
+                    width: auto;
+                    font-size: 14px;
+                    color: rgb(255, 255, 255);
+    }
+    #submitComment:hover {
+                        background: rgb(0, 101, 255);
+                        text-decoration: inherit;
+                        transition-duration: 0s, 0.15s;
+                        color: rgb(255, 255, 255);
+                    }
+    #dropMenu{
+        text-align: left;
+        color: black;
+        position: absolute;
+        right: 43px;
+        background-color: #ffffff;
+        z-index: 1;
+        width: 13em;
+        padding: 15px 0px 0px 0px;
+        border-radius: 10px 0px 10px 10px;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        display:none;
+        font-weight: 500;
+        font-size: 16px;
+            a{
+                text-decoration: none;
+                color: #393E46;
+                margin-bottom: 15px;
+
+            }
+
+        }
+     #dropMenu:hover{
+        cursor: pointer;
+     }
 </style>
 
 <script>
@@ -1252,6 +1362,13 @@ include_once '../../../views/layouts/includes/header.php';
     });
 
 
-
+    function toggleView(){
+        var div = document.getElementById("dropMenu");
+        if(div.style.display === "block"){
+            div.style.display = "none";
+        }else{
+            div.style.display = "block"  
+            }
+        }
 
 </script>

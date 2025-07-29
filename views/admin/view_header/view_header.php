@@ -193,4 +193,7 @@ $account_no = $getContract['account_no'];
         color: grey;
         font-size: 25px;
     }
+    #dotMenu:hover{
+        cursor: pointer;
+    }
 </style>

@@ -63,81 +63,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h2 class="mt-2"><a href="list.php" class="text-dark pt-2"><i
-                    class="fa fa-angle-double-left" aria-hidden="true"></i></a>
-            <?= $contract_data ?>
-        
-            <?php 
-                $contractId = $getContract['id'];
-
-                $hasComment = ( new CommentController )->hasComment($contractId);
-                $hasCommentCount = ( new CommentController )->hasCommentCount($contractId);
-
-                
-            ?>
-        
-                    <?php if($hasComment == true): ?>
-                <!-- <span class=""  id="hasComment"><img src="../../../public/images/withComment.svg" width="33px" alt="This Contract has comment!"></span> -->
-                
-                <?php endif; ?>
-
-            <div id="viewComment" class="float-end" style="margin-top:-5px;right: -10em;">
-                
-
-                </span>
-                <img
-                    src="../../../public/images/viewComment.svg" 
-                    width="33px" 
-                    alt="This Contract has comment!" 
-                    type="button" 
-                    data-bs-toggle="offcanvas" 
-                    data-bs-target="#offcanvasExample" 
-                    aria-controls="offcanvasExample"
-                    data-contract-id="<?= $getContract['id'] ?>"
-                    class="view-comment-trigger"
-                />
-
-               
-                
-                                <?php if($hasCommentCount  > 0): ?>
-                         <span style="background-color: red;
-                                text-align: center;
-                                border-radius: 20px;
-                                font-size: 18px;
-                                color: white;
-                                width: 20px;
-                                position: absolute;
-                                right: 20px;
-
-                            ">
-                    <?= $hasCommentCount; ?>
-                    </span>
-                <?php endif; ?>
-                    </span>
-            </span>
-            </div></h2>
-
-          <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
-                    img.addEventListener('click', function () {
-                        const contractId = this.dataset.contractId;
-
-                        // Send a GET request to your PHP script
-                        fetch(`comments/update_status.php?contract_id=${contractId}`)
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log('PHP script response:', data);
-                                // Optional: show confirmation
-                                // alert('Status updated');
-                            })
-                            .catch(error => {
-                                console.error('Error triggering PHP script:', error);
-                            });
-                    });
-                });
-            });
-            </script>
+        <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
         </h2>
             
         <hr>
@@ -843,6 +769,31 @@ include_once '../../../views/layouts/includes/header.php';
                         transition-duration: 0s, 0.15s;
                         color: rgb(255, 255, 255);
                     }
+    #dropMenu{
+    text-align: left;
+    color: black;
+    position: absolute;
+    right: 43px;
+    background-color: #ffffff;
+    z-index: 1;
+    width: 13em;
+    padding: 15px 0px 0px 0px;
+    border-radius: 10px 0px 10px 10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    display:none;
+    font-weight: 500;
+    font-size: 16px;
+        a{
+            text-decoration: none;
+            color: #393E46;
+            margin-bottom: 15px;
+
+        }
+
+    }
+    #dropMenu:hover{
+        cursor: pointer;
+     }
 </style>
 
 <script>
@@ -1003,5 +954,12 @@ include_once '../../../views/layouts/includes/header.php';
             });
         });
 
-
+    function toggleView(){
+        var div = document.getElementById("dropMenu");
+        if(div.style.display === "block"){
+            div.style.display = "none";
+        }else{
+            div.style.display = "block"  
+            }
+        }
 </script>
