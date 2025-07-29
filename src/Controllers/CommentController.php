@@ -20,14 +20,14 @@ class CommentController{
 
     public function saveComment($data)
     {
-        $query = "INSERT INTO comments (contract_id, audit_id, comment, comment_id, status, department) VALUES (:contract_id, :audit_id, :comment, :comment_id, :status , :department)";
+        $query = "INSERT INTO comments (contract_id, audit_id, comment, comment_id, status, department, username) VALUES (:contract_id, :audit_id, :comment, :comment_id, :status , :department, :username)";
         $stmt = $this->db->prepare($query);
         return $stmt->execute($data);
     }
 
     public function saveCommentForUser($data)
     {
-        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status, department) VALUES (:contract_id, :user_id, :comment, :comment_id, :status, :department)";
+        $query = "INSERT INTO comments (contract_id, user_id, comment, comment_id, status, department, username) VALUES (:contract_id, :user_id, :comment, :comment_id, :status , :department, :username)";
         $stmt = $this->db->prepare($query);
         return $stmt->execute($data);
     }
@@ -81,6 +81,12 @@ class CommentController{
         $stmt->bindParam(':status', $data['status']);
         $stmt->bindParam(':contract_id', $data['contract_id']);
         return $stmt->execute();
+    }
+
+    public function getNotifications(){
+        $stmt = $this->db->prepare("SELECT COUNT(*) as comment_count FROM comments WHERE status = '1'");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
     }
 
 

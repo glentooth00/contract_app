@@ -56,7 +56,7 @@ if ($_GET['type'] === TRANS_RENT) {
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Infrastructure Contract has been successfully updated!',
+                     'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -65,7 +65,7 @@ if ($_GET['type'] === TRANS_RENT) {
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Infrastructure Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -124,7 +124,7 @@ if ($_GET['type'] === TEMP_LIGHTING) {
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Employment Contract has been successfully updated!',
+                    'message' => 'Update for r.',
                     'type' => 'success'
                 ];
 
@@ -133,7 +133,7 @@ if ($_GET['type'] === TEMP_LIGHTING) {
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Employment Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -180,7 +180,7 @@ if($_GET['type'] === EMP_CON){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Employment Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -189,7 +189,7 @@ if($_GET['type'] === EMP_CON){
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Employment Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -223,7 +223,10 @@ if($_GET['type'] === INFRA){
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
+        'implementing_dept' => $_GET['implementingDept'],
     ];
+
+    var_dump($EmpUpdate);
 
         $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
@@ -242,7 +245,10 @@ if($_GET['type'] === INFRA){
                     'date_end' => $getCurrenData['contract_end'],
                     'updated_at' => date('Y-m-d H:i:s'),
                     'contractPrice' =>  $price
+                    
                 ];
+
+                var_dump($currentData);
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
@@ -252,7 +258,7 @@ if($_GET['type'] === INFRA){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Infrastructure Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -261,7 +267,7 @@ if($_GET['type'] === INFRA){
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Infrastructure Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -324,7 +330,7 @@ if($_GET['type'] === GOODS){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Goods Contract has been successfully updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -333,7 +339,7 @@ if($_GET['type'] === GOODS){
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Goods Contract has been successfully updated!',
+                     'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -395,7 +401,7 @@ if($_GET['type'] === SACC){
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Contract update is for approval!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -404,7 +410,7 @@ if($_GET['type'] === SACC){
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => 'Contract update is for approval!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 

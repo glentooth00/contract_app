@@ -18,12 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_id' => $_POST['contract_id'],
         'contract_type' => $_POST['contract_type'],
         'type_of_suspension' => $_POST['type_of_suspension'] ?? '',
-        'updated_at' => $_POST['updated_at'],
+        'updated_at' => $_POST['updated_at'] ?? '' ,
         'rent_end' => $_POST['rent_end'] ?? null,
         'contract_end' => $_POST['contract_end'] ?? null,
     ];
-
-    // var_dump($endSuspensionData);
 
     $type = $endSuspensionData['contract_type'];
 
@@ -121,6 +119,103 @@ if ($remainingDays == 0) {
             'id' => $endSuspensionData['contract_id'],
             'contract_status' => 'Active',
         ];
+
+        $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
+
+        if ($resumeContract) {
+
+            $id = $resumeContractData['id'];
+
+            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
+
+            if ($deleteSuspension) {
+                $_SESSION['notification'] = [
+                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
+            }
+
+        }
+
+    }
+
+
+    if ($type === EMP_CON) {
+
+        $resumeContractData = [
+            'contract_end' => $returnDate,
+            'id' => $endSuspensionData['contract_id'],
+            'contract_status' => 'Active',
+        ];
+
+        // var_dump($resumeContractData);
+
+        $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
+
+        if ($resumeContract) {
+
+            $id = $resumeContractData['id'];
+
+            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
+
+            if ($deleteSuspension) {
+                $_SESSION['notification'] = [
+                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
+            }
+
+        }
+
+    }
+
+    if ($type === GOODS) {
+
+        $resumeContractData = [
+            'contract_end' => $returnDate,
+            'id' => $endSuspensionData['contract_id'],
+            'contract_status' => 'Active',
+        ];
+
+        // var_dump($resumeContractData);
+
+        $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
+
+        if ($resumeContract) {
+
+            $id = $resumeContractData['id'];
+
+            $deleteSuspension = (new SuspensionController)->deleteSuspension($id);
+
+            if ($deleteSuspension) {
+                $_SESSION['notification'] = [
+                    'message' => "Contract successfully resumed! Remaining days: $remaining_days",
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit;
+            }
+
+        }
+
+    }
+
+        if ($type === INFRA) {
+
+        $resumeContractData = [
+            'contract_end' => $returnDate,
+            'id' => $endSuspensionData['contract_id'],
+            'contract_status' => 'Active',
+        ];
+
+        // var_dump($resumeContractData);
 
         $resumeContract = (new ContractController)->updateSuspension($resumeContractData);
 

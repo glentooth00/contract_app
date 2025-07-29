@@ -47,9 +47,10 @@ class NotificationController
 
         public function displayAllPendingUpdatesForISD($department)
     {
-        $sql = "SELECT * FROM pending_data WHERE uploader_department = :uploader_dept AND status = 1";
+        $sql = "SELECT * FROM pending_data WHERE uploader_department = :uploader_dept OR assigned_dept = :assigned_dept  AND status = 1";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':uploader_dept',$department);
+        $stmt->bindParam(':assigned_dept',$department);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
@@ -155,6 +156,14 @@ class NotificationController
         return true;
 
     }
+
+    public function getNotifications(){
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM pending_data WHERE status = '1'");
+        $stmt->execute();
+        return (int) $stmt->fetchColumn();
+    }
+
+
 
 
 

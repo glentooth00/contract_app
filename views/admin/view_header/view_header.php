@@ -17,7 +17,9 @@ $account_no = $getContract['account_no'];
             </span>
             <?php endif; ?>
         </h2>
+        
     <?php include_once('../flags/flags.php'); ?>
+
     </div>
     <div class="col-2 col-sm-1 d-flex justify-content-end pe-4">
         <?php 
@@ -26,8 +28,55 @@ $account_no = $getContract['account_no'];
             $hasCommentCount = (new CommentController)->hasCommentCount($contractId);
         ?>
         <div class="d-flex align-items-center gap-2">
+
+         <?php if (isset($department)) { ?>
+
+                <?php switch ($department) {
+                    case 'IT': ?>
+
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case 'ISD': ?>
+
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case 'CITETD': ?>
+
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case 'IASD': ?>
+
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case 'ISD-MSD': ?>
+
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case 'BAC': ?>
+
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department . ' ' . $role ?> user</span>
+
+                        <?php break;
+                    case '': ?>
+
+                    <?php default: ?>
+
+                <?php } ?>
+
+            <?php } else { ?>
+
+        <?php } ?>
+
+        <?php include_once 'bell.php'; ?>
+
             <!-- Comment icon with badge -->
-            <div id="viewComment" class="position-relative">
+             <?php include_once 'message.php'; ?>
+            <!-- <div id="viewComment" class="position-relative">
                 <?php if ($hasCommentCount > 0): ?>
                     <span id="comment-count-badge-<?= $getContract['id'] ?>"
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -49,7 +98,7 @@ $account_no = $getContract['account_no'];
                     data-department="<?= $user_department ?>"
                     class="view-comment-trigger"
                 />
-            </div>
+            </div> -->
             <!-- Three-dot dropdown -->
             <div class="dotMenu" onclick="toggleView()" id="dotMenu">
                 <img src="../../../public/images/dotMenu.svg" width="25px">
@@ -72,6 +121,45 @@ $account_no = $getContract['account_no'];
         </div>
     </div>
 </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Set Flag to this Document</h5>
+        </div>
+        <div class="modal-body">
+           <form action="flag/flag_contract.php" method="POST">
+            <div class="d-flex col-md-12">
+                <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+
+                <div class="col-md-6">
+                <div class="form-check">
+
+                    <input class="form-check-input" type="checkbox" id="attention" name="attention">
+                    <img src="../../../public/images/withComment.svg" width="25px">
+                    <label class="form-check-label" for="attention">Needs Attention</label>
+                </div>
+                </div>
+
+                <div class="col-md-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="review" name="review">
+                    <img src="../../../public/images/underReview.svg" width="25px">
+                    <label class="form-check-label" for="review">Under Review</label>
+                </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Apply Flag</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    </div>
 
             <script>
                 document.addEventListener("DOMContentLoaded", function () {

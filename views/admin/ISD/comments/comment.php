@@ -16,7 +16,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             'comment' => $_POST['comment'],
             'comment_id' => $_POST['contract_id'],
             'status' => '1',
-            'department' => $_POST['user_department']
+            'department' => $_POST['user_department'],
+            'username' => $_POST['user_name'],
         ];
 
         $saveComment = ( new CommentController )->saveComment($commentData);
@@ -40,14 +41,16 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             // echo 'other dept';
         $commentData = [
             'contract_id' => $_POST['contract_id'],
-            'user_id' => $_POST['audit_id'],
+            'user_id' => $_POST['user_id'],
             'comment' => $_POST['comment'],
             'comment_id' => $_POST['contract_id'],
             'status' => '1',
-            'department' => $_POST['user_department']
+            'department' => $_POST['user_department'],
+            'username' => $_POST['user_name'],
         ];
 
         var_dump($commentData);
+
 
         $saveComment = ( new CommentController )->saveCommentForUser($commentData);
 

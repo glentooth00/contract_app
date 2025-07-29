@@ -87,7 +87,11 @@ include_once '../../../views/layouts/includes/header.php';
                 <!-- <span class="badge text-muted">no department assigned</span> -->
 
             <?php } ?>
+
+           <?php include_once 'bell.php' ?>
         </span>
+
+        
         <hr>
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">

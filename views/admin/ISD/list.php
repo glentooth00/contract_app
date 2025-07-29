@@ -94,6 +94,9 @@ include_once '../../../views/layouts/includes/header.php';
                 <!-- <span class="badge text-muted">no department assigned</span> -->
 
             <?php } ?>
+
+            <?php include_once 'bell.php' ?>
+
         </span>
         <hr>
 
