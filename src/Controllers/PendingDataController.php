@@ -36,7 +36,8 @@ class PendingDataController
                     uploader,
                     approval_status,
                     data_type,
-                    status
+                    status,
+                    updated_by
                 ) VALUES (
                     :contract_name,
                     :contract_start,
@@ -51,7 +52,8 @@ class PendingDataController
                     :uploader,
                     :approval_status,
                     :data_type,
-                    :status
+                    :status,
+                    :updated_by
                 )";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_name', $data['contract_name']);
@@ -68,6 +70,7 @@ class PendingDataController
         $stmt->bindParam(':approval_status', $data['approval_status']);
         $stmt->bindParam(':data_type', $data['data_type']);
         $stmt->bindParam(':status', $data['status']);
+        $stmt->bindParam(':updated_by', $data['updated_by']);
         $stmt->execute();
 
         return true;
