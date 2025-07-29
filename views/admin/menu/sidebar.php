@@ -152,7 +152,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php if ($department === CITET ): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
-              <a class="nav-link" id="changepass" href="view_pending_updates.php">
+              <a class="nav-link" id="changepass" href="pending_updates.php">
                 <img width="27px" src="../../../public/images/bell.svg">
                 <span>Notifications
                   <span>
@@ -171,6 +171,30 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
             </li>
           <?php endif; ?>
         <?php endif; ?>
+
+        <?php if ($department === CITET ): ?>
+          <?php if ($role === CHIEF): ?>
+            <li class="nav-item">
+              <a class="nav-link" id="changepass" href="pending_updates.php">
+                <img width="27px" src="../../../public/images/bell.svg">
+                <span>Pending
+                  <span>
+                    <?php
+                    $getLatestActivities = (new NotificationController)->checkRecentUpdates();
+                    ?>
+                    <?php if (!empty($getLatestActivities)): ?>
+                      <span class="badge bg-danger">
+                        <?= $getLatestActivities ?>
+                      </span>
+                    <?php endif; ?>
+                    <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
+                  </span>
+                </span>
+              </a>
+            </li>
+          <?php endif; ?>
+        <?php endif; ?>
+
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
             <a class="nav-link" id="changepass" href="reset_password.php">
