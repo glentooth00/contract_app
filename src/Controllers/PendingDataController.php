@@ -99,7 +99,7 @@ class PendingDataController
 
     public function delete($id)
     {
-        $sql = "DELETE FROM pending_data WHERE contract_id = :id";
+        $sql = "DELETE FROM pending_data WHERE id = :id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 

@@ -84,7 +84,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <label class="badge text-muted">Total Contract Cost</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa-solid fa-peso-sign"></i></span>
-                                <input type="text" class="form-control contract-cost" name="contractPrice"
+                                <input type="text" class="form-control total_contract_cost" name="contractPrice"
                                     placeholder="0.00">
                             </div>
                         </div>
@@ -177,18 +177,16 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 <script>
     let duration = 0;
 
-    document.querySelectorAll('.contract-cost').forEach(input => {
-        input.addEventListener('input', function (e) {
-            let value = e.target.value;
+    document.getElementById('total_contract_cost').addEventListener('input', function (e) {
+        let value = e.target.value;
 
-            // Remove non-numeric characters (except for the decimal point)
-            value = value.replace(/[^\d.]/g, '');
+        // Remove non-numeric characters (except for the decimal point)
+        value = value.replace(/[^\d.]/g, '');
 
-            // Add commas for thousands separator
-            let formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        // Add commas for thousands separator
+        let formattedValue = value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-            e.target.value = formattedValue;
-        });
+        e.target.value = formattedValue;
     });
 
 
