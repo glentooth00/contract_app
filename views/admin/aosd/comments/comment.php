@@ -15,7 +15,10 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             'audit_id' => $_POST['audit_id'],
             'comment' => $_POST['comment'],
             'comment_id' => $_POST['contract_id'],
-            'status' => '1'
+            'status' => '1',
+            'username' => $_POST['user_name'],
+            'department' => $_POST['user_department'],
+            
         ];
 
         $saveComment = ( new CommentController )->saveComment($commentData);
@@ -35,19 +38,21 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }//end of if user_department is IASD
 
         if(in_array($_POST['user_department'], [IT, ISD, CITET, BAC, FSD, AOSD, CHIEF, 'ISD-MSD', CHIEF])){
-        
-            echo 'other dept';
+
         $commentData = [
             'contract_id' => $_POST['contract_id'],
-            'user_id' => $_POST['audit_id'],
+            'user_id' => $_POST['user_id'],
             'comment' => $_POST['comment'],
             'comment_id' => $_POST['contract_id'],
-            'status' => '1'
+            'status' => '1',
+            'username' => $_POST['user_name'],
+            'department' => $_POST['user_department']
         ];
-
         var_dump($commentData);
 
+
         $saveComment = ( new CommentController )->saveCommentForUser($commentData);
+
 
         if($saveComment){
 
@@ -63,8 +68,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
     }//end of if user_department is IASD
 
-    echo 'still here';
 
 }
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+header("Location: " . $_SERVER['HTTP_REFERER']);
 
