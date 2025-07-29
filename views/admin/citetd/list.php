@@ -124,7 +124,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
-
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
@@ -153,6 +152,17 @@ include_once '../../../views/layouts/includes/header.php';
                                 ?>
 
                                 <?php if(isset($contractId)): ?>
+                                     <?php 
+                                    $contractId = $contract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end">
+                                        <?php include_once 'message.php'; ?> 
+                                    </span>
+                                <?php endif; ?>
+                                
                                 <span class="p-3">
                                     <?php
                                         $id = $contractId;

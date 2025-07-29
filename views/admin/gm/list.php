@@ -143,10 +143,13 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?php endif; ?>
                             <?php 
                                     $contractId = $contract['id'];
+
                                     $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
                                 <?php if($hasComment == true): ?>
-                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                    <span class="float-end" id="hasComment">
+                                         <?php include_once 'message.php'; ?> 
+                                    </span>
                                 <?php endif; ?>
                                 <?php if(isset($contractId)): ?>
                                 <span class="p-3">
