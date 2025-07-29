@@ -768,11 +768,11 @@ include_once '../../../views/layouts/includes/header.php';
 
 
     <form action="comments/comment.php" method="post">
-        <input type="text" name="contract_id" value="<?= $contractId ?>">
-        <input type="text" name="audit_id" value="<?= $user_id ?>">
-        <input type="text" name="user_id" value="<?= $user_id ?>">
-        <input type="text" name="user_department" value="<?= $user_department ?>">
-        <input type="text" name="user_name" value="<?= $user_name ?>">
+        <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+        <input type="hidden" name="audit_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_id" value="<?= $user_id ?>">
+        <input type="hidden" name="user_department" value="<?= $user_department ?>">
+        <input type="hidden" name="user_name" value="<?= $user_name ?>">
         <hr>
         <div class="p-3">
             <textarea class="form-control" name="comment" rows="3" placeholder="Leave a comment..."></textarea>
