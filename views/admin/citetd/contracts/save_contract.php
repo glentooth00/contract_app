@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === POST) {
         'uploader_department' => $_POST['uploader_department'],
     ];
 
-    var_dump($data);
+    // var_dump($data);
 
 
     $saveContract = (new ContractController)->storeContract($data);
@@ -46,5 +46,5 @@ if ($_SERVER['REQUEST_METHOD'] === POST) {
     }
     header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
 }
-header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
+// header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
 
