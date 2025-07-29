@@ -31,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'approval_status' => 'Pending',
             'data_type' => 'New',
             'status' => 1,
+            'updated_by' => null
         ];
 
         var_dump($dataValidation);

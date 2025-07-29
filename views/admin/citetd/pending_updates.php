@@ -5,6 +5,7 @@ use App\Controllers\PendingDataController;
 session_start();
 
 $department = $_SESSION['department'];
+$userRole = $_SESSION['user_role'];
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -50,7 +51,7 @@ include_once '../../../views/layouts/includes/header.php';
         <h1>Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
-            <a href="view_pending_updates.php" style="text-decoration: none;">
+            <a href="pending_updates.php" style="text-decoration: none;">
                 <div style="position: relative; display: inline-block; margin-right: 30px;">
                     <?php if (!empty($getLatestActivities)): ?>
                         <span class="badge bg-danger" style="position: absolute; top: -10px; right: -10px;
@@ -418,6 +419,7 @@ include_once '../../../views/layouts/includes/header.php';
                                         </div>
 
                                     <?php else: ?>
+
                                         <a href="view_pending_updates.php?id=<?= $contract['id'] ?>" class="btn btn-success btn-sm"
                                             data-toggle="modal" data-target="#newData">
                                             <i class="fa fa-eye"></i> View New Data
@@ -432,9 +434,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     <div class="modal-header">
                                                         <h5 class="modal-title" id="exampleModalLongTitle">New Data for Approval
                                                         </h5>
-                                                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button> -->
+                                                       
                                                     </div>
                                                     <div class="modal-body">
                                                         <?php
@@ -564,7 +564,12 @@ include_once '../../../views/layouts/includes/header.php';
                                         <div class="modal-footer">
                                             <!-- <button type="button" class="btn btn-secondary"
                                                 data-dismiss="modal">Close</button> -->
-                                                        <button type="submit" class="btn btn-success">Approve</button>
+                                                        <?php if($userRole == CHIEF): ?>
+                                                            <span class="badge bg-secondary text-white fs-5 " style="margin-left:15em;">Waiting for approval</span>
+                                                        <?php endif; ?>
+                                                        <?php if($userRole == 'Manager' ): ?>
+                                                            <button type="submit" class="btn btn-success">Approve</button>
+                                                             <?php endif; ?>
                                                         </form>
                                                     </div>
                                                 </div>
