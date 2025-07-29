@@ -19,56 +19,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_end' => $_POST['contract_end'],
     ];
 
-    var_dump($updateData);
 
-    // $updateSuccessful = (new ContractController)->managerUpdate($updateData);
+    $updateSuccessful = (new ContractController)->managerUpdate($updateData);
 
 
-    // if ($updateSuccessful) {
+    if ($updateSuccessful) {
 
-    //     $deletePrevData = (new PendingDataController)->delete($updateData['id']);
+        var_dump($updateData['id']);
 
-    //     if ($deletePrevData) {
-    //         $_SESSION['notification'] = [
-    //             'message' => 'Update has been approved',
-    //             'type' => 'success',
-    //         ];
-    //     } else {
+        $deletePrevData = (new PendingDataController)->delete($updateData['id']);
 
-    //         echo $id = $updateData['contract_id'];
+            if ($deletePrevData) {
+                $_SESSION['notification'] = [
+                    'message' => 'Update has been approved',
+                    'type' => 'success',
+                ];
 
-    //         $getContract = ( new ContractController )->getContractbyId($id);
+            } else {
 
-    //         $contractHistoryData = [
-    //                 'id' => $getContract['id'],
-    //                 'contract_name' => $getContract['contract_name'],
-    //                 'contract_start' => $getContract['contract_start'],
-    //                 'contract_end' => $getContract['contract_end'],
-    //                 'updated_at' => date('Y-m-d H:i:s'),
-    //         ];
-            
+                echo $id = $updateData['contract_id'];
 
-    //         $updateConHistory = ( new ContractHistoryController )->updateContractHistoryPowerSupply($contractHistoryData);
+                $getContract = ( new ContractController )->getContractbyId($id);
 
-    //         if($updateConHistory){
+                $contractHistoryData = [
+                        'id' => $getContract['id'],
+                        'contract_name' => $getContract['contract_name'],
+                        'contract_start' => $getContract['contract_start'],
+                        'contract_end' => $getContract['contract_end'],
+                        'updated_at' => date('Y-m-d H:i:s'),
+                ];
+                
 
-    //             $_SESSION['notification'] = [
-    //             'message' => 'Update has been approved.',
-    //             'type' => 'success',
-    //             ];
+                $updateConHistory = ( new ContractHistoryController )->updateContractHistoryPowerSupply($contractHistoryData);
 
-    //         }
+                if($updateConHistory){
 
-    //     }
-    // } else {
-    //     $_SESSION['notification'] = [
-    //         'message' => 'Failed to update contract data.',
-    //         'type' => 'error',
-    //     ];
-    // }
-    // header("Location: " . $_SERVER['HTTP_REFERER']);
-    // exit;
+                    $_SESSION['notification'] = [
+                    'message' => 'Update has been approved.',
+                    'type' => 'success',
+                    ];
+
+                }
+
+        }
+    } else {
+        $_SESSION['notification'] = [
+            'message' => 'Failed to update contract data.',
+            'type' => 'error',
+        ];
+    }
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit;
 }
 
-// header("Location: " . $_SERVER['HTTP_REFERER']);
-// exit;
+header("Location: " . $_SERVER['HTTP_REFERER']);
+exit;
