@@ -102,9 +102,10 @@ class PendingDataController
 
     public function delete($id)
     {
-        $sql = "DELETE FROM pending_data WHERE id = :id";
+        $sql = "DELETE FROM pending_data WHERE id = :id OR contract_id = :contract_id";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':contract_id', $id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -189,6 +190,65 @@ class PendingDataController
             ':status' => $data['status'],
             ':updated_by' => $data['updated_by'],
             ':assigned_dept' => $data['implementing_dept']
+        ]);
+
+
+    }
+
+    public function PendingInsertTR($data)
+    {
+        $sql = "INSERT INTO pending_data (
+                contract_id,
+                contract_name,
+                contract_start,
+                created_at,
+                contract_end,
+                updated_at,
+                contract_status,
+                contract_type,
+                uploader_id,
+                uploader,
+                data_type,
+                uploader_department,
+                status,
+                updated_by,
+                address
+            ) VALUES (
+                :contract_id,
+                :contract_name,
+                :contract_start,
+                :created_at,
+                :contract_end,
+                :updated_at,
+                :contract_status,
+                :contract_type,
+                :uploader_id,
+                :uploader,
+                :data_type,
+                :uploader_department,
+                :status,
+                :updated_by,
+                :address
+            )";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_id' => $data['contract_id'],
+            ':contract_name' => $data['contract_name'],
+            ':contract_start' => $data['contract_start'],
+            ':created_at' => $data['created_at'],
+            ':contract_end' => $data['contract_end'],
+            ':updated_at' => $data['updated_at'],
+            ':contract_status' => $data['contract_status'],
+            ':contract_type' => $data['contract_type'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader' => $data['uploader'],
+            ':data_type' => $data['data_type'],
+            ':uploader_department' => $data['uploader_department'],
+            ':status' => $data['status'],
+            ':updated_by' => $data['updated_by'],
+            ':address' => $data['address']
         ]);
 
 

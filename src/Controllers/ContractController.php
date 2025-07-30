@@ -1524,7 +1524,8 @@ class ContractController
                 contract_name = :contract_name,
                 rent_start = :rent_start,
                 rent_end = :rent_end,
-                contract_status = :contract_status
+                contract_status = :contract_status,
+                address = :address
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':uploader_department', $data['uploader_department']);
@@ -1533,6 +1534,7 @@ class ContractController
             $stmt->bindParam(':rent_end', $data['rent_end']);
             $stmt->bindParam(':contract_id', $data['contract_id']);
             $stmt->bindParam(':contract_status', $data['contract_status']);
+            $stmt->bindParam(':address', $data['address']);
 
             $success = $stmt->execute();
 

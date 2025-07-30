@@ -59,11 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_name' => $_POST['contract_name'],
             'rent_start' => $_POST['rent_start'],
             'rent_end' => $_POST['rent_end'],
-            'contract_status' => 'Active', 
+            'contract_status' => 'Active',
+            'address' => $_POST['address']
         ];
+
 
             $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);
 
+            var_dump($updateSuccessful['id']);
 
 
             if( $updateSuccessful ){
