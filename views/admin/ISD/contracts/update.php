@@ -28,10 +28,13 @@ if ($_GET['type'] === TRANS_RENT) {
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
+        'address' => $_GET['address']
     ];
 
+    var_dump($transRentData);
 
-    $contractUpdate = (new PendingDataController )->PendingInsert($transRentData);
+    $contractUpdate = (new PendingDataController )->PendingInsertTR($transRentData);
+
 
         if ($contractUpdate) {
 
