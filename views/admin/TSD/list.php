@@ -10,6 +10,8 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
+use App\Controllers\FlagController;
+use App\Controllers\CommentController;
 
 
 
@@ -123,7 +125,42 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td>
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+
+                                <?php 
+                                    $contractId = $contract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end" id="hasComment">
+                                        <?php include_once 'message.php'; ?> 
+                                    </span>
+                                <?php endif; ?>
+                            
+                                <?php if(isset($contract['id'])): ?>
+                                <span class="p-3">
+                                    <?php
+                                        $id = $contract['id'];
+                                        $getFlag = ( new FlagController )->getFlag($id);
+                                    ?>
+
+                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
+                                        
+                                        <?php if($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
+                                            <?php endif;  ?>
+
+                                            <?php if($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
+                                            <?php endif;  ?>
+                                        
+                                    <?php endif; ?>
+                                </span>
+                            <?php endif; ?>
+
+                            </td>
                             <td class="text-center">
                                 <?php
                                     $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
