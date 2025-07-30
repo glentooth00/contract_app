@@ -227,9 +227,6 @@ include_once '../../../views/layouts/includes/header.php';
                                 class="fa fa-plus" aria-hidden="true" style="width:40px;font-size:25px;"></i> </span>
                     <?php endif; ?>
                     <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
-
-            
-
                         <span id="add" style="float:inline-end;display:inline;" data-bs-toggle="modal"
                             data-bs-target="#transformerModal"> <i class="fa fa-plus" aria-hidden="true"
                                 style="width:40px;font-size:25px;"></i> </span>
@@ -239,7 +236,8 @@ include_once '../../../views/layouts/includes/header.php';
                         style="width:40px;font-size:25px;" alt=""></i></span><span id="edit"
                     style="float: inline-end;display:inline;"><i class="fa fa-pencil-square-o" aria-hidden="true"
                         style="width:40px;font-size:25px;" alt=""></i></span>
-            </div><?php } ?>
+            </div>
+            <?php } ?>
     <?php endif; ?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
