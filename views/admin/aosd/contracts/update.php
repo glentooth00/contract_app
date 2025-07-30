@@ -61,7 +61,7 @@ if (isset($_GET['id'])) {
                 $r = (new ContractHistoryController)->updatedExpired($i);
 
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                    'message' => 'Contract has been updated updated!',
                     'type' => 'success'
                 ];
                 header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
                 $r = (new ContractHistoryController)->updatedExpired($i);
 
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                    'message' => 'Contract has been updated updated!',
                     'type' => 'success'
                 ];
                 header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -164,7 +164,7 @@ if (isset($_GET['id'])) {
 
                     
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                    'message' => 'Contract has been updated updated!',
                     'type' => 'success'
                 ];
                 header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -226,7 +226,7 @@ if (isset($_GET['id'])) {
 
                     
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                    'message' => 'Contract has been updated updated!',
                     'type' => 'success'
                 ];
                 header("Location: " . $_SERVER['HTTP_REFERER']);
@@ -234,7 +234,7 @@ if (isset($_GET['id'])) {
                 }
 
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                    'message' => 'Contract has been updated updated!',
                     'type' => 'success'
                 ];
                 header("Location: " . $_SERVER['HTTP_REFERER']);

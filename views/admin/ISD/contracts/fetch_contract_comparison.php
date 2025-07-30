@@ -76,6 +76,9 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
+                    
+                    
+
                 </div>
 
                 <!-- End Date -->
@@ -112,7 +115,10 @@ if (isset($_POST['contract_id'])) {
                     <input type="hidden" name="uploader_department" value="<?= $pending['uploader_department'] ?>" >
                 </div>
 
-
+                    <div class="mb-3">
+                        <label><strong>Address:</strong></label>
+                        <input type="text" value="<?= $current['address'] ?>" class="form-control" readonly>
+                    </div>
 
 
             </div>
@@ -203,6 +209,11 @@ if (isset($_POST['contract_id'])) {
 
                     <input type="hidden" name="uploader_department" value="<?= $pending['uploader_department'] ?>" >
                 </div>
+
+                <div class="mb-3">
+                        <label><strong>Address:</strong></label>
+                        <input type="text" value="<?= $pending['address'] ?>" class="form-control" readonly>
+                    </div>
             </div>
         </div>
 
