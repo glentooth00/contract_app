@@ -487,34 +487,47 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
                             type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['address']; ?>" name="address" readonly></div>
-                </div> <?php if (!empty($getContract['contractPrice'])): ?>
+                            value="<?= $getContract['address']; ?>" name="address" readonly>
+                        </div>
+                </div> 
+            <?php if($getContract['party_of_second_part']): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Party of Second Part:</label><input
+                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['party_of_second_part']; ?>" name="address" readonly>
+                        </div>
+                </div>
+            <?php endif; ?>
+                
+                
+                <?php if (!empty($getContract['contractPrice'])): ?>
+
 
                 <div class="row col-md-2">
 
                 <script>
 
                     //peso format
-document.addEventListener('DOMContentLoaded', function () {
-    const input = document.getElementById('ttc');
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const input = document.getElementById('ttc');
 
-    // Remove ₱ and commas on focus so user can type a clean number
-    input.addEventListener('focus', function () {
-        let rawValue = input.value.replace(/[₱,]/g, '').trim();
-        input.value = rawValue;
-    });
+                            // Remove ₱ and commas on focus so user can type a clean number
+                            input.addEventListener('focus', function () {
+                                let rawValue = input.value.replace(/[₱,]/g, '').trim();
+                                input.value = rawValue;
+                            });
 
-    // Format input on keyup
-    input.addEventListener('input', function () {
-        let value = input.value.replace(/[₱,]/g, '').trim();
+                            // Format input on keyup
+                            input.addEventListener('input', function () {
+                                let value = input.value.replace(/[₱,]/g, '').trim();
 
-        if (!isNaN(value) && value !== "") {
-            input.value = '₱' + Number(value).toLocaleString();
-        } else if (value === "") {
-            input.value = "";
-        }
-    });
-});
+                                if (!isNaN(value) && value !== "") {
+                                    input.value = '₱' + Number(value).toLocaleString();
+                                } else if (value === "") {
+                                    input.value = "";
+                                }
+                            });
+                        });
                 </script>
                     
                 <?php if(!empty($getContract['contractPrice'])): ?>

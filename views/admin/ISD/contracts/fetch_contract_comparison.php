@@ -212,7 +212,7 @@ if (isset($_POST['contract_id'])) {
 
                 <div class="mb-3">
                         <label><strong>Address:</strong></label>
-                        <input type="text" value="<?= $pending['address'] ?>" class="form-control" readonly>
+                        <input type="text" value="<?= $pending['address'] ?>" name="address" class="form-control" readonly>
                     </div>
             </div>
         </div>
