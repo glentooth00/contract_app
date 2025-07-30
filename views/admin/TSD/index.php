@@ -11,6 +11,7 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\CommentController;
+use App\Controllers\FlagController;
 
 $contracts = (new ContractController)->getContractsByDepartmentAll($department);
 
@@ -132,17 +133,37 @@ include_once '../../../views/layouts/includes/header.php';
                                     style="text-decoration: none; color: black;">
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
-                                   <?php if (isset($contract['account_no'])): ?>
-                                    <span class="badge account_number">(
-                                        <?= $contract['account_no'] ?> )</span>
-                                <?php endif; ?>
                                 <?php 
                                     $contractId = $contract['id'];
+
                                     $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
                                 <?php if($hasComment == true): ?>
-                                    <span class="float-end" id="hasComment"><img src="../../../public/images/withComment.svg" width="23px" alt="This Contract has comment!"></span>
+                                    <span class="float-end" id="hasComment">
+                                        <?php include_once 'message.php'; ?> 
+                                    </span>
                                 <?php endif; ?>
+                            
+                                <?php if(isset($contract['id'])): ?>
+                                <span class="p-3">
+                                    <?php
+                                        $id = $contract['id'];
+                                        $getFlag = ( new FlagController )->getFlag($id);
+                                    ?>
+
+                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
+                                        
+                                        <?php if($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
+                                            <?php endif;  ?>
+
+                                            <?php if($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
+                                            <?php endif;  ?>
+                                        
+                                    <?php endif; ?>
+                                </span>
+                            <?php endif; ?>
                             </td>
                             <td class="text-center">
                             <?php
