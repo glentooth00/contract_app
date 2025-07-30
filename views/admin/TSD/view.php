@@ -17,7 +17,7 @@ $userid = $_SESSION['id'] ?? null;
 $contract_id = $_GET['contract_id'];
 
 $getContract = (new ContractController)->getContractbyId($contract_id);
-
+$contractId = $getContract['id'];
 $contract_data = $getContract['contract_name'];
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
