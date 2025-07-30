@@ -126,7 +126,10 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
+                               <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
+                                    style="text-decoration: none; color: black;">
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                </a>
 
                                 <?php 
                                     $contractId = $contract['id'];
