@@ -15,6 +15,8 @@ require_once __DIR__ . '../../../../vendor/autoload.php';
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
 
+$user_role = $_SESSION['user_role'];
+
 $user_name = $_SESSION['firstname'].' '. $_SESSION['firstname'] .' '.$_SESSION['lastname'];
 
 if($userid){
@@ -215,7 +217,9 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
         <?php endif; ?>
-        
+
+    <?php if(in_array($user_role, ['MSD','HRAD'])): ?>
+
         <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
             <div class="gap-1"><?php if ($getContract['contract_status'] === 'Expired') { ?>
                     <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?> <span id="add"
@@ -232,7 +236,10 @@ include_once '../../../views/layouts/includes/header.php';
                         style="width:40px;font-size:25px;" alt=""></i></span><span id="edit"
                     style="float: inline-end;display:inline;"><i class="fa fa-pencil-square-o" aria-hidden="true"
                         style="width:40px;font-size:25px;" alt=""></i></span>
-            </div><?php } ?>
+            </div>
+            <?php } ?>
+    <?php endif; ?>
+
         <div class="mt-3 col-md-12 d-flex gap-5">
             <div class="row col-md-2"><input type="hidden" id="contractId" style="margin-left:9px;"
                     class="form-control pl-5" value="<?= $getContract['id']; ?>" name="id" readonly>
@@ -365,11 +372,12 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === TRANS_RENT): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['rent_start']));
+                                $rentstart = date('Y-m-d', strtotime($getContract['rent_start']));
+                                $formatted = date('M-d-Y', strtotime($getContract['rent_start']));
                             ?> 
-                            <input type="date" id="startTransRent" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
+                            <input type="text" id="startTransRent2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" name="rent_start" readonly>
+                            <input type="date" id="startTransRent1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -381,9 +389,12 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === TRANS_RENT): ?>
                             <?php
-                            $rentEnd = date('Y-m-d', strtotime($getContract['rent_end']));
+                                $rentEnd = date('Y-m-d', strtotime($getContract['rent_end']));
+                                $formatted2 = date('M-d-Y', strtotime($getContract['rent_end']));
                             ?>
-                        <input type="date" id="endTransRent" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_start" readonly><?php endif; ?>
+                            <input type="text" id="endTransRent2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="endTransRent1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -473,12 +484,12 @@ include_once '../../../views/layouts/includes/header.php';
                         type:</label><input type="text" id="contractType" style="margin-left:9px;"
                         class="form-control pl-5" value="<?= $getContract['contract_type']; ?>" name="contract_type"
                         readonly></div>
-            </div><?php if (!empty($getContract['address'])): ?>
+            </div>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
-                            type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['address']; ?>" name="address" readonly></div>
-                </div><?php endif; ?> <?php if (!empty($getContract['contractPrice'])): ?>
+                </div> <?php if (!empty($getContract['contractPrice'])): ?>
 
                 <div class="row col-md-2">
 
@@ -1481,10 +1492,17 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endGoods = document.getElementById('goodsEnd');
         const infra_start = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
-        const start_rent = document.getElementById('startTransRent');
-        const end_rent = document.getElementById('endTransRent');
+
+        const start_rent2 = document.getElementById('startTransRent2');
+        const start_rent1 = document.getElementById('startTransRent1');
+
+        const end_rent2 = document.getElementById('endTransRent2');
+        const end_rent1 = document.getElementById('endTransRent1');
+
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
+
+        const contractAddress = document.getElementById('address');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1512,8 +1530,15 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             endGoods?.removeAttribute('readonly');
             infra_start?.removeAttribute('readonly');
             infra_end?.removeAttribute('readonly');
-            start_rent?.removeAttribute('readonly');
-            end_rent?.removeAttribute('readonly');
+            contractAddress?.removeAttribute('readonly');
+
+            start_rent1?.removeAttribute('hidden');
+            start_rent2?.setAttribute('hidden','');
+
+            end_rent1?.removeAttribute('hidden');
+            end_rent2?.setAttribute('hidden', '');
+
+
             tempStart?.removeAttribute('readonly');
             tempEnd?.removeAttribute('readonly');
 
@@ -1555,8 +1580,15 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endGoods = document.getElementById('goodsEnd');
         const start_infra = document.getElementById('infraStart');
         const end_infra = document.getElementById('infraEnd');
-        const start_rent = document.getElementById('startTransRent');
-        const end_rent = document.getElementById('endTransRent');
+        const contractAddress =document.getElementById('address');
+
+        const start_rent1 = document.getElementById('startTransRent1');
+        const start_rent2 = document.getElementById('startTransRent2');
+
+        const end_rent1 = document.getElementById('endTransRent1');
+        const end_rent2 = document.getElementById('endTransRent2');
+
+
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
 
@@ -1579,8 +1611,20 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         endGoods?.setAttribute('readonly', true);
         start_infra?.setAttribute('readonly', true);
         end_infra?.setAttribute('readonly', true);
-        start_rent?.setAttribute('readonly', true);
-        end_rent?.setAttribute('readonly', true);
+        contractAddress?.setAttribute('readonly', true);
+
+        start_rent1?.setAttribute('hidden', true);
+        //setting attribute to readonly 
+        start_rent2?.setAttribute('readonly','');
+        //and removes thre hidden attribute
+        start_rent2?.removeAttribute('hidden','');
+
+
+        end_rent1?.setAttribute('hidden', true);
+        end_rent2?.setAttribute('readonly', '');
+        end_rent2?.removeAttribute('hidden','');
+
+
         tempStart?.setAttribute('readonly', true);
         tempEnd?.setAttribute('readonly', true);
 
@@ -1615,8 +1659,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endGoods = document.getElementById('goodsEnd');
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
-        const rent_start =  document.getElementById('startTransRent');
-        const rent_end = document.getElementById('endTransRent');
+        const contractAddress = document.getElementById('address');
+
+        const rent_start =  document.getElementById('startTransRent1');
+
+        const rent_end = document.getElementById('endTransRent1');
+
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
         const implementing_dept = document.getElementById('impDept');
@@ -1655,10 +1703,11 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const startTemplight = encodeURIComponent(tempStart?. value || '');
         const endTemplight = encodeURIComponent(tempEnd?. value || '');
         const impDept = encodeURIComponent(implementing_dept?. value || '');
+        const addressContract = encodeURIComponent(contractAddress?. value || '');
 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}`;
     });
 
     function formatDate(dateString) {

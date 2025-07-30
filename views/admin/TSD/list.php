@@ -1,109 +1,92 @@
 <?php
 session_start();
-
-$department = $_SESSION['department'] ?? null;
-$role = $_SESSION['user_role'] ?? null;
+$userid = $_SESSION['id'];
+$department = $_SESSION['department'];
 $page_title = "List - $department";
-
+$contractTypes = $_SESSION['contract_types'];
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
-use App\Controllers\CommentController;
-use App\Controllers\FlagController;
+
+
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
-if ($getOneLatest) {
-    //     echo '<script>alert("Latest data inserted")</script>';
+// if ($getOneLatest) {
+//     echo '<script>alert("Latest data inserted")</script>';
 // } else {
-    // Optional: echo nothing or a silent message
-    // echo "No contract data available to insert.";
-}
-
+//     //Optional: echo nothing or a silent message
+//     echo "No contract data available to insert.";
+// }
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-<!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center"
-    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div> -->
 
 <div class="main-layout">
 
     <?php include_once '../menu/sidebar.php'; ?>
-
 
     <div class="content-area">
 
         <h1>Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
-            <a href="view_pending_updates.php" style="text-decoration: none;">
-                <div style="position: relative; display: inline-block; margin-right: 30px;">
-                    <?php if (!empty($getLatestActivities)): ?>
-                        <span class="badge bg-danger" style="position: absolute; top: -10px; right: -10px;
-                display: inline-flex; justify-content: center; align-items: center;
-                border-radius: 50%; width: 20px; height: 20px; font-size: 12px;">
-                            <?= $getLatestActivities ?>
-                        </span>
-                    <?php endif; ?>
-                    <img width="25px" src="../../../public/images/bell.svg" alt="Activities need attention">
-                </div>
-            </a>
 
+            <?php if (isset($department)) { ?>
 
-            <?php switch ($department) {
-                case 'IT': ?>
+                <?php switch ($department) {
+                    case 'IT': ?>
 
-                    <span class="badge p-2" style="background-color: #0d6efd;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
-                    <?php break;
-                case 'ISD': ?>
+                        <?php break;
+                    case 'ISD-HRAD': ?>
 
-                    <span class="badge p-2" style="background-color: #3F7D58;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
-                    <?php break;
-                case 'CITET': ?>
+                        <?php break;
+                    case 'CITETD': ?>
 
-                    <span class="badge p-2" style="background-color: #FFB433;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
 
-                    <?php break;
-                case 'IASD': ?>
+                        <?php break;
+                    case 'IASD': ?>
 
-                    <span class="badge p-2" style="background-color: #EB5B00;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
 
-                    <?php break;
-                case 'ISD-MSD': ?>
+                        <?php break;
+                    case 'ISD-MSD': ?>
 
-                    <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
 
-                    <?php break;
-                case 'BAC': ?>
+                        <?php break;
+                    case 'BAC': ?>
 
-                    <span class="badge p-2" style="background-color: #3B6790;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
 
-                    <?php break;
-                case '': ?>
+                        <?php break;
+                    case '': ?>
 
-                <?php default: ?>
-                    <!-- <span class="badge text-muted">no department assigned</span> -->
+                    <?php default: ?>
+                        <!-- <span class="badge text-muted">no department assigned</span> -->
+                <?php } ?>
+
+            <?php } else { ?>
+
+                <!-- <span class="badge text-muted">no department assigned</span> -->
+
             <?php } ?>
-
-            <!-- <span class="badge text-muted">no department assigned</span> -->
-
         </span>
         <hr>
 
         <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
+
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -124,6 +107,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div>
         </div>
+
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
@@ -139,50 +123,9 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td> <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
-                                    style="text-decoration: none; color: black;">
-                                    <!-- Use htmlspecialchars to prevent XSS -->
-                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
-                                </a>
-                        
-                            <?php 
-                                    $contractId = $contract['id'];
-
-                                    $hasComment = ( new CommentController )->hasComment($contractId);
-                                ?>
-
-                                <?php if(isset($contractId)): ?>
-                                     <?php 
-                                    $contractId = $contract['id'];
-
-                                    $hasComment = ( new CommentController )->hasComment($contractId);
-                                ?>
-                                <?php if($hasComment == true): ?>
-                                    <span class="float-end">
-                                        <?php include_once 'message.php'; ?> 
-                                    </span>
-                                <?php endif; ?>
-                                
-                                <span class="p-3">
-                                    <?php
-                                        $id = $contractId;
-                                        $getFlag = ( new FlagController )->getFlag($id);
-                                    ?>
-                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
-                                        
-                                        <?php if($getFlag['flag_type'] === UR): ?>
-                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
-                                            <?php endif;  ?>
-                                            <?php if($getFlag['flag_type'] === NA): ?>
-                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
-                                            <?php endif;  ?>
-                                    <?php endif; ?>
-                                </span>
-                            <?php endif; ?>
-
-                        </td>
+                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
                             <td class="text-center">
-                               <?php
+                                <?php
                                     $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
                                     switch ($type) {
@@ -211,11 +154,10 @@ include_once '../../../views/layouts/includes/header.php';
                                             $badgeColor = '#03A791';
                                             break;
                                         default:
-                                            $badgeColor = '#FAB12F'; // Fallback color
+                                            $badgeColor = '#FAB12F'; // fallback value
                                             break;
                                     }
                                     ?>
-
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
@@ -241,9 +183,15 @@ include_once '../../../views/layouts/includes/header.php';
                                         class="btn btn-success btn-sm">
                                         <i class="fa fa-eye"></i> View
                                     </a>
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                        <i class="fa fa-trash"></i> Delete
-                                    </a>
+
+                                    <?php if ($department === BAC): ?>
+
+                                    <?php else: ?>
+                                        <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                            <i class="fa fa-trash"></i> Delete
+                                        </a>
+                                    <?php endif; ?>
+
                                 </div>
                             </td>
                         </tr>
@@ -255,15 +203,11 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
 
 <?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
+
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
@@ -352,9 +296,6 @@ include_once '../../../views/layouts/includes/header.php';
         width: 200px;
         /* Adjust width as needed */
     }
-        #attention, #review:hover{
-        cursor: pointer;
-    }
 </style>
 
 <script>
@@ -384,11 +325,12 @@ include_once '../../../views/layouts/includes/header.php';
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
             // Redirect to deletion endpoint (adjust URL to match your backend)
-            window.location.href = 'contracts/delete.php?id=' + selectedContractId;
+            window.location.href = 'procurement/delete_contract.php?id=' + selectedContractId;
         }
     });
 
-    //----------------DAtatables
+    //----------------DAtatables --------------------------------//
+
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
 
@@ -421,7 +363,7 @@ include_once '../../../views/layouts/includes/header.php';
         }
     });
 
+    //----------------DAtatables --------------------------------//
 
 
-    //----------------DAtatables
 </script>
