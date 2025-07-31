@@ -63,10 +63,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'address' => $_POST['address']
         ];
 
+        var_dump($updateData);
+
 
             $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);
-
-            var_dump($updateSuccessful['id']);
 
 
             if( $updateSuccessful ){
