@@ -53,7 +53,6 @@ include_once '../../views/layouts/includes/header.php';
     <span class="sr-only">Loading...</span>
     </div>
 </div>
-    </div>
 
 <div class="pageContent">
     <div class="sideBar bg-dark">
@@ -286,7 +285,7 @@ include_once '../../views/layouts/includes/header.php';
         </div>
     </div>
 </div>
-</div>
+
 
 <!-- modals for every user ---->
 

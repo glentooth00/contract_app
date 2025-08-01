@@ -181,5 +181,16 @@ class UserController {
 
     }
     
+    public function getUserById($id){
+
+        $sql = "SELECT * FROM users WHERE id = :id";
+        $stmt =  $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result;
+
+    }
+    
 
 }

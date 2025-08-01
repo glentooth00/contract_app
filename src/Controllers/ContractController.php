@@ -34,6 +34,7 @@ class ContractController {
     
 
     public function saveContract($data) {
+        
         $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id, uploader_department, department_assigned) 
                   VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :uploader_department, :department_assigned)";
         
@@ -451,7 +452,17 @@ class ContractController {
     }
 
     
-    
+    public function getContractbyId($id){
+        
+        $sql = "SELECT * FROM contracts WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('id',$id );
+        $stmt->execute();
+        $result =  $stmt->fetch();
+
+        return $result;
+
+    }
     
 
     
