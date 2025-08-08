@@ -115,11 +115,20 @@ if (isset($_POST['contract_id'])) {
                     <input type="hidden" name="uploader_department" value="<?= $pending['uploader_department'] ?>" >
                 </div>
 
-                    <div class="mb-3">
-                        <label><strong>Address:</strong></label>
-                        <input type="text" value="<?= $current['address'] ?>" class="form-control" readonly>
-                    </div>
+                <div class="mb-3">
+                    <label><strong>Address:</strong></label>
+                    <input type="text" value="<?= $current['address'] ?>" class="form-control" readonly>
+                </div>
 
+                <div class="mb-3">
+                    <label><strong>Tc no:</strong></label>
+                    <input type="text" value="<?= $current['tc_no'] ?>" class="form-control" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label><strong>Account #</strong></label>
+                    <input type="text" value="<?= $current['account_no'] ?>" class="form-control" readonly>
+                </div>
 
             </div>
         </div>
@@ -214,7 +223,20 @@ if (isset($_POST['contract_id'])) {
                         <label><strong>Address:</strong></label>
                         <input type="text" value="<?= $pending['address'] ?>" name="address" class="form-control" readonly>
                     </div>
-            </div>
+
+                    <div class="mb-3">
+                        <label><strong>Tc no:</strong></label>
+                        <input type="text" value="<?= $pending['tc_no'] ?>" name="tc_no" class="form-control" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label><strong>Account #:</strong></label>
+                        <input type="text" value="<?= $pending['account_no'] ?>" name="account_no" class="form-control" readonly>
+                    </div>
+
+                </div>
+
+              
         </div>
 
         <div class="p-2 mt-4">

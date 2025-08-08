@@ -214,7 +214,9 @@ class PendingDataController
                 uploader_department,
                 status,
                 updated_by,
-                address
+                address,
+                tc_no,
+                account_no
             ) VALUES (
                 :contract_id,
                 :contract_name,
@@ -230,7 +232,9 @@ class PendingDataController
                 :uploader_department,
                 :status,
                 :updated_by,
-                :address
+                :address,
+                :tc_no,
+                :account_no
             )";
 
         $stmt = $this->db->prepare($sql);
@@ -250,7 +254,9 @@ class PendingDataController
             ':uploader_department' => $data['uploader_department'],
             ':status' => $data['status'],
             ':updated_by' => $data['updated_by'],
-            ':address' => $data['address']
+            ':address' => $data['address'],
+            'tc_no' => $data['tc_no'],
+            ':account_no' => $data['account_no']
         ]);
 
 
