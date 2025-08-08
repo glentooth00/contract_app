@@ -28,7 +28,9 @@ if ($_GET['type'] === TRANS_RENT) {
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-        'address' => $_GET['address']
+        'address' => $_GET['address'],
+        'tc_no' => $_GET['tcNumber'],
+        'account_no' => $_GET['account_no']
     ];
 
 
