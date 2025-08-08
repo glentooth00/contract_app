@@ -484,12 +484,32 @@ include_once '../../../views/layouts/includes/header.php';
                         class="form-control pl-5" value="<?= $getContract['contract_type']; ?>" name="contract_type"
                         readonly></div>
             </div>
-                <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
-                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['address']; ?>" name="address" readonly>
-                        </div>
-                </div> 
+
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
+                    type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['address']; ?>" name="address" readonly>
+                </div>
+            </div>
+
+            <?php if($getContract['tc_no']): ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">TC no:</label><input
+                    type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['tc_no']; ?>" name="address" readonly>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['account_no']): ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Account #:</label><input
+                    type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['account_no']; ?>" name="address" readonly>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <?php if($getContract['party_of_second_part']): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Party of Second Part:</label><input

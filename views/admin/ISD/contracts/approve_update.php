@@ -9,7 +9,7 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if($_POST['contract_type'] === TEMP_LIGHTING){
 
@@ -19,7 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_name' => $_POST['contract_name'],
             'contract_start' => $_POST['contract_start'],
             'contract_end' => $_POST['contract_end'],
-            'contract_status' => 'Active', 
+            'contract_status' => 'Active',
+            'address' => $_POST['address'],
         ];
 
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
@@ -62,8 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_status' => 'Active',
             'address' => $_POST['address']
         ];
-
-        var_dump($updateData);
 
 
             $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);

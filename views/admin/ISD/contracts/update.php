@@ -31,7 +31,6 @@ if ($_GET['type'] === TRANS_RENT) {
         'address' => $_GET['address']
     ];
 
-    var_dump($transRentData);
 
     $contractUpdate = (new PendingDataController )->PendingInsertTR($transRentData);
 
@@ -99,6 +98,7 @@ if ($_GET['type'] === TEMP_LIGHTING) {
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
+        'address' => $_GET['address']
     ];
 
     $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
