@@ -9,7 +9,7 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if($_POST['contract_type'] === TEMP_LIGHTING){
 
@@ -61,7 +61,9 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
             'rent_start' => $_POST['rent_start'],
             'rent_end' => $_POST['rent_end'],
             'contract_status' => 'Active',
-            'address' => $_POST['address']
+            'address' => $_POST['address'],
+            'tc_no' => $_POST['tc_no'],
+            'account_no' => $_POST['account_no']
         ];
 
 
@@ -88,10 +90,23 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
                             }
 
+                            $_SESSION['notification'] = [
+                            'message' => 'Update has been approved.',
+                            'type' => 'success',
+                            ];
+
                             header("Location: " . $_SERVER['HTTP_REFERER']);
                             exit;
 
                     }
+
+                    $_SESSION['notification'] = [
+                            'message' => 'Update has been approved.',
+                            'type' => 'success',
+                            ];
+
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;   
 
             }
     }
@@ -176,57 +191,5 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
     }
 
-
-
-
-
-
-
-//     if ($updateSuccessful) {
-
-//         $deletePrevData = (new PendingDataController)->delete($updateData['id']);
-
-//         if ($deletePrevData) {
-//             $_SESSION['notification'] = [
-//                 'message' => 'Update has been approved',
-//                 'type' => 'success',
-//             ];
-//         } else {
-
-//             $id = $updateData['contract_id'];
-
-//             $getContract = ( new ContractController )->getContractbyId($id);
-
-//             $contractHistoryData = [
-//                     'id' => $getContract['id'],
-//                     'contract_name' => $getContract['contract_name'],
-//                     'contract_start' => $getContract['contract_start'],
-//                     'contract_end' => $getContract['contract_end'],
-//                     'updated_at' => date('Y-m-d H:i:s'),
-//             ];
-            
-
-//             $updateConHistory = ( new ContractHistoryController )->updateContractHistoryPowerSupply($contractHistoryData);
-
-//             if($updateConHistory){
-
-//                 $_SESSION['notification'] = [
-//                 'message' => 'Update has been approved.',
-//                 'type' => 'success',
-//                 ];
-
-//             }
-
-//         }
-//     } else {
-//         $_SESSION['notification'] = [
-//             'message' => 'Failed to update contract data.',
-//             'type' => 'error',
-//         ];
-//     }
-//     header("Location: " . $_SERVER['HTTP_REFERER']);
-//     exit;
 }
 
-// header("Location: " . $_SERVER['HTTP_REFERER']);
-// exit;

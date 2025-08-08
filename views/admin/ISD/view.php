@@ -495,7 +495,7 @@ include_once '../../../views/layouts/includes/header.php';
             <?php if($getContract['tc_no']): ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">TC no:</label><input
-                    type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                    type="text" id="tc_no" style="margin-left:9px;" class="form-control pl-5"
                     value="<?= $getContract['tc_no']; ?>" name="address" readonly>
                 </div>
             </div>
@@ -504,8 +504,8 @@ include_once '../../../views/layouts/includes/header.php';
             <?php if($getContract['account_no']): ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Account #:</label><input
-                    type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
-                    value="<?= $getContract['account_no']; ?>" name="address" readonly>
+                    type="text" id="accountNumber" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['account_no']; ?>" name="account_no" readonly>
                 </div>
             </div>
             <?php endif; ?>
@@ -1138,8 +1138,9 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                             </div>
                             <div class="col-md-3 p-2" style="width: 13em;">
                                 <div>
-                                    <lable class="badge text-muted">Account no.</lable><input type="text"
-                                        class="form-control" value="<?= $getContract['account_no'] ?>" name="account_no"
+                                    <lable class="badge text-muted">Account no.</lable>
+                                    <input type="text"
+                                        class="form-control"  value="<?= $getContract['account_no'] ?>" name="account_no"
                                         required>
                                 </div>
                             </div>
@@ -1538,6 +1539,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const tempEnd = document.getElementById('tempLightEnd');
 
         const contractAddress = document.getElementById('address');
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1576,6 +1580,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
             tempStart?.removeAttribute('readonly');
             tempEnd?.removeAttribute('readonly');
+            tcNumber?.removeAttribute('readonly');
+            accountNo?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1627,6 +1633,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
 
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
 
@@ -1662,6 +1671,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         tempStart?.setAttribute('readonly', true);
         tempEnd?.setAttribute('readonly', true);
+        tcNumber?.setAttribute('readonly',true);
+        accountNo?.setAttribute('readonly',true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1695,6 +1706,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const contractAddress = document.getElementById('address');
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
 
         const rent_start =  document.getElementById('startTransRent1');
 
@@ -1739,10 +1752,10 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endTemplight = encodeURIComponent(tempEnd?. value || '');
         const impDept = encodeURIComponent(implementing_dept?. value || '');
         const addressContract = encodeURIComponent(contractAddress?. value || '');
-
-        // Redirect with query parameters
+        const tcNo = encodeURIComponent(tcNumber?. value || '');
+        const account_no = encodeURIComponent(accountNo?. value || '' );       // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}`;
     });
 
     function formatDate(dateString) {
