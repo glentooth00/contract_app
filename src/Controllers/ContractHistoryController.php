@@ -161,6 +161,18 @@ class ContractHistoryController
 
     }
 
+        public function updateStatusBycontract_id($stat)
+    {
+        $sql = 'UPDATE contract_history SET status = :status WHERE contract_id = :contract_id ';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':status', $stat['status'], PDO::PARAM_STR);
+        $stmt->bindParam(':contract_id', $stat['id']);
+        $stmt->execute();
+
+        return;
+
+    }
+
     public function updateContractHistory($data){
 
         $sql = "UPDATE contract_history SET
