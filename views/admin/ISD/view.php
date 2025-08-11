@@ -335,6 +335,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
+            
             <?php if($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
@@ -484,13 +485,15 @@ include_once '../../../views/layouts/includes/header.php';
                         class="form-control pl-5" value="<?= $getContract['contract_type']; ?>" name="contract_type"
                         readonly></div>
             </div>
-
+            
+            <?php if($getContract['address']): ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
                     type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
                     value="<?= $getContract['address']; ?>" name="address" readonly>
                 </div>
             </div>
+            <?php endif; ?>
 
             <?php if($getContract['tc_no']): ?>
             <div class="row col-md-2">
@@ -832,19 +835,24 @@ include_once '../../../views/layouts/includes/header.php';
                                                     </div>
                                                 </div>
                                             </div><?php else: ?> No file <?php endif; ?>
-                                    </td><?php if ($employement_data['contract_type'] === EMP_CON): ?>
+                                    </td>
+                                    
+                                    <?php if ($employement_data['contract_type'] === EMP_CON): ?>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['date_start'])): ?>
                                                 <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
                                                     class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
-                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                                <span class="badge text-danger">No Start Date</span>
+                                            <?php endif; ?>
                                         </td>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['date_end'])): ?>
                                                 <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
                                                     class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
                                                 <span class="badge text-danger">No Start Date</span><?php endif; ?>
-                                        </td><?php endif; ?>
+                                        </td>
+                                    <?php endif; ?>
+
                                     <?php if ($employement_data['contract_type'] === TRANS_RENT): ?>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['rent_start'])): ?>
