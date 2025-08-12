@@ -621,7 +621,8 @@ class ContractController
                     -- department_assigned = :department_assigned,
                     updated_at = :updated_at,
                     contract_status = :contract_status,
-                    contractPrice = :contractPrice
+                    contractPrice = :contractPrice,
+                    contract_type = :contract_type
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -634,6 +635,7 @@ class ContractController
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam('contract_status', $data['contract_status']);
         $stmt->bindParam('contractPrice', $data['contractPrice']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
         // $stmt->bindParam('action_status', $data['action_status']);
 
         $stmt->execute();
