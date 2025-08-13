@@ -119,7 +119,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_name' => $_POST['contract_name'],
             'contract_start' => $_POST['contract_start'],
             'contract_end' => $_POST['contract_end'],
-            'contract_status' => 'Active', 
+            'contract_status' => 'Active',
+            'supplier' => $_POST['supplier']
         ];
 
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
