@@ -157,57 +157,60 @@ if($_GET['type'] === EMP_CON){
         'start' => $_GET['EmpStart'],
         'end' => $_GET['ConEmpEnd'],
         'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+        'created_at' => date('Y-m-d H:i:s'),
         'contract_status' => 'Active',
-        'contract_type' => $_GET['contractType']
+        'contract_type' => $_GET['contractType'],
+        'status' => 1,
+        'uploader_department' => 'ISD'
     ];
 
-        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
-        var_dump($contractUpdate);
-
-        // if ($contractUpdate) {
-
-        //     $id = $EmpUpdate['id'];
-
-        //     $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
-
-        //     if(!empty($getCurrenData)){
-
-        //         $currentData = [
-        //             'id' => $getCurrenData['id'],
-        //             'contract_name' => $getCurrenData['contract_name'],
-        //             'date_start' => $getCurrenData['contract_start'],
-        //             'date_end' => $getCurrenData['contract_end'],
-        //             'updated_at' => date('Y-m-d H:i:s')
-        //         ];
-
-        //         $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
-
-        //         var_dump($updateContractHistory);
-
-        //         if($updateContractHistory){
+        $contractUpdate = (new PendingDataController )->employmentInsert($EmpUpdate);
 
 
-        //         $_SESSION['notification'] = [
-        //               'message' => 'Update successful. This record is now pending further review.',
-        //             'type' => 'success'
-        //         ];
+        if ($contractUpdate) {
 
-        //         header("Location: " . $_SERVER['HTTP_REFERER']);
+            $id = $EmpUpdate['id'];
 
-        //         }
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
-        //         $_SESSION['notification'] = [
-        //               'message' => 'Update successful. This record is now pending further review.',
-        //             'type' => 'success'
-        //         ];
+            if(!empty($getCurrenData)){
 
-        //         header("Location: " . $_SERVER['HTTP_REFERER']);
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
 
-        //     }
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                var_dump($updateContractHistory);
+
+                if($updateContractHistory){
 
 
-        // }
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
 
     
 }

@@ -1560,5 +1560,21 @@ class ContractController
         }
     }
 
+    public function updateEmpContract(){
+
+        $sql = "UPDATE contracts SET
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end
+                WHERE id = :contract_id";
+            
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        return $stmt->execute(); // returns true if successful
+    }
+
 
 }
