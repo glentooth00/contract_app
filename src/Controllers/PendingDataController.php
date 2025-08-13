@@ -237,7 +237,7 @@ class PendingDataController
             ':status' => $data['status'],
             ':updated_by' => $data['updated_by'],
             ':assigned_dept' => $data['implementing_dept'] ?? '',
-            ':address' => $data['address']
+            ':address' => $data['address'] ?? ''
         ]);
 
 
