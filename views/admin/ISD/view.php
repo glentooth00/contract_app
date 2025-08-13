@@ -593,11 +593,12 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
 
                 <?php endif; ?> <?php if (!$getContract['supplier']): ?> <?php else: ?>
-                <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
-                            type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['supplier']; ?>" name="contract_type" readonly></div>
-                </div><?php endif; ?> 
+                    <div class="row col-md-2">
+                        <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
+                                type="text" id="goodsSupplier" style="margin-left:9px;" class="form-control pl-5"
+                                value="<?= $getContract['supplier']; ?>" name="contract_type" readonly></div>
+                    </div>
+                <?php endif; ?> 
 
                 <?php if ($getContract['contract_type'] === INFRA): ?>
                     <?php if(!empty($getContract['implementing_dept'])): ?>
@@ -1597,7 +1598,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const accountNo = document.getElementById('accountNumber');
         const contractInput = document.getElementById('contractTypeInput');
         const contractSelect = document.getElementById('contractTypeSelect');
-
+        const supplier = document.getElementById('goodsSupplier');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1662,7 +1663,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             contractInput?.setAttribute('hidden', true);
 
             contractSelect?.removeAttribute('hidden');
-            
+
+            supplier?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1733,6 +1735,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
+        const supplier = document.getElementById('goodsSupplier');
 
         // Set them back to readonly/disabled
         nameInput?.setAttribute('readonly', true);
@@ -1781,6 +1784,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         contractInput?.removeAttribute('hidden', true);
         contractInput?.setAttribute('readonly', true);
 
+        supplier?.setAttribute('readonly', true);
+
         empCon2?.removeAttribute('hidden');
         empCon2?.setAttribute('readonly', true);
 
@@ -1825,6 +1830,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const contractAddress = document.getElementById('address');
         const tcNumber = document.getElementById('tc_no');
         const accountNo = document.getElementById('accountNumber');
+        const supplier = document.getElementById('goodsSupplier');
 
         const empStart = document.getElementById('empConStart2');
 
@@ -1875,10 +1881,11 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const addressContract = encodeURIComponent(contractAddress?. value || '');
         const tcNo = encodeURIComponent(tcNumber?. value || '');
         const account_no = encodeURIComponent(accountNo?. value || '' );   
-        const contractSelect = encodeURIComponent(contractTypeSelect?. value || '');  
+        const contractSelect = encodeURIComponent(contractTypeSelect?. value || ''); 
+        const goodsSupp = encodeURIComponent(supplier?.value || ''); 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}`;
     });
 
     function formatDate(dateString) {

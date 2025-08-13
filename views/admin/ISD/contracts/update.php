@@ -214,7 +214,6 @@ if($_GET['type'] === EMP_CON){
 
     
 }
-
 //update done
 if($_GET['type'] === INFRA){
 
@@ -292,7 +291,6 @@ if($_GET['type'] === INFRA){
 
     
 }
-
 //update done
 if($_GET['type'] === GOODS){
 
@@ -313,8 +311,8 @@ if($_GET['type'] === GOODS){
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
+        'supplier' => $_GET['goodsSupplier']
     ];
-    
         $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
@@ -359,8 +357,6 @@ if($_GET['type'] === GOODS){
 
         }
 }
-
-
 //update done
 if($_GET['type'] === SACC){
 
