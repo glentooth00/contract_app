@@ -11,6 +11,7 @@ require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 
+
 if ($_GET['type'] === TRANS_RENT) {
 
     $transRentData = [
@@ -156,10 +157,16 @@ if($_GET['type'] === EMP_CON){
         'start' => $_GET['EmpStart'],
         'end' => $_GET['ConEmpEnd'],
         'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
-        'contract_status' => 'Active'
+        'created_at' => date('Y-m-d H:i:s'),
+        'contract_status' => 'Active',
+        'contract_type' => $_GET['contractType'],
+        'status' => 1,
+        'uploader_department' => 'ISD'
     ];
-    
-        $contractUpdate = (new ContractController)->updateContract($EmpUpdate);
+
+
+        $contractUpdate = (new PendingDataController )->employmentInsert($EmpUpdate);
+
 
         if ($contractUpdate) {
 

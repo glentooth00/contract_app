@@ -621,7 +621,8 @@ class ContractController
                     -- department_assigned = :department_assigned,
                     updated_at = :updated_at,
                     contract_status = :contract_status,
-                    contractPrice = :contractPrice
+                    contractPrice = :contractPrice,
+                    contract_type = :contract_type
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -634,6 +635,7 @@ class ContractController
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam('contract_status', $data['contract_status']);
         $stmt->bindParam('contractPrice', $data['contractPrice']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
         // $stmt->bindParam('action_status', $data['action_status']);
 
         $stmt->execute();
@@ -1556,6 +1558,22 @@ class ContractController
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
             return false;
         }
+    }
+
+    public function updateEmpContract(){
+
+        $sql = "UPDATE contracts SET
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end
+                WHERE id = :contract_id";
+            
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        return $stmt->execute(); // returns true if successful
     }
 
 
