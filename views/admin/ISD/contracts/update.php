@@ -313,12 +313,9 @@ if($_GET['type'] === GOODS){
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-
-
     ];
-
     
-    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
 

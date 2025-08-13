@@ -307,31 +307,36 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === GOODS): ?>
-                <div class="row col-md-2">
+
+              <?php if($getContract['contract_type'] === GOODS ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
                             ?> 
-                            <input type="date" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" id="goodsStart"
-                                readonly><?php endif; ?>
+                            <input type="text" id="goodsStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="goodsStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === GOODS): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === GOODS ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" id="goodsEnd"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="goodsEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="goodsEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -1566,6 +1571,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_start = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
 
+        const goodsStart1 = document.getElementById('goodsStart1');
+        const goodsStart2 = document.getElementById('goodsStart2');
+
+        const goodsEnd2 = document.getElementById('goodsEnd2');
+        const goodsEnd1 = document.getElementById('goodsEnd1');
+
         const start_rent2 = document.getElementById('startTransRent2');
         const start_rent1 = document.getElementById('startTransRent1');
 
@@ -1631,6 +1642,15 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             empEnd2?.setAttribute('hidden', true);
 
             empEnd1?.removeAttribute('hidden');
+
+            goodsStart2?.removeAttribute('readonly');
+            goodsStart2?.setAttribute('hidden', true);
+
+            goodsStart1?.removeAttribute('hidden', true);
+
+            goodsEnd2?.removeAttribute('readonly');
+            goodsEnd2?.setAttribute('hidden', true);
+            goodsEnd1?.removeAttribute('hidden');
 
 
             tempStart?.removeAttribute('readonly');
@@ -1705,6 +1725,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const contractInput = document.getElementById('contractTypeInput');
         const contractSelect = document.getElementById('contractTypeSelect');
 
+        const goodsStart1 = document.getElementById('goodsStart1');
+        const goodsStart2 = document.getElementById('goodsStart2');
+
+        const goodsEnd2 = document.getElementById('goodsEnd2');
+        const goodsEnd1 = document.getElementById('goodsEnd1');
+
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
 
@@ -1725,6 +1751,14 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         start_infra?.setAttribute('readonly', true);
         end_infra?.setAttribute('readonly', true);
         contractAddress?.setAttribute('readonly', true);
+
+        goodsStart2?.removeAttribute('hidden', true);
+        goodsStart2?.setAttribute('readonly', true);
+        goodsStart1?.setAttribute('hidden', true);
+
+        goodsEnd2?.removeAttribute('hidden');
+        goodsEnd2?.setAttribute('readonly', true);
+        goodsEnd1?.setAttribute('hidden', true);
 
         start_rent1?.setAttribute('hidden', true);
         //setting attribute to readonly 
@@ -1784,8 +1818,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const deptUploader = document.getElementById('uploader_dept');
         const saccStart =  document.getElementById('saccStartDate');
         const saccEnd = document.getElementById('saccEndDate');
-        const startGoods = document.getElementById('goodsStart');
-        const endGoods = document.getElementById('goodsEnd');
+        const startGoods = document.getElementById('goodsStart1');
+        const endGoods = document.getElementById('goodsEnd1');
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const contractAddress = document.getElementById('address');
