@@ -377,54 +377,53 @@ if($_GET['type'] === SACC){
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-
-
+        'total_cost' => $_GET['ttc']
     ];
 
-    
-        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+    var_dump($EmpUpdate);
+        // $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
-        if ($contractUpdate) {
+        // if ($contractUpdate) {
 
-            $id = $EmpUpdate['contract_id'];
+        //     $id = $EmpUpdate['contract_id'];
 
-            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+        //     $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
-            if(!empty($getCurrenData)){
+        //     if(!empty($getCurrenData)){
 
-                $currentData = [
-                    'id' => $getCurrenData['id'],
-                    'contract_name' => $getCurrenData['contract_name'],
-                    'date_start' => $getCurrenData['contract_start'],
-                    'date_end' => $getCurrenData['contract_end'],
-                    'updated_at' => date('Y-m-d H:i:s')
-                ];
+        //         $currentData = [
+        //             'id' => $getCurrenData['id'],
+        //             'contract_name' => $getCurrenData['contract_name'],
+        //             'date_start' => $getCurrenData['contract_start'],
+        //             'date_end' => $getCurrenData['contract_end'],
+        //             'updated_at' => date('Y-m-d H:i:s')
+        //         ];
 
-                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+        //         $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                if($updateContractHistory){
-
-
-                $_SESSION['notification'] = [
-                      'message' => 'Update successful. This record is now pending further review.',
-                    'type' => 'success'
-                ];
-
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-
-                }
-
-                $_SESSION['notification'] = [
-                      'message' => 'Update successful. This record is now pending further review.',
-                    'type' => 'success'
-                ];
-
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-
-            }
+        //         if($updateContractHistory){
 
 
-        }
+        //         $_SESSION['notification'] = [
+        //               'message' => 'Update successful. This record is now pending further review.',
+        //             'type' => 'success'
+        //         ];
+
+        //         header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        //         }
+
+        //         $_SESSION['notification'] = [
+        //               'message' => 'Update successful. This record is now pending further review.',
+        //             'type' => 'success'
+        //         ];
+
+        //         header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        //     }
+
+
+        // }
 
     
 }
