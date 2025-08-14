@@ -1579,4 +1579,33 @@ class ContractController
     }
 
 
+    public function managerUpdateSACC($data)
+{
+    try {
+        $sql = "UPDATE contracts SET 
+            uploader_department = :uploader_department,
+            contract_name = :contract_name,
+            contract_start = :contract_start,
+            contract_end = :contract_end,   
+            contractPrice = :contractPrice
+            WHERE id = :contract_id";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':uploader_department' => $data['uploader_department'],
+            ':contract_name' => $data['contract_name'],
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':contractPrice' => $data['contractPrice'],
+            ':contract_id' => $data['contract_id']
+        ]);
+
+    } catch (PDOException $e) {
+        echo 'PDO Error: ' . $e->getMessage(); 
+        return false;
+    }
+}
+
+
 }

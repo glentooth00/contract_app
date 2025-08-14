@@ -377,11 +377,10 @@ if($_GET['type'] === SACC){
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-
-
+        'total_cost' => $_GET['ttc']
     ];
 
-    
+
         $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
         if ($contractUpdate) {
