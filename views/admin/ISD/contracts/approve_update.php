@@ -208,7 +208,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         var_dump($updateSuccessful);
 
             if( $updateSuccessful ){
-               $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
+            
+                $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
 
                     if( $deletePrevData ){
 
@@ -231,6 +232,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     }
             }
+
+    }
+
+    if($_POST['contract_type'] === SACC){
+
+        $startDate = date('Y-m-d', strtotime($_POST['contract_start']));
+        $endDate = date('Y-m-d', strtotime($_POST['contract_end']));
+
+
+        $updateData = [
+            'contract_id' => $_POST['contract_id'],
+            'uploader_department' => $_POST['uploader_department'],
+            'contract_name' => $_POST['contract_name'],
+            'contract_start' => $startDate,
+            'contract_end' => $endDate,
+            'contract_status' => 'Active',
+            'contractPrice' => trim(str_replace('₱', '', $_POST['tcc']))
+        ];
+
+
+
+        $updateSuccessful = (new ContractController)->managerUpdateSACC($updateData);
+
+
+        if( $updateSuccessful ){
+            
+                $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
+
+                    if( $deletePrevData ){
+
+                            $updateContractData = (new ContractHistoryController )->updateHistoryTempLight($updateData);
+
+                            if($updateContractData){
+
+                            $_SESSION['notification'] = [
+                            'message' => 'Update has been approved.',
+                            'type' => 'success',
+                            ];
+
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
+
+                            }
+
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
+
+                    }
+            }
+
 
     }
 
