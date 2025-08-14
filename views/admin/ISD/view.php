@@ -1570,8 +1570,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
         const totalCost = document.getElementById('ttc');
-        const saccStart = document.getElementById('saccStartDate');
-        const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
         const infra_start = document.getElementById('infraStart');
@@ -1594,6 +1592,11 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         const empEnd2 = document.getElementById('empConEnd2');
         const empEnd1 = document.getElementById('empConEnd1');
+
+        const saccConStart1 = document.getElementById('saccStart1');
+        const saccConStart2 = document.getElementById('saccStart2');
+        const saccConEnd1 = document.getElementById('saccEnd1');
+        const saccConEnd2 = document.getElementById('saccEnd2');
 
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
@@ -1625,8 +1628,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             empStart?.removeAttribute('readonly');
             empEnd?.removeAttribute('readonly');
             totalCost?.removeAttribute('disabled');
-            saccStart?.removeAttribute('readonly');
-            saccEnd?.removeAttribute('readonly');
             startGoods?.removeAttribute('readonly');
             endGoods?.removeAttribute('readonly');
             infra_start?.removeAttribute('readonly');
@@ -1663,6 +1664,14 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             tempEnd?.removeAttribute('readonly');
             tcNumber?.removeAttribute('readonly');
             accountNo?.removeAttribute('readonly');
+
+            saccConStart2?.removeAttribute('readonly');
+            saccConStart2?.setAttribute('hidden', true);
+            saccConStart1?.removeAttribute('hidden', true);
+
+            saccConEnd2?.removeAttribute('readonly');
+            saccConEnd2?.setAttribute('hidden', true);
+            saccConEnd1?.removeAttribute('hidden', true);
 
             contractInput?.removeAttribute('readonly');
             contractInput?.setAttribute('hidden', true);
@@ -1703,8 +1712,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
         const totalCost = document.getElementById('ttc');
-         const saccStart = document.getElementById('saccStartDate');
-        const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
         const start_infra = document.getElementById('infraStart');
@@ -1723,6 +1730,10 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const end_rent1 = document.getElementById('endTransRent1');
         const end_rent2 = document.getElementById('endTransRent2');
 
+        const saccConStart1 = document.getElementById('saccStart1');
+        const saccConStart2 = document.getElementById('saccStart2');
+        const saccConEnd1 = document.getElementById('saccEnd1');
+        const saccConEnd2 = document.getElementById('saccEnd2');
 
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
@@ -1752,8 +1763,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         empStart?.setAttribute('readonly', true);
         empEnd?.setAttribute('readonly', true);
         totalCost?.setAttribute('disabled', true);
-        saccStart?.setAttribute('readonly',true);
-        saccEnd?.setAttribute('readonly', true);
         startGoods?.setAttribute('readonly', true);
         endGoods?.setAttribute('readonly', true);
         start_infra?.setAttribute('readonly', true);
@@ -1774,6 +1783,13 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         //and removes thre hidden attribute
         start_rent2?.removeAttribute('hidden','');
 
+        saccConStart1?.setAttribute('hidden', true);
+        saccConStart2?.removeAttribute('hidden', true);
+        saccConStart2?.setAttribute('readonly', true);
+
+        saccConEnd2?.removeAttribute('hidden', true);
+        saccConEnd2?.setAttribute('readonly', true);
+        saccConEnd1?.setAttribute('hidden', true);
 
         end_rent1?.setAttribute('hidden', true);
         end_rent2?.setAttribute('readonly', '');
@@ -1789,6 +1805,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         contractInput?.removeAttribute('hidden', true);
         contractInput?.setAttribute('readonly', true);
 
+        
         supplier?.setAttribute('readonly', true);
 
         empCon2?.removeAttribute('hidden');
@@ -1826,8 +1843,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const uploaded_by = document.getElementById('uploadedBy');
         const uploaderId = document.getElementById('uploader_id');
         const deptUploader = document.getElementById('uploader_dept');
-        const saccStart =  document.getElementById('saccStartDate');
-        const saccEnd = document.getElementById('saccEndDate');
+        const saccStart =  document.getElementById('saccStart1');
+        const saccEnd = document.getElementById('saccEnd1');
         const startGoods = document.getElementById('goodsStart1');
         const endGoods = document.getElementById('goodsEnd1');
         const infra_start  = document.getElementById('infraStart');

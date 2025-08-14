@@ -175,7 +175,7 @@ if (isset($_POST['contract_id'])) {
                 <?php if($pending['total_cost']): ?>
                     <div class="mb-3">
                         <label><strong>Total Contract Cost:</strong></label>
-                        <input type="text" value="<?= $current['contractPrice'] ?>" name="supplier" class="form-control" readonly>
+                        <input type="text" value="<?= $current['contractPrice'] ?>"  class="form-control" readonly>
                     </div>
                 <?php endif; ?>
 
@@ -205,7 +205,7 @@ if (isset($_POST['contract_id'])) {
 
                     <?php if($pending['contract_type'] === SACC ): ?> 
                         <div class="input-group">
-                            <input type="text"  value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
+                            <input type="text" name="contract_start"  value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
@@ -252,9 +252,9 @@ if (isset($_POST['contract_id'])) {
                 <div class="mb-3">
                     <label><strong>End Date:</strong></label>
 
-                    <?php if($pending['contract_end']): ?>
+                    <?php if($pending['contract_type'] === SACC): ?>
                          <div class="input-group">
-                            <input type="text"  value="<?= date('M d, Y', strtotime($current['contract_end'])) ?>" class="form-control" readonly>
+                            <input type="text" name="contract_end"  value="<?= date('M d, Y', strtotime($pending['contract_end'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
@@ -328,7 +328,7 @@ if (isset($_POST['contract_id'])) {
                 <?php if($pending['total_cost']): ?>
                     <div class="mb-3">
                         <label><strong>Account #:</strong></label>
-                        <input type="text" value="<?= $pending['total_cost'] ?>" name="supplier" class="form-control" readonly>
+                        <input type="text" value="<?= $pending['total_cost'] ?> " name="tcc" class="form-control" readonly>
                     </div>
                 <?php endif; ?>
                 
