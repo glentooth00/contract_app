@@ -621,7 +621,8 @@ class ContractController
                     -- department_assigned = :department_assigned,
                     updated_at = :updated_at,
                     contract_status = :contract_status,
-                    contractPrice = :contractPrice
+                    contractPrice = :contractPrice,
+                    contract_type = :contract_type
                 WHERE id = :contract_id";
 
         $stmt = $this->db->prepare($sql);
@@ -634,6 +635,7 @@ class ContractController
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam('contract_status', $data['contract_status']);
         $stmt->bindParam('contractPrice', $data['contractPrice']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
         // $stmt->bindParam('action_status', $data['action_status']);
 
         $stmt->execute();
@@ -1500,7 +1502,9 @@ class ContractController
                 uploader_department = :uploader_department,
                 contract_name = :contract_name,
                 contract_start = :contract_start,
-                contract_end = :contract_end
+                contract_end = :contract_end,
+                address = :address,
+                supplier = :supplier
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':uploader_department', $data['uploader_department']);
@@ -1508,7 +1512,8 @@ class ContractController
             $stmt->bindParam(':contract_start', $data['contract_start']);
             $stmt->bindParam(':contract_end', $data['contract_end']);
             $stmt->bindParam(':contract_id', $data['contract_id']);
-
+            $stmt->bindParam(':address', $data['address']);
+            $stmt->bindParam(':supplier', $data['supplier']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
@@ -1525,7 +1530,9 @@ class ContractController
                 rent_start = :rent_start,
                 rent_end = :rent_end,
                 contract_status = :contract_status,
-                address = :address
+                address = :address,
+                tc_no = :tc_no,
+                account_no = :account_no
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':uploader_department', $data['uploader_department']);
@@ -1535,7 +1542,8 @@ class ContractController
             $stmt->bindParam(':contract_id', $data['contract_id']);
             $stmt->bindParam(':contract_status', $data['contract_status']);
             $stmt->bindParam(':address', $data['address']);
-
+            $stmt->bindParam(':tc_no', $data['tc_no']);
+            $stmt->bindParam(':account_no', $data['account_no']);
             $success = $stmt->execute();
 
                 if($success){
@@ -1553,6 +1561,51 @@ class ContractController
             return false;
         }
     }
+
+    public function updateEmpContract(){
+
+        $sql = "UPDATE contracts SET
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end
+                WHERE id = :contract_id";
+            
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        return $stmt->execute(); // returns true if successful
+    }
+
+
+    public function managerUpdateSACC($data)
+{
+    try {
+        $sql = "UPDATE contracts SET 
+            uploader_department = :uploader_department,
+            contract_name = :contract_name,
+            contract_start = :contract_start,
+            contract_end = :contract_end,   
+            contractPrice = :contractPrice
+            WHERE id = :contract_id";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':uploader_department' => $data['uploader_department'],
+            ':contract_name' => $data['contract_name'],
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':contractPrice' => $data['contractPrice'],
+            ':contract_id' => $data['contract_id']
+        ]);
+
+    } catch (PDOException $e) {
+        echo 'PDO Error: ' . $e->getMessage(); 
+        return false;
+    }
+}
 
 
 }

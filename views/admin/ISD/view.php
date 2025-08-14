@@ -1,5 +1,6 @@
 <?php
 use App\Controllers\ContractHistoryController;
+use App\Controllers\ContractTypeController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
 use App\Controllers\SuspensionController;
@@ -249,30 +250,35 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
 
 
-            <?php if($getContract['contract_type'] === SACC ): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === SACC ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
-                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="saccStartDate" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="text" id="saccStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="saccStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === SACC ): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === SACC ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
-                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="saccEndDate" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="saccEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="saccEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -306,59 +312,70 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === GOODS): ?>
-                <div class="row col-md-2">
+
+            <?php if($getContract['contract_type'] === GOODS ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
                             ?> 
-                            <input type="date" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" id="goodsStart"
-                                readonly><?php endif; ?>
+                            <input type="text" id="goodsStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="goodsStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === GOODS): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === GOODS ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" id="goodsEnd"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="goodsEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="goodsEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === EMP_CON): ?>
-                <div class="row col-md-2">
+            
+            <?php if($getContract['contract_type'] === EMP_CON ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="empConStart" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" id="" name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M-d-Y', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="text" id="empConStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="empConStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === EMP_CON): ?>
-                <div class="row col-md-2">
-                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+            <?php if($getContract['contract_type'] === EMP_CON ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="empConEnd" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>"  name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M-d-Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="empConEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="empConEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -478,18 +495,57 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
         <!---- 2nd row ------>
         <div class="mt-3 col-md-12 d-flex gap-5">
+            
+        <?php 
+            $getContractTypes = ( new ContractTypeController)->getContractTypes();
+
+        ?>
+
             <div class="row col-md-2">
-                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Contract
-                        type:</label><input type="text" id="contractType" style="margin-left:9px;"
+                <div class="mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
+
+                        <input type="text" id="contractTypeInput" style="margin-left:9px;"
                         class="form-control pl-5" value="<?= $getContract['contract_type']; ?>" name="contract_type"
-                        readonly></div>
+                        readonly>
+                    
+                        <select class="p-1 form-select" name="contract_type" id="contractTypeSelect" style="width:12em;margin-left:9px;" hidden>
+                            <option value="<?= $getContract['contract_type']; ?>"><?= $getContract['contract_type']; ?></option>
+                            <?php foreach($getContractTypes as $types): ?>
+                                <option value="<?= $types['contract_type'] ?>"><?= $types['contract_type'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
+                </div>
             </div>
-                <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
-                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['address']; ?>" name="address" readonly>
-                        </div>
-                </div> 
+            
+            <?php if($getContract['address']): ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Address:</label><input
+                    type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['address']; ?>" name="address" readonly>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['tc_no']): ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">TC no:</label><input
+                    type="text" id="tc_no" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['tc_no']; ?>" name="address" readonly>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['account_no']): ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Account #:</label><input
+                    type="text" id="accountNumber" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['account_no']; ?>" name="account_no" readonly>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <?php if($getContract['party_of_second_part']): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Party of Second Part:</label><input
@@ -542,11 +598,12 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
 
                 <?php endif; ?> <?php if (!$getContract['supplier']): ?> <?php else: ?>
-                <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
-                            type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['supplier']; ?>" name="contract_type" readonly></div>
-                </div><?php endif; ?> 
+                    <div class="row col-md-2">
+                        <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
+                                type="text" id="goodsSupplier" style="margin-left:9px;" class="form-control pl-5"
+                                value="<?= $getContract['supplier']; ?>" name="contract_type" readonly></div>
+                    </div>
+                <?php endif; ?> 
 
                 <?php if ($getContract['contract_type'] === INFRA): ?>
                     <?php if(!empty($getContract['implementing_dept'])): ?>
@@ -560,10 +617,16 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
                  <?php if ($getContract['contract_type'] === EMP_CON): ?>
                 <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Assigned
-                            Department</label><input type="text" id="deptSelect" style="margin-left:9px;"
+                    <div class="mt-3">
+
+                        <label class="badge text-muted" style="font-size: 15px;">Assigned
+                            Department</label>
+                            <input type="text" id="deptSelect" style="margin-left:9px;"
                             class="form-control pl-5" value="<?= $getContract['department_assigned']; ?>"
-                            name="contract_type" readonly></div>
+                            name="contract_type" readonly>
+
+
+                        </div>
                 </div>
                 <?php endif; ?>
 
@@ -812,19 +875,24 @@ include_once '../../../views/layouts/includes/header.php';
                                                     </div>
                                                 </div>
                                             </div><?php else: ?> No file <?php endif; ?>
-                                    </td><?php if ($employement_data['contract_type'] === EMP_CON): ?>
+                                    </td>
+                                    
+                                    <?php if ($employement_data['contract_type'] === EMP_CON): ?>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['date_start'])): ?>
                                                 <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
                                                     class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
-                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                                <span class="badge text-danger">No Start Date</span>
+                                            <?php endif; ?>
                                         </td>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['date_end'])): ?>
                                                 <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
                                                     class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
                                                 <span class="badge text-danger">No Start Date</span><?php endif; ?>
-                                        </td><?php endif; ?>
+                                        </td>
+                                    <?php endif; ?>
+
                                     <?php if ($employement_data['contract_type'] === TRANS_RENT): ?>
                                         <td style="text-align: center !important;">
                                             <?php if (!empty($employement_data['rent_start'])): ?>
@@ -1118,8 +1186,9 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                             </div>
                             <div class="col-md-3 p-2" style="width: 13em;">
                                 <div>
-                                    <lable class="badge text-muted">Account no.</lable><input type="text"
-                                        class="form-control" value="<?= $getContract['account_no'] ?>" name="account_no"
+                                    <lable class="badge text-muted">Account no.</lable>
+                                    <input type="text"
+                                        class="form-control"  value="<?= $getContract['account_no'] ?>" name="account_no"
                                         required>
                                 </div>
                             </div>
@@ -1501,12 +1570,16 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
         const totalCost = document.getElementById('ttc');
-        const saccStart = document.getElementById('saccStartDate');
-        const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
         const infra_start = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
+
+        const goodsStart1 = document.getElementById('goodsStart1');
+        const goodsStart2 = document.getElementById('goodsStart2');
+
+        const goodsEnd2 = document.getElementById('goodsEnd2');
+        const goodsEnd1 = document.getElementById('goodsEnd1');
 
         const start_rent2 = document.getElementById('startTransRent2');
         const start_rent1 = document.getElementById('startTransRent1');
@@ -1514,10 +1587,26 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const end_rent2 = document.getElementById('endTransRent2');
         const end_rent1 = document.getElementById('endTransRent1');
 
+        const empCon2 =  document.getElementById('empConStart2');
+        const empCon1 =  document.getElementById('empConStart1');
+
+        const empEnd2 = document.getElementById('empConEnd2');
+        const empEnd1 = document.getElementById('empConEnd1');
+
+        const saccConStart1 = document.getElementById('saccStart1');
+        const saccConStart2 = document.getElementById('saccStart2');
+        const saccConEnd1 = document.getElementById('saccEnd1');
+        const saccConEnd2 = document.getElementById('saccEnd2');
+
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
 
         const contractAddress = document.getElementById('address');
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+        const contractInput = document.getElementById('contractTypeInput');
+        const contractSelect = document.getElementById('contractTypeSelect');
+        const supplier = document.getElementById('goodsSupplier');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -1539,8 +1628,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             empStart?.removeAttribute('readonly');
             empEnd?.removeAttribute('readonly');
             totalCost?.removeAttribute('disabled');
-            saccStart?.removeAttribute('readonly');
-            saccEnd?.removeAttribute('readonly');
             startGoods?.removeAttribute('readonly');
             endGoods?.removeAttribute('readonly');
             infra_start?.removeAttribute('readonly');
@@ -1553,9 +1640,45 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             end_rent1?.removeAttribute('hidden');
             end_rent2?.setAttribute('hidden', '');
 
+            empCon2?.removeAttribute('readonly');
+            empCon2?.setAttribute('hidden', true);
+
+            empCon1?.removeAttribute('hidden');
+
+            empEnd2?.removeAttribute('readonly');
+            empEnd2?.setAttribute('hidden', true);
+
+            empEnd1?.removeAttribute('hidden');
+
+            goodsStart2?.removeAttribute('readonly');
+            goodsStart2?.setAttribute('hidden', true);
+
+            goodsStart1?.removeAttribute('hidden', true);
+
+            goodsEnd2?.removeAttribute('readonly');
+            goodsEnd2?.setAttribute('hidden', true);
+            goodsEnd1?.removeAttribute('hidden');
+
 
             tempStart?.removeAttribute('readonly');
             tempEnd?.removeAttribute('readonly');
+            tcNumber?.removeAttribute('readonly');
+            accountNo?.removeAttribute('readonly');
+
+            saccConStart2?.removeAttribute('readonly');
+            saccConStart2?.setAttribute('hidden', true);
+            saccConStart1?.removeAttribute('hidden', true);
+
+            saccConEnd2?.removeAttribute('readonly');
+            saccConEnd2?.setAttribute('hidden', true);
+            saccConEnd1?.removeAttribute('hidden', true);
+
+            contractInput?.removeAttribute('readonly');
+            contractInput?.setAttribute('hidden', true);
+
+            contractSelect?.removeAttribute('hidden');
+
+            supplier?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -1589,8 +1712,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const empStart = document.getElementById('empConStart');
         const empEnd = document.getElementById('empConEnd');
         const totalCost = document.getElementById('ttc');
-         const saccStart = document.getElementById('saccStartDate');
-        const saccEnd = document.getElementById('saccEndDate');
         const startGoods = document.getElementById('goodsStart');
         const endGoods = document.getElementById('goodsEnd');
         const start_infra = document.getElementById('infraStart');
@@ -1600,15 +1721,37 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const start_rent1 = document.getElementById('startTransRent1');
         const start_rent2 = document.getElementById('startTransRent2');
 
+        const empCon2 =  document.getElementById('empConStart2');
+        const empCon1 =  document.getElementById('empConStart1');
+
+        const empEnd2 = document.getElementById('empConEnd2');
+        const empEnd1 = document.getElementById('empConEnd1');
+
         const end_rent1 = document.getElementById('endTransRent1');
         const end_rent2 = document.getElementById('endTransRent2');
 
+        const saccConStart1 = document.getElementById('saccStart1');
+        const saccConStart2 = document.getElementById('saccStart2');
+        const saccConEnd1 = document.getElementById('saccEnd1');
+        const saccConEnd2 = document.getElementById('saccEnd2');
 
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
 
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+        const contractInput = document.getElementById('contractTypeInput');
+        const contractSelect = document.getElementById('contractTypeSelect');
+
+        const goodsStart1 = document.getElementById('goodsStart1');
+        const goodsStart2 = document.getElementById('goodsStart2');
+
+        const goodsEnd2 = document.getElementById('goodsEnd2');
+        const goodsEnd1 = document.getElementById('goodsEnd1');
+
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
+        const supplier = document.getElementById('goodsSupplier');
 
         // Set them back to readonly/disabled
         nameInput?.setAttribute('readonly', true);
@@ -1620,13 +1763,19 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         empStart?.setAttribute('readonly', true);
         empEnd?.setAttribute('readonly', true);
         totalCost?.setAttribute('disabled', true);
-        saccStart?.setAttribute('readonly',true);
-        saccEnd?.setAttribute('readonly', true);
         startGoods?.setAttribute('readonly', true);
         endGoods?.setAttribute('readonly', true);
         start_infra?.setAttribute('readonly', true);
         end_infra?.setAttribute('readonly', true);
         contractAddress?.setAttribute('readonly', true);
+
+        goodsStart2?.removeAttribute('hidden', true);
+        goodsStart2?.setAttribute('readonly', true);
+        goodsStart1?.setAttribute('hidden', true);
+
+        goodsEnd2?.removeAttribute('hidden');
+        goodsEnd2?.setAttribute('readonly', true);
+        goodsEnd1?.setAttribute('hidden', true);
 
         start_rent1?.setAttribute('hidden', true);
         //setting attribute to readonly 
@@ -1634,6 +1783,13 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         //and removes thre hidden attribute
         start_rent2?.removeAttribute('hidden','');
 
+        saccConStart1?.setAttribute('hidden', true);
+        saccConStart2?.removeAttribute('hidden', true);
+        saccConStart2?.setAttribute('readonly', true);
+
+        saccConEnd2?.removeAttribute('hidden', true);
+        saccConEnd2?.setAttribute('readonly', true);
+        saccConEnd1?.setAttribute('hidden', true);
 
         end_rent1?.setAttribute('hidden', true);
         end_rent2?.setAttribute('readonly', '');
@@ -1642,6 +1798,25 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         tempStart?.setAttribute('readonly', true);
         tempEnd?.setAttribute('readonly', true);
+        tcNumber?.setAttribute('readonly',true);
+        accountNo?.setAttribute('readonly',true);
+
+        contractSelect?.setAttribute('hidden', true);
+        contractInput?.removeAttribute('hidden', true);
+        contractInput?.setAttribute('readonly', true);
+
+        
+        supplier?.setAttribute('readonly', true);
+
+        empCon2?.removeAttribute('hidden');
+        empCon2?.setAttribute('readonly', true);
+
+        empCon1?.setAttribute('hidden', true);
+
+        empEnd2?.removeAttribute('hidden', true);
+        empEnd2?.setAttribute('readonly', true);
+
+        empEnd1?.setAttribute('hidden', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1659,22 +1834,27 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
-        const contract_type = document.getElementById('contractType');
-        const EmpStart = document.getElementById('EmpStartDate');
-        const EmpEnd = document.getElementById('EmpEndDate');
+        const contract_type = document.getElementById('contractTypeInput');
+        const EmpStart = document.getElementById('empConStart1');
+        const EmpEnd = document.getElementById('empConEnd1');
         const totalCost = document.getElementById('ttc');
         const uploader_dept = document.getElementById('uploadingDept');
         const loginUser = document.getElementById('loggedInUser');
         const uploaded_by = document.getElementById('uploadedBy');
         const uploaderId = document.getElementById('uploader_id');
         const deptUploader = document.getElementById('uploader_dept');
-        const saccStart =  document.getElementById('saccStartDate');
-        const saccEnd = document.getElementById('saccEndDate');
-        const startGoods = document.getElementById('goodsStart');
-        const endGoods = document.getElementById('goodsEnd');
+        const saccStart =  document.getElementById('saccStart1');
+        const saccEnd = document.getElementById('saccEnd1');
+        const startGoods = document.getElementById('goodsStart1');
+        const endGoods = document.getElementById('goodsEnd1');
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const contractAddress = document.getElementById('address');
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+        const supplier = document.getElementById('goodsSupplier');
+
+        const empStart = document.getElementById('empConStart2');
 
         const rent_start =  document.getElementById('startTransRent1');
 
@@ -1683,6 +1863,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const tempStart =  document.getElementById('tempLightStart');
         const tempEnd = document.getElementById('tempLightEnd');
         const implementing_dept = document.getElementById('impDept');
+
+        const contractTypeSelect = document.getElementById('contractTypeSelect');
 
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
@@ -1719,10 +1901,13 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endTemplight = encodeURIComponent(tempEnd?. value || '');
         const impDept = encodeURIComponent(implementing_dept?. value || '');
         const addressContract = encodeURIComponent(contractAddress?. value || '');
-
+        const tcNo = encodeURIComponent(tcNumber?. value || '');
+        const account_no = encodeURIComponent(accountNo?. value || '' );   
+        const contractSelect = encodeURIComponent(contractTypeSelect?. value || ''); 
+        const goodsSupp = encodeURIComponent(supplier?.value || ''); 
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}`;
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}`;
     });
 
     function formatDate(dateString) {

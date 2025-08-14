@@ -134,6 +134,52 @@ class PendingDataController
         ]);
     }
 
+        public function employmentInsert($data)
+    {
+        $sql = "INSERT INTO pending_data (
+                contract_id,
+                contract_name,
+                contract_start,
+                created_at,
+                contract_end,
+                updated_at,
+                contract_status,
+                contract_type,
+                assigned_dept,
+                status,
+                uploader_department
+            ) VALUES (
+                :contract_id,
+                :contract_name,
+                :contract_start,
+                :created_at,
+                :contract_end,
+                :updated_at,
+                :contract_status,
+                :contract_type,
+                :assigned_dept,
+                :status,
+                :uploader_department
+            )";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_id' => $data['id'],
+            ':contract_name' => $data['contract_name'],
+            ':contract_start' => $data['start'],
+            ':contract_end' => $data['end'],
+            ':created_at' => $data['created_at'],
+            ':updated_at' => $data['updated_at'],
+            ':contract_status' => $data['contract_status'],
+            ':contract_type' => $data['contract_type'],
+            ':assigned_dept' => $data['implementing_dept'] ?? '',
+            ':status' => $data['status'],
+            ':uploader_department' => $data['uploader_department'] ?? '',
+        ]);
+
+
+    }
 
     public function PendingInsert($data)
     {
@@ -152,7 +198,10 @@ class PendingDataController
                 uploader_department,
                 status,
                 updated_by,
-                assigned_dept
+                assigned_dept,
+                address,
+                supplier,
+                total_cost
             ) VALUES (
                 :contract_id,
                 :contract_name,
@@ -168,8 +217,10 @@ class PendingDataController
                 :uploader_department,
                 :status,
                 :updated_by,
-                :assigned_dept
-
+                :assigned_dept,
+                :address,
+                :supplier,
+                :total_cost
             )";
 
         $stmt = $this->db->prepare($sql);
@@ -189,7 +240,10 @@ class PendingDataController
             ':uploader_department' => $data['uploader_department'],
             ':status' => $data['status'],
             ':updated_by' => $data['updated_by'],
-            ':assigned_dept' => $data['implementing_dept']
+            ':assigned_dept' => $data['implementing_dept'] ?? '',
+            ':address' => $data['address'] ?? '',
+            ':supplier' => $data['supplier'] ?? '',
+            ':total_cost' => $data['total_cost'] ?? ''
         ]);
 
 
@@ -212,7 +266,9 @@ class PendingDataController
                 uploader_department,
                 status,
                 updated_by,
-                address
+                address,
+                tc_no,
+                account_no
             ) VALUES (
                 :contract_id,
                 :contract_name,
@@ -228,7 +284,9 @@ class PendingDataController
                 :uploader_department,
                 :status,
                 :updated_by,
-                :address
+                :address,
+                :tc_no,
+                :account_no
             )";
 
         $stmt = $this->db->prepare($sql);
@@ -248,7 +306,9 @@ class PendingDataController
             ':uploader_department' => $data['uploader_department'],
             ':status' => $data['status'],
             ':updated_by' => $data['updated_by'],
-            ':address' => $data['address']
+            ':address' => $data['address'],
+            'tc_no' => $data['tc_no'],
+            ':account_no' => $data['account_no']
         ]);
 
 
