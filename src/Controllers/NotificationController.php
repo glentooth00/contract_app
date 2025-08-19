@@ -58,6 +58,18 @@ class NotificationController
 
     }
 
+    public function displayAllPendingUpdatesForCITET($department)
+    {
+        $sql = "SELECT * FROM pending_data WHERE uploader_department = :uploader_dept OR assigned_dept = :assigned_dept  AND status = 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':uploader_dept',$department);
+        $stmt->bindParam(':assigned_dept',$department);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+
+    }
+
     public function getPendingDatabyId($id)
     {
 

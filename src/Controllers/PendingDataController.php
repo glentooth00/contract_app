@@ -315,30 +315,82 @@ class PendingDataController
     }
 
 
-    public function updatedInfraData($data)
-    {
+    public function powerSupplyLong($data){
 
-        $sql = "INSERT INTO pending_data (
+        $sql = "INSERT INTO  pending_data (
                     contract_id,
-                    contract_name,
                     contract_start,
                     contract_end,
-                    contract_type,
-                    contract_file,
-                    created_at,
-                    updated_at,
-                    uploader_id,
-                    contract_status,
-                    uploader_department,
+                    contract_name,
                     uploader,
-                    approval_status,
-                    status,
+                    uploader_id,
+                    uploader_department,
                     data_type,
-                    updated_by
+                    status
                 ) VALUES (
-
+                    :contract_id,
+                    :contract_start,
+                    :contract_end,
+                    :contract_name,
+                    :uploader,
+                    :uploader_id,
+                    :uploader_department,
+                    :data_type,
+                    :status
                 )";
 
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_start' => $data['powerSupplyLongStart1'],
+            ':contract_end' => $data['powerSupplyLongEnd1'],
+            ':contract_name' => $data['name'],
+            ':uploader' => $data['uploader'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+            ':data_type' => $data['data_type'],
+            ':status' => $data['status'],
+            ':contract_id' => $data['contract_id']
+        ]);
+    }
+
+    public function powerSupplyShort($data){
+
+        $sql = "INSERT INTO  pending_data (
+                    contract_id,
+                    contract_start,
+                    contract_end,
+                    contract_name,
+                    uploader,
+                    uploader_id,
+                    uploader_department,
+                    data_type,
+                    status
+                ) VALUES (
+                    :contract_id,
+                    :contract_start,
+                    :contract_end,
+                    :contract_name,
+                    :uploader,
+                    :uploader_id,
+                    :uploader_department,
+                    :data_type,
+                    :status
+                )";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':contract_name' => $data['name'],
+            ':uploader' => $data['uploader'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+            ':data_type' => $data['data_type'],
+            ':status' => $data['status'],
+            ':contract_id' => $data['contract_id']
+        ]);
     }
 
 
