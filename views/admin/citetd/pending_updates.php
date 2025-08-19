@@ -15,7 +15,7 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
-$contracts = (new NotificationController)->displayAllPendingUpdates();
+$contracts = (new NotificationController)->displayAllPendingUpdatesForCITET($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
@@ -290,18 +290,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                 <input type="text" value="<?= $remainingDays ?> Days"
                                                                     class="form-control" readonly>
                                                             </div>
-
-
                                                         </div>
-
-
-
-
-                                                        <!-- <p><strong>Row ID:</strong> <span id="modal-id"></span></p>
-                            <p><strong>Contract ID:</strong> <span id="modal-contract-id"></span></p>
-                            <p><strong>Contract Name:</strong> <span id="modal-contract-name"></span></p>
-                            <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
-                            <p><strong>End Date:</strong> <span id="modal-end-date"></span></p> -->
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 card p-3" style="background-color: #E8F9FF;">
@@ -313,9 +302,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                                     $contract_id = $contract['contract_id'];
 
                                                                     $getPendingUpdate = (new NotificationController)->getPendingDatabyId($contract_id);
-
-                                                                    // var_dump($getContractFromContracts);
-                                                        
 
                                                                     ?>
                                                                     <div class="col-md-12">
