@@ -17,30 +17,6 @@ class UserController
         $this->db = Database::connect();
     }
 
-    // public function getUsers() {
-    //     $table = "users"; // Change to your table
-
-    //     if ($this->db instanceof PDO) {
-    //         try {
-    //             $stmt = $this->db->query("SELECT * FROM $table");
-    //             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    //         } catch (\PDOException $e) {
-    //             return "SQL Server Query failed: " . $e->getMessage();
-    //         }
-    //     } elseif ($this->db instanceof mysqli) {
-    //         $query = "SELECT * FROM $table";
-    //         $result = $this->db->query($query);
-
-    //         if ($result) {
-    //             return $result->fetch_all(MYSQLI_ASSOC);
-    //         } else {
-    //             return "MySQL Query failed: " . $this->db->error;
-    //         }
-    //     } else {
-    //         return "No valid database connection.";
-    //     }
-    // }
-
     public function authenticate($data)
     {
 
@@ -64,7 +40,8 @@ class UserController
                 'middlename' => $user['middlename'],
                 'department' => $user['department'],
                 'contract_types' => $user['contract_types'],
-                'user_role' => $user['user_role']
+                'user_role' => $user['user_role'],
+                'user_type' => $user['user_type']
             ];
 
         } else {
