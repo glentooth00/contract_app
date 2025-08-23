@@ -6,6 +6,7 @@ session_start();
 
 $department = $_SESSION['department'];
 $userRole = $_SESSION['user_role'];
+$userType =  $_SESSION['user_role'];
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -15,7 +16,7 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
-$contracts = (new NotificationController)->displayAllPendingUpdates();
+$contracts = (new NotificationController)->displayAllPendingUpdatesForCITET($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
@@ -48,7 +49,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Pending Updates</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
             <a href="pending_updates.php" style="text-decoration: none;">
@@ -123,12 +124,6 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
 
-        <!-- <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#powerSupplyModal">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i>
-            Add Contract
-        </button> -->
-
-        <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
 
@@ -217,11 +212,9 @@ include_once '../../../views/layouts/includes/header.php';
                                                         $contract_id = $contract['contract_id'];
 
                                                         $getContractFromContracts = (new ContractController)->getContractbyId($contract_id);
-
-                                                        // var_dump($getContractFromContracts); 
                                             
                                                         ?>
-
+                                                        
                                                         <div class="col-md-12">
                                                             <div class="mb-3">
                                                                 <label class="badge text-muted float-start">Contract
@@ -245,8 +238,11 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                             </svg>
                                                                         </span>
+                                                                        <?php
+                                                                        $dateStart = date('M-d-Y', strtotime($getContractFromContracts['contract_start']));
+                                                                        ?>
                                                                         <input type="text"
-                                                                            value="<?= $getContractFromContracts['contract_start'] ?? '' ?>"
+                                                                            value="<?= $dateStart ?>"
                                                                             class="form-control" readonly>
                                                                     </div>
                                                                 </div>
@@ -265,8 +261,11 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                             </svg>
                                                                         </span>
+                                                                        <?php
+                                                                        $dateEnd = date('M-d-Y', strtotime($getContractFromContracts['contract_end']));
+                                                                        ?>
                                                                         <input type="text"
-                                                                            value="<?= $getContractFromContracts['contract_end'] ?? '' ?>"
+                                                                            value="<?= $dateEnd ?>"
                                                                             class="form-control" readonly>
                                                                     </div>
                                                                 </div>
@@ -281,27 +280,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                             $interval = $today->diff($end);
                                                             $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                                                             ?>
-
-
-
                                                             <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract
-                                                                    name</label>
+                                                                <label class="badge text-muted float-start">Remaining days</label>
                                                                 <input type="text" value="<?= $remainingDays ?> Days"
                                                                     class="form-control" readonly>
                                                             </div>
-
-
                                                         </div>
-
-
-
-
-                                                        <!-- <p><strong>Row ID:</strong> <span id="modal-id"></span></p>
-                            <p><strong>Contract ID:</strong> <span id="modal-contract-id"></span></p>
-                            <p><strong>Contract Name:</strong> <span id="modal-contract-name"></span></p>
-                            <p><strong>Start Date:</strong> <span id="modal-start-date"></span></p>
-                            <p><strong>End Date:</strong> <span id="modal-end-date"></span></p> -->
                                                                 </div>
                                                             </div>
                                                             <div class="col-md-6 card p-3" style="background-color: #E8F9FF;">
@@ -313,9 +297,6 @@ include_once '../../../views/layouts/includes/header.php';
                                                                     $contract_id = $contract['contract_id'];
 
                                                                     $getPendingUpdate = (new NotificationController)->getPendingDatabyId($contract_id);
-
-                                                                    // var_dump($getContractFromContracts);
-                                                        
 
                                                                     ?>
                                                                     <div class="col-md-12">
@@ -331,7 +312,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                 <input type="hidden" name="contract_id"
                                                                                     value="<?= $getPendingUpdate['contract_id'] ?>"
                                                                                     class="form-control" readonly>
-                                                                                <label class="badge text-muted">Contract
+                                                                                <label class="badge text-muted float-start">Contract
                                                                                     name</label>
                                                                                 <input type="text" name="contract_name"
                                                                                     value="<?= $getPendingUpdate['contract_name'] ?>"
@@ -339,7 +320,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             </div>
                                                                             <div class="d-flex gap-2">
                                                                                 <div class="col-md-6">
-                                                                                    <label class="badge text-muted">Date
+                                                                                    <label class="badge text-muted float-start">Date
                                                                                         Start</label>
                                                                                     <div class="input-group">
                                                                                         <span class="input-group-text">
@@ -359,7 +340,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                 </div>
 
                                                                                 <div class="col-md-6">
-                                                                                    <label class="badge text-muted">Date End</label>
+                                                                                    <label class="badge text-muted float-start">Date End</label>
                                                                                     <div class="input-group">
                                                                                         <span class="input-group-text">
                                                                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -393,7 +374,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                                                                                 <div class="mb-3">
                                                                                     <label
-                                                                                        class="badge text-muted float-start">Contract
+                                                                                        class="badge text-muted float-start mt-2">Contract
                                                                                         name</label>
                                                                                     <input type="text"
                                                                                         value="<?= $remainingDays ?> Days"
@@ -411,7 +392,13 @@ include_once '../../../views/layouts/includes/header.php';
                                                     </div>
                                                     <div class="modal-footer">
                                                         <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                                                        <button type="submit" class="btn btn-primary">Approve Update</button>
+                                                        <?php if(!$userRole === CHIEF): ?>
+                                                            <button type="submit" class="btn btn-primary">Approve Update</button>
+                                                        <?php endif; ?>
+
+                                                        <?php if($userType === 'Manager'): ?>
+                                                            <button type="submit" class="btn btn-primary">Approve Update</button>
+                                                        <?php endif; ?>
                                                     </div>
                                                     </form>
                                                 </div>
@@ -562,14 +549,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <!-- <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button> -->
                                                         <?php if($userRole == CHIEF): ?>
                                                             <span class="badge bg-secondary text-white fs-5 " style="margin-left:15em;">Waiting for approval</span>
                                                         <?php endif; ?>
                                                         <?php if($userRole == 'Manager' ): ?>
                                                             <button type="submit" class="btn btn-success">Approve</button>
-                                                             <?php endif; ?>
+                                                            <?php endif; ?>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -578,30 +563,32 @@ include_once '../../../views/layouts/includes/header.php';
 
                                     <?php endif; ?>
 
+                                    <!-- Bootstrap Modal for confirmation -->
+                                    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="confirmModalLabel">Confirm Deletion</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to delete this contract?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <!-- Yes, Delete button -->
+                                                    <a href="#" id="confirmDelete" class="btn btn-danger">Yes, Delete</a>
+                                                    <input type="text" name="id" id="modal-contract-id" >
+                                                    <!-- Cancel button -->
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
-
-
-
-
-
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                    <a href="" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
                                         <i class="fa fa-trash"></i> Delete
                                     </a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                                 </div>
                             </td>
@@ -614,20 +601,8 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
-
-
-
-
-
-
-
 
 
 <?php include '../modals/power_supply.php'; ?>
@@ -635,26 +610,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
 
-<!-- Bootstrap Modal for confirmation -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this contract?</p>
-            </div>
-            <div class="modal-footer">
-                <!-- Yes, Delete button -->
-                <a href="#" id="confirmDelete" class="btn btn-danger">Yes, Delete</a>
-                <!-- Cancel button -->
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 
