@@ -243,21 +243,19 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 <?php endif; ?>
 
-
             <?php else: ?>
 
-                <div class="row col-md-2">
-                    <div class="mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
-                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['implementing_dept']; ?>" name="contract_type" readonly>
+                <?php if($getContract['implementing_dept'] ): ?>
+                    <div class="row col-md-2">
+                        <div class="mt-3">
+                            <label class="badge text-muted" style="font-size: 15px;">Implementing Department</label>
+                            <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                                value="<?= $getContract['implementing_dept']; ?>" name="contract_type" readonly>
+                        </div>
                     </div>
-                </div>
-
+                <?php endif; ?>
 
             <?php endif; ?>
-
-
 
             <div class="row col-md-3">
                 <div class="mt-3">

@@ -144,14 +144,36 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
                             <td class="text-center">
                                 <?php
-                                $type = $contract['contract_type'] ?? '';
-                                $badgeColor = match ($type) {
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
-                                    default => '#FAB12F'
-                                };
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                }
                                 ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">

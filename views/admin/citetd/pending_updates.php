@@ -49,7 +49,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Pending Updates</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
             <a href="pending_updates.php" style="text-decoration: none;">
@@ -549,14 +549,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                 </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <!-- <button type="button" class="btn btn-secondary"
-                                                data-dismiss="modal">Close</button> -->
                                                         <?php if($userRole == CHIEF): ?>
                                                             <span class="badge bg-secondary text-white fs-5 " style="margin-left:15em;">Waiting for approval</span>
                                                         <?php endif; ?>
                                                         <?php if($userRole == 'Manager' ): ?>
                                                             <button type="submit" class="btn btn-success">Approve</button>
-                                                             <?php endif; ?>
+                                                            <?php endif; ?>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -565,30 +563,32 @@ include_once '../../../views/layouts/includes/header.php';
 
                                     <?php endif; ?>
 
+                                    <!-- Bootstrap Modal for confirmation -->
+                                    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="confirmModalLabel">Confirm Deletion</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to delete this contract?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <!-- Yes, Delete button -->
+                                                    <a href="#" id="confirmDelete" class="btn btn-danger">Yes, Delete</a>
+                                                    <input type="text" name="id" id="modal-contract-id" >
+                                                    <!-- Cancel button -->
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
-
-
-
-
-
-                                    <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
+                                    <a href="" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
                                         <i class="fa fa-trash"></i> Delete
                                     </a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                                 </div>
                             </td>
@@ -601,20 +601,8 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
             </tbody>
         </table>
-
-
-
-
-
     </div>
 </div>
-
-
-
-
-
-
-
 
 
 <?php include '../modals/power_supply.php'; ?>
@@ -622,26 +610,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
 
-<!-- Bootstrap Modal for confirmation -->
-<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmModalLabel">Confirm Deletion</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete this contract?</p>
-            </div>
-            <div class="modal-footer">
-                <!-- Yes, Delete button -->
-                <a href="#" id="confirmDelete" class="btn btn-danger">Yes, Delete</a>
-                <!-- Cancel button -->
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 
 
 
