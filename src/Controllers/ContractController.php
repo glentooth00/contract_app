@@ -1500,10 +1500,12 @@ class ContractController
         try {
             $sql = "UPDATE contracts SET 
                 uploader_department = :uploader_department,
+                contract_name = :contract_name,
                 contract_start = :contract_start,
                 contract_end = :contract_end,
                 address = :address,
                 supplier = :supplier,
+                contract_type = :contract_type,
                 contractPrice = :contractPrice
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
@@ -1515,6 +1517,7 @@ class ContractController
             $stmt->bindParam(':address', $data['address']);
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
+            $stmt->bindParam(':contract_type', $data['contract_type_update']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
@@ -1532,6 +1535,7 @@ class ContractController
                 contract_end = :contract_end,
                 address = :address,
                 supplier = :supplier,
+                contract_type = :contract_type,
                 contractPrice = :contractPrice
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
@@ -1543,6 +1547,7 @@ class ContractController
             $stmt->bindParam(':address', $data['address']);
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
+            $stmt->bindParam(':contract_type', $data['contract_type_update']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
