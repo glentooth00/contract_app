@@ -329,6 +329,7 @@ class PendingDataController
                     uploader_id,
                     uploader_department,
                     data_type,
+                    contract_type_update,
                     status
                 ) VALUES (
                     :contract_id,
@@ -339,6 +340,7 @@ class PendingDataController
                     :uploader_id,
                     :uploader_department,
                     :data_type,
+                    :contract_type,
                     :status
                 )";
 
@@ -353,7 +355,8 @@ class PendingDataController
             ':uploader_department' => $data['uploader_department'],
             ':data_type' => $data['data_type'],
             ':status' => $data['status'],
-            ':contract_id' => $data['contract_id']
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type']
         ]);
     }
 
@@ -368,6 +371,7 @@ class PendingDataController
                     uploader_id,
                     uploader_department,
                     data_type,
+                    contract_type_update,
                     status
                 ) VALUES (
                     :contract_id,
@@ -378,6 +382,7 @@ class PendingDataController
                     :uploader_id,
                     :uploader_department,
                     :data_type,
+                    :contract_type,
                     :status
                 )";
 
@@ -392,7 +397,8 @@ class PendingDataController
             ':uploader_department' => $data['uploader_department'],
             ':data_type' => $data['data_type'],
             ':status' => $data['status'],
-            ':contract_id' => $data['contract_id']
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type']
         ]);
     }
 

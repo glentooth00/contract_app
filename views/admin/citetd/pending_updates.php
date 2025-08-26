@@ -280,6 +280,13 @@ include_once '../../../views/layouts/includes/header.php';
                                                             $interval = $today->diff($end);
                                                             $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                                                             ?>
+
+                                                             <div class="mb-3">
+                                                                <label class="badge text-muted float-start">Contract Type</label>
+                                                                <input type="text" value="<?= $getContractFromContracts['contract_type'] ?>"
+                                                                    class="form-control" readonly>
+                                                            </div>
+
                                                             <div class="mb-3">
                                                                 <label class="badge text-muted float-start">Remaining days</label>
                                                                 <input type="text" value="<?= $remainingDays ?> Days"
@@ -372,6 +379,18 @@ include_once '../../../views/layouts/includes/header.php';
 
                                                                                 ?>
 
+                                                                                <?php if( $getPendingUpdate['contract_type_update'] ): ?>
+                                                                                <div class="mb-3">
+                                                                                    <label
+                                                                                        class="badge text-muted float-start mt-2">Contract
+                                                                                        name</label>
+                                                                                    <input type="text"
+                                                                                        value="<?= $getPendingUpdate['contract_type_update'] ?>"
+                                                                                        name="contract_type_update"
+                                                                                        class="form-control" readonly>
+                                                                                </div>
+                                                                                <?php endif; ?>
+
                                                                                 <div class="mb-3">
                                                                                     <label
                                                                                         class="badge text-muted float-start mt-2">Contract
@@ -380,6 +399,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                         value="<?= $remainingDays ?> Days"
                                                                                         class="form-control" readonly>
                                                                                 </div>
+
                                                                             </div>
                                                                     </div>
 
@@ -577,7 +597,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                 <div class="modal-footer">
                                                     <!-- Yes, Delete button -->
                                                     <a href="#" id="confirmDelete" class="btn btn-danger">Yes, Delete</a>
-                                                    <input type="text" name="id" id="modal-contract-id" >
+                                                    <input type="hidden" name="id" id="modal-contract-id" >
                                                     <!-- Cancel button -->
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                 </div>

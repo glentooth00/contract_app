@@ -66,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
+            'contract_type' => $_GET['contractType']
 
         ];
-
 
         $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);
 
