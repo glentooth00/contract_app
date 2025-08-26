@@ -17,15 +17,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_name' => $_POST['contract_name'],
         'contract_start' => $_POST['contract_start'],
         'contract_end' => $_POST['contract_end'],
+        'contract_type' => $_POST['contract_type_update'] ?? ''
     ];
-
+    var_dump($updateData);
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
 
 
-    if ($updateSuccessful) {
 
-        var_dump($updateData['id']);
+
+    if ($updateSuccessful) {
 
         $deletePrevData = (new PendingDataController)->delete($updateData['id']);
 
@@ -37,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             } else {
 
-                echo $id = $updateData['contract_id'];
+                $id = $updateData['contract_id'];
 
                 $getContract = ( new ContractController )->getContractbyId($id);
 

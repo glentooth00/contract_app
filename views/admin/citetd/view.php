@@ -78,6 +78,9 @@ include_once '../../../views/layouts/includes/header.php';
 
         <hr>
 
+        <input type="hidden" id="loggedInUser" value="<?= $User ?>">
+        <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
+        <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
 
 
         <?php
@@ -158,6 +161,12 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
+            <?php if($getContract['contract_type'] === TRANS_RENT): ?>
+                <div>
+                    <input type="hidden" value="<?= $getContract['contract_type']; ?>" id="typeOfContract">
+                </div>
+            <?php endif; ?>
+
             <?php if($getContract['contract_type'] === PSC_SHORT): ?>
                 <div>
                     <input type="hidden" value="<?= $getContract['contract_type']; ?>" id="typeOfContract">
@@ -193,6 +202,40 @@ include_once '../../../views/layouts/includes/header.php';
                             ?>
                             <input type="text" id="psLongEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
                             <input type="date" id="psLongEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                            <?php
+                                $rentstart = date('Y-m-d', strtotime($getContract['rent_start'] ?? $getContract['contract_start'] ));
+                                $formatted = date('M-d-Y', strtotime($getContract['rent_start'] ?? $getContract['contract_start']));
+                            ?> 
+                            <input type="text" id="startTransRent2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" name="rent_start" readonly>
+                            <input type="date" id="startTransRent1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" hidden>
+                            <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <?php endif; ?>
+            <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Retirement Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                            <?php
+                                $rentEnd = date('Y-m-d', strtotime($getContract['rent_end'] ?? $getContract['contract_end']));
+                                $formatted2 = date('M-d-Y', strtotime($getContract['rent_end'] ?? $getContract['contract_end']));
+                            ?>
+                            <input type="text" id="endTransRent2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="endTransRent1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -1019,6 +1062,12 @@ include_once '../../../views/layouts/includes/header.php';
         const longPsEnd2 = document.getElementById('psLongEnd2');
         const longPsEnd1 =  document.getElementById('psLongEnd1');
 
+        const start_rent2 = document.getElementById('startTransRent2');
+        const start_rent1 = document.getElementById('startTransRent1');
+
+        const end_rent2 = document.getElementById('endTransRent2');
+        const end_rent1 = document.getElementById('endTransRent1');
+
         
 
         const saveBtn = document.getElementById('save');
@@ -1048,6 +1097,12 @@ include_once '../../../views/layouts/includes/header.php';
 
             contractInput?.removeAttribute('readonly');
             contractInput?.setAttribute('hidden', true);
+
+            start_rent1?.removeAttribute('hidden');
+            start_rent2?.setAttribute('hidden','');
+
+            end_rent1?.removeAttribute('hidden');
+            end_rent2?.setAttribute('hidden', '');
 
             contractSelect.removeAttribute('hidden');
 
@@ -1146,7 +1201,7 @@ include_once '../../../views/layouts/includes/header.php';
         const endDate = document.getElementById('endDate');
 
         const contract_type = document.getElementById('typeOfContract');
-
+        const contract_type_input = document.getElementById('contractTypeInput');
         const psLongStart1 = document.getElementById('psLongStart1');
         const psLongEnd1 = document.getElementById('psLongEnd1');
 
@@ -1162,6 +1217,12 @@ include_once '../../../views/layouts/includes/header.php';
         const uploader_id = document.getElementById('uploaderId');
         const uploader_dept = document.getElementById('uploaderDept');
         const loggedUser = document.getElementById('loggedInUser');
+
+        const rent_start =  document.getElementById('startTransRent1');
+
+        const rent_end = document.getElementById('endTransRent1');
+
+        const contractTypeSelect = document.getElementById('contractTypeSelect');
 
         const startDateValue = startDate?.value || rentStart?.value || '';
         const endDateValue = endDate?.value || rentEnd?.value || '';
@@ -1184,8 +1245,15 @@ include_once '../../../views/layouts/includes/header.php';
 
         const psShortStart = encodeURIComponent(psShortStart1?.value || '');
         const psShortEnd = encodeURIComponent(psShortEnd1?.value || '');
+        const contractSelect = encodeURIComponent(contractTypeSelect?. value || ''); 
 
-        const url = `contracts/pending_update.php?id=${contract_id}&contract_type=${type_of_contract}&powerSupplyLongStart1=${powerSupplyLongStart1}&powerSupplyLongEnd1=${powerSupplyLongEnd1}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}&psShortStart=${psShortStart}&psShortEnd=${psShortEnd}`;
+        const startRent = encodeURIComponent(rent_start?. value || '');
+        const endRent =  encodeURIComponent(rent_end?. value || '');
+
+        const contractInputType = encodeURIComponent(contract_type_input?. value || '');
+
+        const url = `contracts/pending_update.php?id=${contract_id}&contract_type=${type_of_contract}&powerSupplyLongStart1=${powerSupplyLongStart1}&powerSupplyLongEnd1=${powerSupplyLongEnd1}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}&psShortStart=${psShortStart}&psShortEnd=${psShortEnd}&contractType=${contractSelect}&contractInputType=${contractInputType}
+        &rentStart=${startRent}&rentEnd=${endRent}`;
 
         console.log("Redirecting to:", url); // Debug
         window.location.href = url;
