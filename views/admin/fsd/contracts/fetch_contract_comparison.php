@@ -90,6 +90,8 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
+                
+
                     
                     
 
@@ -176,6 +178,13 @@ if (isset($_POST['contract_id'])) {
                     <div class="mb-3">
                         <label><strong>Total Contract Cost:</strong></label>
                         <input type="text" value="<?= $current['contractPrice'] ?>"  class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
+
+                <?php if($pending['contract_type_update']): ?>
+                    <div class="mb-3">
+                        <label><strong>Contract Type:</strong></label>
+                        <input type="text" value="<?= $current['contract_type'] ?>"  class="form-control" readonly>
                     </div>
                 <?php endif; ?>
 
@@ -329,6 +338,13 @@ if (isset($_POST['contract_id'])) {
                     <div class="mb-3">
                         <label><strong>Total Contract Cost:</strong></label>
                         <input type="text" value="<?= $pending['total_cost'] ?> " name="tcc" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
+
+                <?php if($pending['contract_type_update']): ?>
+                    <div class="mb-3">
+                        <label><strong>Contract Type:</strong></label>
+                        <input type="text" value="<?= $pending['contract_type_update'] ?>" name="contract_type_update"  class="form-control" readonly>
                     </div>
                 <?php endif; ?>
                 

@@ -31,7 +31,8 @@ if ($_GET['type'] === TRANS_RENT) {
         'updated_by' => $_GET['updatedBy'],
         'address' => $_GET['address'],
         'tc_no' => $_GET['tcNumber'],
-        'account_no' => $_GET['account_no']
+        'account_no' => $_GET['account_no'],
+        'contractType' => $_GET['contractType']
     ];
 
 
@@ -101,7 +102,8 @@ if ($_GET['type'] === TEMP_LIGHTING) {
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-        'address' => $_GET['address']
+        'address' => $_GET['address'],
+        'contractType' => $_GET['contractType']
     ];
 
     $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
@@ -161,7 +163,8 @@ if($_GET['type'] === EMP_CON){
         'contract_status' => 'Active',
         'contract_type' => $_GET['contractType'],
         'status' => 1,
-        'uploader_department' => 'ISD'
+        'uploader_department' => 'ISD',
+        'contractType' => $_GET['contractType']
     ];
 
 
@@ -235,7 +238,8 @@ if($_GET['type'] === INFRA){
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
         'implementing_dept' => $_GET['implementingDept'],
-        'total_cost' => $price
+        'total_cost' => $price,
+        'contractType' => $_GET['contractType']
     ];
 
 
@@ -312,52 +316,54 @@ if($_GET['type'] === GOODS){
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
         'supplier' => $_GET['goodsSupplier'],
-        'total_cost' => $price
+        'total_cost' => $price,
+        'contractType' => $_GET['contractType']
     ];
 
         $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+        
 
-        if ($contractUpdate) {
+        // if ($contractUpdate) {
 
-            $id = $EmpUpdate['contract_id'];
+        //     $id = $EmpUpdate['contract_id'];
 
-            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+        //     $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
-            if(!empty($getCurrenData)){
+        //     if(!empty($getCurrenData)){
 
-                $currentData = [
-                    'id' => $getCurrenData['id'],
-                    'contract_name' => $getCurrenData['contract_name'],
-                    'date_start' => $getCurrenData['contract_start'],
-                    'date_end' => $getCurrenData['contract_end'],
-                    'updated_at' => date('Y-m-d H:i:s')
-                ];
+        //         $currentData = [
+        //             'id' => $getCurrenData['id'],
+        //             'contract_name' => $getCurrenData['contract_name'],
+        //             'date_start' => $getCurrenData['contract_start'],
+        //             'date_end' => $getCurrenData['contract_end'],
+        //             'updated_at' => date('Y-m-d H:i:s')
+        //         ];
 
-                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+        //         $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                if($updateContractHistory){
-
-
-                $_SESSION['notification'] = [
-                      'message' => 'Update successful. This record is now pending further review.',
-                    'type' => 'success'
-                ];
-
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-
-                }
-
-                $_SESSION['notification'] = [
-                     'message' => 'Update successful. This record is now pending further review.',
-                    'type' => 'success'
-                ];
-
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-
-            }
+        //         if($updateContractHistory){
 
 
-        }
+        //         $_SESSION['notification'] = [
+        //               'message' => 'Update successful. This record is now pending further review.',
+        //             'type' => 'success'
+        //         ];
+
+        //         header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        //         }
+
+        //         $_SESSION['notification'] = [
+        //              'message' => 'Update successful. This record is now pending further review.',
+        //             'type' => 'success'
+        //         ];
+
+        //         header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        //     }
+
+
+        // }
 }
 //update done
 if($_GET['type'] === SACC){
@@ -379,7 +385,8 @@ if($_GET['type'] === SACC){
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-        'total_cost' => $_GET['ttc']
+        'total_cost' => $_GET['ttc'],
+        'contractType' => $_GET['contractType']
     ];
 
 
