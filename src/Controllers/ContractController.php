@@ -1475,12 +1475,20 @@ class ContractController
     public function managerUpdate($data)
     {
         try {
+            // Base SQL (without contract_type)
             $sql = "UPDATE contracts SET 
                 uploader_department = :uploader_department,
                 contract_name = :contract_name,
                 contract_start = :contract_start,
-                contract_end = :contract_end
-                WHERE id = :contract_id";
+                contract_end = :contract_end";
+
+            // Add contract_type only if not empty
+            if (!empty($data['contract_type'])) {
+                $sql .= ", contract_type = :contract_type";
+            }
+
+            $sql .= " WHERE id = :contract_id";
+
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':uploader_department', $data['uploader_department']);
             $stmt->bindParam(':contract_name', $data['contract_name']);
@@ -1488,12 +1496,18 @@ class ContractController
             $stmt->bindParam(':contract_end', $data['contract_end']);
             $stmt->bindParam(':contract_id', $data['contract_id']);
 
-            return $stmt->execute(); // returns true if successful
+            // Only bind contract_type if not empty
+            if (!empty($data['contract_type'])) {
+                $stmt->bindParam(':contract_type', $data['contract_type']);
+            }
+
+            return $stmt->execute();
         } catch (PDOException $e) {
-            echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
+            echo 'PDO Error: ' . $e->getMessage();
             return false;
         }
     }
+
 
         public function managerUpdateINFRA($data)
     {
