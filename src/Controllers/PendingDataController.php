@@ -201,7 +201,8 @@ class PendingDataController
                 assigned_dept,
                 address,
                 supplier,
-                total_cost
+                total_cost,
+                contract_type_update
             ) VALUES (
                 :contract_id,
                 :contract_name,
@@ -220,7 +221,8 @@ class PendingDataController
                 :assigned_dept,
                 :address,
                 :supplier,
-                :total_cost
+                :total_cost,
+                :contract_type_update
             )";
 
         $stmt = $this->db->prepare($sql);
@@ -233,7 +235,7 @@ class PendingDataController
             ':contract_end' => $data['contract_end'],
             ':updated_at' => $data['updated_at'],
             ':contract_status' => $data['contract_status'],
-            ':contract_type' => $data['contract_type'],
+            ':contract_type' => $data['contract_type'] ?? $data['contractType'],
             ':uploader_id' => $data['uploader_id'],
             ':uploader' => $data['uploader'],
             ':data_type' => $data['data_type'],
@@ -243,7 +245,8 @@ class PendingDataController
             ':assigned_dept' => $data['implementing_dept'] ?? '',
             ':address' => $data['address'] ?? '',
             ':supplier' => $data['supplier'] ?? '',
-            ':total_cost' => $data['total_cost'] ?? ''
+            ':total_cost' => $data['total_cost'] ?? '',
+            ':contract_type_update' => $data['contractType']
         ]);
 
 

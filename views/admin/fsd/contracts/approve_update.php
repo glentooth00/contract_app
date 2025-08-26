@@ -120,11 +120,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $_POST['contract_start'],
             'contract_end' => $_POST['contract_end'],
             'contract_status' => 'Active',
-            'supplier' => $_POST['supplier'],
-            'contractPrice' => $_POST['tcc']
+            'supplier' => $_POST['supplier'] ?? '',
+            'contractPrice' => $_POST['tcc'],
+            'contract_type_update' => $_POST['contract_type_update']
         ];
 
+
         $updateSuccessful = (new ContractController)->managerUpdateGOODS($updateData);
+
 
             if( $updateSuccessful ){
                $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
@@ -155,17 +158,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if($_POST['contract_type'] === INFRA){
 
+        $startDate = date('Y-m-d', strtotime($_POST['contract_start']));
+        $endDate = date('Y-m-d', strtotime($_POST['contract_end']));
+
         $updateData = [
             'contract_id' => $_POST['contract_id'],
             'uploader_department' => $_POST['uploader_department'],
             'contract_name' => $_POST['contract_name'],
-            'contract_start' => $_POST['contract_start'],
-            'contract_end' => $_POST['contract_end'],
+            'contract_start' => $startDate,
+            'contract_end' =>  $endDate,
             'contract_status' => 'Active', 
-            'contractPrice' => $_POST['tcc']
+            'contractPrice' => $_POST['tcc'],
+            'contract_type_update' => $_POST['contract_type_update']
         ];
 
+        // var_dump( $updateData);
+
         $updateSuccessful = (new ContractController)-> managerUpdateINFRA($updateData);
+
 
             if( $updateSuccessful ){
                $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
@@ -203,6 +213,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $_POST['contract_start'],
             'contract_end' => $_POST['contract_end'],
             'contract_status' => 'Active', 
+            'contract_type_update' => $_POST['contract_type_update']
         ];
 
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
@@ -250,7 +261,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $startDate,
             'contract_end' => $endDate,
             'contract_status' => 'Active',
-            'contractPrice' => trim(str_replace('₱', '', $_POST['tcc']))
+            'contractPrice' => trim(str_replace('₱', '', $_POST['tcc'])),
+            'contract_type_update' => $_POST['contract_type_update']
         ];
 
 
