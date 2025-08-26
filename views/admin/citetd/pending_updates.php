@@ -163,13 +163,15 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
 
                             <td class="text-center">
+                                <?php $dateStart = date('M-d-Y', strtotime($contract['rent_start'] ?? $contract['contract_start'])) ?>
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                    <?= $dateStart ?>
                                 </span>
                             </td>
                             <td class="text-center">
+                                <?php $dateEnd = date('M-d-Y', strtotime($contract['rent_end'] ?? $contract['contract_end'])) ?>
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                    <?= $dateEnd ?>
                                 </span>
                             </td>
                             <!-- <td class="text-center">
@@ -340,9 +342,17 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                                             </svg>
                                                                                         </span>
+                                                                                        <?php if( $getPendingUpdate['rent_start']): ?>
+                                                                                        <input type="text" name="contract_start"
+                                                                                            value="<?= $getPendingUpdate['rent_start'] ?? '' ?>"
+                                                                                            class="form-control">
+                                                                                        <?php endif; ?>
+
+                                                                                        <?php if( !$getPendingUpdate['contract_start'] === '1900-01-01' ||$getPendingUpdate['contract_start'] ): ?>
                                                                                         <input type="text" name="contract_start"
                                                                                             value="<?= $getPendingUpdate['contract_start'] ?? '' ?>"
-                                                                                            class="form-control">
+                                                                                            class="form-control    ">
+                                                                                        <?php endif; ?>
                                                                                     </div>
                                                                                 </div>
 
@@ -359,26 +369,46 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                                     d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                                                             </svg>
                                                                                         </span>
+                                                                                         <?php if( $getPendingUpdate['rent_end']): ?>
+                                                                                        <input type="text" name="contract_end"
+                                                                                            value="<?= $getPendingUpdate['rent_end'] ?? '' ?>"
+                                                                                            class="form-control">
+                                                                                        <?php endif; ?>
+
+                                                                                        <?php if( !$getPendingUpdate['contract_end'] === '1900-01-01' ||$getPendingUpdate['contract_end'] ): ?>
                                                                                         <input type="text" name="contract_end"
                                                                                             value="<?= $getPendingUpdate['contract_end'] ?? '' ?>"
-                                                                                            class="form-control">
+                                                                                            class="form-control    ">
+                                                                                        <?php endif; ?>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="mt-2">
                                                                                 <?php
-
-                                                                                $start = new DateTime($getPendingUpdate['contract_start']);
-                                                                                $end = new DateTime($getPendingUpdate['contract_end']);
+                                                                                $start = new DateTime($getPendingUpdate['contract_start'] ??  $getPendingUpdate['rent_start']);
+                                                                                $end = new DateTime($getPendingUpdate['contract_end'] ?? $getPendingUpdate['rent_end']);
                                                                                 $today = new DateTime();
+
+                                                                                // if($getPendingUpdate['contract_start'] ?? $getPendingUpdate['rent_start'] === '1900-01-01'){
+                                                                                //     $start = new DateTime($getPendingUpdate['rent_start']);
+                                                                                   
+                                                                                // } else {
+                                                                                //     $start = new DateTime($getPendingUpdate['contract_start']);
+                                                                                // }
+
+                                                                                // if($getPendingUpdate['contract_end'] ?? $getPendingUpdate['rent_end'] === '1900-01-01'){
+                                                                                //     $end = new DateTime($getPendingUpdate['rent_end']);
+                                                                                // } else {
+                                                                                //     $end = new DateTime($getPendingUpdate['contract_end']);
+                                                                                // }
+
+                                                                                
+
+
 
                                                                                 $interval = $today->diff($end);
                                                                                 $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-
-
-
                                                                                 ?>
-
                                                                                 <?php if( $getPendingUpdate['contract_type_update'] ): ?>
                                                                                 <div class="mb-3">
                                                                                     <label

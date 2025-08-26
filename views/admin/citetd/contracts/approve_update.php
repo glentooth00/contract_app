@@ -17,10 +17,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_name' => $_POST['contract_name'],
         'contract_start' => $_POST['contract_start'],
         'contract_end' => $_POST['contract_end'],
-        'contract_type' => $_POST['contract_type_update']
+        'contract_type' => $_POST['contract_type_update'] ?? ''
     ];
+    var_dump($updateData);
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
+
+
 
 
     if ($updateSuccessful) {
@@ -70,5 +73,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// header("Location: " . $_SERVER['HTTP_REFERER']);
-// exit;
+header("Location: " . $_SERVER['HTTP_REFERER']);
+exit;

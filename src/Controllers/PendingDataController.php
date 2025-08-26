@@ -330,6 +330,8 @@ class PendingDataController
                     uploader_department,
                     data_type,
                     contract_type_update,
+                    rent_start,
+                    rent_end,
                     status
                 ) VALUES (
                     :contract_id,
@@ -341,14 +343,16 @@ class PendingDataController
                     :uploader_department,
                     :data_type,
                     :contract_type,
+                    :rent_start,
+                    :rent_end,
                     :status
                 )";
 
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
-            ':contract_start' => $data['powerSupplyLongStart1'],
-            ':contract_end' => $data['powerSupplyLongEnd1'],
+            ':contract_start' => $data['powerSupplyLongStart1'] ?? 'null',
+            ':contract_end' => $data['powerSupplyLongEnd1'] ?? 'null',
             ':contract_name' => $data['name'],
             ':uploader' => $data['uploader'],
             ':uploader_id' => $data['uploader_id'],
@@ -356,7 +360,9 @@ class PendingDataController
             ':data_type' => $data['data_type'],
             ':status' => $data['status'],
             ':contract_id' => $data['contract_id'],
-            ':contract_type' => $data['contract_type']
+            ':contract_type' => $data['contract_type_update'],
+            ':rent_start' => $data['rent_start'],
+            ':rent_end' => $data['rent_end']
         ]);
     }
 
