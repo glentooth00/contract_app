@@ -265,6 +265,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_type_update' => $_POST['contract_type_update']
         ];
 
+        var_dump($updateData);
+
 
 
         $updateSuccessful = (new ContractController)->managerUpdateSACC($updateData);
