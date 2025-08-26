@@ -1646,7 +1646,8 @@ class ContractController
             uploader_department = :uploader_department,
             contract_name = :contract_name,
             contract_start = :contract_start,
-            contract_end = :contract_end,   
+            contract_end = :contract_end,
+            contract_type = :contract_type,
             contractPrice = :contractPrice
             WHERE id = :contract_id";
 
@@ -1658,7 +1659,8 @@ class ContractController
             ':contract_start' => $data['contract_start'],
             ':contract_end' => $data['contract_end'],
             ':contractPrice' => $data['contractPrice'],
-            ':contract_id' => $data['contract_id']
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type_update']
         ]);
 
     } catch (PDOException $e) {
