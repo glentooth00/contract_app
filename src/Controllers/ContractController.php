@@ -1495,7 +1495,67 @@ class ContractController
         }
     }
 
-        public function managerUpdateTempLight($data)
+        public function managerUpdateINFRA($data)
+    {
+        try {
+            $sql = "UPDATE contracts SET 
+                uploader_department = :uploader_department,
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end,
+                address = :address,
+                supplier = :supplier,
+                contract_type = :contract_type,
+                contractPrice = :contractPrice
+                WHERE id = :contract_id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':uploader_department', $data['uploader_department']);
+            $stmt->bindParam(':contract_name', $data['contract_name']);
+            $stmt->bindParam(':contract_start', $data['contract_start']);
+            $stmt->bindParam(':contract_end', $data['contract_end']);
+            $stmt->bindParam(':contract_id', $data['contract_id']);
+            $stmt->bindParam(':address', $data['address']);
+            $stmt->bindParam(':supplier', $data['supplier']);
+            $stmt->bindParam(':contractPrice', $data['contractPrice']);
+            $stmt->bindParam(':contract_type', $data['contract_type_update']);
+            return $stmt->execute(); // returns true if successful
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
+            return false;
+        }
+    }
+
+    public function managerUpdateGOODS($data)
+    {
+        try {
+            $sql = "UPDATE contracts SET 
+                uploader_department = :uploader_department,
+                contract_name = :contract_name,
+                contract_start = :contract_start,
+                contract_end = :contract_end,
+                address = :address,
+                supplier = :supplier,
+                contract_type = :contract_type,
+                contractPrice = :contractPrice
+                WHERE id = :contract_id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':uploader_department', $data['uploader_department']);
+            $stmt->bindParam(':contract_name', $data['contract_name']);
+            $stmt->bindParam(':contract_start', $data['contract_start']);
+            $stmt->bindParam(':contract_end', $data['contract_end']);
+            $stmt->bindParam(':contract_id', $data['contract_id']);
+            $stmt->bindParam(':address', $data['address']);
+            $stmt->bindParam(':supplier', $data['supplier']);
+            $stmt->bindParam(':contractPrice', $data['contractPrice']);
+            $stmt->bindParam(':contract_type', $data['contract_type_update']);
+            return $stmt->execute(); // returns true if successful
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
+            return false;
+        }
+    }
+
+            public function managerUpdateTempLight($data)
     {
         try {
             $sql = "UPDATE contracts SET 
@@ -1586,7 +1646,8 @@ class ContractController
             uploader_department = :uploader_department,
             contract_name = :contract_name,
             contract_start = :contract_start,
-            contract_end = :contract_end,   
+            contract_end = :contract_end,
+            contract_type = :contract_type,
             contractPrice = :contractPrice
             WHERE id = :contract_id";
 
@@ -1598,7 +1659,8 @@ class ContractController
             ':contract_start' => $data['contract_start'],
             ':contract_end' => $data['contract_end'],
             ':contractPrice' => $data['contractPrice'],
-            ':contract_id' => $data['contract_id']
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type_update']
         ]);
 
     } catch (PDOException $e) {

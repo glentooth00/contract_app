@@ -1,9 +1,12 @@
 <?php
+
+use App\Controllers\NotificationController;
+use App\Controllers\PendingDataController;
 session_start();
-$userid = $_SESSION['id'];
+
 $department = $_SESSION['department'];
 $page_title = "List - $department";
-$contractTypes = $_SESSION['contract_types'];
+
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
@@ -11,64 +14,67 @@ use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
 use App\Controllers\ContractHistoryController;
 
-
-
-$contracts = (new ContractController)->getContractsByDepartment($department);
+$contracts = (new NotificationController)->displayAllPendingUpdatesForISD($department);
 
 $getAllContractType = (new ContractTypeController)->getContractTypes();
 
+// $pendingUpdates = (new NotificationController)->displayAllPendingUpdates();
+
 $getOneLatest = (new ContractHistoryController)->insertLatestData();
-// if ($getOneLatest) {
-//     echo '<script>alert("Latest data inserted")</script>';
+if ($getOneLatest) {
+    //     echo '<script>alert("Latest data inserted")</script>';
 // } else {
-//     //Optional: echo nothing or a silent message
-//     echo "No contract data available to insert.";
-// }
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
+}
+
 include_once '../../../views/layouts/includes/header.php';
 ?>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
 <div class="main-layout">
 
     <?php include_once '../menu/sidebar.php'; ?>
 
+
     <div class="content-area">
 
-        <h1>Contracts</h1>
+        <h1>Pending updates</h1>
+        
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
-            <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
+        
 
-            <?php if (isset($department)) { ?>
+         <?php if (isset($department)) { ?>
 
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
-                    case 'ISD-HRAD': ?>
+                    case 'ISD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'CITETD': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department . ' ' . $role ?> user</span>
 
                         <?php break;
                     case '': ?>
@@ -82,18 +88,12 @@ include_once '../../../views/layouts/includes/header.php';
                 <!-- <span class="badge text-muted">no department assigned</span> -->
 
             <?php } ?>
+
+
+            <?php include_once 'bell.php'; ?>
+
         </span>
         <hr>
-
-        <?php include_once __DIR__ . '../../buttons/switch.php'; ?>
-
-
-        <!-- <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init
-            style="width:15%;padding-right:10px;font-size:14px;background-color:#003092;" href="#!" role="button"
-            data-bs-toggle="modal" data-bs-target="#transformerModal">
-            <i class="fa fa-file-text-o" aria-hidden="true"></i>
-            Transformer Rental Contract
-        </a> -->
 
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
@@ -118,11 +118,11 @@ include_once '../../../views/layouts/includes/header.php';
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Contract name</th>
+
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th>
+                    <!-- <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th> -->
                     <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Action</th>
                 </tr>
             </thead>
@@ -131,79 +131,30 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
-                                  <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
-                                    style="text-decoration: none; color: black;">
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
-                                </a>
                             </td>
+
                             <td class="text-center">
-                               <?php
-                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
-                                switch ($type) {
-                                    case INFRA:
-                                        $badgeColor = '#328E6E';
-                                        break;
-                                    case SACC:
-                                        $badgeColor = '#123458';
-                                        break;
-                                    case GOODS:
-                                        $badgeColor = '#F75A5A';
-                                        break;
-                                    case EMP_CON:
-                                        $badgeColor = '#FAB12F';
-                                        break;
-                                    case PSC_LONG:
-                                        $badgeColor = '#007bff';
-                                        break;
-                                    case PSC_SHORT:
-                                        $badgeColor = '#28a745';
-                                        break;
-                                    case TRANS_RENT:
-                                        $badgeColor = '#003092';
-                                        break;
-                                    case TEMP_LIGHTING:
-                                        $badgeColor = '#03A791';
-                                        break;
-                                    default:
-                                        $badgeColor = '#FAB12F';
-                                        break;
-                                }
-                                ?>
-                                <span class="p-2 text-white badge"
-                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
-                                    <?= htmlspecialchars($type) ?>
+                                <span class="badge text-secondary">
+                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
                                 </span>
                             </td>
                             <td class="text-center">
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                </span>
                             </td>
-                            <td class="text-center">
-                                <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
-                            </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <span
                                     class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
                                     <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
                                 </span>
-                            </td>
+                            </td> -->
                             <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                                        class="btn btn-success btn-sm">
-                                        <i class="fa fa-eye"></i> View
-                                    </a>
-
-                                    <?php if ($department === BAC): ?>
-
-                                    <?php else: ?>
-                                        <a href="#" class="btn btn-danger badge p-2 delete-btn" data-id="<?= $contract['id'] ?>">
-                                            <i class="fa fa-trash"></i> Delete
-                                        </a>
-                                    <?php endif; ?>
-
-                                </div>
+                                <button class="btn btn-success btn-sm view-btn" data-id="<?= $contract['contract_id'] ?>"
+                                    data-toggle="modal" data-target="#exampleModal">
+                                    <i class="fa fa-eye"></i> View
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -217,8 +168,24 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
-<?php include_once __DIR__ . '../../modals/modal_switch.php'; ?>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Compare Data</h5>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- AJAX-loaded content goes here -->
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
@@ -307,8 +274,18 @@ include_once '../../../views/layouts/includes/header.php';
         width: 200px;
         /* Adjust width as needed */
     }
-</style>
 
+    #file:hover {
+        cursor: pointer;
+    }
+</style>
+<?php if (isset($_GET['contract_id'])): ?>
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            $('#exampleModal').modal('show');
+        });
+    </script>
+<?php endif; ?>
 <script>
     // When the page finishes loading, hide the spinner
     window.onload = function () {
@@ -336,12 +313,11 @@ include_once '../../../views/layouts/includes/header.php';
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
             // Redirect to deletion endpoint (adjust URL to match your backend)
-            window.location.href = 'procurement/delete_contract.php?id=' + selectedContractId;
+            window.location.href = 'contracts/delete.php?id=' + selectedContractId;
         }
     });
 
-    //----------------DAtatables --------------------------------//
-
+    //----------------DAtatables
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
 
@@ -374,7 +350,26 @@ include_once '../../../views/layouts/includes/header.php';
         }
     });
 
-    //----------------DAtatables --------------------------------//
 
+
+    //----------------DAtatables
+
+
+
+    $(document).ready(function () {
+        $('.view-btn').click(function () {
+            const contractId = $(this).data('id');
+
+            $.ajax({
+                url: 'contracts/fetch_contract_comparison.php',
+                type: 'POST',
+                data: { contract_id: contractId },
+                success: function (response) {
+                    $('#modal-body-content').html(response);
+                    $('#exampleModal').modal('show');
+                }
+            });
+        });
+    });
 
 </script>

@@ -52,12 +52,14 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 <div class="main-layout ">
     <?php include_once '../menu/sidebar.php'; ?>
+
     <div class="content-area">
         <input type="hidden" id="loggedInUser" value="<?= $User ?>">
         <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
         <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
         
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
+    
         <hr>
         <!-- Modal -->
         <div class="modal fade" id="suspendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
