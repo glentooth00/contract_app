@@ -361,8 +361,8 @@ class PendingDataController
             ':status' => $data['status'],
             ':contract_id' => $data['contract_id'],
             ':contract_type' => $data['contract_type_update'],
-            ':rent_start' => $data['rent_start'],
-            ':rent_end' => $data['rent_end']
+            ':rent_start' => $data['rent_start'] ?? '',
+            ':rent_end' => $data['rent_end'] ?? ''
         ]);
     }
 
@@ -404,7 +404,7 @@ class PendingDataController
             ':data_type' => $data['data_type'],
             ':status' => $data['status'],
             ':contract_id' => $data['contract_id'],
-            ':contract_type' => $data['contract_type']
+            ':contract_type' => $data['contract_type_update']
         ]);
     }
 

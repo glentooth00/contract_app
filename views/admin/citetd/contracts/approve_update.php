@@ -19,12 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_end' => $_POST['contract_end'],
         'contract_type' => $_POST['contract_type_update'] ?? ''
     ];
-    var_dump($updateData);
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
-
-
-
 
     if ($updateSuccessful) {
 
