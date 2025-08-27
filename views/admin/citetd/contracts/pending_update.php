@@ -71,20 +71,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         ];
 
-        var_dump($contractData);
+        $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);
 
-        // $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);
+        if($insertPSLongData){
 
-        // if($insertPSLongData){
+            $_SESSION['notification'] = [
+                'message' => 'Contract updated , Waiting for approval',
+                'type' => 'success'
+            ];
 
-        //     $_SESSION['notification'] = [
-        //         'message' => 'Contract updated , Waiting for approval',
-        //         'type' => 'success'
-        //     ];
+            header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
-
-        // }
+        }
         
 
         
@@ -107,8 +105,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
             'contract_start' => $_GET['psShortStart'],
-            'contract_end' => $_GET['psShortEnd']
+            'contract_end' => $_GET['psShortEnd'],
+            'contract_type_update' => $_GET['contractType'],
+            'contract_type' => $_GET['contract_type'],
         ];
+
 
         $insertPSShortData = ( new PendingDataController )->powerSupplyShort( $contractData);
 
