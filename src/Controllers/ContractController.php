@@ -1482,7 +1482,8 @@ class ContractController
                 contract_start = :contract_start,
                 contract_end = :contract_end,
                 contractPrice = :contractPrice,
-                procurementMode = :procurementMode
+                procurementMode = :procurementMode,
+                supplier = :supplier
                 ";
 
             // Add contract_type only if not empty
@@ -1500,6 +1501,7 @@ class ContractController
             $stmt->bindParam(':contract_id', $data['contract_id']);
             $stmt->bindParam(':contractPrice', $data['contract_price']);
             $stmt->bindParam(':procurementMode', $data['procurementMode']);
+            $stmt->bindParam(':supplier', $data['supplier']);
 
 
             // Only bind contract_type if not empty

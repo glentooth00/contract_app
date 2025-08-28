@@ -15,7 +15,6 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    var_dump($_GET);
 
     if($_GET['contract_type'] === PSC_LONG ){
     
@@ -163,9 +162,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'contract_type_update' => $_GET['contractType'],
             'rent_start' =>  $startDate,
             'rent_end' => $endDate,
-            'contract_type' => $_GET['contract_type']
+            'contract_type' => $_GET['contract_type'],
+            'proc_mode' => $_GET['procurementMode'],
+            'contract_start' => $_GET['goodsStart'],
+            'contract_end' => $_GET['goodsEnd'],
+            'total_cost' => $_GET['ttc'],
+            'supplier' => $_GET['goodsSupplier']
 
         ];
+
 
         $GoodsUpdate = ( new PendingDataController )->goodsUpdate( $contractData);
 
@@ -180,9 +185,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             header("Location: " . $_SERVER['HTTP_REFERER']);
 
         }
-        
-
-        
 
     }
 
