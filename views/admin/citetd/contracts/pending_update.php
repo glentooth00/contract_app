@@ -15,6 +15,7 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
+    // var_dump($_GET);
 
     if($_GET['contract_type'] === PSC_LONG ){
     
@@ -176,6 +177,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 
         if($GoodsUpdate){
+
+            $_SESSION['notification'] = [
+                'message' => 'Contract updated , Waiting for approval',
+                'type' => 'success'
+            ];
+
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        }
+
+    }
+
+    if($_GET['contract_type'] === INFRA ){
+    
+        $startDate = date('Y-m-d', strtotime( $_GET['startInfra']));
+        $endDate = date('Y-m-d', strtotime($_GET['endInfra']));
+
+        $contractData = [
+            'contract_id' => $_GET['id'],
+            'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
+            'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
+            'name' => $_GET['name'],
+            'uploader' => $_GET['uploader'],
+            'uploader_id' => $_GET['uploader_id'],
+            'uploader_dept' => $_GET['uploader_dept'],
+            'data_type' => 'Update',
+            'status' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+            'uploader_department' => $_GET['uploader_dept'],
+            'contract_type_update' => $_GET['contractType'],
+            'rent_start' =>  $startDate,
+            'rent_end' => $endDate,
+            'contract_type' => $_GET['contract_type'],
+            'proc_mode' => $_GET['procurementMode'],
+            'contract_start' => $_GET['startInfra'],
+            'contract_end' => $_GET['endInfra'],
+            'total_cost' => $_GET['ttc'],
+            'supplier' => $_GET['goodsSupplier']
+
+        ];
+
+
+        $infrasUpdate = ( new PendingDataController )->goodsUpdate( $contractData);
+
+
+        if($infrasUpdate){
 
             $_SESSION['notification'] = [
                 'message' => 'Contract updated , Waiting for approval',
