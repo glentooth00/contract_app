@@ -380,6 +380,9 @@ class PendingDataController
                     contract_type_update,
                     rent_start,
                     rent_end,
+                    proc_mode,
+                    total_cost,
+                    supplier,
                     status
                 ) VALUES (
                     :contract_id,
@@ -393,14 +396,17 @@ class PendingDataController
                     :contract_type,
                     :rent_start,
                     :rent_end,
+                    :proc_mode,
+                    :total_cost,
+                    :supplier,
                     :status
                 )";
 
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
-            ':contract_start' => $data['powerSupplyLongStart1'] ?? 'null',
-            ':contract_end' => $data['powerSupplyLongEnd1'] ?? 'null',
+            ':contract_start' => $data['contract_start'] ?? 'null',
+            ':contract_end' => $data['contract_end'] ?? 'null',
             ':contract_name' => $data['name'],
             ':uploader' => $data['uploader'],
             ':uploader_id' => $data['uploader_id'],
@@ -410,7 +416,10 @@ class PendingDataController
             ':contract_id' => $data['contract_id'],
             ':contract_type' => $data['contract_type_update'],
             ':rent_start' => $data['rent_start'] ?? '',
-            ':rent_end' => $data['rent_end'] ?? ''
+            ':rent_end' => $data['rent_end'] ?? '',
+            ':total_cost' => $data['total_cost'],
+            ':proc_mode' => $data['proc_mode'],
+            ':supplier' => $data['supplier']
         ]);
     }
 
