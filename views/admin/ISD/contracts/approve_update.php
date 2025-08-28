@@ -11,6 +11,8 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    // var_dump($_POST);
+
     if($_POST['contract_type'] === TEMP_LIGHTING){
 
         $updateData = [
@@ -168,8 +170,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $startDate,
             'contract_end' =>  $endDate,
             'contract_status' => 'Active', 
-            'contractPrice' => $_POST['tcc'],
-            'contract_type_update' => $_POST['contract_type_update']
+            'contractPrice' => $_POST['tcc'] ?? '',
+            'contract_type' => $_POST['contract_type'] ?? ''
         ];
 
         // var_dump( $updateData);

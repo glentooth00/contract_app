@@ -246,7 +246,7 @@ class PendingDataController
             ':address' => $data['address'] ?? '',
             ':supplier' => $data['supplier'] ?? '',
             ':total_cost' => $data['total_cost'] ?? '',
-            ':contract_type_update' => $data['contractType']
+            ':contract_type_update' => $data['contract_type']
         ]);
 
 
