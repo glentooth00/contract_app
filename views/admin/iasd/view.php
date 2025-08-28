@@ -421,6 +421,24 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
+             <?php if($getContract['procurementMode']): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Procurement Mode:</label>
+
+                        <input type="text" id="procurementModeInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['procurementMode']; ?>" name="contract_type" readonly>
+
+                        <select class="p-1 form-select" name="contract_type" id="procurementModeSelect" style="width:12em;margin-left:9px;" hidden>
+                            <option value="<?= $getContract['procurementMode']; ?>"><?= $getContract['procurementMode']; ?></option>
+                            <?php foreach($getAllprocMode as $types): ?>
+                                <option value="<?= $types['procMode'] ?>"><?= $types['procMode'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            <?php endif; ?>
+
 
 
 
