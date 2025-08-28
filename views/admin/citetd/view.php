@@ -279,6 +279,40 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <?php endif; ?>
 
+            <?php if($getContract['contract_type'] === INFRA  ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA ): ?>
+                            <?php
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="text" id="infraStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="infraStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <?php endif; ?>
+            <?php if($getContract['contract_type'] === INFRA ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
+                            <?php
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="infraEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="infraEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             
 
             <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
@@ -1120,6 +1154,11 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('edit').addEventListener('click', function () {
 
+        const startInfra2 = document.getElementById('infraStart2');
+        const startInfra1 = document.getElementById('infraStart1');
+        const endInfra2 = document.getElementById('infraEnd2');
+        const endInfra1 = document.getElementById('infraEnd1');
+
         const totalCost = document.getElementById('ttc');
         const supplier = document.getElementById('goodsSupplier');
 
@@ -1232,6 +1271,13 @@ include_once '../../../views/layouts/includes/header.php';
             saccConEnd2?.setAttribute('hidden', true);
             saccConEnd1?.removeAttribute('hidden', true);
 
+            startInfra2?.removeAttribute('readonly');
+            startInfra2?.setAttribute('hidden', true);
+            startInfra1?.removeAttribute('hidden');
+
+            endInfra2?.setAttribute('hidden', true);
+            endInfra1?.removeAttribute('hidden');
+
             supplier?.removeAttribute('readonly');
 
             saveBtn.style.display = 'inline';
@@ -1295,6 +1341,11 @@ include_once '../../../views/layouts/includes/header.php';
 
         const supplier = document.getElementById('goodsSupplier');
 
+        const startInfra2 = document.getElementById('infraStart2');
+        const startInfra1 = document.getElementById('infraStart1');
+        const endInfra2 = document.getElementById('infraEnd2');
+        const endInfra1 = document.getElementById('infraEnd1');
+
 
 
         // Check if fields are currently readonly/disabled
@@ -1345,6 +1396,14 @@ include_once '../../../views/layouts/includes/header.php';
 
         supplier?.setAttribute('readonly', true);
 
+        startInfra2?.setAttribute('readonly', true);
+        startInfra2?.removeAttribute('hidden', true);
+        startInfra1?.setAttribute('hidden', true);
+
+        endInfra2?.removeAttribute('hidden', true);
+        endInfra2?.setAttribute('readonly', true);
+        endInfra1?.setAttribute('hidden', true);
+
         
         procurementModeSelect?.setAttribute('hidden', true);
         procurementModeInput?.removeAttribute('hidden', true);
@@ -1357,6 +1416,9 @@ include_once '../../../views/layouts/includes/header.php';
 
 
     document.getElementById('save').addEventListener('click', function () {
+
+        const infraStart = document.getElementById('infraStart1');
+        const infraEnd = document.getElementById('infraEnd1');
 
         const supplier = document.getElementById('goodsSupplier');
 
@@ -1434,8 +1496,14 @@ include_once '../../../views/layouts/includes/header.php';
 
         const goodsSupp = encodeURIComponent(supplier?.value || ''); 
 
+        const start_infra = encodeURIComponent(infraStart?. value || '');
+        const end_infra = encodeURIComponent(infraEnd?. value || '');
+
+        console.log("Infra Start:", start_infra);
+        console.log("Infra End:", end_infra);
+
         const url = `contracts/pending_update.php?id=${contract_id}&contract_type=${type_of_contract}&powerSupplyLongStart1=${powerSupplyLongStart1}&powerSupplyLongEnd1=${powerSupplyLongEnd1}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}&psShortStart=${psShortStart}&psShortEnd=${psShortEnd}&contractType=${contractSelect}&contractInputType=${contractInputType}
-        &rentStart=${startRent}&rentEnd=${endRent}&goodsStart=${goods_start}&goodsEnd=${goods_end}&saccStart=${saccDate_Start}&saccEnd=${saccDate_End}&ttc=${Cost}&procurementMode=${procMode}&goodsSupplier=${goodsSupp}`;
+        &rentStart=${startRent}&rentEnd=${endRent}&goodsStart=${goods_start}&goodsEnd=${goods_end}&saccStart=${saccDate_Start}&saccEnd=${saccDate_End}&ttc=${Cost}&procurementMode=${procMode}&goodsSupplier=${goodsSupp}&startInfra=${start_infra}&endInfra=${end_infra}`;
 
         console.log("Redirecting to:", url); // Debug
         window.location.href = url;
