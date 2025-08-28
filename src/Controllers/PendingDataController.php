@@ -351,6 +351,54 @@ class PendingDataController
         $stmt = $this->db->prepare($sql);
 
         return $stmt->execute([
+            ':contract_start' => $data['powerSupplyLongStart1'],
+            ':contract_end' => $data['powerSupplyLongEnd1'],
+            ':contract_name' => $data['name'],
+            ':uploader' => $data['uploader'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+            ':data_type' => $data['data_type'],
+            ':status' => $data['status'],
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type_update'],
+            ':rent_start' => $data['rent_start'] ?? '',
+            ':rent_end' => $data['rent_end'] ?? ''
+        ]);
+    }
+
+    public function goodsUpdate($data){
+
+        $sql = "INSERT INTO  pending_data (
+                    contract_id,
+                    contract_start,
+                    contract_end,
+                    contract_name,
+                    uploader,
+                    uploader_id,
+                    uploader_department,
+                    data_type,
+                    contract_type_update,
+                    rent_start,
+                    rent_end,
+                    status
+                ) VALUES (
+                    :contract_id,
+                    :contract_start,
+                    :contract_end,
+                    :contract_name,
+                    :uploader,
+                    :uploader_id,
+                    :uploader_department,
+                    :data_type,
+                    :contract_type,
+                    :rent_start,
+                    :rent_end,
+                    :status
+                )";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
             ':contract_start' => $data['powerSupplyLongStart1'] ?? 'null',
             ':contract_end' => $data['powerSupplyLongEnd1'] ?? 'null',
             ':contract_name' => $data['name'],
@@ -363,6 +411,60 @@ class PendingDataController
             ':contract_type' => $data['contract_type_update'],
             ':rent_start' => $data['rent_start'] ?? '',
             ':rent_end' => $data['rent_end'] ?? ''
+        ]);
+    }
+
+    public function SACCUpdate($data){
+
+        $sql = "INSERT INTO  pending_data (
+                    contract_id,
+                    contract_start,
+                    contract_end,
+                    contract_name,
+                    uploader,
+                    uploader_id,
+                    uploader_department,
+                    data_type,
+                    contract_type_update,
+                    rent_start,
+                    rent_end,
+                    status,
+                    total_cost,
+                    proc_mode
+                ) VALUES (
+                    :contract_id,
+                    :contract_start,
+                    :contract_end,
+                    :contract_name,
+                    :uploader,
+                    :uploader_id,
+                    :uploader_department,
+                    :data_type,
+                    :contract_type,
+                    :rent_start,
+                    :rent_end,
+                    :status,
+                    :total_cost,
+                    :procurement_mode
+                )";
+
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            ':contract_start' =>  $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':contract_name' => $data['name'],
+            ':uploader' => $data['uploader'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+            ':data_type' => $data['data_type'],
+            ':status' => $data['status'],
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type_update'],
+            ':rent_start' => $data['rent_start'] ?? '',
+            ':rent_end' => $data['rent_end'] ?? '',
+            ':total_cost' => $data['total_cost'],
+            ':procurement_mode' => $data['procurement_mode']
         ]);
     }
 

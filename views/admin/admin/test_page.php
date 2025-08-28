@@ -12,7 +12,6 @@ use App\Controllers\ContractTypeController;
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
-// getting the contract types to be compared with the contracts for their expiration
 $contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
 foreach ($contractTypes as $row) {
 
@@ -24,13 +23,6 @@ foreach ($contractTypes as $row) {
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-<!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center"
-    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div> -->
 
 <div class="main-layout">
     <div class="sideBar">
@@ -214,8 +206,6 @@ include_once '../../../views/layouts/includes/header.php';
                                     </span>
                                     <?php break;
                                 case PSC_LONG: ?>
-                                    <!-- Code for PSC_LONG -->
-                                    <!-- Code for EMP_CON -->
                                     <span>
                                         <?php
                                         $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
