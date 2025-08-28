@@ -462,6 +462,14 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
+                <?php if (!$getContract['supplier']): ?> <?php else: ?>
+                    <div class="row col-md-2">
+                        <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Supplier</label><input
+                                type="text" id="goodsSupplier" style="margin-left:9px;" class="form-control pl-5"
+                                value="<?= $getContract['supplier']; ?>" name="contract_type" readonly></div>
+                    </div>
+                <?php endif; ?> 
+
             
 
             <?php if ($getContract['contractPrice'] === True): ?>
@@ -475,16 +483,6 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <?php if (empty($getContract['supplier'])): ?>
-            <?php else: ?>
-                <div class="row col-md-2">
-                    <div class="mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Supplier</label>
-                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['supplier']; ?>" name="contract_type" readonly>
-                    </div>
-                </div>
-            <?php endif; ?>
 
             <?php if (empty($getContract['implementing_dept'])): ?>
             <?php else: ?>
@@ -1121,6 +1119,7 @@ include_once '../../../views/layouts/includes/header.php';
     document.getElementById('edit').addEventListener('click', function () {
 
         const totalCost = document.getElementById('ttc');
+        const supplier = document.getElementById('goodsSupplier');
 
         const procurementModeInput = document.getElementById('procurementModeInput');
         const procurementModeSelect = document.getElementById('procurementModeSelect');
@@ -1231,6 +1230,8 @@ include_once '../../../views/layouts/includes/header.php';
             saccConEnd2?.setAttribute('hidden', true);
             saccConEnd1?.removeAttribute('hidden', true);
 
+            supplier?.removeAttribute('readonly');
+
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
             closeBtn.style.display = 'inline';
@@ -1290,6 +1291,8 @@ include_once '../../../views/layouts/includes/header.php';
         const saccConEnd1 = document.getElementById('saccEnd1');
         const saccConEnd2 = document.getElementById('saccEnd2');
 
+        const supplier = document.getElementById('goodsSupplier');
+
 
 
         // Check if fields are currently readonly/disabled
@@ -1338,6 +1341,8 @@ include_once '../../../views/layouts/includes/header.php';
         saccConEnd2?.setAttribute('readonly', true);
         saccConEnd1?.setAttribute('hidden', true);
 
+        supplier?.setAttribute('readonly', true);
+
         
         procurementModeSelect?.setAttribute('hidden', true);
         procurementModeInput?.removeAttribute('hidden', true);
@@ -1350,6 +1355,8 @@ include_once '../../../views/layouts/includes/header.php';
 
 
     document.getElementById('save').addEventListener('click', function () {
+
+        const supplier = document.getElementById('goodsSupplier');
 
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
@@ -1423,8 +1430,10 @@ include_once '../../../views/layouts/includes/header.php';
         const contractInputType = encodeURIComponent(contract_type_input?. value || '');
         const procMode = encodeURIComponent(procurementModeSelect?. value || '');
 
+        const goodsSupp = encodeURIComponent(supplier?.value || ''); 
+
         const url = `contracts/pending_update.php?id=${contract_id}&contract_type=${type_of_contract}&powerSupplyLongStart1=${powerSupplyLongStart1}&powerSupplyLongEnd1=${powerSupplyLongEnd1}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}&psShortStart=${psShortStart}&psShortEnd=${psShortEnd}&contractType=${contractSelect}&contractInputType=${contractInputType}
-        &rentStart=${startRent}&rentEnd=${endRent}&goodsStart=${goods_start}&goodsEnd=${goods_end}&saccStart=${saccDate_Start}&saccEnd=${saccDate_End}&ttc=${Cost}&procurementMode=${procMode}`;
+        &rentStart=${startRent}&rentEnd=${endRent}&goodsStart=${goods_start}&goodsEnd=${goods_end}&saccStart=${saccDate_Start}&saccEnd=${saccDate_End}&ttc=${Cost}&procurementMode=${procMode}&goodsSupplier=${goodsSupp}`;
 
         console.log("Redirecting to:", url); // Debug
         window.location.href = url;

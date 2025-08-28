@@ -310,6 +310,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                                     class="form-control" readonly>
                                                             </div>
 
+                                                            <div class="mb-3">
+                                                                <label class="badge text-muted float-start">Current Supplier</label>
+                                                                <input type="text" value="<?= $getContractFromContracts['supplier'] ?>"
+                                                                    class="form-control" readonly>
+                                                            </div>
+
 
                                                         </div>
                                                                 </div>
@@ -461,7 +467,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                 </div>
                                                                                 <?php endif; ?>
 
-                                                                             <?php if( $getPendingUpdate['contract_type_update'] ): ?>
+                                                                            <?php if( $getPendingUpdate['contract_type_update'] ): ?>
                                                                                 <div class="mb-2">
                                                                                     <label
                                                                                         class="badge text-muted float-start mt-2">Procurement Mode</label>
@@ -472,10 +478,18 @@ include_once '../../../views/layouts/includes/header.php';
                                                                                 </div>
                                                                                 <?php endif; ?>
 
+                                                                                <?php if( $getPendingUpdate['contract_type_update'] ): ?>
+                                                                                <div class="mb-2">
+                                                                                    <label
+                                                                                        class="badge text-muted float-start mt-2">Updated Supplier</label>
+                                                                                    <input type="text"
+                                                                                        value="<?= $getPendingUpdate['supplier'] ?>"
+                                                                                        name="supplier"
+                                                                                        class="form-control" readonly>
+                                                                                </div>
+                                                                                <?php endif; ?>
                                                                             </div>
                                                                     </div>
-
-
                                                                 </div>
                                                             </div>
                                                         </div>

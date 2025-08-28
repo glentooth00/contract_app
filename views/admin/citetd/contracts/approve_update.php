@@ -10,6 +10,8 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    var_dump($_POST);
+
     $updateData = [
         'id' => $_POST['id'],
         'contract_id' => $_POST['contract_id'],
@@ -20,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_type' => $_POST['contract_type_update'] ?? '',
         'contract_price' => $_POST['contractPrice'],
         'procurementMode' => $_POST['procurementMode'] ?? '',
+        'supplier' => $_POST['supplier'] ?? '',
     ];
 
     $updateSuccessful = (new ContractController)->managerUpdate($updateData);
