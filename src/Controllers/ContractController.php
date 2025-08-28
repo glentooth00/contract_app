@@ -1540,7 +1540,7 @@ class ContractController
             $stmt->bindParam(':address', $data['address']);
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
-            $stmt->bindParam(':contract_type', $data['contract_type_update']);
+            $stmt->bindParam(':contract_type', $data['contract_type']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
