@@ -214,7 +214,7 @@ if (isset($_POST['contract_id'])) {
 
                     <?php if($pending['contract_type'] === SACC ): ?> 
                         <div class="input-group">
-                            <input type="text" name="contract_start"  value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
+                            <input type="text" name="contract_start"  value="<?= date('M d, Y', strtotime($pending['contract_start'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
