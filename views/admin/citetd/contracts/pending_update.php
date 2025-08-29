@@ -120,8 +120,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         ];
 
-        // var_dump($contractData);
-
 
         $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);
 

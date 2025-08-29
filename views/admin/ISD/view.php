@@ -74,29 +74,29 @@ include_once '../../../views/layouts/includes/header.php';
                             <div class="form-group">
                                 
                                 <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
-                                    <input type="hidden" name="contract_start"
+                                    <input type="text" name="contract_start"
                                         value="<?= $getContract['contract_start'] ?>">
-                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
-                                    <input type="hidden" name="rent_start" value="<?= $getContract['rent_start'] ?>">
-                                    <input type="hidden" name="rent_end" value="<?= $getContract['rent_end'] ?>">
+                                    <input type="text" name="rent_start" value="<?= $getContract['rent_start'] ?>">
+                                    <input type="text" name="rent_end" value="<?= $getContract['rent_end'] ?>">
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === EMP_CON): ?>
-                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
-                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="text" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                  <?php if ($getContract['contract_type'] === GOODS): ?>
-                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
-                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="text" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === INFRA): ?>
-                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
-                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="text" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                 <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
