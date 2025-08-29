@@ -51,6 +51,9 @@ $comments = (new CommentController)->getComments($contractId);
 
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
+$contractEnding = $getContract['contract_end'] ?? null;
+$rentEnding = $getContract['rent_end'] ?? null;
+
 //-----------------------------------------------------------------------//
 
 //------------------------- GET Departments ----------------------------//

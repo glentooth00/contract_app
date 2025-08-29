@@ -20,6 +20,8 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
         'contract_end' => $_POST['contract_end'] ?? null,
     ];
 
+    var_dump($endSuspensionData);
+
 if(isset($_POST['end_suspension'])){
 
     if( $endSuspensionData['contract_type'] === TEMP_LIGHTING){
