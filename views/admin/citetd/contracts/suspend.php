@@ -585,7 +585,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($suspensionData['contract_type'] === SACC ) {
 
-        $typeSus = $suspensionData['type_of_suspension'];
+       $typeSus = $suspensionData['type_of_suspension'];
 
         if ($typeSus === DTD) {
 
@@ -636,8 +636,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'contract_status' => 'Suspended'
                 ];
 
-                var_dump($suspensionData);
-
 
 
                 $suspension = (new SuspensionController)->saveSuspension($suspensionData);
@@ -656,6 +654,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }// END FOR DTD
 
+        }        
         if ($typeSus === UNSAS) {
 
             $transRentData = [
@@ -664,6 +663,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'contract_end' => $_POST['contract_end'],
                 'updated_at' => (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('Y-m-d H:i:s')
             ];
+
+            var_dump($transRentData);
 
             $o = (new ContractController)->updateTempLightContractStatus($transRentData);
 
@@ -700,7 +701,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             }
 
-        }
+
 
         if (isset($_POST['end_suspension'])) {
             echo 'end suspension button clicked';

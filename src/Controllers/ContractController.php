@@ -1693,4 +1693,16 @@ class ContractController
 }
 
 
+    public function updateStatusById($data){
+
+        echo  $data['contract_id'] .' '. $data['contract_status'];
+
+        $sql = "UPDATE contracts SET contract_status = :contract_status WHERE id = :contract_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        return $stmt->execute();
+    }
+
+
 }
