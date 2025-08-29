@@ -1254,6 +1254,16 @@ include_once '../../../views/layouts/includes/header.php';
 
     }
 </style>
+<?php
+date_default_timezone_set('Asia/Manila');
+$updatedAt = new DateTime($getContract['updated_at']);
+$timestamp = $updatedAt->getTimestamp(); // Unix timestamp
+?>
+
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 
 <script>
     // When the page finishes loading, hide the spinner
