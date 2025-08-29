@@ -78,7 +78,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <?php include_once '../menu/sidebar.php'; ?>
 
-     <?php
+        <?php
         $id = $getContract['account_no'] ?? $getContract['id'];
         $suspended = (new SuspensionController)->getSuspensionByAccount_no($id);
         $num_o_days = $suspended['no_of_days'] ?? 0;
