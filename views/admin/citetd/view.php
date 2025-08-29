@@ -149,7 +149,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
-                                 <?php if ($getContract['contract_type'] === GOODS): ?>
+                                <?php if ($getContract['contract_type'] === GOODS): ?>
                                     <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
                                     <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
@@ -160,6 +160,16 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === SACC): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === PSC_LONG): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === PSC_SHORT): ?>
                                     <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
                                     <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
