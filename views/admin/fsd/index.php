@@ -124,7 +124,11 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php if (!empty($contracts)): ?>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
+                            <td><a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
+                                    style="text-decoration: none; color: black;">
+                                    <!-- Use htmlspecialchars to prevent XSS -->
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                </a></td>
                             <td class="text-center">
                                 <?php
                                 $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
