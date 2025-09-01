@@ -1652,8 +1652,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const start_infra = encodeURIComponent(infraStart?. value || '');
         const end_infra = encodeURIComponent(infraEnd?. value || '');
 
-        console.log("Infra Start:", start_infra);
-        console.log("Infra End:", end_infra);
 
         const url = `contracts/pending_update.php?id=${contract_id}&contract_type=${type_of_contract}&powerSupplyLongStart1=${powerSupplyLongStart1}&powerSupplyLongEnd1=${powerSupplyLongEnd1}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}&type=${typeContract}&uploader=${docUploader}&uploader_id=${uploaderId}&uploader_dept=${uploaderDept}&user=${user}&psShortStart=${psShortStart}&psShortEnd=${psShortEnd}&contractType=${contractSelect}&contractInputType=${contractInputType}
         &rentStart=${startRent}&rentEnd=${endRent}&goodsStart=${goods_start}&goodsEnd=${goods_end}&saccStart=${saccDate_Start}&saccEnd=${saccDate_End}&ttc=${Cost}&procurementMode=${procMode}&goodsSupplier=${goodsSupp}&startInfra=${start_infra}&endInfra=${end_infra}`;
