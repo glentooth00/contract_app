@@ -100,7 +100,7 @@ if (isset($_POST['contract_id'])) {
 
                     <?php if($current['contract_type'] === GOODS ): ?> 
                         <div class="input-group">
-                            <input type="text" value="<?= date('M d, Y', strtotime($current['rent_end'])) ?>" class="form-control" readonly>
+                            <input type="text" value="<?= date('M d, Y', strtotime($current['contract_end'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
