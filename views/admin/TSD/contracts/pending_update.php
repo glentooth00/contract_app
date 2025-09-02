@@ -142,16 +142,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if($_GET['type'] === GOODS ){
     
-        $startDate = date('Y-m-d', strtotime( $_GET['rentStart']));
-        $endDate = date('Y-m-d', strtotime($_GET['rentEnd']));
+        $startDate = date('Y-m-d', strtotime( $_GET['rentStart'] ?? $_GET['goodsStart']));
+        $endDate = date('Y-m-d', strtotime($_GET['rentEnd'] ?? $_GET['goodsEnd']));
 
         $contractData = [
             'contract_id' => $_GET['id'],
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
             'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
             'name' => $_GET['name'],
-            'uploader' => $_GET['uploader'],
-            'uploader_id' => $_GET['uploader_id'],
+            'uploader' => $_GET['updatedBy'],
+            'uploader_id' => $_GET['uploadId'],
             'uploader_dept' => $_GET['uploader_dept'],
             'data_type' => 'Update',
             'status' => 1,
@@ -161,15 +161,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'contract_type_update' => $_GET['contractType'],
             'rent_start' =>  $startDate,
             'rent_end' => $endDate,
-            'contract_type' => $_GET['contract_type'],
+            'contract_type' => $_GET['type'],
             'proc_mode' => $_GET['procurementMode'],
-            'contract_start' => $_GET['goodsStart'],
-            'contract_end' => $_GET['goodsEnd'],
+            'contract_start' =>$startDate,
+            'contract_end' => $endDate,
             'total_cost' => $_GET['ttc'],
             'supplier' => $_GET['goodsSupplier']
 
         ];
-
 
         $GoodsUpdate = ( new PendingDataController )->goodsUpdate( $contractData);
 
