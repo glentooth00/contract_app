@@ -12,6 +12,8 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     var_dump($_POST);
+    echo '<br>';
+    echo '<br>';
 
     // if($_POST['contract_type'] === TEMP_LIGHTING){
 
@@ -113,50 +115,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     //         }
     // }
 
-    // if($_POST['contract_type'] === GOODS){
+    
+    if($_POST['contract_type'] === GOODS){
 
-    //     $updateData = [
-    //         'contract_id' => $_POST['contract_id'],
-    //         'uploader_department' => $_POST['uploader_department'],
-    //         'contract_name' => $_POST['contract_name'],
-    //         'contract_start' => $_POST['contract_start'],
-    //         'contract_end' => $_POST['contract_end'],
-    //         'contract_status' => 'Active',
-    //         'supplier' => $_POST['supplier'] ?? '',
-    //         'contractPrice' => $_POST['tcc'],
-    //         'contract_type_update' => $_POST['contract_type_update']
-    //     ];
-
-
-    //     $updateSuccessful = (new ContractController)->managerUpdateGOODS($updateData);
+        $updateData = [
+            'contract_id' => $_POST['contract_id'],
+            'uploader_department' => $_POST['uploader_department'],
+            'contract_name' => $_POST['contract_name'],
+            'contract_start' => $_POST['contract_start'],
+            'contract_end' => $_POST['contract_end'],
+            'contract_status' => 'Active',
+            'supplier' => $_POST['supplier'] ?? '',
+            'contractPrice' => trim(str_replace('₱', '', $_POST['total_cost'])),
+            'contract_type' => $_POST['contract_type_update'] ?? $_POST['contract_type'],
+        ];
 
 
-    //         if( $updateSuccessful ){
-    //            $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
+        $updateSuccessful = (new ContractController)->managerUpdateGOODS($updateData);
 
-    //                 if( $deletePrevData ){
 
-    //                         $updateContractData = (new ContractHistoryController )->updateHistoryTempLight($updateData);
+            if( $updateSuccessful ){
+               $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
 
-    //                         if($updateContractData){
+                    if( $deletePrevData ){
 
-    //                         $_SESSION['notification'] = [
-    //                         'message' => 'Update has been approved.',
-    //                         'type' => 'success',
-    //                         ];
+                            $updateContractData = (new ContractHistoryController )->updateHistoryTempLight($updateData);
 
-    //                         header("Location: " . $_SERVER['HTTP_REFERER']);
-    //                         exit;
+                            if($updateContractData){
 
-    //                         }
+                            $_SESSION['notification'] = [
+                            'message' => 'Update has been approved.',
+                            'type' => 'success',
+                            ];
 
-    //                         header("Location: " . $_SERVER['HTTP_REFERER']);
-    //                         exit;
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
 
-    //                 }
-    //         }
+                            }
 
-    // }
+                            header("Location: " . $_SERVER['HTTP_REFERER']);
+                            exit;
+
+                    }
+            }
+
+    }
 
     if($_POST['contract_type'] === INFRA){
 
