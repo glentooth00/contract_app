@@ -138,6 +138,18 @@ if (isset($_POST['contract_id'])) {
                         <input type="text" value="<?= $current['procurementMode'] ?>" class="form-control" readonly>
                     </div>
                 <?php endif; ?>
+
+                <?php if(empty($current['contractPrice'])): ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" value="<?= $current['contractPrice'] ?>" class="form-control" readonly>
+                    </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" value="<?= $current['contractPrice'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -229,13 +241,25 @@ if (isset($_POST['contract_id'])) {
 
                     <div class="mb-3">
                         <label><strong>Address:</strong></label>
-                        <input type="text" value="<?= $pending['address'] ?>" class="form-control" readonly>
+                        <input type="text" name="address" value="<?= $pending['address'] ?>" class="form-control" readonly>
                     </div>
 
                 <?php if(!empty($pending['proc_mode'])): ?>
                     <div class="mb-3">
                         <label><strong>Procurement Mode:</strong></label>
-                        <input type="text" value="<?= $pending['proc_mode'] ?>" class="form-control" readonly>
+                        <input type="text" name="proc_mode" value="<?= $pending['proc_mode'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
+
+                <?php if(empty($pending['total_cost'])): ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" name="total_cost" value="<?= $pending['total_cost'] ?>" class="form-control" readonly>
+                    </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" name="total_cost" value="<?= $pending['total_cost'] ?>" class="form-control" readonly>
                     </div>
                 <?php endif; ?>
 
