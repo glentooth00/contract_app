@@ -10,10 +10,6 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-var_dump($_GET);
-echo '<br>';
-echo '<br>';
-
 if ($_GET['type'] === TRANS_RENT) {
 
     $transRentData = [
