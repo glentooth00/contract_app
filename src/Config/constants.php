@@ -21,6 +21,7 @@ define('FSD', 'FSD');
 define('AOSD', 'AOSD');
 define('CHIEF', 'PSPTD CHIEF');
 define('GM', 'OGM');
+define('TSD', 'TSD');
 
 
 //REQUESTS
