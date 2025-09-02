@@ -10,8 +10,6 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    var_dump($_POST);
-
     $updateData = [
         'id' => $_POST['id'],
         'contract_id' => $_POST['contract_id'],
