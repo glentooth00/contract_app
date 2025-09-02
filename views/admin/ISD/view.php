@@ -555,7 +555,7 @@ include_once '../../../views/layouts/includes/header.php';
 
             <?php if($getContract['party_of_second_part']): ?>
                 <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Party of Second Part:</label><input
+                    <div class="mt-3"><label class="badge text-muteProcurementd" style="font-size: 15px;">Party of Second Part:</label><input
                             type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['party_of_second_part']; ?>" name="address" readonly>
                         </div>
@@ -682,7 +682,8 @@ include_once '../../../views/layouts/includes/header.php';
                         name="contract_type" readonly></div>
             </div>
             <div class="row col-md-3 mt-4 float-end">
-                <div class="mt-3 float-end" style="margin-left: 90%;"><?php
+                <div class="mt-3 float-end" style="margin-left: 90%;">
+                <?php
                 $dept = $_SESSION['department'];
                 ?> <?php if ($dept === 'ISD-HRAD'): ?>
                         <?php
