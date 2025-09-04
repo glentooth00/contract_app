@@ -1675,7 +1675,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
             tcNo?.removeAttribute('readonly');
 
-
             tempStart?.removeAttribute('readonly');
             tempEnd?.removeAttribute('readonly');
             tcNumber?.removeAttribute('readonly');
@@ -1716,7 +1715,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             startDate.setAttribute('readonly', true);
             endDate.setAttribute('readonly', true);
             deptSelect.setAttribute('disabled', true);
-
 
             saveBtn.style.display = 'none';
 
