@@ -2,7 +2,10 @@
 use App\Controllers\ContractHistoryController;
 use App\Controllers\DepartmentController;
 use App\Controllers\EmploymentContractController;
+use App\Controllers\ProcurementController;
 use App\Controllers\UserController;
+use App\Controllers\SuspensionController;
+use App\Controllers\ContractTypeController;
 session_start();
 
 use App\Controllers\ContractController;
@@ -23,7 +26,7 @@ $contract_data = $getContract['contract_name'];
 $page_title = 'View Contract | ' . $getContract['contract_name'];
 
 $user_name = $_SESSION['firstname'].' '. $_SESSION['firstname'] .' '.$_SESSION['lastname'];
-
+$getAllprocMode = ( new ProcurementController )->getAllProcMode();
 if($userid){
     $isLoggedIn = $userid;
 }
@@ -35,6 +38,11 @@ if($department === IASD){
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
 }
+
+$contractEnding = $getContract['contract_end'] ?? null;
+$rentEnding = $getContract['rent_end'] ?? null;
+
+$User = $_SESSION['firstname'].' '.$_SESSION['middlename'].' '.$_SESSION['lastname'];
 //-----------------------------------------------------------------------//
 
 //------------------------- GET Departments ----------------------------//
@@ -51,8 +59,151 @@ include_once '../../../views/layouts/includes/header.php';
 
     <?php include_once '../menu/sidebar.php'; ?>
 
+    <?php
+        $id = $getContract['account_no'] ?? $getContract['id'];
+        $suspended = (new SuspensionController)->getSuspensionByAccount_no($id);
+        $num_o_days = $suspended['no_of_days'] ?? 0;
+        $suspension_start = $suspended['created_at'] ?? null;
+        $suspensionType = $suspended['type_of_suspension'] ?? '';
+        // Format created_at for JS (must be in a valid ISO 8601 format)
+        $formattedStart = $suspension_start ? date('Y-m-d\TH:i:s', strtotime($suspension_start)) : null;
+        ?>
+        <?php if ($getContract['contract_status'] === 'Suspended'): ?>
+            
+            <?php if ($suspensionType === DTD): ?>
+                <div id="draggable" class="card" style="
+                    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+                        font-weight: bold;
+                        color: red;
+                        background-color: #ebebf7;
+                        padding: 40px;
+                        position: absolute;
+                        margin: 3% 5% 7% 11%;
+                        width: 20em;
+                        text-align: center;
+                        font-size: 50px;
+                        z-index: 99;">
+                </div>
+            <?php endif; ?>
+            <?php if ($suspensionType === UNSAS): ?>
+                <div id="draggable" class="card display" style="
+                    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+                        font-weight: bold;
+                        color: red;
+                        background-color: #ebebf7;
+                        padding: 40px;
+                        position: absolute;
+                        margin: 3% 5% 7% 11%;
+                        width: 20em;
+                        text-align: center;
+                        font-size: 50px;
+                        z-index: 99;">
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
+    <!-- Modal -->
+        <div class="modal fade" id="suspendModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Suspend Contract</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="contracts/suspend.php" method="post">
+                            <div class="form-group">
+                                
+                                <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                                    <input type="hidden" name="contract_start"
+                                        value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                                    <input type="hidden" name="rent_start" value="<?= $getContract['rent_start'] ?>">
+                                    <input type="hidden" name="rent_end" value="<?= $getContract['rent_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === EMP_CON): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === GOODS): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === INFRA): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === SACC): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === PSC_LONG): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <?php if ($getContract['contract_type'] === PSC_SHORT): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php endif; ?>
+
+                                <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
+                                <div class="d-flex">
+                                    <div class="form-check me-3">
+                                        <input class="form-check-input" onclick="showDiv()" type="radio"
+                                            name="type_of_suspension" value="Due to Disaster" id="flexRadioDefault1">
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Due to Disaster
+                                        </label>
+                                    </div>
+                                    <div onclick="hideDiv()" class="form-check">
+                                        <input class="form-check-input" value="Unsatisfactory Output" type="radio"
+                                            name="type_of_suspension" id="flexRadioDefault2" checked>
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Unsatisfactory Output
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" form-group mb-3" id="myDiv" style="display: none;">
+                                <label for="suspendReason" class="badge text-muted">Number of suspension days</label>
+                                <input type="number" class="form-control" id="suspendReason" name="no_of_days" rows="3"
+                                    placeholder="Enter reason for suspension">
+                            </div>
+                            <div class=" form-group">
+                                <label for="suspendReason" class="badge text-muted">Reason for Suspension</label>
+                                <textarea class="form-control" id="suspendReason" name="reason" rows="3"
+                                    placeholder="Enter reason for suspension"></textarea>
+                            </div>
+                            <div class=" form-group">
+                                <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
+                                <input type="hidden" name="account_no" value="<?= $getContract['account_no'] ?>">
+                                <input type="hidden" name=" contract_type" value="<?= $getContract['contract_type'] ?>">
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     <div class="content-area">
+
+        <input type="hidden" id="loggedInUser" value="<?= $User ?>">
+        <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
+        <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
 
            <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
         <hr>
@@ -146,93 +297,110 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <?php endif; ?>
 
-            <?php if($getContract['contract_type'] === INFRA): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === INFRA  ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
-                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA ): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="infraStart" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="text" id="infraStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="infraStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === INFRA): ?>
-                <div class="row col-md-2">
+            
+            <?php if($getContract['contract_type'] === SACC ) : ?>
+            <div class="row col-md-2">
+                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
+                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC): ?>
+                            <?php
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
+                            ?> 
+                            <input type="text" id="saccStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="saccStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+            
+            <?php endif; ?>
+            <?php if($getContract['contract_type'] === SACC ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
-                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="infraEnd" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="saccEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="saccEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
             
-            <?php if($getContract['contract_type'] === SACC ): ?>
-                <div class="row col-md-2">
-                <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
-                    <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
-                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
-                            <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                            ?> <input type="date" id="saccStartDate" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
-                    </div>
-                </div>
-            </div>
-            <?php endif; ?>
-            <?php if($getContract['contract_type'] === SACC ): ?>
-                <div class="row col-md-2">
+
+            <?php if($getContract['contract_type'] === INFRA ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
-                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === SACC ): ?>
+                            aria-hidden="true"></i><?php if ($getContract['contract_type'] === INFRA): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" id="saccEndDate" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="infraEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="infraEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
 
-            <?php if($getContract['contract_type'] === GOODS): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === GOODS ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Start Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['contract_start']));
                             ?> 
-                            <input type="date" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" id="goodsStart"
-                                readonly><?php endif; ?>
+                            <input type="text" id="goodsStart2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" readonly>
+                            <input type="date" id="goodsStart1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
-            <?php if($getContract['contract_type'] === GOODS): ?>
-                <div class="row col-md-2">
+            <?php if($getContract['contract_type'] === GOODS ) : ?>
+            <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">End Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === GOODS): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_end']));
-                            ?> <input type="date" style="margin-left:px;"
-                                class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" id="goodsEnd"
-                                readonly><?php endif; ?>
+                                $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['contract_end']));
+                            ?>
+                            <input type="text" id="goodsEnd2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="goodsEnd1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
             <?php endif; ?>
+
 
             <div class="row col-md-2">
 
@@ -299,34 +467,62 @@ include_once '../../../views/layouts/includes/header.php';
         <!---- 2nd row ------>
         <div class="mt-3 col-md-12 d-flex gap-5">
 
-            <div class="row col-md-2">
+             <?php 
+            $getContractTypes = ( new ContractTypeController)->getContractTypes();
+
+        ?>
+
+           <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Contract type:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['contract_type']; ?>" name="contract_type" readonly>
+
+                        <input type="text" id="contractTypeInput" style="margin-left:9px;"
+                        class="form-control pl-5" value="<?= $getContract['contract_type']; ?>" name="contract_type"
+                        readonly>
+                    
+                        <select class="p-1 form-select" name="contract_type" id="contractTypeSelect" style="width:12em;margin-left:9px;" hidden>
+                            <option value="<?= $getContract['contract_type']; ?>"><?= $getContract['contract_type']; ?></option>
+                            <?php foreach($getContractTypes as $types): ?>
+                                <option value="<?= $types['contract_type'] ?>"><?= $types['contract_type'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+
                 </div>
             </div>
 
-            <?php if (!empty($getContract['contractPrice'])): ?>
+             <?php if(!empty($getContract['contractPrice'])): ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Total Contract cost</label>
-                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= '₱ ' . $getContract['contractPrice']; ?>" name="contract_type" readonly>
-                    </div>
+                        <label class="badge text-muted" style="font-size: 15px;">Total Contract
+                            cost</label>
+                            <input type="text" id="ttc" style="margin-left:9px;"
+                            class="form-control pl-5" value="₱<?=  $getContract['contractPrice']; ?>"
+                            name="contract_type" disabled>
+                        </div>
                 </div>
-            <?php endif; ?>
+                <?php endif; ?>
 
-            <?php if (!empty($getContract['procurementMode'])): ?>
+           
+
+            <?php if($getContract['procurementMode']): ?>
                 <div class="row col-md-2">
                     <div class="mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Procurement mode</label>
-                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                        <label class="badge text-muted" style="font-size: 15px;">Procurement Mode:</label>
+
+                        <input type="text" id="procurementModeInput" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['procurementMode']; ?>" name="contract_type" readonly>
+
+                        <select class="p-1 form-select" name="contract_type" id="procurementModeSelect" style="width:12em;margin-left:9px;" hidden>
+                            <option value="<?= $getContract['procurementMode']; ?>"><?= $getContract['procurementMode']; ?></option>
+                            <?php foreach($getAllprocMode as $types): ?>
+                                <option value="<?= $types['procMode'] ?>"><?= $types['procMode'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
             <?php endif; ?>
 
+            
 
             <?php if (!$getContract['supplier']): ?>
 
@@ -353,7 +549,9 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php endif; ?>
 
 
-            <?php else: ?>
+            <?php endif; ?>
+
+            <?php if (!empty($getContract['implementing_dept'])): ?>
 
                 <div class="row col-md-2">
                     <div class="mt-3">
@@ -362,7 +560,6 @@ include_once '../../../views/layouts/includes/header.php';
                             value="<?= $getContract['implementing_dept']; ?>" name="contract_type" readonly>
                     </div>
                 </div>
-
 
             <?php endif; ?>
 
@@ -936,7 +1133,16 @@ include_once '../../../views/layouts/includes/header.php';
                     }
 </style>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js">
+
+</script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
 <script>
+    // When the page finishes loading, hide the spinner
+    // window.onload = function () {
+    //     document.getElementById("loadingSpinner").style.display = "none"; // Hide the spinner
+    //     document.getElementById("content").style.display = "block"; // Show the page content
+    // };
 
 
     document.addEventListener("click", function (e) {
@@ -955,12 +1161,61 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('edit').addEventListener('click', function () {
 
+        const procurementModeInput = document.getElementById('procurementModeInput');
+        const procurementModeSelect = document.getElementById('procurementModeSelect');
+        const startInfra2 = document.getElementById('infraStart2');
+        const startInfra1 = document.getElementById('infraStart1');
+        const endInfra2 = document.getElementById('infraEnd2');
+        const endInfra1 = document.getElementById('infraEnd1');
+
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
-        const rentStart = document.getElementById('rentStart');
-        const rentEnd = document.getElementById('rentEnd');
+        const rentStart = document.getElementById('rent_start');
+        const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
+        const EndDate = document.getElementById('EmpEndDate');
+        const StartDate = document.getElementById('EmpStartDate');
+        const empStart = document.getElementById('empConStart');
+        const empEnd = document.getElementById('empConEnd');
+        const totalCost = document.getElementById('ttc');
+        const startGoods = document.getElementById('goodsStart');
+        const endGoods = document.getElementById('goodsEnd');
+        const infra_start = document.getElementById('infraStart');
+        const infra_end = document.getElementById('infraEnd');
+
+        const goodsStart1 = document.getElementById('goodsStart1');
+        const goodsStart2 = document.getElementById('goodsStart2');
+
+        const goodsEnd2 = document.getElementById('goodsEnd2');
+        const goodsEnd1 = document.getElementById('goodsEnd1');
+
+        const start_rent2 = document.getElementById('startTransRent2');
+        const start_rent1 = document.getElementById('startTransRent1');
+
+        const end_rent2 = document.getElementById('endTransRent2');
+        const end_rent1 = document.getElementById('endTransRent1');
+
+        const empCon2 =  document.getElementById('empConStart2');
+        const empCon1 =  document.getElementById('empConStart1');
+
+        const empEnd2 = document.getElementById('empConEnd2');
+        const empEnd1 = document.getElementById('empConEnd1');
+
+        const saccConStart1 = document.getElementById('saccStart1');
+        const saccConStart2 = document.getElementById('saccStart2');
+        const saccConEnd1 = document.getElementById('saccEnd1');
+        const saccConEnd2 = document.getElementById('saccEnd2');
+
+        const tempStart =  document.getElementById('tempLightStart');
+        const tempEnd = document.getElementById('tempLightEnd');
+
+        const contractAddress = document.getElementById('address');
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+        const contractInput = document.getElementById('contractTypeInput');
+        const contractSelect = document.getElementById('contractTypeSelect');
+        const supplier = document.getElementById('goodsSupplier');
 
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
@@ -977,6 +1232,72 @@ include_once '../../../views/layouts/includes/header.php';
             deptSelect?.removeAttribute('disabled');
             rentStart?.removeAttribute('readonly');
             rentEnd?.removeAttribute('readonly');
+            EndDate?.removeAttribute('readonly');
+            StartDate?.removeAttribute('readonly');
+            empStart?.removeAttribute('readonly');
+            empEnd?.removeAttribute('readonly');
+            totalCost?.removeAttribute('disabled');
+            startGoods?.removeAttribute('readonly');
+            endGoods?.removeAttribute('readonly');
+            infra_start?.removeAttribute('readonly');
+            infra_end?.removeAttribute('readonly');
+            contractAddress?.removeAttribute('readonly');
+
+            start_rent1?.removeAttribute('hidden');
+            start_rent2?.setAttribute('hidden','');
+
+            end_rent1?.removeAttribute('hidden');
+            end_rent2?.setAttribute('hidden', '');
+
+            empCon2?.removeAttribute('readonly');
+            empCon2?.setAttribute('hidden', true);
+
+            empCon1?.removeAttribute('hidden');
+
+            empEnd2?.removeAttribute('readonly');
+            empEnd2?.setAttribute('hidden', true);
+
+            empEnd1?.removeAttribute('hidden');
+
+            goodsStart2?.removeAttribute('readonly');
+            goodsStart2?.setAttribute('hidden', true);
+
+            goodsStart1?.removeAttribute('hidden', true);
+
+            goodsEnd2?.removeAttribute('readonly');
+            goodsEnd2?.setAttribute('hidden', true);
+            goodsEnd1?.removeAttribute('hidden');
+
+
+            tempStart?.removeAttribute('readonly');
+            tempEnd?.removeAttribute('readonly');
+            tcNumber?.removeAttribute('readonly');
+            accountNo?.removeAttribute('readonly');
+
+            saccConStart2?.removeAttribute('readonly');
+            saccConStart2?.setAttribute('hidden', true);
+            saccConStart1?.removeAttribute('hidden', true);
+
+            procurementModeInput?.setAttribute('hidden', true);
+            procurementModeSelect?.removeAttribute('hidden');
+
+            saccConEnd2?.removeAttribute('readonly');
+            saccConEnd2?.setAttribute('hidden', true);
+            saccConEnd1?.removeAttribute('hidden', true);
+
+            contractInput?.removeAttribute('readonly');
+            contractInput?.setAttribute('hidden', true);
+
+            contractSelect?.removeAttribute('hidden');
+
+            supplier?.removeAttribute('readonly');
+
+            startInfra2?.removeAttribute('readonly');
+            startInfra2?.setAttribute('hidden', true);
+            startInfra1?.removeAttribute('hidden');
+
+            endInfra2?.setAttribute('hidden', true);
+            endInfra1?.removeAttribute('hidden');
 
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
@@ -998,22 +1319,143 @@ include_once '../../../views/layouts/includes/header.php';
 
     document.getElementById('close').addEventListener('click', function () {
 
+        const procurementModeInput = document.getElementById('procurementModeInput');
+        const procurementModeSelect = document.getElementById('procurementModeSelect');
+
+        const startInfra2 = document.getElementById('infraStart2');
+        const startInfra1 = document.getElementById('infraStart1');
+        const endInfra2 = document.getElementById('infraEnd2');
+        const endInfra1 = document.getElementById('infraEnd1');
+
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
         const deptSelect = document.getElementById('deptSelect');
+        const infraStart =  document.getElementById('EmpStartDate');
+        const infraEnd =  document.getElementById('EmpEndDate');
         const saveBtn = document.getElementById('save');
         const editBtn = document.getElementById('edit');
         const closeBtn = document.getElementById('close');
+        const empStart = document.getElementById('empConStart');
+        const empEnd = document.getElementById('empConEnd');
+        const totalCost = document.getElementById('ttc');
+        const startGoods = document.getElementById('goodsStart');
+        const endGoods = document.getElementById('goodsEnd');
+        const start_infra = document.getElementById('infraStart');
+        const end_infra = document.getElementById('infraEnd');
+        const contractAddress =document.getElementById('address');
+
+        const start_rent1 = document.getElementById('startTransRent1');
+        const start_rent2 = document.getElementById('startTransRent2');
+
+        const empCon2 =  document.getElementById('empConStart2');
+        const empCon1 =  document.getElementById('empConStart1');
+
+        const empEnd2 = document.getElementById('empConEnd2');
+        const empEnd1 = document.getElementById('empConEnd1');
+
+        const end_rent1 = document.getElementById('endTransRent1');
+        const end_rent2 = document.getElementById('endTransRent2');
+
+        const saccConStart1 = document.getElementById('saccStart1');
+        const saccConStart2 = document.getElementById('saccStart2');
+        const saccConEnd1 = document.getElementById('saccEnd1');
+        const saccConEnd2 = document.getElementById('saccEnd2');
+
+        const tempStart =  document.getElementById('tempLightStart');
+        const tempEnd = document.getElementById('tempLightEnd');
+
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+        const contractInput = document.getElementById('contractTypeInput');
+        const contractSelect = document.getElementById('contractTypeSelect');
+
+        const goodsStart1 = document.getElementById('goodsStart1');
+        const goodsStart2 = document.getElementById('goodsStart2');
+
+        const goodsEnd2 = document.getElementById('goodsEnd2');
+        const goodsEnd1 = document.getElementById('goodsEnd1');
 
         // Check if fields are currently readonly/disabled
         const isReadOnly = nameInput.hasAttribute('readonly');
+        const supplier = document.getElementById('goodsSupplier');
 
         // Set them back to readonly/disabled
         nameInput?.setAttribute('readonly', true);
         startDate?.setAttribute('readonly', true);
         endDate?.setAttribute('readonly', true);
         deptSelect?.setAttribute('disabled', true);
+        infraStart?.setAttribute('readonly', true);
+        infraEnd?.setAttribute('readonly', true);
+        empStart?.setAttribute('readonly', true);
+        empEnd?.setAttribute('readonly', true);
+        totalCost?.setAttribute('disabled', true);
+        startGoods?.setAttribute('readonly', true);
+        endGoods?.setAttribute('readonly', true);
+        start_infra?.setAttribute('readonly', true);
+        end_infra?.setAttribute('readonly', true);
+        contractAddress?.setAttribute('readonly', true);
+
+        goodsStart2?.removeAttribute('hidden', true);
+        goodsStart2?.setAttribute('readonly', true);
+        goodsStart1?.setAttribute('hidden', true);
+
+        goodsEnd2?.removeAttribute('hidden');
+        goodsEnd2?.setAttribute('readonly', true);
+        goodsEnd1?.setAttribute('hidden', true);
+
+        start_rent1?.setAttribute('hidden', true);
+        //setting attribute to readonly 
+        start_rent2?.setAttribute('readonly','');
+        //and removes thre hidden attribute
+        start_rent2?.removeAttribute('hidden','');
+
+        saccConStart1?.setAttribute('hidden', true);
+        saccConStart2?.removeAttribute('hidden', true);
+        saccConStart2?.setAttribute('readonly', true);
+
+        saccConEnd2?.removeAttribute('hidden', true);
+        saccConEnd2?.setAttribute('readonly', true);
+        saccConEnd1?.setAttribute('hidden', true);
+
+        end_rent1?.setAttribute('hidden', true);
+        end_rent2?.setAttribute('readonly', '');
+        end_rent2?.removeAttribute('hidden','');
+
+
+        tempStart?.setAttribute('readonly', true);
+        tempEnd?.setAttribute('readonly', true);
+        tcNumber?.setAttribute('readonly',true);
+        accountNo?.setAttribute('readonly',true);
+
+        contractSelect?.setAttribute('hidden', true);
+        contractInput?.removeAttribute('hidden', true);
+        contractInput?.setAttribute('readonly', true);
+
+        
+        supplier?.setAttribute('readonly', true);
+
+        empCon2?.removeAttribute('hidden');
+        empCon2?.setAttribute('readonly', true);
+
+        empCon1?.setAttribute('hidden', true);
+
+        empEnd2?.removeAttribute('hidden', true);
+        empEnd2?.setAttribute('readonly', true);
+
+        empEnd1?.setAttribute('hidden', true);
+
+        startInfra2?.setAttribute('readonly', true);
+        startInfra2?.removeAttribute('hidden', true);
+        startInfra1?.setAttribute('hidden', true);
+
+        endInfra2?.removeAttribute('hidden', true);
+        endInfra2?.setAttribute('readonly', true);
+        endInfra1?.setAttribute('hidden', true);
+
+        procurementModeSelect?.setAttribute('hidden', true);
+        procurementModeInput?.removeAttribute('hidden', true);
+        procurementModeInput?.setAttribute('readonly', true);
 
         saveBtn.style.display = 'none';
         editBtn.style.display = 'inline';
@@ -1024,6 +1466,10 @@ include_once '../../../views/layouts/includes/header.php';
     document.getElementById('save').addEventListener('click', function () {
 
         // Get the relevant DOM elements
+        const contract_type = document.getElementById('contractTypeInput');
+        const procurementModeSelect = document.getElementById('procurementModeSelect');
+        const infraStart = document.getElementById('infraStart1');
+        const infraEnd = document.getElementById('infraEnd1');
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
         const endDate = document.getElementById('endDate');
@@ -1031,7 +1477,37 @@ include_once '../../../views/layouts/includes/header.php';
         const rentEnd = document.getElementById('rent_end');
         const deptSelect = document.getElementById('deptSelect');
         const id = document.getElementById('contractId');
-        const deptAssigned = document.getElementById('deptAssigned');
+        const EmpStart = document.getElementById('empConStart1');
+        const EmpEnd = document.getElementById('empConEnd1');
+        const totalCost = document.getElementById('ttc');
+        const uploader_dept = document.getElementById('uploadingDept');
+        const loginUser = document.getElementById('loggedInUser');
+        const uploaded_by = document.getElementById('uploadedBy');
+        const uploaderId = document.getElementById('uploader_id');
+        const deptUploader = document.getElementById('uploader_dept');
+        const saccStart =  document.getElementById('saccStart1');
+        const saccEnd = document.getElementById('saccEnd1');
+        const startGoods = document.getElementById('goodsStart1');
+        const endGoods = document.getElementById('goodsEnd1');
+        const infra_start  = document.getElementById('infraStart');
+        const infra_end = document.getElementById('infraEnd');
+        const contractAddress = document.getElementById('address');
+        const tcNumber = document.getElementById('tc_no');
+        const accountNo = document.getElementById('accountNumber');
+        const supplier = document.getElementById('goodsSupplier');
+
+        const empStart = document.getElementById('empConStart2');
+
+        const rent_start =  document.getElementById('startTransRent1');
+
+        const rent_end = document.getElementById('endTransRent1');
+
+        const tempStart =  document.getElementById('tempLightStart');
+        const tempEnd = document.getElementById('tempLightEnd');
+        const implementing_dept = document.getElementById('impDept');
+
+        const contractTypeSelect = document.getElementById('contractTypeSelect');
+
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1039,13 +1515,40 @@ include_once '../../../views/layouts/includes/header.php';
 
         // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
+        const typeContract = encodeURIComponent(contract_type?.value || '');
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
+        const procMode = encodeURIComponent(procurementModeSelect?.value || '');
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
-
+        const EndEmpCon =  encodeURIComponent(EmpEnd?.Value || '');
+        const StartEmpCon =  encodeURIComponent(EmpStart?.value || '');
+        const EndConEmp = encodeURIComponent(EmpEnd?.value || '');
+        const Cost = encodeURIComponent(totalCost?. value || '');
+        const deptUpload = encodeURIComponent(uploader_dept?. value || '');
+        const updatedby = encodeURIComponent(loginUser?.  value || '');
+        const uploadedBy = encodeURIComponent(uploaded_by?. value || '');
+        const uploadId = encodeURIComponent(uploaderId?. value || '');
+        const dept_uploader = encodeURIComponent(deptUploader?. value || '');
+        const saccDate_Start = encodeURIComponent(saccStart?. value || '');
+        const saccDate_End = encodeURIComponent(saccEnd?. value || '');
+        const goods_start = encodeURIComponent(startGoods?. value || '');
+        const goods_end = encodeURIComponent(endGoods?. value || '');
+        const startRent = encodeURIComponent(rent_start?. value || '');
+        const endRent =  encodeURIComponent(rent_end?. value || '');
+        const startTemplight = encodeURIComponent(tempStart?. value || '');
+        const endTemplight = encodeURIComponent(tempEnd?. value || '');
+        const impDept = encodeURIComponent(implementing_dept?. value || '');
+        const addressContract = encodeURIComponent(contractAddress?. value || '');
+        const tcNo = encodeURIComponent(tcNumber?. value || '');
+        const account_no = encodeURIComponent(accountNo?. value || '' );   
+        const contractSelect = encodeURIComponent(contractTypeSelect?. value || ''); 
+        const goodsSupp = encodeURIComponent(supplier?.value || ''); 
+        const start_infra = encodeURIComponent(infraStart?. value || '');
+        const end_infra = encodeURIComponent(infraEnd?. value || '');
         // Redirect with query parameters
-        window.location.href = `procurement/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&dept=${department}`;
+        window.location.href = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}&procurementMode=${procMode}&type=${typeContract}
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}&type=${typeContract}`;
     });
 
     function formatDate(dateString) {
@@ -1074,6 +1577,130 @@ include_once '../../../views/layouts/includes/header.php';
     });
 
 
+    //suspension button
+    function myFunction() {
+        var x = document.getElementById("actions");
+        if (x.style.display === "block") {
+            x.style.display = "none";
+        } else {
+            x.style.display = "block";
+        }
+    }
+
+
+    //show and hide div
+    function showDiv() {
+        var div = document.getElementById("myDiv");
+        div.style.display = "block";
+    }
+
+    function hideDiv() {
+        var div = document.getElementById("myDiv");
+        div.style.display = "none";
+    }
+
+    const suspensionDays = <?= (int) $num_o_days ?>;
+    const suspensionStart = "<?= $formattedStart ?>";
+
+    if (!suspensionStart || suspensionDays === 0) {
+        document.getElementById("draggable").innerHTML = `
+  CONTRACT is Under Review.
+`;
+
+    } else {
+        const startDate = new Date(suspensionStart);
+        const suspensionEnd = new Date(startDate.getTime() + suspensionDays * 24 * 60 * 60 * 1000);
+
+        const countdown = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = suspensionEnd - now;
+
+            if (distance <= 0) {
+                clearInterval(countdown);
+                document.getElementById("draggable").innerHTML = "Suspension has ended!";
+            } else {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("draggable").innerHTML = `
+                Suspension ends in: ${days}D ${hours}H ${minutes}m ${seconds}s
+                <form action="contracts/end_suspension.php" method="post">
+                    <input type="hidden" name="account_no" value="<?= $id ?>">
+                    <input type="hidden" name="remaining_days" value="${days}">
+                    <input type="hidden" name="remaining_hours" value="${hours}">
+                    <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+                    <input type="hidden" name="contract_type" value="<?= $getContract['contract_type'] ?>">
+                    <button type="submit" class="btn btn-sm btn-success fw-bold mt-5" 
+                        style="width:10em; font-size:10px; position:absolute; bottom:10px; right:10px;">
+                        End Suspension
+                    </button>
+                </form>
+            `;
+            }
+        }, 1000);
+    }
+
+    //for draggable
+    $(function () {
+        $("#draggable").draggable();
+    });
+
+
+
+
+
+    const updatedAt = <?= (new DateTime($getContract['updated_at']))->getTimestamp() ?> * 1000;
+
+    function getTimeElapsedString() {
+        const now = Date.now();
+        const diffInSeconds = Math.floor((now - updatedAt) / 1000);
+
+        const days2 = Math.floor(diffInSeconds / (24 * 3600));
+        const hours2 = Math.floor((diffInSeconds % (24 * 3600)) / 3600);
+        const minutes2 = Math.floor((diffInSeconds % 3600) / 60);
+        const seconds2 = diffInSeconds % 60;
+
+        return `${days2} day(s), ${hours2} hour(s), ${minutes2} minute(s), ${seconds2} second(s)`;
+    }
+
+    function renderDraggableBox() {
+        const timeElapsed = getTimeElapsedString();
+        const displayBox = document.querySelector(".display");
+
+        if (displayBox) {
+            displayBox.innerHTML = `
+            <div class="text-center fw-bold text-danger" style="font-size:1.2em;">
+               Contract is Under Review.
+            </div>
+            <div class="text-center fw-bold text-danger fs-5 mb-3">
+                ${timeElapsed}
+            </div>
+
+            <form action="contracts/end.php" method="post">
+                <input type="hidden" name="account_no" value="<?= $id ?>">
+                <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+                <input type="hidden" name="contract_type" value="<?= $getContract['contract_type'] ?>">
+                <input type="hidden" name="contract_end" value="<?= $contractEnding ?>">
+                <input type="hidden" name="rent_end" value="<?= $rentEnding ?>">
+                <input type="hidden" name="updated_at" value="<?= $getContract['updated_at'] ?>">
+                <div class="d-flex gap-2 mt-5 justify-content-end">
+                    <button type="submit" name="terminate" class="btn btn-sm btn-danger fw-bold" style="width: 11em; font-size: 10px;">
+                        Terminate Contract
+                    </button>
+                    <button type="submit" name="end_suspension" class="btn btn-sm btn-success fw-bold" style="width: 10em; font-size: 10px;">
+                        End Suspension
+                    </button>
+                </div>
+            </form>
+        `;
+        }
+    }
+
+    renderDraggableBox();
+    setInterval(renderDraggableBox, 1000);
+
     function toggleView(){
         var div = document.getElementById("dropMenu");
         if(div.style.display === "block"){
@@ -1082,5 +1709,7 @@ include_once '../../../views/layouts/includes/header.php';
             div.style.display = "block"  
             }
         }
+
+
 
 </script>

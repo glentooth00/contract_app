@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_status' => 'Suspended'
     ];
 
-    // var_dump($suspensionData);
+    var_dump($suspensionData );
 
 
     if ($suspensionData['contract_type'] === TRANS_RENT) {
@@ -585,11 +585,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($suspensionData['contract_type'] === SACC ) {
 
-        echo $typeSus = $suspensionData['type_of_suspension'];
+    $typeSus = $suspensionData['type_of_suspension'];
 
         if ($typeSus === DTD) {
 
-            $newEndString = $suspensionData['contract_end'];
+            echo $newEndString = $suspensionData['contract_end'];
 
             $addTodate = !empty($suspensionData['no_of_days']) ? (int) $suspensionData['no_of_days'] : 0;
 
@@ -636,6 +636,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'contract_status' => 'Suspended'
                 ];
 
+
+
                 $suspension = (new SuspensionController)->saveSuspension($suspensionData);
 
                 if ($suspension) {
@@ -652,7 +654,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         }// END FOR DTD
 
-        if ($typeSus === UNSAS) {
+               
+    if ($typeSus === UNSAS) {
 
             $transRentData = [
                 'contract_status' => 'Suspended',
@@ -660,6 +663,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'contract_end' => $_POST['contract_end'],
                 'updated_at' => (new DateTime('now', new DateTimeZone('Asia/Manila')))->format('Y-m-d H:i:s')
             ];
+
+            var_dump($transRentData);
 
             $o = (new ContractController)->updateTempLightContractStatus($transRentData);
 
@@ -696,12 +701,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             }
 
+
+
+            if (isset($_POST['end_suspension'])) {
+                echo 'end suspension button clicked';
+            }
+        
         }
 
-        if (isset($_POST['end_suspension'])) {
-            echo 'end suspension button clicked';
-        }
-        
     }
 
     if ($suspensionData['contract_type'] === PSC_LONG ) {
@@ -757,7 +764,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'contract_status' => 'Suspended'
                 ];
 
-                // var_dump($suspensionData);
+                var_dump($suspensionData);
 
 
 
@@ -828,7 +835,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
         
     }
-
+        
     if ($suspensionData['contract_type'] === PSC_SHORT ) {
 
         $typeSus = $suspensionData['type_of_suspension'];
@@ -953,7 +960,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
         
     }
-
 }
 
 

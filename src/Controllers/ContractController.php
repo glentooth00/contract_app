@@ -1540,7 +1540,7 @@ class ContractController
             $stmt->bindParam(':address', $data['address']);
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
-            $stmt->bindParam(':contract_type', $data['contract_type_update']);
+            $stmt->bindParam(':contract_type', $data['contract_type']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
@@ -1550,6 +1550,8 @@ class ContractController
 
     public function managerUpdateGOODS($data)
     {
+        $type = $data['contract_type_update'] ?? $data['contract_type'];
+
         try {
             $sql = "UPDATE contracts SET 
                 uploader_department = :uploader_department,
@@ -1570,7 +1572,7 @@ class ContractController
             $stmt->bindParam(':address', $data['address']);
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
-            $stmt->bindParam(':contract_type', $data['contract_type_update']);
+            $stmt->bindParam(':contract_type',  $type);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
@@ -1691,6 +1693,18 @@ class ContractController
         return false;
     }
 }
+
+
+    public function updateStatusById($data){
+
+        echo  $data['contract_id'] .' '. $data['contract_status'];
+
+        $sql = "UPDATE contracts SET contract_status = :contract_status WHERE id = :contract_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_status', $data['contract_status']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        return $stmt->execute();
+    }
 
 
 }

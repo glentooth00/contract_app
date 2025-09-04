@@ -10,8 +10,6 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-
-
 if ($_GET['type'] === TRANS_RENT) {
 
     $transRentData = [
@@ -222,22 +220,23 @@ if($_GET['type'] === INFRA){
     $EmpUpdate = [
         'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'contract_start' => $_GET['infraStart'],
-        'contract_end' => $_GET['infraEnd'],
+        'contract_start' => $_GET['infra_start'],
+        'contract_end' => $_GET['infra_end'],
         'created_at' => date('Y-m-d'),
         'updated_at' => date('Y-m-d'),
         'contract_status' => 'Active',
         'status' => 1,
-        'contract_type' => $_GET['type'],
+        'contract_type' => $_GET['type'] ?? $_GET['contractType'],
         'uploader' => $_GET['uploadedBy'],
         'uploader_id' => $_GET['uploadId'],
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
         'implementing_dept' => $_GET['implementingDept'],
+        'total_cost' => $price
+
     ];
 
-    var_dump($EmpUpdate);
 
         $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
@@ -263,13 +262,12 @@ if($_GET['type'] === INFRA){
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-             
 
                 if($updateContractHistory){
 
 
                 $_SESSION['notification'] = [
-                      'message' => 'Update successful. This record is now pending further review.',
+                    'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -278,7 +276,7 @@ if($_GET['type'] === INFRA){
                 }
 
                 $_SESSION['notification'] = [
-                      'message' => 'Update successful. This record is now pending further review.',
+                    'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 

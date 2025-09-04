@@ -41,7 +41,7 @@ if (isset($_POST['contract_id'])) {
                     <input type="text" value="<?= $current['contract_name'] ?>" class="form-control" readonly>
                 </div>
 
-                 <div class="">
+                <div class="">
                     <input type="hidden" value="<?= $pending['contract_type'] ?>" name="contract_type" class="form-control" readonly>
                 </div>
                 <!-- Start Date -->
@@ -62,20 +62,26 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
-                     <?php if($current['contract_type'] === GOODS ): ?> 
+                    <?php if($current['contract_type'] === GOODS ): ?> 
                         <div class="input-group">
                             <input type="text" value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
 
-                     <?php if($current['contract_type'] === INFRA ): ?> 
+                    <?php if($current['contract_type'] === INFRA ): ?> 
                         <div class="input-group">
                             <input type="text" value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
 
+                    <?php if($current['contract_type'] === SACC ): ?> 
+                        <div class="input-group">
+                            <input type="text" value="<?= date('M d, Y', strtotime($current['contract_start'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
                     
                     
 
@@ -100,7 +106,7 @@ if (isset($_POST['contract_id'])) {
 
                     <?php if($current['contract_type'] === GOODS ): ?> 
                         <div class="input-group">
-                            <input type="text" value="<?= date('M d, Y', strtotime($current['rent_end'])) ?>" class="form-control" readonly>
+                            <input type="text" value="<?= date('M d, Y', strtotime($current['contract_end'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
                     <?php endif; ?>
@@ -112,15 +118,51 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
+                    <?php if($current['contract_type'] === SACC ): ?> 
+                        <div class="input-group">
+                            <input type="text" value="<?= date('M d, Y', strtotime($current['contract_end'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
                     <input type="hidden" name="uploader_department" value="<?= $pending['uploader_department'] ?>" >
                 </div>
 
+                <?php if(empty($current['address'])): ?>
                     <div class="mb-3">
                         <label><strong>Address:</strong></label>
                         <input type="text" value="<?= $current['address'] ?>" class="form-control" readonly>
                     </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label><strong>Address:</strong></label>
+                        <input type="text" value="<?= $current['address'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
 
+                <?php if(empty($current['proc_mode'])): ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" value="<?= $current['procurementMode'] ?>" class="form-control" readonly>
+                    </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" value="<?= $current['procurementMode'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
 
+                <?php if(empty($current['contractPrice'])): ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" value="<?= $current['contractPrice'] ?>" class="form-control" readonly>
+                    </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" value="<?= $current['contractPrice'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -137,7 +179,7 @@ if (isset($_POST['contract_id'])) {
                     <input type="text" value="<?= $pending['contract_name'] ?>" name="contract_name" class="form-control" readonly>
                 </div>
 
-                 <div class="">
+                <div class="">
                     <input type="hidden" value="<?= $pending['contract_type'] ?>" name="contract_type" class="form-control" readonly>
                 </div>
 
@@ -167,7 +209,14 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
-                     <?php if($pending['contract_type'] === INFRA ): ?> 
+                    <?php if($pending['contract_type'] === INFRA ): ?> 
+                        <div class="input-group">
+                            <input type="text" name="contract_start" value="<?= date('M d, Y', strtotime($pending['contract_start'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if($pending['contract_type'] === SACC ): ?> 
                         <div class="input-group">
                             <input type="text" name="contract_start" value="<?= date('M d, Y', strtotime($pending['contract_start'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
@@ -207,13 +256,40 @@ if (isset($_POST['contract_id'])) {
                         </div>
                     <?php endif; ?>
 
+                     <?php if($pending['contract_type'] === SACC ): ?> 
+                        <div class="input-group">
+                            <input type="text" name="contract_end" value="<?= date('M d, Y', strtotime($pending['contract_end'])) ?>" class="form-control" readonly>
+                            <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                        </div>
+                    <?php endif; ?>
+
                     <input type="hidden" name="uploader_department" value="<?= $pending['uploader_department'] ?>" >
                 </div>
 
-                <div class="mb-3">
+                    <div class="mb-3">
                         <label><strong>Address:</strong></label>
-                        <input type="text" value="<?= $pending['address'] ?>" class="form-control" readonly>
+                        <input type="text" name="address" value="<?= $pending['address'] ?>" class="form-control" readonly>
                     </div>
+
+                <?php if(!empty($pending['proc_mode'])): ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" name="proc_mode" value="<?= $pending['proc_mode'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
+
+                <?php if(empty($pending['total_cost'])): ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" name="total_cost" value="<?= $pending['total_cost'] ?>" class="form-control" readonly>
+                    </div>
+                <?php else: ?>
+                    <div class="mb-3">
+                        <label><strong>Procurement Mode:</strong></label>
+                        <input type="text" name="total_cost" value="<?= $pending['total_cost'] ?>" class="form-control" readonly>
+                    </div>
+                <?php endif; ?>
+
             </div>
         </div>
 
