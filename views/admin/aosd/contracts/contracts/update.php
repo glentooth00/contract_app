@@ -28,8 +28,8 @@ if ($_GET['type'] === TRANS_RENT) {
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
         'address' => $_GET['address'],
-        'tc_no' => $_GET['tcNo'],
-        'account_no' => $_GET['account_no'],
+        'tc_no' => $_GET['tcNumber'],
+        'account_no' => $_GET['account_no']
     ];
 
 
@@ -59,7 +59,7 @@ if ($_GET['type'] === TRANS_RENT) {
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Update successful. This record is now pending further review.',
+                     'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 

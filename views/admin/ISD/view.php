@@ -57,7 +57,6 @@ include_once '../../../views/layouts/includes/header.php';
         <input type="hidden" id="loggedInUser" value="<?= $User ?>">
         <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
         <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
-        
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
     
         <hr>
@@ -1567,7 +1566,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('edit').addEventListener('click', function () {
 
-
+        const tcNo = document.getElementById('tc_no');
+        const address = document.getElementById('address');
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
         const endInfra2 = document.getElementById('infraEnd2');
@@ -1673,6 +1673,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             goodsEnd2?.setAttribute('hidden', true);
             goodsEnd1?.removeAttribute('hidden');
 
+            tcNo?.removeAttribute('readonly');
 
             tempStart?.removeAttribute('readonly');
             tempEnd?.removeAttribute('readonly');
@@ -1701,6 +1702,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             endInfra2?.setAttribute('hidden', true);
             endInfra1?.removeAttribute('hidden');
 
+            address?.removeAttribute('readonly');
+
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
             closeBtn.style.display = 'inline';
@@ -1713,7 +1716,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             endDate.setAttribute('readonly', true);
             deptSelect.setAttribute('disabled', true);
 
-
             saveBtn.style.display = 'none';
 
         }
@@ -1721,6 +1723,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('close').addEventListener('click', function () {
 
+        const address = document.getElementById('address');
+        const tcNo = document.getElementById('tc_no');
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
         const endInfra2 = document.getElementById('infraEnd2');
@@ -1780,6 +1784,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const supplier = document.getElementById('goodsSupplier');
 
         // Set them back to readonly/disabled
+        tcNo?.setAttribute('readonly', true);
         nameInput?.setAttribute('readonly', true);
         startDate?.setAttribute('readonly', true);
         endDate?.setAttribute('readonly', true);
@@ -1808,6 +1813,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         start_rent2?.setAttribute('readonly','');
         //and removes thre hidden attribute
         start_rent2?.removeAttribute('hidden','');
+
+        address?.setAttribute('readonly', true);
 
         saccConStart1?.setAttribute('hidden', true);
         saccConStart2?.removeAttribute('hidden', true);
@@ -1860,7 +1867,11 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('save').addEventListener('click', function () {
 
+
+
         // Get the relevant DOM elements
+        const tcNo = document.getElementById('tc_no');
+        const address = document.getElementById('address');
         const infraStart = document.getElementById('infraStart1');
         const infraEnd = document.getElementById('infraEnd1');
         const nameInput = document.getElementById('contractName');
@@ -1886,7 +1897,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const contractAddress = document.getElementById('address');
-        const tcNumber = document.getElementById('tc_no');
         const accountNo = document.getElementById('accountNumber');
         const supplier = document.getElementById('goodsSupplier');
 
@@ -1912,7 +1922,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
-
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
         const typeContract = encodeURIComponent(contract_type?.value || '');
@@ -1935,14 +1944,14 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endTemplight = encodeURIComponent(tempEnd?. value || '');
         const impDept = encodeURIComponent(implementing_dept?. value || '');
         const addressContract = encodeURIComponent(contractAddress?. value || '');
-        const tcNo = encodeURIComponent(tcNumber?. value || '');
+        const tcNumber = encodeURIComponent(tcNo?. value || '');
         const account_no = encodeURIComponent(accountNo?. value || '' );   
         const contractSelect = encodeURIComponent(contractTypeSelect?. value || ''); 
         const goodsSupp = encodeURIComponent(supplier?.value || ''); 
         const start_infra = encodeURIComponent(infraStart?. value || '');
         const end_infra = encodeURIComponent(infraEnd?. value || '');
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}&address=${contractAddress}&tcNo=${tcNumber}
                                 &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}`;
     });
 
