@@ -10,6 +10,10 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
+// var_dump($_GET);  
+// echo  "<br>";
+// echo  "<br>";
+
 if ($_GET['type'] === TRANS_RENT) {
 
     $transRentData = [
@@ -87,8 +91,8 @@ if ($_GET['type'] === TEMP_LIGHTING) {
     $EmpUpdate = [
         'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'contract_start' => $_GET['tempLightStart'],
-        'contract_end' => $_GET['tempLightEnd'],
+        'contract_start' => $_GET['templightingStart'],
+        'contract_end' => $_GET['templightingEnd'],
         'created_at' => date('Y-m-d'),
         'updated_at' => date('Y-m-d'),
         'contract_status' => 'Active',
@@ -102,48 +106,50 @@ if ($_GET['type'] === TEMP_LIGHTING) {
         'address' => $_GET['address']
     ];
 
-    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+    var_dump($EmpUpdate);
 
-    if ($contractUpdate) {
+    // $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
-            $id = $EmpUpdate['contract_id'];
+    // if ($contractUpdate) {
 
-            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+    //         $id = $EmpUpdate['contract_id'];
 
-            if(!empty($getCurrenData)){
+    //         $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
-                $currentData = [
-                    'id' => $getCurrenData['id'],
-                    'contract_name' => $getCurrenData['contract_name'],
-                    'date_start' => $getCurrenData['contract_start'],
-                    'date_end' => $getCurrenData['contract_end'],
-                    'updated_at' => date('Y-m-d H:i:s')
-                ];
+    //         if(!empty($getCurrenData)){
 
-                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+    //             $currentData = [
+    //                 'id' => $getCurrenData['id'],
+    //                 'contract_name' => $getCurrenData['contract_name'],
+    //                 'date_start' => $getCurrenData['contract_start'],
+    //                 'date_end' => $getCurrenData['contract_end'],
+    //                 'updated_at' => date('Y-m-d H:i:s')
+    //             ];
 
-                var_dump($updateContractHistory);
+    //             $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-                if($updateContractHistory){
+    //             var_dump($updateContractHistory);
+
+    //             if($updateContractHistory){
 
 
-                $_SESSION['notification'] = [
-                    'message' => 'Update for r.',
-                    'type' => 'success'
-                ];
+    //             $_SESSION['notification'] = [
+    //                 'message' => 'Update for r.',
+    //                 'type' => 'success'
+    //             ];
 
-                header("Location: " . $_SERVER['HTTP_REFERER']);
+    //             header("Location: " . $_SERVER['HTTP_REFERER']);
 
-                }
+    //             }
 
-                $_SESSION['notification'] = [
-                      'message' => 'Update successful. This record is now pending further review.',
-                    'type' => 'success'
-                ];
+    //             $_SESSION['notification'] = [
+    //                   'message' => 'Update successful. This record is now pending further review.',
+    //                 'type' => 'success'
+    //             ];
 
-                header("Location: " . $_SERVER['HTTP_REFERER']);
-            }
-        }
+    //             header("Location: " . $_SERVER['HTTP_REFERER']);
+    //         }
+    //     }
 
 }
 
