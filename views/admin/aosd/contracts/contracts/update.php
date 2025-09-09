@@ -10,10 +10,6 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-// var_dump($_GET);  
-// echo  "<br>";
-// echo  "<br>";
-
 if ($_GET['type'] === TRANS_RENT) {
 
     $transRentData = [
@@ -32,8 +28,8 @@ if ($_GET['type'] === TRANS_RENT) {
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
         'address' => $_GET['address'],
-        'tc_no' => $_GET['tcNo'],
-        'account_no' => $_GET['account_no'],
+        'tc_no' => $_GET['tcNumber'],
+        'account_no' => $_GET['account_no']
     ];
 
 
@@ -63,7 +59,7 @@ if ($_GET['type'] === TRANS_RENT) {
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Update successful. This record is now pending further review.',
+                     'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -91,8 +87,8 @@ if ($_GET['type'] === TEMP_LIGHTING) {
     $EmpUpdate = [
         'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'contract_start' => $_GET['templightingStart'],
-        'contract_end' => $_GET['templightingEnd'],
+        'contract_start' => $_GET['tempLightStart'],
+        'contract_end' => $_GET['tempLightEnd'],
         'created_at' => date('Y-m-d'),
         'updated_at' => date('Y-m-d'),
         'contract_status' => 'Active',
@@ -106,50 +102,48 @@ if ($_GET['type'] === TEMP_LIGHTING) {
         'address' => $_GET['address']
     ];
 
-    var_dump($EmpUpdate);
+    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
-    // $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+    if ($contractUpdate) {
 
-    // if ($contractUpdate) {
+            $id = $EmpUpdate['contract_id'];
 
-    //         $id = $EmpUpdate['contract_id'];
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
 
-    //         $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+            if(!empty($getCurrenData)){
 
-    //         if(!empty($getCurrenData)){
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
 
-    //             $currentData = [
-    //                 'id' => $getCurrenData['id'],
-    //                 'contract_name' => $getCurrenData['contract_name'],
-    //                 'date_start' => $getCurrenData['contract_start'],
-    //                 'date_end' => $getCurrenData['contract_end'],
-    //                 'updated_at' => date('Y-m-d H:i:s')
-    //             ];
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
 
-    //             $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+                var_dump($updateContractHistory);
 
-    //             var_dump($updateContractHistory);
-
-    //             if($updateContractHistory){
+                if($updateContractHistory){
 
 
-    //             $_SESSION['notification'] = [
-    //                 'message' => 'Update for r.',
-    //                 'type' => 'success'
-    //             ];
+                $_SESSION['notification'] = [
+                    'message' => 'Update for r.',
+                    'type' => 'success'
+                ];
 
-    //             header("Location: " . $_SERVER['HTTP_REFERER']);
+                header("Location: " . $_SERVER['HTTP_REFERER']);
 
-    //             }
+                }
 
-    //             $_SESSION['notification'] = [
-    //                   'message' => 'Update successful. This record is now pending further review.',
-    //                 'type' => 'success'
-    //             ];
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
 
-    //             header("Location: " . $_SERVER['HTTP_REFERER']);
-    //         }
-    //     }
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+            }
+        }
 
 }
 
