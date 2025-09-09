@@ -562,7 +562,7 @@ include_once '../../../views/layouts/includes/header.php';
             <?php if($getContract['party_of_second_part']): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted Procurementd" style="font-size: 15px;">Party of Second Part:</label><input
-                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                            type="text" id="second_party" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['party_of_second_part']; ?>" name="address" readonly>
                         </div>
                 </div>
@@ -1573,6 +1573,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('edit').addEventListener('click', function () {
 
+        const secondParty = document.getElementById('second_party');
+
         const templightEnd2 = document.getElementById('endTempLight2');
         const templightEnd1 = document.getElementById('endTempLight1');
 
@@ -1652,6 +1654,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             templightEnd2?.removeAttribute('readonly');
             templightEnd2?.setAttribute('hidden', true);
             templightEnd1?.removeAttribute('hidden');
+
+            secondParty?.removeAttribute('readonly');
 
             nameInput?.removeAttribute('readonly');
             startDate?.removeAttribute('readonly');
@@ -1751,6 +1755,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const templightStart1 = document.getElementById('startTempLight1');
         const templightStart2 = document.getElementById('startTempLight2');
 
+        const secondParty = document.getElementById('second_party');
+
         const address = document.getElementById('address');
         const tcNo = document.getElementById('tc_no');
         const startInfra2 = document.getElementById('infraStart2');
@@ -1812,6 +1818,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const supplier = document.getElementById('goodsSupplier');
 
         // Set them back to readonly/disabled
+
+        secondParty?.setAttribute('readonly', true);
 
         templightStart2?.removeAttribute('hidden');
         templightStart2?.setAttribute('readonly', true);
@@ -1904,7 +1912,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('save').addEventListener('click', function () {
         // Get the relevant DOM elements
-
+        const secondParty = document.getElementById('second_party');
         const templightStart1 = document.getElementById('startTempLight1');
         const templightEnd1 = document.getElementById('endTempLight1');
         const tcNo = document.getElementById('tc_no');
@@ -1956,7 +1964,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
-
+        const second_party = encodeURIComponent(secondParty?.value || '');
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
@@ -1992,7 +2000,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         // Redirect with query parameters
         window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}&address=${contractAddress}&tcNo=${tcNumber}
                                 &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}
-                                &templightingStart=${templightingStart}&templightingEnd=${templightingEnd}`;
+                                &templightingStart=${templightingStart}&templightingEnd=${templightingEnd}&second_party=${second_party}`;
     });
 
     function formatDate(dateString) {
