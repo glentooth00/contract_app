@@ -194,6 +194,29 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           <?php endif; ?>
         <?php endif; ?>
 
+        <?php if ($department === AOSD ): ?>
+          <?php if ($role === 'Manager'): ?>
+            <li class="nav-item">
+              <a class="nav-link" id="changepass" href="pending_updates.php">
+                <img width="27px" src="../../../public/images/bell.svg">
+                <span>Notifications
+                  <span>
+                    <?php
+                    $getLatestActivities = (new NotificationController)->checkRecentUpdates();
+                    ?>
+                    <?php if (!empty($getLatestActivities)): ?>
+                      <span class="badge bg-danger">
+                        <?= $getLatestActivities ?>
+                      </span>
+                    <?php endif; ?>
+                    <!-- <img width="20px" src="../../../public/images/notify.svg" alt="Activities needs attention"> -->
+                  </span>
+                </span>
+              </a>
+            </li>
+          <?php endif; ?>
+        <?php endif; ?>
+
         <?php if ($department === CITET ): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">

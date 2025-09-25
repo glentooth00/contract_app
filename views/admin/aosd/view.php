@@ -6,12 +6,14 @@ use App\Controllers\EmploymentContractController;
 use App\Controllers\SuspensionController;
 use App\Controllers\UserController;
 use App\Controllers\CommentController;
+use App\Controllers\ProcurementController;
 session_start();
 date_default_timezone_set('Asia/Manila');
 use App\Controllers\ContractController;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
+$getAllprocMode = ( new ProcurementController )->getAllProcMode();
 
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
@@ -74,29 +76,29 @@ include_once '../../../views/layouts/includes/header.php';
                             <div class="form-group">
                                 
                                 <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
-                                    <input type="text" name="contract_start"
+                                    <input type="hidden" name="contract_start"
                                         value="<?= $getContract['contract_start'] ?>">
-                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
-                                    <input type="text" name="rent_start" value="<?= $getContract['rent_start'] ?>">
-                                    <input type="text" name="rent_end" value="<?= $getContract['rent_end'] ?>">
+                                    <input type="hidden" name="rent_start" value="<?= $getContract['rent_start'] ?>">
+                                    <input type="hidden" name="rent_end" value="<?= $getContract['rent_end'] ?>">
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === EMP_CON): ?>
-                                    <input type="text" name="contract_start" value="<?= $getContract['contract_start'] ?>">
-                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
-                                 <?php if ($getContract['contract_type'] === GOODS): ?>
-                                    <input type="text" name="contract_start" value="<?= $getContract['contract_start'] ?>">
-                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                <?php if ($getContract['contract_type'] === GOODS): ?>
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                 <?php if ($getContract['contract_type'] === INFRA): ?>
-                                    <input type="text" name="contract_start" value="<?= $getContract['contract_start'] ?>">
-                                    <input type="text" name="contract_end" value="<?= $getContract['contract_end'] ?>">
+                                    <input type="hidden" name="contract_start" value="<?= $getContract['contract_start'] ?>">
+                                    <input type="hidden" name="contract_end" value="<?= $getContract['contract_end'] ?>">
                                 <?php endif; ?>
 
                                 <label for="suspendReason" class="badge text-muted mb-2">Type of Suspension</label>
@@ -244,6 +246,23 @@ include_once '../../../views/layouts/includes/header.php';
     <?php endif; ?>
 
         <div class="mt-3 col-md-12 d-flex gap-5">
+
+        <input type="hidden" id="uploaderDept" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader_department']; ?>" name="uploader_department" readonly>
+                <input type="hidden" id="contractFile" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['contract_file']; ?>" name="contract_file" readonly>
+
+                <input type="hidden" id="contractUploader" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader']; ?>" name="uploader" readonly>
+
+                <input type="hidden" id="uploaderId" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['uploader_id']; ?>" name="uploader_id" readonly>
+
+                <input type="hidden" id="contractId" style="margin-left:9px;" class="form-control pl-5"
+                    value="<?= $getContract['id']; ?>" name="contract_name" readonly>
+
+
+
             <div class="row col-md-2"><input type="hidden" id="contractId" style="margin-left:9px;"
                     class="form-control pl-5" value="<?= $getContract['id']; ?>" name="id" readonly>
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Contract Name:</label><input
@@ -603,6 +622,24 @@ include_once '../../../views/layouts/includes/header.php';
                         </div>
                 </div>
                 <?php endif; ?>
+
+                            <?php if($getContract['procurementMode']): ?>
+                <div class="row col-md-2">
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Procurement Mode:</label>
+
+                        <input type="text" id="procurementModeInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['procurementMode']; ?>" name="contract_type" readonly>
+
+                        <select class="p-1 form-select" name="contract_type" id="procurementModeSelect" style="width:12em;margin-left:9px;" hidden>
+                            <option value="<?= $getContract['procurementMode']; ?>"><?= $getContract['procurementMode']; ?></option>
+                            <?php foreach($getAllprocMode as $types): ?>
+                                <option value="<?= $types['procMode'] ?>"><?= $types['procMode'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            <?php endif; ?>
 
                 <?php endif; ?> <?php if (!$getContract['supplier']): ?> <?php else: ?>
                     <div class="row col-md-2">
@@ -1567,11 +1604,14 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('edit').addEventListener('click', function () {
 
-
+        const uploader_dept = document.getElementById('uploaderDept');
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
         const endInfra2 = document.getElementById('infraEnd2');
         const endInfra1 = document.getElementById('infraEnd1');
+
+        const procurementModeInput = document.getElementById('procurementModeInput');
+        const procurementModeSelect = document.getElementById('procurementModeSelect');
 
         const nameInput = document.getElementById('contractName');
         const startDate = document.getElementById('startDate');
@@ -1648,6 +1688,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             infra_end?.removeAttribute('readonly');
             contractAddress?.removeAttribute('readonly');
 
+            procurementModeInput?.setAttribute('hidden', true);
+            procurementModeSelect?.removeAttribute('hidden');
+
             start_rent1?.removeAttribute('hidden');
             start_rent2?.setAttribute('hidden','');
 
@@ -1720,6 +1763,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
     });
 
     document.getElementById('close').addEventListener('click', function () {
+
+        const procurementModeInput = document.getElementById('procurementModeInput');
+        const procurementModeSelect = document.getElementById('procurementModeSelect');
 
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
@@ -1821,6 +1867,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         end_rent2?.setAttribute('readonly', '');
         end_rent2?.removeAttribute('hidden','');
 
+        procurementModeSelect?.setAttribute('hidden', true);
+        procurementModeInput?.removeAttribute('hidden', true);
+        procurementModeInput?.setAttribute('readonly', true);
 
         tempStart?.setAttribute('readonly', true);
         tempEnd?.setAttribute('readonly', true);
@@ -1861,6 +1910,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
     document.getElementById('save').addEventListener('click', function () {
 
         // Get the relevant DOM elements
+        const uploader_id = document.getElementById('uploaderId');
+        const uploader_dept = document.getElementById('uploaderDept');
         const infraStart = document.getElementById('infraStart1');
         const infraEnd = document.getElementById('infraEnd1');
         const nameInput = document.getElementById('contractName');
@@ -1874,7 +1925,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const EmpStart = document.getElementById('empConStart1');
         const EmpEnd = document.getElementById('empConEnd1');
         const totalCost = document.getElementById('ttc');
-        const uploader_dept = document.getElementById('uploadingDept');
         const loginUser = document.getElementById('loggedInUser');
         const uploaded_by = document.getElementById('uploadedBy');
         const uploaderId = document.getElementById('uploader_id');
@@ -1902,6 +1952,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         const contractTypeSelect = document.getElementById('contractTypeSelect');
 
+        const procurementModeSelect = document.getElementById('procurementModeSelect');
+
 
         // Get the values for start and end dates, fallback to rent_start and rent_end if necessary
         const startDateValue = startDate?.value || rentStart?.value || '';
@@ -1912,7 +1964,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
-
+        const uploaderDept = encodeURIComponent(uploader_dept?.value || '');
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
         const typeContract = encodeURIComponent(contract_type?.value || '');
@@ -1920,7 +1972,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const StartEmpCon =  encodeURIComponent(EmpStart?.value || '');
         const EndConEmp = encodeURIComponent(EmpEnd?.value || '');
         const Cost = encodeURIComponent(totalCost?. value || '');
-        const deptUpload = encodeURIComponent(uploader_dept?. value || '');
         const updatedby = encodeURIComponent(loginUser?.  value || '');
         const uploadedBy = encodeURIComponent(uploaded_by?. value || '');
         const uploadId = encodeURIComponent(uploaderId?. value || '');
@@ -1941,9 +1992,10 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const goodsSupp = encodeURIComponent(supplier?.value || ''); 
         const start_infra = encodeURIComponent(infraStart?. value || '');
         const end_infra = encodeURIComponent(infraEnd?. value || '');
+        const procMode = encodeURIComponent(procurementModeSelect?. value || '');
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}`;
+        window.location.href = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&contract_type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${dept_uploader}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
+                                &goodsStart=${goods_start}&procurementMode=${procMode}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}`;
     });
 
     function formatDate(dateString) {

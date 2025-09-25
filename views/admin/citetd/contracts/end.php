@@ -20,8 +20,7 @@ require_once __DIR__ . '/../../../../vendor/autoload.php';
         'contract_end' => $_POST['contract_end'] ?? null,
     ];
 
-
-if(isset($_POST['end_suspension'])){
+if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
     if( $endSuspensionData['contract_type'] === TEMP_LIGHTING){
 
@@ -270,7 +269,7 @@ if(isset($_POST['end_suspension'])){
             'contract_end' => $_POST['contract_end'] ?? null,
         ];
         
-        // var_dump($endSuspensionData);
+        var_dump($endSuspensionData);
 
         $start = strtotime(substr($endSuspensionData['updated_at'], 0, 19));
         $end = time();
