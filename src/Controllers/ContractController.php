@@ -1581,30 +1581,42 @@ class ContractController
     }
 
             public function managerUpdateTempLight($data)
-    {
-        try {
-            $sql = "UPDATE contracts SET 
-                uploader_department = :uploader_department,
-                contract_name = :contract_name,
-                contract_start = :contract_start,
-                contract_end = :contract_end,
-                address = :address,
-                supplier = :supplier
-                WHERE id = :contract_id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam(':uploader_department', $data['uploader_department']);
-            $stmt->bindParam(':contract_name', $data['contract_name']);
-            $stmt->bindParam(':contract_start', $data['contract_start']);
-            $stmt->bindParam(':contract_end', $data['contract_end']);
-            $stmt->bindParam(':contract_id', $data['contract_id']);
-            $stmt->bindParam(':address', $data['address']);
-            $stmt->bindParam(':supplier', $data['supplier']);
-            return $stmt->execute(); // returns true if successful
-        } catch (PDOException $e) {
-            echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
-            return false;
-        }
+{
+    try {
+        $sql = "UPDATE contracts SET 
+            uploader_department = :uploader_department,
+            contract_name = :contract_name,
+            contract_start = :contract_start,
+            contract_end = :contract_end,
+            address = :address,
+            supplier = :supplier,
+            tc_no = :tc_no,
+            contract_type = :contract_type,
+            party_of_second_part = :party_of_second_part,
+            account_no = :account_no
+            WHERE id = :contract_id";
+        
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->bindParam(':uploader_department', $data['uploader_department']);
+        $stmt->bindParam(':contract_name', $data['contract_name']);
+        $stmt->bindParam(':contract_start', $data['contract_start']);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':contract_id', $data['contract_id']);
+        $stmt->bindParam(':address', $data['address']);
+        $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
+        $stmt->bindParam(':supplier', $data['supplier']); // supplier mapped to party_of_second_party
+        $stmt->bindParam(':tc_no', $data['tc_no']);
+        $stmt->bindParam(':contract_type', $data['contract_type']);
+        $stmt->bindParam(':account_no', $data['account_no']);
+
+        return $stmt->execute(); // returns true if successful
+    } catch (PDOException $e) {
+        echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
+        return false;
     }
+}
+
 
     public function managerUpdateTransRent($data)
     {

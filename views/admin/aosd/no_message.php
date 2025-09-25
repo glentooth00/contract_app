@@ -24,7 +24,7 @@
                 class="view-comment-trigger">
     </div>
 </a>
-
+<!-- 
 <script>
     function fetchNotificationCount() {
         fetch('contracts/message_notification_count.php') // this is your PHP endpoint
@@ -51,5 +51,5 @@
 
     // Repeat every 10 seconds
     setInterval(fetchNotificationCount, 10000);
-</script>
+</script> -->
 

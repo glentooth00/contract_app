@@ -11,7 +11,7 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    var_dump($_POST) ;
+    // var_dump($_POST);
 
     if($_POST['contract_type'] === TEMP_LIGHTING){
 
@@ -23,17 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_end' => $_POST['contract_end'],
             'contract_status' => 'Active',
             'address' => $_POST['address'],
-            'tc_no' => $_POST['tc_no'],
-            'account_no' => $_POST['account_no'],
-            'party_of_second_part' => $_POST['party_of_second_part'],
-            'contract_type' => $_POST['contract_type'],
         ];
-
-        echo "<br>";
-        echo "<br>";
-        echo "<br>";
-
-        var_dump( $updateData);
 
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
 

@@ -10,10 +10,6 @@ session_start();
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-var_dump($_GET);  
-echo  "<br>";
-echo  "<br>";
-
 if ($_GET['type'] === TRANS_RENT) {
 
     $transRentData = [
@@ -32,8 +28,8 @@ if ($_GET['type'] === TRANS_RENT) {
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
         'address' => $_GET['address'],
-        'tc_no' => $_GET['tcNo'],
-        'account_no' => $_GET['account_no'],
+        'tc_no' => $_GET['tcNumber'],
+        'account_no' => $_GET['account_no']
     ];
 
 
@@ -63,7 +59,7 @@ if ($_GET['type'] === TRANS_RENT) {
 
 
                 $_SESSION['notification'] = [
-                    'message' => 'Update successful. This record is now pending further review.',
+                     'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
 
@@ -91,8 +87,8 @@ if ($_GET['type'] === TEMP_LIGHTING) {
     $EmpUpdate = [
         'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'contract_start' => $_GET['templightingStart'],
-        'contract_end' => $_GET['templightingEnd'],
+        'contract_start' => $_GET['tempLightStart'],
+        'contract_end' => $_GET['tempLightEnd'],
         'created_at' => date('Y-m-d'),
         'updated_at' => date('Y-m-d'),
         'contract_status' => 'Active',
@@ -103,13 +99,8 @@ if ($_GET['type'] === TEMP_LIGHTING) {
         'uploader_department' => $_GET['uploader_dept'],
         'data_type' => 'Update',
         'updated_by' => $_GET['updatedBy'],
-        'address' => $_GET['address'],
-        'tc_no' => $_GET['tcNo'],
-        'account_no' => $_GET['account_no'],
-        'second_party' => $_GET['second_party']
+        'address' => $_GET['address']
     ];
-
-    // var_dump($EmpUpdate);
 
     $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
 
@@ -130,6 +121,8 @@ if ($_GET['type'] === TEMP_LIGHTING) {
                 ];
 
                 $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                var_dump($updateContractHistory);
 
                 if($updateContractHistory){
 

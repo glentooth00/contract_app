@@ -172,14 +172,12 @@ if (isset($_POST['contract_id'])) {
                 </div>
                 <?php endif; ?>
 
-                <?php if($current['party_of_second_part']): ?>
+                <?php if($pending['total_cost']): ?>
                     <div class="mb-3">
-                        <label><strong>Second Party:</strong></label>
-                        <input type="text" value="<?= $current['party_of_second_part'] ?>"  class="form-control" readonly>
+                        <label><strong>Total Contract Cost:</strong></label>
+                        <input type="text" value="<?= $current['contractPrice'] ?>"  class="form-control" readonly>
                     </div>
                 <?php endif; ?>
-
-                
 
             </div>
         </div>
@@ -331,13 +329,6 @@ if (isset($_POST['contract_id'])) {
                     <div class="mb-3">
                         <label><strong>Account #:</strong></label>
                         <input type="text" value="<?= $pending['total_cost'] ?> " name="tcc" class="form-control" readonly>
-                    </div>
-                <?php endif; ?>
-
-                <?php if($pending['second_party']): ?>
-                    <div class="mb-3">
-                        <label><strong>Second Party:</strong></label>
-                        <input type="text" value="<?= $pending['second_party'] ?> " name="party_of_second_part" class="form-control" readonly>
                     </div>
                 <?php endif; ?>
                 

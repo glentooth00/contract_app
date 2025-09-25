@@ -57,7 +57,6 @@ include_once '../../../views/layouts/includes/header.php';
         <input type="hidden" id="loggedInUser" value="<?= $User ?>">
         <input type="hidden" id="uploader_id" value="<?= $getContract['uploader_id'] ?>">
         <input type="hidden" id="uploader_dept" value="<?= $getContract['uploader_department'] ?>">
-        
     <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
     
         <hr>
@@ -423,18 +422,22 @@ include_once '../../../views/layouts/includes/header.php';
             </div>
             <?php endif; ?>
 
-            <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
+           <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
                             <?php
-                            $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
+                                $rentstart = date('Y-m-d', strtotime($getContract['rent_start'] ?? $getContract['contract_start']));
+                                $formatted = date('M/d/Y', strtotime($getContract['rent_start'] ?? $getContract['contract_start']));
                             ?> 
-                            <input type="date" id="tempLightStart" style="margin-left:px;" class="form-control pl-5" value="<?= $rentstart ?>" name="contract_start" readonly><?php endif; ?>
+                            <input type="text" id="startTempLight2" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $formatted ?>" name="rent_start" readonly>
+                            <input type="date" id="startTempLight1" style="margin-left:px;width:10em;" class="form-control pl-5" value="<?= $rentstart ?>" name="rent_start" hidden>
+                            <?php endif; ?>
                     </div>
                 </div>
             </div>
+            
             <?php endif; ?>
             <?php if($getContract['contract_type'] === TEMP_LIGHTING ) : ?>
             <div class="row col-md-2">
@@ -442,9 +445,12 @@ include_once '../../../views/layouts/includes/header.php';
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
                             aria-hidden="true"></i><?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
                             <?php
-                            $rentEnd = date('Y-m-d', strtotime($getContract['contract_end']));
+                                $rentEnd = date('Y-m-d', strtotime($getContract['rent_end'] ?? $getContract['contract_end']));
+                                $formatted2 = date('M/d/Y', strtotime($getContract['rent_end'] ?? $getContract['contract_end']));
                             ?>
-                        <input type="date" id="tempLightEnd" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="contract_start" readonly><?php endif; ?>
+                            <input type="text" id="endTempLight2" style="margin-left:px;" class="form-control pl-5" value="<?= $formatted2 ?>" name="rent_end" readonly>
+                            <input type="date" id="endTempLight1" style="margin-left:px;" class="form-control pl-5" value="<?= $rentEnd ?>" name="rent_end" hidden>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -555,8 +561,8 @@ include_once '../../../views/layouts/includes/header.php';
 
             <?php if($getContract['party_of_second_part']): ?>
                 <div class="row col-md-2">
-                    <div class="mt-3"><label class="badge text-muteProcurementd" style="font-size: 15px;">Party of Second Part:</label><input
-                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                    <div class="mt-3"><label class="badge text-muted Procurementd" style="font-size: 15px;">Party of Second Part:</label><input
+                            type="text" id="second_party" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['party_of_second_part']; ?>" name="address" readonly>
                         </div>
                 </div>
@@ -1567,7 +1573,16 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('edit').addEventListener('click', function () {
 
+        const secondParty = document.getElementById('second_party');
 
+        const templightEnd2 = document.getElementById('endTempLight2');
+        const templightEnd1 = document.getElementById('endTempLight1');
+
+        const templightStart1 = document.getElementById('startTempLight1');
+        const templightStart2 = document.getElementById('startTempLight2');
+
+        const tcNo = document.getElementById('tc_no');
+        const address = document.getElementById('address');
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
         const endInfra2 = document.getElementById('infraEnd2');
@@ -1631,6 +1646,17 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         if (isReadOnly) {
             // Make all editable
+
+            templightStart2?.removeAttribute('readonly');
+            templightStart2?.setAttribute('hidden', true);
+            templightStart1?.removeAttribute('hidden');
+
+            templightEnd2?.removeAttribute('readonly');
+            templightEnd2?.setAttribute('hidden', true);
+            templightEnd1?.removeAttribute('hidden');
+
+            secondParty?.removeAttribute('readonly');
+
             nameInput?.removeAttribute('readonly');
             startDate?.removeAttribute('readonly');
             endDate?.removeAttribute('readonly');
@@ -1673,6 +1699,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             goodsEnd2?.setAttribute('hidden', true);
             goodsEnd1?.removeAttribute('hidden');
 
+            tcNo?.removeAttribute('readonly');
 
             tempStart?.removeAttribute('readonly');
             tempEnd?.removeAttribute('readonly');
@@ -1701,6 +1728,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             endInfra2?.setAttribute('hidden', true);
             endInfra1?.removeAttribute('hidden');
 
+            address?.removeAttribute('readonly');
+
             saveBtn.style.display = 'inline';
             editBtn.style.display = 'none';
             closeBtn.style.display = 'inline';
@@ -1713,7 +1742,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             endDate.setAttribute('readonly', true);
             deptSelect.setAttribute('disabled', true);
 
-
             saveBtn.style.display = 'none';
 
         }
@@ -1721,6 +1749,16 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('close').addEventListener('click', function () {
 
+        const templightEnd2 = document.getElementById('endTempLight2');
+        const templightEnd1 = document.getElementById('endTempLight1');
+
+        const templightStart1 = document.getElementById('startTempLight1');
+        const templightStart2 = document.getElementById('startTempLight2');
+
+        const secondParty = document.getElementById('second_party');
+
+        const address = document.getElementById('address');
+        const tcNo = document.getElementById('tc_no');
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
         const endInfra2 = document.getElementById('infraEnd2');
@@ -1780,6 +1818,18 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const supplier = document.getElementById('goodsSupplier');
 
         // Set them back to readonly/disabled
+
+        secondParty?.setAttribute('readonly', true);
+
+        templightStart2?.removeAttribute('hidden');
+        templightStart2?.setAttribute('readonly', true);
+        templightStart1?.setAttribute('hidden', true);
+
+        templightEnd2?.removeAttribute('hidden');
+        templightEnd2?.setAttribute('readonly', true);
+        templightEnd1?.setAttribute('hidden', true);
+
+        tcNo?.setAttribute('readonly', true);
         nameInput?.setAttribute('readonly', true);
         startDate?.setAttribute('readonly', true);
         endDate?.setAttribute('readonly', true);
@@ -1808,6 +1858,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         start_rent2?.setAttribute('readonly','');
         //and removes thre hidden attribute
         start_rent2?.removeAttribute('hidden','');
+
+        address?.setAttribute('readonly', true);
 
         saccConStart1?.setAttribute('hidden', true);
         saccConStart2?.removeAttribute('hidden', true);
@@ -1859,8 +1911,12 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
 
     document.getElementById('save').addEventListener('click', function () {
-
         // Get the relevant DOM elements
+        const secondParty = document.getElementById('second_party');
+        const templightStart1 = document.getElementById('startTempLight1');
+        const templightEnd1 = document.getElementById('endTempLight1');
+        const tcNo = document.getElementById('tc_no');
+        const address = document.getElementById('address');
         const infraStart = document.getElementById('infraStart1');
         const infraEnd = document.getElementById('infraEnd1');
         const nameInput = document.getElementById('contractName');
@@ -1886,7 +1942,6 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const infra_start  = document.getElementById('infraStart');
         const infra_end = document.getElementById('infraEnd');
         const contractAddress = document.getElementById('address');
-        const tcNumber = document.getElementById('tc_no');
         const accountNo = document.getElementById('accountNumber');
         const supplier = document.getElementById('goodsSupplier');
 
@@ -1909,10 +1964,9 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
-
+        const second_party = encodeURIComponent(secondParty?.value || '');
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
-
         const department = encodeURIComponent(deptSelect?.value || ''); // Safe here
         const contract_id = encodeURIComponent(id?.value || '');
         const typeContract = encodeURIComponent(contract_type?.value || '');
@@ -1935,15 +1989,18 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const endTemplight = encodeURIComponent(tempEnd?. value || '');
         const impDept = encodeURIComponent(implementing_dept?. value || '');
         const addressContract = encodeURIComponent(contractAddress?. value || '');
-        const tcNo = encodeURIComponent(tcNumber?. value || '');
+        const tcNumber = encodeURIComponent(tcNo?. value || '');
         const account_no = encodeURIComponent(accountNo?. value || '' );   
         const contractSelect = encodeURIComponent(contractTypeSelect?. value || ''); 
         const goodsSupp = encodeURIComponent(supplier?.value || ''); 
         const start_infra = encodeURIComponent(infraStart?. value || '');
         const end_infra = encodeURIComponent(infraEnd?. value || '');
+        const templightingStart = encodeURIComponent(templightStart1?. value || '');
+        const templightingEnd = encodeURIComponent(templightEnd1?. value || '');
         // Redirect with query parameters
-        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
-                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}`;
+        window.location.href = `contracts/update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${deptUpload}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}&address=${contractAddress}&tcNo=${tcNumber}
+                                &goodsStart=${goods_start}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}
+                                &templightingStart=${templightingStart}&templightingEnd=${templightingEnd}&second_party=${second_party}`;
     });
 
     function formatDate(dateString) {
