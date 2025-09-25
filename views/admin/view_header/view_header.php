@@ -77,7 +77,7 @@ $account_no = $getContract['account_no'];
             <!-- Comment icon with badge -->
                         <?php if(isset($contractId)): ?>
                                 <?php 
-                                   $contractId = $getContract['id'];
+                                $contractId = $getContract['id'];
 
                                     $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
