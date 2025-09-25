@@ -154,7 +154,7 @@ include_once '../../../views/layouts/includes/header.php';
                                 ?>
 
                                 <?php if(isset($contractId)): ?>
-                                     <?php 
+                                <?php 
                                     $contractId = $contract['id'];
 
                                     $hasComment = ( new CommentController )->hasComment($contractId);
@@ -180,7 +180,7 @@ include_once '../../../views/layouts/includes/header.php';
                                             <?php endif;  ?>
                                     <?php endif; ?>
                                 </span>
-                            <?php endif; ?>
+                                <?php endif; ?>
 
                             </td>
                             <td class="text-center">
