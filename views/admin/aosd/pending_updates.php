@@ -292,11 +292,15 @@ include_once '../../../views/layouts/includes/header.php';
                                                                     class="form-control" readonly>
                                                             </div>
 
+                                                            
+
                                                             <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract Price</label>
-                                                                <input type="text" value="<?=$getContractFromContracts['contractPrice'] ?? '' ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
+                                                                    <label class="badge text-muted float-start">Contract Price</label>
+                                                                    <input type="text" value="<?=$getContractFromContracts['contractPrice'] ?? '' ?>"
+                                                                        class="form-control" readonly>
+                                                                </div>
+
+                                                            
 
                                                             <div class="mb-3">
                                                                 <label class="badge text-muted float-start">Contract Type</label>
