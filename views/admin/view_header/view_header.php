@@ -1,5 +1,6 @@
 <?php 
 use App\Controllers\CommentController;
+use App\Controllers\FlagController;
 
 $account_no = $getContract['account_no'];
 ?>
@@ -73,32 +74,40 @@ $account_no = $getContract['account_no'];
         <?php } ?>
 
         <?php include_once 'bell.php'; ?>
-
             <!-- Comment icon with badge -->
-             <?php include_once 'message.php'; ?>
-            <!-- <div id="viewComment" class="position-relative">
-                <?php if ($hasCommentCount > 0): ?>
-                    <span id="comment-count-badge-<?= $getContract['id'] ?>"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style="font-size: 14px;">
-                        <?= $hasCommentCount; ?>
-                    </span>
-                <?php endif; ?>
-                <img
-                    src="../../../public/images/viewComment.svg"
-                    width="33px"
-                    alt="This Contract has comment!"
-                    type="button"
-                    data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasWithBothOptions"
-                    aria-controls="offcanvasWithBothOptions"
-                    data-contract-id="<?= $getContract['id'] ?>"
-                    data-audit-id="<?= $user_id ?>"
-                    data-user-id="<?= $user_id ?>"
-                    data-department="<?= $user_department ?>"
-                    class="view-comment-trigger"
-                />
-            </div> -->
+                        <?php if(isset($contractId)): ?>
+                                <?php 
+                                $contractId = $getContract['id'];
+
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                ?>
+                                <?php if($hasComment == true): ?>
+                                    <span class="float-end">
+                                        <?php include_once 'message.php'; ?> 
+                                    </span>
+
+                                <?php else: ?>
+                                    <span class="float-end">
+                                        <?php include_once 'no_message.php'; ?> 
+                                    </span>
+                                <?php endif; ?>
+                                
+                                <span class="p-3">
+                                    <?php
+                                        $id = $contractId;
+                                        $getFlag = ( new FlagController )->getFlag($id);
+                                    ?>
+                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
+                                        
+                                        <?php if($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
+                                            <?php endif;  ?>
+                                            <?php if($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
+                                            <?php endif;  ?>
+                                    <?php endif; ?>
+                                </span>
+                                <?php endif; ?>
             <!-- Three-dot dropdown -->
             <div class="dotMenu" onclick="toggleView()" id="dotMenu">
                 <img src="../../../public/images/dotMenu.svg" width="25px">
