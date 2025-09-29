@@ -44,11 +44,12 @@ include_once '../../../views/layouts/includes/header.php';
 
 <div class="main-layout">
 
+
+
     <?php include_once '../menu/sidebar.php'; ?>
 
 
     <div class="content-area">
-
         <h1>Pending Updates</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
@@ -184,332 +185,17 @@ include_once '../../../views/layouts/includes/header.php';
                             <td class="text-center">
                                 <div class="d-flex justify-content-center gap-2">
 
-                                    <?php if ($contract['data_type'] === 'Update'): ?>
+                                <?php if ($contract['data_type'] === 'Update'): ?>
+                                    <button type="button" class="btn btn-success btn-sm view-details"
+                                        data-id="<?= $contract['id'] ?>"
+                                        data-toggle="modal"
+                                        data-target="#myModal"
+                                        data-contract-id = "<?= $contract['contract_id'] ?>"
+                                        >
+                                        <i class="fa fa-eye"></i> View
+                                    </button>
 
-                                        <a href="view_pending_updates.php" class="btn btn-success btn-sm view-btn"
-                                            data-toggle="modal" data-target="#exampleModal" data-id="<?= $contract['id'] ?>"
-                                            data-contract-id="<?= $contract['id'] ?>" data-name=" <?= $contract['contract_name'] ?>"
-                                            data-start="<?= $contract['contract_start'] ?>"
-                                            data-end="<?= $contract['contract_end'] ?>">
-                                            <i class="fa fa-eye"></i> View
-                                        </a>
-
-
-                                        <!----update modal ------->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-xl" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Compare Changes</h5></span>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="col-md-12 d-flex gap-1">
-                                                <div class="col-md-6 card p-3" style="background-color: #ECFAE5;">
-                                                    <div>
-
-                                                        <h5>Current Data</h5>
-                                                        <hr>
-                                                        <?php
-
-                                                        $contract_id = $contract['contract_id'];
-
-                                                        $getContractFromContracts = (new ContractController)->getContractbyId($contract_id);
-                                            
-                                                        ?>
-                                                        
-                                                        <div class="col-md-12">
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract
-                                                                    name</label>
-                                                                <input type="text"
-                                                                    value="<?= $getContractFromContracts['contract_name'] ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
-                                                            <div class="d-flex gap-2">
-                                                                <div class="col-md-6">
-                                                                    <label class="badge text-muted float-start">Date
-                                                                        Start</label>
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-text">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="16" height="16"
-                                                                                fill="currentColor"
-                                                                                class="bi bi-calendar"
-                                                                                viewBox="0 0 16 16">
-                                                                                <path
-                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                            </svg>
-                                                                        </span>
-                                                                        <?php
-                                                                        $dateStart = date('M-d-Y', strtotime($getContractFromContracts['contract_start']));
-                                                                        ?>
-                                                                        <input type="text"
-                                                                            value="<?= $dateStart ?>"
-                                                                            class="form-control" readonly>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="col-md-6">
-                                                                    <label class="badge text-muted float-start">Date
-                                                                        End</label>
-                                                                    <div class="input-group">
-                                                                        <span class="input-group-text">
-                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                width="16" height="16"
-                                                                                fill="currentColor"
-                                                                                class="bi bi-calendar"
-                                                                                viewBox="0 0 16 16">
-                                                                                <path
-                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                            </svg>
-                                                                        </span>
-                                                                        <?php
-                                                                        $dateEnd = date('M-d-Y', strtotime($getContractFromContracts['contract_end']));
-                                                                        ?>
-                                                                        <input type="text"
-                                                                            value="<?= $dateEnd ?>"
-                                                                            class="form-control" readonly>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="mt-3">
-                                                            </div>
-                                                            <?php
-                                                            $start = new DateTime($getContractFromContracts['contract_start']);
-                                                            $end = new DateTime($getContractFromContracts['contract_end']);
-                                                            $today = new DateTime();
-
-                                                            $interval = $today->diff($end);
-                                                            $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-                                                            ?>
-
-                                                            
-
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Remaining days</label>
-                                                                <input type="text" value="<?= $remainingDays ?> Days"
-                                                                    class="form-control" readonly>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract Price</label>
-                                                                <input type="text" value="<?=$getContractFromContracts['contractPrice'] ?? '' ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Contract Type</label>
-                                                                <input type="text" value="<?= $getContractFromContracts['contract_type'] ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Procurement Mode</label>
-                                                                <input type="text" value="<?= $getContractFromContracts['procurementMode'] ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
-
-                                                            <div class="mb-3">
-                                                                <label class="badge text-muted float-start">Current Supplier</label>
-                                                                <input type="text" value="<?= $getContractFromContracts['supplier'] ?>"
-                                                                    class="form-control" readonly>
-                                                            </div>
-
-
-                                                        </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-6 card p-3" style="background-color: #E8F9FF;">
-                                                                <div>
-                                                                    <h5>Pending Changes</h5>
-                                                                    <hr>
-                                                                    <?php
-
-                                                                    $contract_id = $contract['contract_id'];
-
-                                                                    $getPendingUpdate = (new NotificationController)->getPendingDatabyId($contract_id);
-
-                                                                    ?>
-                                                                    <div class="col-md-12">
-                                                                        <form action="contracts/approve_update.php" method="POST">
-                                                                            <div class="mb-3">
-
-                                                                                <input type="hidden" name="uploader_department"
-                                                                                    value="<?= $getPendingUpdate['uploader_department'] ?>"
-                                                                                    class="form-control" readonly>
-                                                                                <input type="hidden" name="id"
-                                                                                    value="<?= $getPendingUpdate['id'] ?>"
-                                                                                    class="form-control" readonly>
-                                                                                <input type="hidden" name="contract_id"
-                                                                                    value="<?= $getPendingUpdate['contract_id'] ?>"
-                                                                                    class="form-control" readonly>
-                                                                                <label class="badge text-muted float-start">Contract
-                                                                                    name</label>
-                                                                                <input type="text" name="contract_name"
-                                                                                    value="<?= $getPendingUpdate['contract_name'] ?>"
-                                                                                    class="form-control">
-                                                                            </div>
-                                                                            <div class="d-flex gap-2">
-                                                                                <div class="col-md-6">
-                                                                                    <label class="badge text-muted float-start">Date
-                                                                                        Start</label>
-                                                                                    <div class="input-group">
-                                                                                        <span class="input-group-text">
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                                width="16" height="16"
-                                                                                                fill="currentColor"
-                                                                                                class="bi bi-calendar"
-                                                                                                viewBox="0 0 16 16">
-                                                                                                <path
-                                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                                            </svg>
-                                                                                        </span>
-                                                                                        <?php if( $getPendingUpdate['rent_start'] === '1900-01-01' ?? $getPendingUpdate['rent_start'] ): ?>
-                                                                                        <input type="text" name="contract_start"
-                                                                                            value="<?= $getPendingUpdate['rent_start'] ?? '' ?>"
-                                                                                            class="form-control">
-                                                                                        <?php endif; ?>
-
-                                                                                        <?php if( !$getPendingUpdate['contract_start'] === '1900-01-01' ||$getPendingUpdate['contract_start'] ): ?>
-                                                                                        <input type="text" name="contract_start"
-                                                                                            value="<?= $getPendingUpdate['contract_start'] ?? '' ?>"
-                                                                                            class="form-control    ">
-                                                                                        <?php endif; ?>
-                                                                                    </div>
-                                                                                </div>
-
-                                                                                <div class="col-md-6">
-                                                                                    <label class="badge text-muted float-start">Date End</label>
-                                                                                    <div class="input-group">
-                                                                                        <span class="input-group-text">
-                                                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                                                width="16" height="16"
-                                                                                                fill="currentColor"
-                                                                                                class="bi bi-calendar"
-                                                                                                viewBox="0 0 16 16">
-                                                                                                <path
-                                                                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-12a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                                                            </svg>
-                                                                                        </span>
-
-                                                                                        
-                                                                                        <?php if( $getPendingUpdate['rent_end']  === '1900-01-01' ?? $getPendingUpdate['rent_end'] ): ?>
-                                                                                        <input type="text" name="contract_end"
-                                                                                            value="<?= $getPendingUpdate['rent_end'] ?? '' ?>"
-                                                                                            class="form-control">
-                                                                                        <?php endif; ?>
-
-                                                                                        <?php if( !$getPendingUpdate['contract_end'] === '1900-01-01' ||$getPendingUpdate['contract_end'] ): ?>
-                                                                                        <input type="text" name="contract_end"
-                                                                                            value="<?= $getPendingUpdate['contract_end'] ?? '' ?>"
-                                                                                            class="form-control    ">
-                                                                                        <?php endif; ?>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="mt-2">
-                                                                                <?php
-                                                                                $start = new DateTime($getPendingUpdate['contract_start'] ??  $getPendingUpdate['rent_start']);
-                                                                                $end = new DateTime($getPendingUpdate['contract_end'] ?? $getPendingUpdate['rent_end']);
-                                                                                $today = new DateTime();
-
-                                                                                // if($getPendingUpdate['contract_start'] ?? $getPendingUpdate['rent_start'] === '1900-01-01'){
-                                                                                //     $start = new DateTime($getPendingUpdate['rent_start']);
-                                                                                   
-                                                                                // } else {
-                                                                                //     $start = new DateTime($getPendingUpdate['contract_start']);
-                                                                                // }
-
-                                                                                // if($getPendingUpdate['contract_end'] ?? $getPendingUpdate['rent_end'] === '1900-01-01'){
-                                                                                //     $end = new DateTime($getPendingUpdate['rent_end']);
-                                                                                // } else {
-                                                                                //     $end = new DateTime($getPendingUpdate['contract_end']);
-                                                                                // }
-
-                                                                                
-
-
-
-                                                                                $interval = $today->diff($end);
-                                                                                $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-                                                                                ?>
-
-                                                                                <div class="mb-3">
-                                                                                    <label
-                                                                                        class="badge text-muted float-start mt-2">Remaining days</label>
-                                                                                    <input type="text"
-                                                                                        value="<?= $remainingDays ?> Days"
-                                                                                        class="form-control" readonly>
-                                                                                </div>
-
-                                                                                <?php if( $getPendingUpdate['contract_type_update'] ): ?>
-                                                                                <div class="mb-2">
-                                                                                    <label
-                                                                                        class="badge text-muted float-start mt-2">Contract
-                                                                                        Price</label>
-                                                                                    <input type="text"
-                                                                                        value="<?= $getPendingUpdate['total_cost'] ?>"
-                                                                                        name="contractPrice"
-                                                                                        class="form-control" readonly>
-                                                                                </div>
-                                                                                <?php endif; ?>
-
-                                                                                <?php if( $getPendingUpdate['contract_type_update'] ): ?>
-                                                                                <div class="mb-2">
-                                                                                    <label
-                                                                                        class="badge text-muted float-start mt-2">Contract
-                                                                                        name</label>
-                                                                                    <input type="text"
-                                                                                        value="<?= $getPendingUpdate['contract_type_update'] ?>"
-                                                                                        name="contract_type_update"
-                                                                                        class="form-control" readonly>
-                                                                                </div>
-                                                                                <?php endif; ?>
-
-                                                                            <?php if( $getPendingUpdate['contract_type_update'] ): ?>
-                                                                                <div class="mb-2">
-                                                                                    <label
-                                                                                        class="badge text-muted float-start mt-2">Procurement Mode</label>
-                                                                                    <input type="text"
-                                                                                        value="<?= $getPendingUpdate['proc_mode'] ?>"
-                                                                                        name="procurementMode"
-                                                                                        class="form-control" readonly>
-                                                                                </div>
-                                                                                <?php endif; ?>
-
-                                                                                <?php if( $getPendingUpdate['contract_type_update'] ): ?>
-                                                                                <div class="mb-2">
-                                                                                    <label
-                                                                                        class="badge text-muted float-start mt-2">Updated Supplier</label>
-                                                                                    <input type="text"
-                                                                                        value="<?= $getPendingUpdate['supplier'] ?>"
-                                                                                        name="supplier"
-                                                                                        class="form-control" readonly>
-                                                                                </div>
-                                                                                <?php endif; ?>
-                                                                            </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
-                                                        <?php if(!$userRole === CHIEF): ?>
-                                                            <button type="submit" class="btn btn-primary">Approve Update</button>
-                                                        <?php endif; ?>
-
-                                                        <?php if($userType === 'Manager'): ?>
-                                                            <button type="submit" class="btn btn-primary">Approve Update</button>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <!----update modal ------->
 
                                     <?php else: ?>
 
@@ -711,6 +397,42 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 
+<!-- The Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document"><!-- make it wider -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Compare Contract Details</h5>
+        <button type="button" class="btn close float-end" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row" id="modal-body-content">
+          <!-- AJAX will insert two columns here -->
+          <div class="col-md-6 border-end" id="current-contract">
+            <h3 class="text-start fw-bold">Current</h3>
+            <div class="p-2">
+              LOADING...
+            </div>
+          </div>
+          <div class="col-md-6" id="pending-contract">
+            <h3 class="text-start fw-bold">Pending Update</h3>
+            <div class="p-2">
+              LOADING...
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
@@ -793,6 +515,10 @@ include_once '../../../views/layouts/includes/header.php';
         });
     </script>
 <?php endif; ?>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+
 <script>
     // When the page finishes loading, hide the spinner
     window.onload = function () {
@@ -862,19 +588,158 @@ include_once '../../../views/layouts/includes/header.php';
     //----------------DAtatables
 
 
-    $(document).ready(function () {
-        $('.view-btn').on('click', function () {
-            const id = $(this).data('id');
-            const contractId = $(this).data('contract-id');
-            const name = $(this).data('name').trim(); // remove leading space
-            const start = $(this).data('start');
-            const end = $(this).data('end');
+    // retrieve data using ajax 
+    $(document).ready(function(){
+        $('.view-details').on('click', function() {
 
-            $('#modal-id').text(id);
-            $('#modal-contract-id').text(contractId);
-            $('#modal-contract-name').text(name);
-            $('#modal-start-date').text(start);
-            $('#modal-end-date').text(end);
+            //variable from button data-id
+            var itemId = $(this).data('id');
+            var contractId = $(this).data('contractId');
+
+            $.ajax({
+                url: 'get_data.php',
+                type: 'POST',
+                data: { id:itemId,contract_id:contractId },
+                success: function(response){
+                    response = JSON.parse(response); // make sure JSON is parsed
+
+                    if(response.success){
+                        let data = response.data;
+
+                        let rawDateStart = data.contract_start ?? rent_start;
+                        let isoDateStart =  rawDateStart.replace(" ", "T");
+                        let newDateStart =  new Date(isoDateStart);
+                        let formattedDateStart = newDateStart.toLocaleDateString("en-US");
+
+                        let rawDateEnd = data.contract_end ?? rent_end;
+                        let isoDateEnd =  rawDateEnd.replace(" ", "T");
+                        let newDateEnd =  new Date(isoDateEnd);
+                        let formattedDateEnd = newDateEnd.toLocaleDateString("en-US");
+
+                        let pendingHtml = "";
+
+                    const fields = {
+                        "Contract Name": data.contract_name,
+                        "Contract Type": data.contract_type,
+                        "Start Date": data.contract_start,
+                        "End Date": data.contract_end,
+                        "Rent Start": data.rent_start,
+                        "Rent End": data.rent_end,
+                        "Total Cost": data.total_cost,
+                        "Status": data.contract_status,
+                        "Approval Status": data.approval_status,
+                        "Account No": data.account_no,
+                        "TC No": data.tc_no,
+                        "Address": data.address,
+                        "Assigned Department": data.assigned_dept,
+                        "Second Party": data.second_party,
+                        "Supplier": data.supplier,
+                        "Procurement Mode": data.proc_mode
+                    };
+
+                    for (let label in fields) {
+                        let value = fields[label];
+                        if (value && value.trim() !== "") {
+                            pendingHtml += `
+                                <div class="form-group mb-2">
+                                    <label><strong>${label}:</strong></label>
+                                    <input type="text" class="form-control" value="${value}" disabled>
+                                </div>
+                            `;
+                        }
+                    }
+
+
+
+
+                        $('#pending-contract .p-2').html(pendingHtml);
+                    }else {
+                        $('#modal-body-content').html('<p>Error: ' + response.message + '</p>');
+                    }
+                },
+                error: function(xhr, status, error ){
+                    $('#modal-body-content').html('<p>An error occurred: ' + error + '</p>');
+                }
+            });
+
+        });
+    });
+
+
+
+    //getCurrentData
+
+    // retrieve data using ajax 
+    $(document).ready(function(){
+        $('.view-details').on('click', function() {
+
+            //variable from button data-id
+            var itemId = $(this).data('id');
+            var contractId = $(this).data('contractId');
+
+            $.ajax({
+                url: 'get_currentData.php',
+                type: 'POST',
+                data: { id:itemId,contract_id:contractId },
+                success: function(response){
+                    response = JSON.parse(response); // make sure JSON is parsed
+
+                    if(response.success){
+                        let data = response.data;
+
+                        let rawDateStart = data.contract_start ?? rent_start;
+                        let isoDateStart =  rawDateStart.replace(" ", "T");
+                        let newDateStart =  new Date(isoDateStart);
+                        let formattedDateStart = newDateStart.toLocaleDateString("en-US");
+
+                        let rawDateEnd = data.contract_end ?? rent_end;
+                        let isoDateEnd =  rawDateEnd.replace(" ", "T");
+                        let newDateEnd =  new Date(isoDateEnd);
+                        let formattedDateEnd = newDateEnd.toLocaleDateString("en-US");
+
+
+                        let currentHtml = "";
+
+                        function addField(label, value) {
+                            if (value && value.trim() !== "") {
+                                currentHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>${label}:</strong></label>
+                                        <input type="text" class="form-control" value="${value}" disabled>
+                                    </div>
+                                `;
+                            }
+                        }
+
+                        // Add fields only if they have data
+                        addField("Contract Name", data.contract_name);
+                        addField("Contract Type", data.contract_type);
+                        addField("Start Date", data.contract_start);
+                        addField("End Date", data.contract_end);
+                        addField("Rent Start", data.rent_start);
+                        addField("Rent End", data.rent_end);
+                        addField("Total Cost", data.total_cost);
+                        addField("Status", data.contract_status);
+                        addField("Approval Status", data.approval_status);
+                        addField("Account No", data.account_no);
+                        addField("TC No", data.tc_no);
+                        addField("Address", data.address);
+                        addField("Assigned Department", data.assigned_dept);
+                        addField("Second Party", data.second_party);
+                        addField("Supplier", data.supplier);
+                        addField("Procurement Mode", data.proc_mode);
+
+
+                        $('#current-contract .p-2').html(currentHtml);
+                    }else {
+                        $('#modal-body-content').html('<p>Error: ' + response.message + '</p>');
+                    }
+                },
+                error: function(xhr, status, error ){
+                    $('#modal-body-content').html('<p>An error occurred: ' + error + '</p>');
+                }
+            });
+
         });
     });
 
