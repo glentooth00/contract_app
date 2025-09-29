@@ -15,7 +15,7 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    var_dump($_GET);
+    // var_dump($_GET);
 
     if($_GET['contract_type'] === PSC_LONG ){
     
@@ -205,14 +205,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
-            'contract_type_update' => $_GET['contractType'],
-            'rent_start' =>  $startDate,
-            'rent_end' => $endDate,
             'contract_type' => $_GET['contract_type'],
             'proc_mode' => $_GET['procurementMode'],
             'contract_start' => $_GET['infra_start'],
             'contract_end' => $_GET['infra_end'],
-            'total_cost' => $_GET['ttc'],
+            'total_cost' => trim(str_replace('₱', '', $_GET['ttc'])),
             'supplier' => $_GET['goodsSupplier']
 
         ];
@@ -279,6 +276,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
     }
     
+
+
+    if($_GET['contract_type'] === TEMP_LIGHTING){
+
+        $startDate = date('Y-m-d', strtotime( $_GET['tempLightStart']));
+        $endDate = date('Y-m-d', strtotime($_GET['tempLightEnd']));
+
+        $contractData = [
+            'contract_id' => $_GET['id'],
+            'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
+            'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
+            'name' => $_GET['name'],
+            'uploader' => $_GET['uploadedBy'],
+            'uploader_id' => $_GET['uploadId'],
+            'uploader_dept' => $_GET['uploader_dept'],
+            'data_type' => 'Update',
+            'status' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s'),
+            'uploader_department' => $_GET['uploader_dept'],
+            'contract_type_update' => $_GET['contractType'],
+            'rent_start' =>  $startDate,
+            'rent_end' => $endDate,
+            'contract_type' => $_GET['contract_type'],
+            'contract_start' => $startDate,
+            'contract_end' => $endDate,
+            'total_cost' => $_GET['ttc'],
+            'procurement_mode' => $_GET['procurementMode'],
+            'second_part' => $_GET['secondPart']
+
+        ];
+
+        $temporaryLightingUpdate = ( new PendingDataController )->temporaryLightingUpdate( $contractData);
+
+         if($temporaryLightingUpdate){
+
+            $_SESSION['notification'] = [
+                'message' => 'Contract updated , Waiting for approval',
+                'type' => 'success'
+            ];
+
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        }
+
+    }
 
 
 
