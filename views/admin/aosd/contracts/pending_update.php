@@ -205,9 +205,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
-            'contract_type_update' => $_GET['contractType'],
-            'rent_start' =>  $startDate,
-            'rent_end' => $endDate,
             'contract_type' => $_GET['contract_type'],
             'proc_mode' => $_GET['procurementMode'],
             'contract_start' => $_GET['infra_start'],
@@ -307,7 +304,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'contract_end' => $endDate,
             'total_cost' => $_GET['ttc'],
             'procurement_mode' => $_GET['procurementMode'],
-            'second_party' => $_GET['secondPart']
+            'second_part' => $_GET['secondPart']
 
         ];
 
