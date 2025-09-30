@@ -545,9 +545,12 @@ class PendingDataController
                     uploader_id,
                     uploader_department,
                     data_type,
-                    contract_type_update,
+                    contract_type,
                     status,
-                    second_party
+                    second_party,
+                    tc_no,
+                    account_no,
+                    address
                 ) VALUES (
                     :contract_id,
                     :contract_start,
@@ -559,7 +562,10 @@ class PendingDataController
                     :data_type,
                     :contract_type,
                     :status,
-                    :second_party
+                    :second_party,
+                    :tc_no,
+                    :account_no,
+                    :address
                 )";
 
         $stmt = $this->db->prepare($sql);
@@ -574,8 +580,11 @@ class PendingDataController
             ':data_type' => $data['data_type'],
             ':status' => $data['status'],
             ':contract_id' => $data['contract_id'],
-            ':contract_type' => $data['contract_type_update'],
-            ':second_party' => $data['second_party'] ?? ''
+            ':contract_type' => $data['contract_type'],
+            ':second_party' => $data['second_party'],
+            ':tc_no' => $data['tc_no'],
+            ':account_no' => $data['account_no'],
+            ':address' => $_GET['address']
         ]);
     }
 
