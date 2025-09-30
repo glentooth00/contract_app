@@ -406,7 +406,7 @@ include_once '../../../views/layouts/includes/header.php';
     document.getElementById('confirmDelete').addEventListener('click', function (e) {
         if (selectedContractId) {
             // Redirect to deletion endpoint (adjust URL to match your backend)
-            window.location.href = 'contracts/delete.php?id=' + selectedContractId;
+            window.location.href = 'contracts/delete_row.php?id=' + selectedContractId;
         }
     });
 

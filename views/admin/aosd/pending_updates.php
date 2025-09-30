@@ -629,36 +629,112 @@ include_once '../../../views/layouts/includes/header.php';
                             year: "numeric"
                         }).replace(",","").replace(" ","/").replace(" ","/");
 
-                        let pendingHtml = `
-                        <input type="hidden" class="form-control" name="uploader_department" value="${data.uploader_department}" readonly>
-                         <input type="hidden" class="form-control" name="contract_id" value="${data.contract_id}" readonly>
-                            <div class="form-group mb-2">
-                                <label><strong>Contract Name:</strong></label>
-                                <input type="text" class="form-control" name="contract_name" value="${data.contract_name}" readonly>
-                            </div>
-                            <div class="form-group mb-2">
-                                <label><strong>Contract Type:</strong></label>
-                                <input type="text" class="form-control" name="contract_type" value="${data.contract_type}" readonly>
-                            </div>
-                            <div class="form-group mb-2">
-                                <label><strong>Start Date:</strong></label>
-                                <input type="text" class="form-control"  value="${formatStart}" readonly>
-                                <input type="hidden" class="form-control" name="contract_start" value="${rawDateStart}" readonly>
-                            </div>
-                            <div class="form-group mb-2">
-                                <label><strong>End Date:</strong></label>
-                                <input type="text" class="form-control"  value="${formatEnd}" readonly>
-                                <input type="hidden" class="form-control" name="contract_end" value="${rawDateEnd}" readonly>
-                            </div>
-                            <div class="form-group mb-2">
-                                <label><strong>Contract Cost:</strong></label>
-                                <input type="text" class="form-control" name="contractPrice" value="${data.total_cost}" readonly>
-                            </div>
-                            <div class="form-group mb-2">
-                                <label><strong>Procurement Mode:</strong></label>
-                                <input type="text" class="form-control" name="procurementMode" value="${data.proc_mode}" readonly>
-                            </div>
-                        `
+                       let pendingHtml = `
+                                <input type="hidden" name="uploader_department" value="${data.uploader_department || ''}" readonly>
+                                <input type="hidden" name="contract_id" value="${data.contract_id || ''}" readonly>
+                            `;
+
+                            if (data.contract_name) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Contract Name:</strong></label>
+                                        <input type="text" class="form-control" name="contract_name" value="${data.contract_name}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.contract_type) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Contract Type:</strong></label>
+                                        <input type="text" class="form-control" name="contract_type" value="${data.contract_type}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (rawDateStart) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Start Date:</strong></label>
+                                        <input type="text" class="form-control" value="${formatStart}" readonly>
+                                        <input type="hidden" name="contract_start" value="${rawDateStart}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (rawDateEnd) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>End Date:</strong></label>
+                                        <input type="text" class="form-control" value="${formatEnd}" readonly>
+                                        <input type="hidden" name="contract_end" value="${rawDateEnd}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.supplier) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Supplier:</strong></label>
+                                        <input type="text" class="form-control" name="supplier" value="${data.supplier}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.account_no) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Account No:</strong></label>
+                                        <input type="text" class="form-control" name="account_no" value="${data.account_no}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.tc_no) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>TC No:</strong></label>
+                                        <input type="text" class="form-control" name="tc_no" value="${data.tc_no}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.total_cost) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Contract Cost:</strong></label>
+                                        <input type="text" class="form-control" name="contractPrice" value="${data.total_cost}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.proc_mode) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Procurement Mode:</strong></label>
+                                        <input type="text" class="form-control" name="procurementMode" value="${data.proc_mode}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.address) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Address:</strong></label>
+                                        <input type="text" class="form-control" name="address" value="${data.address}" readonly>
+                                    </div>
+                                `;
+                            }
+
+                            if (data.second_party) {
+                                pendingHtml += `
+                                    <div class="form-group mb-2">
+                                        <label><strong>Second Party:</strong></label>
+                                        <input type="text" class="form-control" name="party_of_second_part" value="${data.second_party}" readonly>
+                                    </div>
+                                `;
+                            }
+
 
                         $('#pending-contract .p-2').html(pendingHtml);
                     }else {
@@ -747,6 +823,7 @@ include_once '../../../views/layouts/includes/header.php';
                         addField("Supplier", data.supplier);
                         addField("Contract Cost", data.contractPrice);
                         addField("Procurement Mode", data.procurementMode);
+                        addField("Second Party", data.party_of_second_part);
 
 
                         $('#current-contract .p-2').html(currentHtml);
@@ -762,5 +839,34 @@ include_once '../../../views/layouts/includes/header.php';
         });
     });
 
+
+    //delete-btn
+    // $(document).on('click', '.delete-btn', function (e) {
+    //     e.preventDefault();
+
+    //     let id = $(this).data('id');
+    //     let url = "contracts/delete_pending.php";
+
+    //     if(confirm("Delete this Pending Update")){
+    //         $.ajax({
+    //             url: url,
+    //             type: "POST",
+    //             data: { id:id },
+    //             success: function(response){
+    //                 let res = JSON.parse(response);
+
+    //                 if(res.success){
+    //                     alert("Deleted Successfully!");
+    //                     $("#row-" + id).remove();
+    //                 }else{
+    //                     alert("Error:" + res.message);
+    //                     }
+    //                 },
+    //                 error: function (xhr, status, error){
+    //                     console.log(error);
+    //             }
+    //         });
+    //     }
+    // });
 
 </script>

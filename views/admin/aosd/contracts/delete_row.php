@@ -13,7 +13,7 @@ if (isset($_GET['id'])) {
 
     $id = $_GET['id'];
 
-    $delete = (new PendingDataController())->delete($id);
+    $delete = (new ContractController())->deleteContract($id);
 
     if ($delete) {
 
