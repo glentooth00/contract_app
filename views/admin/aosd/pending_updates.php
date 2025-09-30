@@ -403,9 +403,9 @@ include_once '../../../views/layouts/includes/header.php';
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="myModalLabel">Compare Contract Details</h5>
-        <button type="button" class="btn close float-end" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+            <button type="button" class="btn close float-end" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
       </div>
       <div class="modal-body">
         <div class="row" id="modal-body-content">
@@ -418,6 +418,7 @@ include_once '../../../views/layouts/includes/header.php';
           </div>
           <div class="col-md-6" id="pending-contract">
             <h3 class="text-start fw-bold">Pending Update</h3>
+            <form action="contracts/approve_update.php" method="POST">
             <div class="p-2">
               LOADING...
             </div>
@@ -425,8 +426,10 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
       </div>
       <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Approve</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
+      </form>
     </div>
   </div>
 </div>
@@ -610,47 +613,52 @@ include_once '../../../views/layouts/includes/header.php';
                         let isoDateStart =  rawDateStart.replace(" ", "T");
                         let newDateStart =  new Date(isoDateStart);
                         let formattedDateStart = newDateStart.toLocaleDateString("en-US");
+                        let formatStart = newDateStart.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric"
+                        }).replace(",","").replace(" ","/").replace(" ","/");
 
                         let rawDateEnd = data.contract_end ?? rent_end;
                         let isoDateEnd =  rawDateEnd.replace(" ", "T");
                         let newDateEnd =  new Date(isoDateEnd);
                         let formattedDateEnd = newDateEnd.toLocaleDateString("en-US");
+                        let formatEnd = newDateEnd.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric"
+                        }).replace(",","").replace(" ","/").replace(" ","/");
 
-                        let pendingHtml = "";
-
-                    const fields = {
-                        "Contract Name": data.contract_name,
-                        "Contract Type": data.contract_type,
-                        "Start Date": data.contract_start,
-                        "End Date": data.contract_end,
-                        "Rent Start": data.rent_start,
-                        "Rent End": data.rent_end,
-                        "Total Cost": data.total_cost,
-                        "Status": data.contract_status,
-                        "Approval Status": data.approval_status,
-                        "Account No": data.account_no,
-                        "TC No": data.tc_no,
-                        "Address": data.address,
-                        "Assigned Department": data.assigned_dept,
-                        "Second Party": data.second_party,
-                        "Supplier": data.supplier,
-                        "Procurement Mode": data.proc_mode
-                    };
-
-                    for (let label in fields) {
-                        let value = fields[label];
-                        if (value && value.trim() !== "") {
-                            pendingHtml += `
-                                <div class="form-group mb-2">
-                                    <label><strong>${label}:</strong></label>
-                                    <input type="text" class="form-control" value="${value}" disabled>
-                                </div>
-                            `;
-                        }
-                    }
-
-
-
+                        let pendingHtml = `
+                        <input type="hidden" class="form-control" name="uploader_department" value="${data.uploader_department}" readonly>
+                         <input type="hidden" class="form-control" name="contract_id" value="${data.contract_id}" readonly>
+                            <div class="form-group mb-2">
+                                <label><strong>Contract Name:</strong></label>
+                                <input type="text" class="form-control" name="contract_name" value="${data.contract_name}" readonly>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label><strong>Contract Type:</strong></label>
+                                <input type="text" class="form-control" name="contract_type" value="${data.contract_type}" readonly>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label><strong>Start Date:</strong></label>
+                                <input type="text" class="form-control"  value="${formatStart}" readonly>
+                                <input type="hidden" class="form-control" name="contract_start" value="${rawDateStart}" readonly>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label><strong>End Date:</strong></label>
+                                <input type="text" class="form-control"  value="${formatEnd}" readonly>
+                                <input type="hidden" class="form-control" name="contract_end" value="${rawDateEnd}" readonly>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label><strong>Contract Cost:</strong></label>
+                                <input type="text" class="form-control" name="contractPrice" value="${data.total_cost}" readonly>
+                            </div>
+                            <div class="form-group mb-2">
+                                <label><strong>Procurement Mode:</strong></label>
+                                <input type="text" class="form-control" name="procurementMode" value="${data.proc_mode}" readonly>
+                            </div>
+                        `
 
                         $('#pending-contract .p-2').html(pendingHtml);
                     }else {
@@ -691,11 +699,21 @@ include_once '../../../views/layouts/includes/header.php';
                         let isoDateStart =  rawDateStart.replace(" ", "T");
                         let newDateStart =  new Date(isoDateStart);
                         let formattedDateStart = newDateStart.toLocaleDateString("en-US");
+                        let formatStart = newDateStart.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric"
+                        }).replace(",","").replace(" ","/").replace(" ","/");
 
                         let rawDateEnd = data.contract_end ?? rent_end;
                         let isoDateEnd =  rawDateEnd.replace(" ", "T");
                         let newDateEnd =  new Date(isoDateEnd);
                         let formattedDateEnd = newDateEnd.toLocaleDateString("en-US");
+                        let formatEnd = newDateEnd.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "2-digit",
+                            year: "numeric"
+                        }).replace(",","").replace(" ","/").replace(" ","/");
 
 
                         let currentHtml = "";
@@ -714,12 +732,12 @@ include_once '../../../views/layouts/includes/header.php';
                         // Add fields only if they have data
                         addField("Contract Name", data.contract_name);
                         addField("Contract Type", data.contract_type);
-                        addField("Start Date", data.contract_start);
-                        addField("End Date", data.contract_end);
+                        addField("Start Date", formatStart);
+                        addField("End Date", formatEnd);
                         addField("Rent Start", data.rent_start);
                         addField("Rent End", data.rent_end);
                         addField("Total Cost", data.total_cost);
-                        addField("Status", data.contract_status);
+                        // addField("Status", data.contract_status);
                         addField("Approval Status", data.approval_status);
                         addField("Account No", data.account_no);
                         addField("TC No", data.tc_no);
@@ -727,7 +745,8 @@ include_once '../../../views/layouts/includes/header.php';
                         addField("Assigned Department", data.assigned_dept);
                         addField("Second Party", data.second_party);
                         addField("Supplier", data.supplier);
-                        addField("Procurement Mode", data.proc_mode);
+                        addField("Contract Cost", data.contractPrice);
+                        addField("Procurement Mode", data.procurementMode);
 
 
                         $('#current-contract .p-2').html(currentHtml);
