@@ -15,6 +15,8 @@ $contractController = new ContractController();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    var_dump($_POST);
+
     // Upload the file
     $filePath = $contractController->uploadFile($_FILES["contract_file"] ?? null);
 
@@ -32,14 +34,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'department_assigned' => $_POST["department_assigned"] ?? 'Missing department_assigned',
             'uploader_id' => $_POST['uploader_id'] ?? 'Missing uploader_id',
             'uploader_department' => $_POST['uploader_department'] ?? 'Missing uploader_department',
-            'uploader' => $_POST['uploader']
+            'uploader' => $_POST['uploader'],
+            'contractPrice' => $_POST['contractPrice'],
+            'procurementMode' => $_POST['procurementMode'],
+            'supplier' => $_POST['supplier']
         ];
 
         // var_dump($contractData);
 
         // echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
 
-        // Save contract
+        //Save contract
             $contractSaved = $contractController->saveContract($contractData);
 
             if ($contractSaved) {
@@ -55,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     }
 
-    // header("Location: " . $_SERVER['HTTP_REFERER']);
+    header("Location: " . $_SERVER['HTTP_REFERER']);
 }
 
 
