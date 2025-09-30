@@ -1561,7 +1561,8 @@ class ContractController
                 address = :address,
                 supplier = :supplier,
                 contract_type = :contract_type,
-                contractPrice = :contractPrice
+                contractPrice = :contractPrice,
+                procurementMode = :procurementMode
                 WHERE id = :contract_id";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':uploader_department', $data['uploader_department']);
@@ -1573,6 +1574,7 @@ class ContractController
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
             $stmt->bindParam(':contract_type',  $type);
+            $stmt->bindParam(':procurementMode',  $data['procurementMode']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
@@ -1594,6 +1596,7 @@ class ContractController
             contract_type = :contract_type,
             party_of_second_part = :party_of_second_part,
             account_no = :account_no
+
             WHERE id = :contract_id";
         
         $stmt = $this->db->prepare($sql);
@@ -1609,6 +1612,7 @@ class ContractController
         $stmt->bindParam(':tc_no', $data['tc_no']);
         $stmt->bindParam(':contract_type', $data['contract_type']);
         $stmt->bindParam(':account_no', $data['account_no']);
+        $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
 
         return $stmt->execute(); // returns true if successful
     } catch (PDOException $e) {

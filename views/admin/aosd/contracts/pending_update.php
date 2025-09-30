@@ -15,7 +15,7 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    // var_dump($_GET);
+    var_dump($_GET);
 
     if($_GET['contract_type'] === PSC_LONG ){
     
@@ -142,15 +142,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if($_GET['contract_type'] === GOODS ){
     
-        $startDate = date('Y-m-d', strtotime( $_GET['rentStart']));
-        $endDate = date('Y-m-d', strtotime($_GET['rentEnd']));
+        $startDate = date('Y-m-d', strtotime( $_GET['rentStart'] ?? $_GET['goodsStart']));
+        $endDate = date('Y-m-d', strtotime($_GET['rentEnd'] ?? $_GET['goodsEnd']));
 
         $contractData = [
             'contract_id' => $_GET['id'],
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
             'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
             'name' => $_GET['name'],
-            'uploader' => $_GET['uploader'],
+            'uploader' => $_GET['uploadedBy'],
             'uploader_id' => $_GET['uploader_id'],
             'uploader_dept' => $_GET['uploader_dept'],
             'data_type' => 'Update',
@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'proc_mode' => $_GET['procurementMode'],
             'contract_start' => $_GET['infra_start'],
             'contract_end' => $_GET['infra_end'],
-            'total_cost' => trim(str_replace('₱', '', $_GET['ttc'])),
+            'total_cost' => trim(str_replace('₱', '', $_GET['contractPrice'])),
             'supplier' => $_GET['goodsSupplier']
 
         ];
@@ -288,6 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
             'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
             'name' => $_GET['name'],
+            'account_no' => $_GET['account_no'],
             'uploader' => $_GET['uploadedBy'],
             'uploader_id' => $_GET['uploadId'],
             'uploader_dept' => $_GET['uploader_dept'],
@@ -296,7 +297,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
-            'contract_type_update' => $_GET['contractType'],
             'rent_start' =>  $startDate,
             'rent_end' => $endDate,
             'contract_type' => $_GET['contract_type'],
@@ -304,9 +304,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'contract_end' => $endDate,
             'total_cost' => $_GET['ttc'],
             'procurement_mode' => $_GET['procurementMode'],
-            'second_part' => $_GET['secondPart']
+            'second_party' => $_GET['secondPart'],
+            'tc_no' => $_GET['tcNumber'],
+            'address' => $_GET['address']
 
         ];
+
+        // var_dump($contractData);
 
         $temporaryLightingUpdate = ( new PendingDataController )->temporaryLightingUpdate( $contractData);
 

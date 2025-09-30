@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_end' => $_POST['contract_end'],
             'contract_status' => 'Active',
             'address' => $_POST['address'],
+            'party_of_second_part' => $_POST['party_of_second_part']
         ];
 
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
@@ -122,39 +123,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $_POST['contract_start'],
             'contract_end' => $_POST['contract_end'],
             'contract_status' => 'Active',
-            'supplier' => $_POST['supplier'] ?? '',
-            'contractPrice' => $_POST['tcc'],
-            'contract_type_update' => $_POST['contract_type_update']
+            'supplier' => $_POST['supplier'] ,
+            'contractPrice' => trim(str_replace('₱', '', $_POST['contractPrice'])),
+            'contract_type_update' => $_POST['contract_type_update'],
+            'procurementMode' => $_POST['procurementMode'],
         ];
 
+        var_dump($updateData);
 
-        $updateSuccessful = (new ContractController)->managerUpdateGOODS($updateData);
+
+        // $updateSuccessful = (new ContractController)->managerUpdateGOODS($updateData);
 
 
-            if( $updateSuccessful ){
-               $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
+        //     if( $updateSuccessful ){
+        //        $deletePrevData = (new PendingDataController)->delete($updateData['contract_id']);
 
-                    if( $deletePrevData ){
+        //             if( $deletePrevData ){
 
-                            $updateContractData = (new ContractHistoryController )->updateHistoryTempLight($updateData);
+        //                     $updateContractData = (new ContractHistoryController )->updateHistoryTempLight($updateData);
 
-                            if($updateContractData){
+        //                     if($updateContractData){
 
-                            $_SESSION['notification'] = [
-                            'message' => 'Update has been approved.',
-                            'type' => 'success',
-                            ];
+        //                     $_SESSION['notification'] = [
+        //                     'message' => 'Update has been approved.',
+        //                     'type' => 'success',
+        //                     ];
 
-                            header("Location: " . $_SERVER['HTTP_REFERER']);
-                            exit;
+        //                     header("Location: " . $_SERVER['HTTP_REFERER']);
+        //                     exit;
 
-                            }
+        //                     }
 
-                            header("Location: " . $_SERVER['HTTP_REFERER']);
-                            exit;
+        //                     header("Location: " . $_SERVER['HTTP_REFERER']);
+        //                     exit;
 
-                    }
-            }
+        //             }
+        //     }
 
     }
 
