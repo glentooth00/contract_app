@@ -36,6 +36,8 @@ if ($_GET['type'] === TRANS_RENT) {
         'account_no' => $_GET['account_no'],
     ];
 
+    var_dump($transRentData);
+
 
     $contractUpdate = (new PendingDataController )->PendingInsertTR($transRentData);
 

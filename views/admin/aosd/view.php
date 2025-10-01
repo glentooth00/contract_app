@@ -408,7 +408,7 @@ include_once '../../../views/layouts/includes/header.php';
             <?php endif; ?>
 
             
-            <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
+             <?php if($getContract['contract_type'] === TRANS_RENT ) : ?>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Installation Date:</label>
                     <div class="d-flex"><i class="fa fa-calendar p-2" style="font-size: 20px;"
