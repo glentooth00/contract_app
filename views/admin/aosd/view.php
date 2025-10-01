@@ -553,6 +553,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
             <?php endif; ?>
+            
 
             <?php if($getContract['tc_no']): ?>
             <div class="row col-md-2">
@@ -575,7 +576,7 @@ include_once '../../../views/layouts/includes/header.php';
             <?php if($getContract['party_of_second_part']): ?>
                 <div class="row col-md-2">
                     <div class="mt-3"><label class="badge text-muted Procurementd" style="font-size: 15px;">Party of Second Part:</label><input
-                            type="text" id="address" style="margin-left:9px;" class="form-control pl-5"
+                            type="text" id="second_part" style="margin-left:9px;" class="form-control pl-5"
                             value="<?= $getContract['party_of_second_part']; ?>" name="address" readonly>
                         </div>
                 </div>
@@ -604,7 +605,7 @@ include_once '../../../views/layouts/includes/header.php';
                                 let value = input.value.replace(/[₱,]/g, '').trim();
 
                                 if (!isNaN(value) && value !== "") {
-                                    input.value = '₱' + Number(value).toLocaleString();
+                                    input.value =  Number(value).toLocaleString();
                                 } else if (value === "") {
                                     input.value = "";
                                 }
@@ -617,7 +618,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <label class="badge text-muted" style="font-size: 15px;">Total Contract
                             cost</label>
                             <input type="text" id="ttc" style="margin-left:9px;"
-                            class="form-control pl-5" value="₱<?=  $getContract['contractPrice']; ?>"
+                            class="form-control pl-5" value="<?=  $getContract['contractPrice']; ?>"
                             name="contract_type" disabled>
                         </div>
                 </div>
@@ -1604,6 +1605,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('edit').addEventListener('click', function () {
 
+        const secondPart = document.getElementById('second_part');
         const uploader_dept = document.getElementById('uploaderDept');
         const startInfra2 = document.getElementById('infraStart2');
         const startInfra1 = document.getElementById('infraStart1');
@@ -1691,6 +1693,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
             procurementModeInput?.setAttribute('hidden', true);
             procurementModeSelect?.removeAttribute('hidden');
 
+            secondPart?.removeAttribute('readonly');
+
             start_rent1?.removeAttribute('hidden');
             start_rent2?.setAttribute('hidden','');
 
@@ -1764,6 +1768,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
     document.getElementById('close').addEventListener('click', function () {
 
+        const secondPart = document.getElementById('second_part');
         const procurementModeInput = document.getElementById('procurementModeInput');
         const procurementModeSelect = document.getElementById('procurementModeSelect');
 
@@ -1848,6 +1853,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         goodsEnd2?.removeAttribute('hidden');
         goodsEnd2?.setAttribute('readonly', true);
         goodsEnd1?.setAttribute('hidden', true);
+
+        secondPart?.setAttribute('readonly', true);
 
         start_rent1?.setAttribute('hidden', true);
         //setting attribute to readonly 
@@ -1940,6 +1947,8 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const accountNo = document.getElementById('accountNumber');
         const supplier = document.getElementById('goodsSupplier');
 
+        const secondPart = document.getElementById('second_part');
+
         const empStart = document.getElementById('empConStart2');
 
         const rent_start =  document.getElementById('startTransRent1');
@@ -1961,7 +1970,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
 
         // Get other values
         const contractName = encodeURIComponent(nameInput?.value || '');
-
+        const partSecond = encodeURIComponent(secondPart?.value || '');
         const contractStart = encodeURIComponent(formatDate(startDateValue));
         const contractEnd = encodeURIComponent(formatDate(endDateValue));
         const uploaderDept = encodeURIComponent(uploader_dept?.value || '');
@@ -1994,7 +2003,7 @@ $timestamp = $updatedAt->getTimestamp(); // Unix timestamp
         const end_infra = encodeURIComponent(infraEnd?. value || '');
         const procMode = encodeURIComponent(procurementModeSelect?. value || '');
         // Redirect with query parameters
-        window.location.href = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&contract_type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${dept_uploader}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}
+        window.location.href = `contracts/pending_update.php?id=${contract_id}&name=${contractName}&start=${contractStart}&end=${contractEnd}&contract_type=${typeContract}&EmpStart=${StartEmpCon}&ConEmpEnd=${EndConEmp}&ttc=${Cost}&deptLoader=${dept_uploader}&updatedBy=${updatedby}&uploadedBy=${uploadedBy}&uploadId=${uploadId}&uploader_dept=${dept_uploader}&saccDateStart=${saccDate_Start}&saccDateEnd=${saccDate_End}&secondPart=${partSecond}
                                 &goodsStart=${goods_start}&procurementMode=${procMode}&goodsEnd=${goods_end}&infraStart=${infraStart}&infraEnd=${infraEnd}&transRentStart=${startRent}&transRentEnd=${endRent}&tempLightStart=${startTemplight}&tempLightEnd=${endTemplight}&implementingDept=${impDept}&address=${addressContract}&tcNumber=${tcNo}&account_no=${account_no}&contractType=${contractSelect}&goodsSupplier=${goodsSupp}&infra_start=${start_infra}&infra_end=${end_infra}`;
     });
 
