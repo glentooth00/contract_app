@@ -268,11 +268,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $startDate,
             'contract_end' => $endDate,
             'contract_status' => 'Active',
-            'contractPrice' => trim(str_replace('₱', '', $_POST['tcc'])),
-            'contract_type_update' => $_POST['contract_type_update']
+            'contractPrice' => trim(str_replace('₱', '', $_POST['contractPrice'])),
+            'contract_type' => $_POST['contract_type']
         ];
-
-        var_dump($updateData);
+        // echo '<br>';
+        // echo '<br>';
+        // var_dump($updateData);
 
 
 

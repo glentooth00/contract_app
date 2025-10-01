@@ -99,8 +99,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if($_GET['contract_type'] === TRANS_RENT ){
     
         $startDate = date('Y-m-d', strtotime( $_GET['rentStart']));
+        
         $endDate = date('Y-m-d', strtotime($_GET['rentEnd']));
 
+        
         $contractData = [
             'contract_id' => $_GET['id'],
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
@@ -119,6 +121,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'rent_end' => $endDate
 
         ];
+
 
 
         $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);

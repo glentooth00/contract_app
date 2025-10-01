@@ -15,7 +15,7 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
-    var_dump($_GET);
+    var_dump($_GET ,'<br><br>');
 
     if($_GET['contract_type'] === PSC_LONG ){
     
@@ -98,42 +98,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if($_GET['contract_type'] === TRANS_RENT ){
     
-        $startDate = date('Y-m-d', strtotime( $_GET['rentStart']));
-        $endDate = date('Y-m-d', strtotime($_GET['rentEnd']));
+        $startDate = date('Y-m-d', strtotime( $_GET['transRentStart']));
+        $endDate = date('Y-m-d', strtotime($_GET['transRentEnd']));
 
         $contractData = [
             'contract_id' => $_GET['id'],
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
             'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
             'name' => $_GET['name'],
-            'uploader' => $_GET['uploader'],
-            'uploader_id' => $_GET['uploader_id'],
+            'uploader' => $_GET['uploadedBy'],
+            'uploader_id' => $_GET['uploadId'],
             'uploader_dept' => $_GET['uploader_dept'],
             'data_type' => 'Update',
             'status' => 1,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
-            'contract_type_update' => $_GET['contractType'],
+            'contract_type' => $_GET['contractType'],
             'rent_start' =>  $startDate,
             'rent_end' => $endDate
-
         ];
+
+        var_dump($contractData);
 
 
         $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);
 
 
-        if($insertPSLongData){
+        // if($insertPSLongData){
 
-            $_SESSION['notification'] = [
-                'message' => 'Contract updated , Waiting for approval',
-                'type' => 'success'
-            ];
+        //     $_SESSION['notification'] = [
+        //         'message' => 'Contract updated , Waiting for approval',
+        //         'type' => 'success'
+        //     ];
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+        //     header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        }
+        // }
         
 
         
@@ -255,27 +256,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'contract_type' => $_GET['contract_type'],
             'contract_start' =>$startDate,
             'contract_end' => $endDate,
-            'total_cost' => trim(str_replace('₱', '', $_GET['contractPrice'])),
+            'total_cost' => trim(str_replace('₱', '', $_GET['ttc'])),
             'proc_mode' => $_GET['procurementMode']
 
         ];
-        echo '<br>';
-        echo '<br>';
-        var_dump($contractData);
-
-        // $GoodsUpdate = ( new PendingDataController )->SACCUpdate( $contractData);
 
 
-        // if($GoodsUpdate){
+        $GoodsUpdate = ( new PendingDataController )->SACCUpdate( $contractData);
 
-        //     $_SESSION['notification'] = [
-        //         'message' => 'Contract updated , Waiting for approval',
-        //         'type' => 'success'
-        //     ];
 
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
+        if($GoodsUpdate){
 
-        // }
+            $_SESSION['notification'] = [
+                'message' => 'Contract updated , Waiting for approval',
+                'type' => 'success'
+            ];
+
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+
+        }
         
     }
     
