@@ -233,16 +233,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if($_GET['contract_type'] === SACC ){
     
-        $startDate = date('Y-m-d', strtotime( $_GET['rentStart']));
-        $endDate = date('Y-m-d', strtotime($_GET['rentEnd']));
+        $startDate = date('Y-m-d', strtotime( $_GET['rentStart'] ?? $_GET['saccDateStart']));
+        $endDate = date('Y-m-d', strtotime($_GET['rentEnd'] ?? $_GET['saccDateEnd']));
 
         $contractData = [
             'contract_id' => $_GET['id'],
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
             'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
             'name' => $_GET['name'],
-            'uploader' => $_GET['uploader'],
-            'uploader_id' => $_GET['uploader_id'],
+            'uploader' => $_GET['uploadedBy'],
+            'uploader_id' => $_GET['uploadId'],
             'uploader_dept' => $_GET['uploader_dept'],
             'data_type' => 'Update',
             'status' => 1,
@@ -253,26 +253,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'rent_start' =>  $startDate,
             'rent_end' => $endDate,
             'contract_type' => $_GET['contract_type'],
-            'contract_start' => $_GET['saccStart'],
-            'contract_end' => $_GET['saccEnd'],
-            'total_cost' => $_GET['ttc'],
-            'procurement_mode' => $_GET['procurementMode']
+            'contract_start' =>$startDate,
+            'contract_end' => $endDate,
+            'total_cost' => trim(str_replace('₱', '', $_GET['contractPrice'])),
+            'proc_mode' => $_GET['procurementMode']
 
         ];
+        echo '<br>';
+        echo '<br>';
+        var_dump($contractData);
 
-        $GoodsUpdate = ( new PendingDataController )->SACCUpdate( $contractData);
+        // $GoodsUpdate = ( new PendingDataController )->SACCUpdate( $contractData);
 
 
-        if($GoodsUpdate){
+        // if($GoodsUpdate){
 
-            $_SESSION['notification'] = [
-                'message' => 'Contract updated , Waiting for approval',
-                'type' => 'success'
-            ];
+        //     $_SESSION['notification'] = [
+        //         'message' => 'Contract updated , Waiting for approval',
+        //         'type' => 'success'
+        //     ];
 
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+        //     header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        }
+        // }
         
     }
     
