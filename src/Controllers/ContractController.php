@@ -1703,7 +1703,7 @@ class ContractController
             ':contract_end' => $data['contract_end'],
             ':contractPrice' => $data['contractPrice'],
             ':contract_id' => $data['contract_id'],
-            ':contract_type' => $data['contract_type_update']
+            ':contract_type' => $data['contract_type']
         ]);
 
     } catch (PDOException $e) {
