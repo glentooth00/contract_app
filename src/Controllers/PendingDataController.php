@@ -369,10 +369,73 @@ class PendingDataController
             ':data_type' => $data['data_type'],
             ':status' => $data['status'],
             ':contract_id' => $data['contract_id'],
-            ':contract_type' => $data['contract_type_update'],
+            ':contract_type' => $data['contract_type'],
             ':rent_start' => $data['rent_start'] ?? '',
             ':rent_end' => $data['rent_end'] ?? ''
         ]);
+    }
+
+    public function transRentPendingUpdate($data){
+
+        $sql = "INSERT INTO  pending_data (
+                    contract_id,
+                    contract_start,
+                    contract_end,
+                    contract_name,
+                    uploader,
+                    uploader_id,
+                    uploader_department,
+                    data_type,
+                    contract_type,
+                    status,
+                    tc_no,
+                    account_no,
+                    address,
+                    rent_start,
+                    rent_end
+                ) VALUES (
+                    :contract_id,
+                    :contract_start,
+                    :contract_end,
+                    :contract_name,
+                    :uploader,
+                    :uploader_id,
+                    :uploader_department,
+                    :data_type,
+                    :contract_type,
+                    :status,
+                    :tc_no,
+                    :account_no,
+                    :address,
+                    :rent_start,
+                    :rent_end
+                )";
+
+                $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            // ':contract_start' => $data['powerSupplyLongStart1'],
+            // ':contract_end' => $data['powerSupplyLongEnd1'],
+            ':contract_name' => $data['name'],
+            ':uploader' => $data['uploader'],
+            ':uploader_id' => $data['uploader_id'],
+            ':uploader_department' => $data['uploader_department'],
+            ':data_type' => $data['data_type'],
+            ':status' => $data['status'],
+            ':contract_id' => $data['contract_id'],
+            ':contract_type' => $data['contract_type'],
+            ':contract_start' => $data['contract_start'],
+            ':contract_end' => $data['contract_end'],
+            ':rent_start' => $data['rent_start'],
+            ':rent_end' => $data['rent_end'],
+            ':account_no' => $data['account_no'],
+            ':tc_no' => $data['tc_no'],
+            ':address' => $data['address']
+        ]);
+
+
+
+
     }
 
     public function goodsUpdate($data){

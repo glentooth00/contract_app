@@ -65,16 +65,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_id' => $_POST['contract_id'],
             'uploader_department' => $_POST['uploader_department'],
             'contract_name' => $_POST['contract_name'],
-            'rent_start' => $_POST['rent_start'],
-            'rent_end' => $_POST['rent_end'],
+            'rent_start' => $_POST['rent_start'] ?? $_POST['contract_start'],
+            'rent_end' => $_POST['rent_end'] ?? $_POST['contract_end'],
             'contract_status' => 'Active',
             'address' => $_POST['address'],
             'tc_no' => $_POST['tc_no'],
             'account_no' => $_POST['account_no']
         ];
 
-
-            $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);
+        $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);
 
 
             if( $updateSuccessful ){

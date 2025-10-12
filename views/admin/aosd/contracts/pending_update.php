@@ -98,10 +98,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if($_GET['contract_type'] === TRANS_RENT ){
     
-        $startDate = date('Y-m-d', strtotime( $_GET['transRentStart']));
-        $endDate = date('Y-m-d', strtotime($_GET['transRentEnd']));
+        $startDate = new DateTime( $_GET['transRentStart']);
+        $formattedDateStart = $startDate->format('Y-m-d H:i:s');
+
+        $endDate = new DateTime($_GET['transRentEnd']);
+        $formattedDateEnd = $endDate->format('Y-m-d H:i:s');
 
         $contractData = [
+            'address' => $_GET['address'],
             'contract_id' => $_GET['id'],
             'powerSupplyLongStart1' => $_GET['powerSupplyLongStart1'] ?? 'null',
             'powerSupplyLongEnd1' => $_GET['powerSupplyLongEnd1'] ?? 'null',
@@ -115,26 +119,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'updated_at' => date('Y-m-d H:i:s'),
             'uploader_department' => $_GET['uploader_dept'],
             'contract_type' => $_GET['contractType'],
-            'rent_start' =>  $startDate,
-            'rent_end' => $endDate
+            'rent_start' =>  $formattedDateStart,
+            'rent_end' => $formattedDateEnd,
+            'account_no' => $_GET['account_no'],
+            'tc_no' => $_GET['tcNumber']
         ];
+
 
         var_dump($contractData);
 
 
-        $insertPSLongData = ( new PendingDataController )->powerSupplyLong( $contractData);
+        $insertPSLongData = ( new PendingDataController )->transRentPendingUpdate( $contractData);
 
 
-        // if($insertPSLongData){
+        if($insertPSLongData){
 
-        //     $_SESSION['notification'] = [
-        //         'message' => 'Contract updated , Waiting for approval',
-        //         'type' => 'success'
-        //     ];
+            $_SESSION['notification'] = [
+                'message' => 'Contract updated , Waiting for approval',
+                'type' => 'success'
+            ];
 
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
+            header("Location: " . $_SERVER['HTTP_REFERER']);
 
-        // }
+        }
         
 
         
