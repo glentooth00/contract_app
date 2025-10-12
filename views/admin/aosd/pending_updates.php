@@ -609,7 +609,7 @@ include_once '../../../views/layouts/includes/header.php';
                     if(response.success){
                         let data = response.data;
 
-                        let rawDateStart = data.contract_start ?? rent_start;
+                        let rawDateStart = data.contract_start ?? data.rent_start;
                         let isoDateStart =  rawDateStart.replace(" ", "T");
                         let newDateStart =  new Date(isoDateStart);
                         let formattedDateStart = newDateStart.toLocaleDateString("en-US");
@@ -619,7 +619,7 @@ include_once '../../../views/layouts/includes/header.php';
                             year: "numeric"
                         }).replace(",","").replace(" ","/").replace(" ","/");
 
-                        let rawDateEnd = data.contract_end ?? rent_end;
+                        let rawDateEnd = data.contract_end ?? data.rent_end;
                         let isoDateEnd =  rawDateEnd.replace(" ", "T");
                         let newDateEnd =  new Date(isoDateEnd);
                         let formattedDateEnd = newDateEnd.toLocaleDateString("en-US");
@@ -628,6 +628,8 @@ include_once '../../../views/layouts/includes/header.php';
                             day: "2-digit",
                             year: "numeric"
                         }).replace(",","").replace(" ","/").replace(" ","/");
+
+                        
 
                        let pendingHtml = `
                                 <input type="hidden" name="uploader_department" value="${data.uploader_department || ''}" readonly>
@@ -754,90 +756,78 @@ include_once '../../../views/layouts/includes/header.php';
     //getCurrentData
 
     // retrieve data using ajax 
-    $(document).ready(function(){
-        $('.view-details').on('click', function() {
+$(document).on('click', '.view-details', function() {
+    console.log("Button clicked!");
 
-            //variable from button data-id
-            var itemId = $(this).data('id');
-            var contractId = $(this).data('contractId');
+    var itemId = $(this).data('id');
+    var contractId = $(this).data('contractId');
 
-            $.ajax({
-                url: 'get_currentData.php',
-                type: 'POST',
-                data: { id:itemId,contract_id:contractId },
-                success: function(response){
-                    response = JSON.parse(response); // make sure JSON is parsed
+    $.ajax({
+        url: 'get_currentData.php',
+        type: 'POST',
+        data: { id: itemId, contract_id: contractId },
+        success: function(response) {
+            console.log(response);
 
-                    if(response.success){
-                        let data = response.data;
+            try {
+                response = JSON.parse(response);
+            } catch (e) {
+                console.error("Invalid JSON:", response);
+                $('#current-contract .p-2').html('<p>Error loading data.</p>');
+                return;
+            }
 
-                        let rawDateStart = data.contract_start ?? rent_start;
-                        let isoDateStart =  rawDateStart.replace(" ", "T");
-                        let newDateStart =  new Date(isoDateStart);
-                        let formattedDateStart = newDateStart.toLocaleDateString("en-US");
-                        let formatStart = newDateStart.toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "2-digit",
-                            year: "numeric"
-                        }).replace(",","").replace(" ","/").replace(" ","/");
+            if (response.success) {
+                let d = response.data;
 
-                        let rawDateEnd = data.contract_end ?? rent_end;
-                        let isoDateEnd =  rawDateEnd.replace(" ", "T");
-                        let newDateEnd =  new Date(isoDateEnd);
-                        let formattedDateEnd = newDateEnd.toLocaleDateString("en-US");
-                        let formatEnd = newDateEnd.toLocaleDateString("en-US", {
-                            month: "short",
-                            day: "2-digit",
-                            year: "numeric"
-                        }).replace(",","").replace(" ","/").replace(" ","/");
+                let rawDateStart = d.contract_start || d.rent_start;
+                let rawDateEnd = d.contract_end || d.rent_end;
 
-
-                        let currentHtml = "";
-
-                        function addField(label, value) {
-                            if (value && value.trim() !== "") {
-                                currentHtml += `
-                                    <div class="form-group mb-2">
-                                        <label><strong>${label}:</strong></label>
-                                        <input type="text" class="form-control" value="${value}" disabled>
-                                    </div>
-                                `;
-                            }
-                        }
-
-                        // Add fields only if they have data
-                        addField("Contract Name", data.contract_name);
-                        addField("Contract Type", data.contract_type);
-                        addField("Start Date", formatStart);
-                        addField("End Date", formatEnd);
-                        addField("Rent Start", data.rent_start);
-                        addField("Rent End", data.rent_end);
-                        addField("Total Cost", data.total_cost);
-                        // addField("Status", data.contract_status);
-                        addField("Approval Status", data.approval_status);
-                        addField("Account No", data.account_no);
-                        addField("TC No", data.tc_no);
-                        addField("Address", data.address);
-                        addField("Assigned Department", data.assigned_dept);
-                        addField("Second Party", data.second_party);
-                        addField("Supplier", data.supplier);
-                        addField("Contract Cost", data.contractPrice);
-                        addField("Procurement Mode", data.procurementMode);
-                        addField("Second Party", data.party_of_second_part);
-
-
-                        $('#current-contract .p-2').html(currentHtml);
-                    }else {
-                        $('#modal-body-content').html('<p>Error: ' + response.message + '</p>');
-                    }
-                },
-                error: function(xhr, status, error ){
-                    $('#modal-body-content').html('<p>An error occurred: ' + error + '</p>');
+                function formatDate(dateStr) {
+                    if (!dateStr) return '';
+                    let date = new Date(dateStr.replace(" ", "T"));
+                    return date.toLocaleDateString("en-US", {
+                        month: "short", day: "2-digit", year: "numeric"
+                    });
                 }
-            });
 
-        });
+                let html = "";
+                function addField(label, value) {
+                    if (value && value.trim() !== "") {
+                        html += `
+                            <div class="form-group mb-2">
+                                <label><strong>${label}:</strong></label>
+                                <input type="text" class="form-control" value="${value}" disabled>
+                            </div>
+                        `;
+                    }
+                }
+
+                addField("Contract Name", d.contract_name);
+                addField("Contract Type", d.contract_type);
+                addField("Start Date", formatDate(rawDateStart));
+                addField("End Date", formatDate(rawDateEnd));
+                addField("Total Cost", d.total_cost);
+                addField("Approval Status", d.approval_status);
+                addField("Account No", d.account_no);
+                addField("TC No", d.tc_no);
+                addField("Address", d.address);
+                addField("Assigned Department", d.assigned_dept);
+                addField("Second Party", d.second_party);
+                addField("Supplier", d.supplier);
+                addField("Contract Cost", d.contractPrice);
+                addField("Procurement Mode", d.procurementMode);
+
+                $('#current-contract .p-2').html(html);
+            } else {
+                $('#current-contract .p-2').html('<p>No data found.</p>');
+            }
+        },
+        error: function(xhr, status, error) {
+            $('#current-contract .p-2').html('<p>Error: ' + error + '</p>');
+        }
     });
+});
 
 
     //delete-btn
