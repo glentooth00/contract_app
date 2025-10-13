@@ -96,12 +96,25 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             </select>
                         </div>
 
+                        <?php if($department === 'BAC'): ?>
+                         <div class="col-md-6 p-2">
+                            <label class="badge text-muted">Assign To:</label>
+                            <select class="form-select" name="department_assigned" required>
+                                <option>--Select Department--</option>
+                                <option value="ISD">ISD</option>
+                                <option value="CITET">CITET</option>
+                                <option value="FSD">FSD</option>
+                                <option value="TSD">TSD</option>
+                                <option value="IASD">IASD</option>
+                                <option value="AOSD">AOSD</option>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+
                         <div class="col-md-4 mb-3" id="supplier_field" style="display: none;">
                             <label class="badge text-muted">Supplier</label>
                             <input type="text" class="form-control" name="supplier" placeholder="">
                         </div>
-
-
                     </div>
 
                     <div class="row p-3">

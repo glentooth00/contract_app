@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
             'contract_file' => $filePath,
-            'department_assigned' => 'ISD-MSD',
             'contrasct_status' => 'Active',
             'address' => $_POST['address'],
             'account_no' => $_POST['account_no'],
+            'department_assigned' => $_POST['department_assigned']
 
         ];
 

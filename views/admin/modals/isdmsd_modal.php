@@ -75,6 +75,21 @@ $getUserInfo = (new UserController)->getUserByDept($department);
                             <input type="file" class="form-control" name="contract_file" required>
                         </div>
 
+                        <?php if($department === 'BAC'): ?>
+                         <div class="col-md-6 p-2">
+                            <label class="badge text-muted">Assign To:</label>
+                            <select class="form-select" name="department_assigned" required>
+                                <option>--Select Department--</option>
+                                <option value="ISD">ISD</option>
+                                <option value="CITET">CITET</option>
+                                <option value="FSD">FSD</option>
+                                <option value="TSD">TSD</option>
+                                <option value="IASD">IASD</option>
+                                <option value="AOSD">AOSD</option>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+
                         <!-- Uploader Info -->
                         <?php
                         $userid;
