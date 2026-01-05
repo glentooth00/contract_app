@@ -130,7 +130,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <h5 class="modal-title" id="exampleModalLabel">Suspend Contract</h5>
                     </div>
                     <div class="modal-body">
-                        <form action="contracts/suspend.php" method="post">
+                        <form action="contracts/suspendContract.php" method="post">
                             <div class="form-group">
                                 
                                 <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
@@ -193,8 +193,8 @@ include_once '../../../views/layouts/includes/header.php';
                                 </div>
                             </div>
                             <div class=" form-group mb-3" id="myDiv" style="display: none;">
-                                <label for="suspendReason" class="badge text-muted">Number of suspension days</label>
-                                <input type="number" class="form-control" id="suspendReason" name="no_of_days" rows="3"
+                                <label for="suspendReason" class="badge text-muted">Adjust Date</label>
+                                <input type="date" class="form-control" id="suspendReason" name="suspendDate" rows="3"
                                     placeholder="Enter reason for suspension">
                             </div>
                             <div class=" form-group">

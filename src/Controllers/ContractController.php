@@ -1724,5 +1724,17 @@ class ContractController
         return $stmt->execute();
     }
 
+    public function updateEndDate($data){
+
+        $sql = "UPDATE contracts SET contract_end = :contract_end WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':contract_end', $data['contract_end']);
+        $stmt->bindParam(':id',$data['contract_id']);
+
+        return $stmt->execute();
+
+    }
+
 
 }
