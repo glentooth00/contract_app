@@ -31,7 +31,7 @@
         margin: 0;
         padding: 0;
         height: 100%;
-        background-color: #37AFE1;
+        background-color: #1D546D;
     }
 
     .pageContent {
