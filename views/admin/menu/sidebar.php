@@ -10,7 +10,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
       <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid" style="max-height: 40px;">
     </div>
     <div>
-      <h6 class="m-0 text-dark fw-bold">Contract Monitor</h6>
+      <h2 class="m-0 text-dark" style="font-family:Arial, sans-serif;font-weight:600;">CMS</h2>
     </div>
   </div>
 

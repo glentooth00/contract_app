@@ -108,250 +108,123 @@ include_once '../../../views/layouts/includes/header.php';
                 </select>
             </div> -->
         </div>
-
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Username</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Days Remaining</th>
-                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Days Remaining</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Username</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Status</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Created At</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Updated At</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($contracts)): ?>
-                    <?php foreach ($contracts as $contract): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($contract['username'] ?? '') ?></td>
-                            <td class="text-center">
-                                <span class="badge text-secondar    y">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
-                            </td>
-                            <td class="text-center">
-                                <span
-                                    class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
-                                    <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
-                                </span>
-                            </td>
-
-                            <?php
-                            $contractType = $contract['contract_type'];
-
-                            $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                            foreach ($getFromContractType as $row) {
-
-                                if ($contractType === $row['contract_type']) {
-
-                                    $end = new DateTime($contract['contract_end']);
-                                    $now = new DateTime();
-
-                                    $interval = $now->diff($end);
-                                    $diff = $interval->days;
-
-                                    $diff;
-
-                                }
-
-                            }
-                            ?>
-
-                            <?php switch ($contractType):
-                                case EMP_CON: ?>
-                                    <!-- Code for EMP_CON -->
-                                    <span>
-                                        <?php
-                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                                        foreach ($getFromContractType as $row) {
-                                            if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
-                                                $now = new DateTime();
-                                                $ert = $row['contract_ert'];
-
-                                                $interval = $now->diff($end);
-                                                $diff = $interval->days;
-
-                                                // $diff;
-                        
-                                                if ($diff >= $ert) {
-                                                    echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                                } else {
-                                                    echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
-                                                    </td>';
-
-                                                }
-
-                                            }
-                                        }
-                                        ?>
-                                    </span>
-                                    <?php break;
-                                case PSC_LONG: ?>
-                                    <!-- Code for PSC_LONG -->
-                                    <!-- Code for EMP_CON -->
-                                    <span>
-                                        <?php
-                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                                        foreach ($getFromContractType as $row) {
-                                            if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
-                                                $now = new DateTime();
-                                                $ert = $row['contract_ert'];
-
-                                                $interval = $now->diff($end);
-                                                $diff = $interval->days;
-
-                                                // $diff;
-                        
-                                                if ($diff >= $ert) {
-                                                    echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                                } else {
-                                                    echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
-                                                    </td>';
-
-                                                }
-
-                                            }
-                                        }
-                                        ?>
-                                    </span>
-                                    <?php break;
-                                case PSC_SHORT: ?>
-                                    <!-- Code for PSC_SHORT -->
-                                    <!-- Code for EMP_CON -->
-                                    <span>
-                                        <?php
-                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                                        foreach ($getFromContractType as $row) {
-                                            if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
-                                                $now = new DateTime();
-                                                $ert = $row['contract_ert'];
-
-                                                $interval = $now->diff($end);
-                                                $diff = $interval->days;
-
-                                                // $diff;
-                        
-                                                if ($diff >= $ert) {
-                                                    echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                                } else {
-                                                    echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
-                                                    </td>';
-
-                                                }
-
-                                            }
-                                        }
-                                        ?>
-                                    </span>
-                                    <?php break;
-                                case TEMP_LIGHTING: ?>
-                                    <!-- Code for PSC_SHORT -->
-                                    <!-- Code for EMP_CON -->
-                                    <span>
-                                        <?php
-                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                                        foreach ($getFromContractType as $row) {
-                                            if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
-                                                $now = new DateTime();
-                                                $ert = $row['contract_ert'];
-
-                                                $interval = $now->diff($end);
-                                                $diff = $interval->days;
-
-                                                // $diff;
-                        
-                                                if ($diff >= $ert) {
-                                                    echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                                } else {
-                                                    echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining before expiring </span>
-                                                    </td>';
-
-                                                }
-
-                                            }
-                                        }
-                                        ?>
-                                    </span>
-                                    <?php break;
-                                case TRANS_RENT: ?>
-                                    <!-- Code for PSC_SHORT -->
-                                    <!-- Code for EMP_CON -->
-                                    <span>
-                                        <?php
-                                        $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
-
-                                        foreach ($getFromContractType as $row) {
-                                            if ($contractType === $row['contract_type']) {
-                                                $end = new DateTime($contract['contract_end']);
-                                                $now = new DateTime();
-                                                $ert = $row['contract_ert'];
-
-                                                $interval = $now->diff($end);
-                                                $diff = $interval->days;
-
-                                                // $diff;
-                        
-                                                if ($diff >= $ert) {
-                                                    echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                          </td>';
-                                                } elseif ($diff == 0) {
-                                                    echo '<td class="text-center table-primary">
-                                                            <span class="text-primary fw-bold">Contract ends today</span>
-                                                          </td>';
-                                                } else {
-                                                    echo '<td class="text-center table-warning">
-                                                            <span class="text-danger fw-bold">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-exclamation-diamond" viewBox="0 0 16 16">
-                                                                    <path d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.48 1.48 0 0 1 0-2.098zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z"/>
-                                                                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                                </svg> ' . $diff . ' days remaining</span>
-                                                          </td>';
-                                                }
-
-                                            }
-                                        }
-                                        ?>
-                                    </span>
-                                    <?php break;
-                                default: ?>
-                                    <!-- Code if no match -->
-                                    <p>Unknown Contract Type</p>
-                            <?php endswitch; ?>
-
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+                <?php foreach ($contracts as $request): ?>
                     <tr>
-                        <td colspan="6" class="text-center">No contracts found.</td>
+                        <td style="text-align: center; border: 1px solid #030303FF;">
+                            <?= htmlspecialchars($request['user_id']) ?>
+                            <?= htmlspecialchars($request['username']) ?>
+                        </td>
+                        <td style="text-align: center; border: 1px solid #030303FF;">
+                            <?php if($request['status'] === 'completed'): ?>
+                                <span class="badge bg-success text-light p-2"><?= htmlspecialchars($request['status']) ?></span>
+                            <?php else: ?>
+                                 <span class="badge bg-danger text-white p-2"><?= htmlspecialchars($request['status']) ?></span>
+                            <?php endif; ?>
+                            
+                        </td>
+                        <td style="text-align: center; border: 1px solid #030303FF;">
+                            <?= date('d F Y', strtotime($request['created_at'])) ?>
+                        </td>
+                        <td style="text-align: center; border: 1px solid #030303FF;">
+                            <?= date('d F Y', strtotime($request['updated_at'])) ?>
+                        </td>
+                        <td style="text-align: center; border: 1px solid #030303FF;">
+
+                        <?php if ($request['status'] === 'completed') : ?>
+
+                            <!-- <div class="d-flex justify-content-center align-items-center gap-2">
+                            <button
+                                    type="button"
+                                    class="btn btn-sm btn-primary"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#resetModal"
+                                    data-id="<?= htmlspecialchars($request['user_id']) ?>"
+                                    data-username="<?= htmlspecialchars($request['username']) ?>"
+                                    data-status="<?= htmlspecialchars($request['status']) ?>"
+                                    data-created="<?= date('d F Y', strtotime($request['created_at'])) ?>"
+                                    data-updated="<?= date('d F Y', strtotime($request['updated_at'])) ?>"
+                                >
+                                    Reset Password
+                                </button>
+                            </div> -->
+                        <?php else: ?>
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <button
+                                        type="button"
+                                        class="btn btn-sm btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#resetModal"
+                                        data-id="<?= htmlspecialchars($request['user_id']) ?>"
+                                        data-username="<?= htmlspecialchars($request['username']) ?>"
+                                        data-status="<?= htmlspecialchars($request['status']) ?>"
+                                        data-created="<?= date('d F Y', strtotime($request['created_at'])) ?>"
+                                        data-updated="<?= date('d F Y', strtotime($request['updated_at'])) ?>"
+                                    >
+                                        Reset Password
+                                    </button>
+                            </div>
+                        <?php endif; ?>
+                        </td>
                     </tr>
-                <?php endif; ?>
+                <?php endforeach; ?>
             </tbody>
         </table>
 
+        <div class="modal fade" id="resetModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reset Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Username:</strong> <span id="m_username"></span></p>
+                        <p><strong>Status:</strong> <span id="m_status"></span></p>
+                        <p><strong>Created At:</strong> <span id="m_created"></span></p>
+                        <p><strong>Updated At:</strong> <span id="m_updated"></span></p>
+                        <hr>
+                        <form method="POST" action="reset_password_action.php">
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">
+                                New Password
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="new_password"
+                                name="new_password"
+                                placeholder="Enter new password"
+                                required
+                            >
+                        </div>
+                        <p class="text-danger mb-0">
+                            Are you sure you want to reset this account’s password?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                            <input type="hidden" name="id" id="m_id">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-danger">
+                                Confirm Reset
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -512,4 +385,19 @@ include_once '../../../views/layouts/includes/header.php';
 
 
     //----------------DAtatables
+
+
+
+    var resetModal = document.getElementById('resetModal');
+
+    resetModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+
+        document.getElementById('m_id').value = button.getAttribute('data-id');
+        document.getElementById('m_username').textContent = button.getAttribute('data-username');
+        document.getElementById('m_status').textContent = button.getAttribute('data-status');
+        document.getElementById('m_created').textContent = button.getAttribute('data-created');
+        document.getElementById('m_updated').textContent = button.getAttribute('data-updated');
+    });
+
 </script>

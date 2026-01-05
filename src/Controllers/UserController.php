@@ -203,10 +203,11 @@ class UserController
 
     public function changePass($data)
     {
-        $sql = 'INSERT INTO change_password ( user_id, username, created_at, updated_at ,request) VALUES ( :user_id, :username, :created_at, :updated_at, :request)';
+        $sql = 'INSERT INTO change_password ( user_id, username, status ,created_at, updated_at ,request) VALUES ( :user_id, :username, :status, :created_at, :updated_at, :request)';
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':user_id', $data['user_id'], PDO::PARAM_INT);
         $stmt->bindParam(':username', $data['username'], PDO::PARAM_STR);
+        $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
         $stmt->bindParam(':created_at', $data['created_at']);
         $stmt->bindParam(':updated_at', $data['updated_at']);
         $stmt->bindParam(':request', $data['request']);
@@ -323,7 +324,18 @@ class UserController
     }
 
 
+    public function updateRequest($id,$status){
 
+        $sql = "UPDATE change_password SET status = :status WHERE user_id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':status' => $status,
+            ':id' => $id
+        ]);
+
+        return $this;
+
+    }
 
 
 
