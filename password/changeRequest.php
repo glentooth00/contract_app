@@ -7,7 +7,10 @@ include_once __DIR__ . "../../vendor/autoload.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $checkUsername = (new UserController())->checkUsername($_POST['username']);
+    $username = $_POST['username'];
+
+    $checkUsername = (new UserController())->checkUsername($username);
+
 
     if ($checkUsername) {
 
@@ -19,7 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'username' => $checkUsername['username'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
+                'request' => '1'
             ];
+
 
             $i = (new UserController)->changePass($data);
 
@@ -33,27 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header("Location: " . $_SERVER['HTTP_REFERER']);
 
 
-        } else {
-
-            $_SESSION['notification'] = [
-                'message' => 'Username is not found',
-                'type' => 'danger'
-            ];
-
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-
-        }
-
-    } else {
-
-
-        $_SESSION['notification'] = [
-            'message' => 'Username is not found',
-            'type' => 'danger'
-        ];
-
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-
+        } 
     }
 
 }
