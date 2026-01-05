@@ -22,7 +22,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'username' => $checkUsername['username'],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-                'request' => '1'
+                'request' => '1',
+                'status' => 'pending'
             ];
 
 

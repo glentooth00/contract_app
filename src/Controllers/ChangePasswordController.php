@@ -27,4 +27,17 @@ class ChangePasswordController{
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function updatePassword($ChangePasswordData){
+
+        $sql = "UPDATE users SET password = :new_password WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':new_password' => $ChangePasswordData['new_password'],
+            ':id' => $ChangePasswordData['id']
+        ]);
+
+        return $this;
+
+    }
+
 }
