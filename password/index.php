@@ -119,6 +119,17 @@ $page_title = 'Login';
     <?php endif; ?>
 
     <style>
+        body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: #1D546D;
+        background-image:url('../gb.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        
+    }
         .notifMsg {
             font-size: 13px;
             color: red;

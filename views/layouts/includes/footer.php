@@ -1,7 +1,7 @@
 <footer class="footerDiv bg-dark text-white py-3 mt-2">
     <div class="container text-center">
-        <h5 class="mb-0">Web App</h5>
-        <small>&copy; <?= date('Y') ?> All rights reserved.</small>
+        <h5 class="mb-0">Contract Monitoring System</h5>
+        <small><span class="text-dark fw-bold">CMS</span> &copy; <?= date('Y') ?> </small>
     </div>
 </footer>
 
@@ -24,8 +24,8 @@
     .footerDiv {
         color: #393E46 !important;
         background-color: #F7F7F7 !important;
-        padding: 5px;
-        margin-top: auto;
+        padding: 10px;
+        margin-top: 10px;
         /* Push the footer to the bottom */
         text-align: center;
     }
