@@ -318,7 +318,7 @@ class UserController
             } else {
                 return ['status' => 'error', 'message' => 'Failed to execute update statement.'];
             }
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
