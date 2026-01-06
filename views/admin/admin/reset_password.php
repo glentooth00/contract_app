@@ -122,7 +122,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php foreach ($contracts as $request): ?>
                     <tr>
                         <td style="text-align: center; border: 1px solid #030303FF;">
-                            <?= htmlspecialchars($request['user_id']) ?>
                             <?= htmlspecialchars($request['username']) ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #030303FF;">
@@ -190,7 +189,9 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                     <div class="modal-body">
                         <p><strong>Username:</strong> <span id="m_username"></span></p>
-                        <p><strong>Status:</strong> <span id="m_status"></span></p>
+                        <p><strong>Status:</strong>
+                            <span class="badge bg-danger p-2" id="m_status"></span>
+                        </p>
                         <p><strong>Created At:</strong> <span id="m_created"></span></p>
                         <p><strong>Updated At:</strong> <span id="m_updated"></span></p>
                         <hr>
