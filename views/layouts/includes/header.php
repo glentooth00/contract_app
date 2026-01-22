@@ -26,12 +26,16 @@
 
     <!-- Custom Styles -->
 <style>
-    html, body {
+     body {
         width: 100%;
         margin: 0;
         padding: 0;
-        height: 100%;
         background-color: #1D546D;
+        background-image:url('gb.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        
     }
 
     .pageContent {

@@ -30,14 +30,14 @@ $page_title = 'Login';
 <?php endif; ?>
 
 
-<div class="container d-flex justify-content-center" style="margin-top: 11em;margin-bottom:20em;">
+<div class="container d-flex justify-content-center" style="margin-top: 11em;margin-bottom:22em;">
     <div class="formHolder card col-md-3 bg-white p-4 rounded mt-5">
-        <div class="d-flex justify-content-center mb-1">
+        <div class="d-flex justify-content-center mb-2">
             <div>
-                <img width="60px" src="public/images/login.svg">
+                <img width="30px" src="public/images/login.svg">
             </div>
             <div>
-                <h1 class="text-dark p-2">Login</h1>
+                <h4 class="text-dark">Login</h4>
             </div>
         </div>
         <form action="authenticate.php" method="post">

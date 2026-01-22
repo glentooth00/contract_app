@@ -142,79 +142,81 @@ include_once '../../../views/layouts/includes/header.php';
                             <td> <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
-                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                    <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
-                        
-                            <?php 
-                                    $contractId = $contract['id'];
 
-                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                <?php
+                                $contractId = $contract['id'];
+
+                                $hasComment = (new CommentController)->hasComment($contractId);
                                 ?>
 
-                                <?php if(isset($contractId)): ?>
-                                     <?php 
+                                <?php if (isset($contractId)): ?>
+                                    <?php
                                     $contractId = $contract['id'];
 
-                                    $hasComment = ( new CommentController )->hasComment($contractId);
-                                ?>
-                                <?php if($hasComment == true): ?>
-                                    <span class="float-end">
-                                        <?php include_once 'message.php'; ?> 
+                                    $hasComment = (new CommentController)->hasComment($contractId);
+                                    ?>
+                                    <?php if ($hasComment == true): ?>
+                                        <span class="float-end">
+                                            <?php include_once 'message.php'; ?>
+                                        </span>
+                                    <?php endif; ?>
+
+                                    <span class="p-3">
+                                        <?php
+                                        $id = $contractId;
+                                        $getFlag = (new FlagController)->getFlag($id);
+                                        ?>
+                                        <?php if ($getFlag['status'] ?? '' === 1): ?>
+
+                                            <?php if ($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;"
+                                                    title="This Contract is Under review">
+                                            <?php endif; ?>
+                                            <?php if ($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;"
+                                                    title="This Contract Needs Attention">
+                                            <?php endif; ?>
+                                        <?php endif; ?>
                                     </span>
                                 <?php endif; ?>
-                                
-                                <span class="p-3">
-                                    <?php
-                                        $id = $contractId;
-                                        $getFlag = ( new FlagController )->getFlag($id);
-                                    ?>
-                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
-                                        
-                                        <?php if($getFlag['flag_type'] === UR): ?>
-                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
-                                            <?php endif;  ?>
-                                            <?php if($getFlag['flag_type'] === NA): ?>
-                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
-                                            <?php endif;  ?>
-                                    <?php endif; ?>
-                                </span>
-                            <?php endif; ?>
 
-                        </td>
+                            </td>
                             <td class="text-center">
-                               <?php
-                                    $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                <?php
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
-                                    switch ($type) {
-                                        case INFRA:
-                                            $badgeColor = '#328E6E';
-                                            break;
-                                        case SACC:
-                                            $badgeColor = '#123458';
-                                            break;
-                                        case GOODS:
-                                            $badgeColor = '#F75A5A';
-                                            break;
-                                        case EMP_CON:
-                                            $badgeColor = '#FAB12F';
-                                            break;
-                                        case PSC_LONG:
-                                            $badgeColor = '#007bff';
-                                            break;
-                                        case PSC_SHORT:
-                                            $badgeColor = '#28a745';
-                                            break;
-                                        case TRANS_RENT:
-                                            $badgeColor = '#003092';
-                                            break;
-                                        case TEMP_LIGHTING:
-                                            $badgeColor = '#03A791';
-                                            break;
-                                        default:
-                                            $badgeColor = '#FAB12F'; // Fallback color
-                                            break;
-                                    }
-                                    ?>
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F'; // Fallback color
+                                        break;
+                                }
+                                ?>
 
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
@@ -352,7 +354,9 @@ include_once '../../../views/layouts/includes/header.php';
         width: 200px;
         /* Adjust width as needed */
     }
-        #attention, #review:hover{
+
+    #attention,
+    #review:hover {
         cursor: pointer;
     }
 </style>
