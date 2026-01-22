@@ -564,11 +564,9 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             <span class="input-group-text">
                                                                                 <i class="bi bi-calendar-date"></i>
                                                                             </span>
-
                                                                             <input type="date" class="form-control"
                                                                                 name="contract_start"
-                                                                                value="<?= date('Y-m-d', strtotime($contract['contract_start'])) ?>"
-                                                                                readonly>
+                                                                                value="<?= $contract['contract_start'] ?>" readonly>
                                                                         </div>
                                                                     </div>
 
@@ -643,8 +641,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                 </span>
                                                                 <input type="date" class="form-control"
                                                                     name="contract_end"
-                                                                    value="<?= date('Y-m-d', strtotime($contract['contract_end'])) ?>"
-                                                                    readonly>
+                                                                    value="<?= $contract['contract_end'] ?>" readonly>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3">

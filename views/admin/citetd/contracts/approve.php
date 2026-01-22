@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'contract_status' => 'Active',
     ];
 
-    var_dump($data);
+    // var_dump($data);
 
     $saveContract = (new ContractController)->saveContract($data);
 
