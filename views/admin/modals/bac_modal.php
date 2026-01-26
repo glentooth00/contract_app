@@ -47,7 +47,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <input type="text" class="form-control" name="contract_name" placeholder="">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <?php if ($department === BAC): ?>
+                            <?php if ($department === 'OGM'): ?>
 
                                 <label class="badge text-muted">Contract Type</label>
                                 <select class="form-select" name="contract_type" id="contract_type">

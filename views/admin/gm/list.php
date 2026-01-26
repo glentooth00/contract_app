@@ -30,14 +30,6 @@ if ($getOneLatest) {
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-<!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center"
-    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
-        <span class="sr-only">Loading...</span>
-    </div>
-</div> -->
-
 <div class="main-layout">
 
     <?php include_once '../menu/sidebar.php'; ?>
@@ -135,73 +127,75 @@ include_once '../../../views/layouts/includes/header.php';
                                 <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
-                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                    <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 </a>
-                                   <?php if (isset($contract['account_no'])): ?>
+                                <?php if (isset($contract['account_no'])): ?>
                                     <span class="badge account_number">(
                                         <?= $contract['account_no'] ?> )</span>
                                 <?php endif; ?>
-                            <?php 
-                                    $contractId = $contract['id'];
+                                <?php
+                                $contractId = $contract['id'];
 
-                                    $hasComment = ( new CommentController )->hasComment($contractId);
+                                $hasComment = (new CommentController)->hasComment($contractId);
                                 ?>
-                                <?php if($hasComment == true): ?>
+                                <?php if ($hasComment == true): ?>
                                     <span class="float-end" id="hasComment">
-                                         <?php include_once 'message.php'; ?> 
+                                        <?php include_once 'message.php'; ?>
                                     </span>
                                 <?php endif; ?>
-                                <?php if(isset($contractId)): ?>
-                                <span class="p-3">
-                                    <?php
+                                <?php if (isset($contractId)): ?>
+                                    <span class="p-3">
+                                        <?php
                                         $id = $contractId;
-                                        $getFlag = ( new FlagController )->getFlag($id);
-                                    ?>
-                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
-                                        
-                                        <?php if($getFlag['flag_type'] === UR): ?>
-                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
-                                            <?php endif;  ?>
-                                            <?php if($getFlag['flag_type'] === NA): ?>
-                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
-                                            <?php endif;  ?>
-                                    <?php endif; ?>
-                                </span>
-                            <?php endif; ?>
-                        </td>
+                                        $getFlag = (new FlagController)->getFlag($id);
+                                        ?>
+                                        <?php if ($getFlag['status'] ?? '' === 1): ?>
+
+                                            <?php if ($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;"
+                                                    title="This Contract is Under review">
+                                            <?php endif; ?>
+                                            <?php if ($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;"
+                                                    title="This Contract Needs Attention">
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                    </span>
+                                <?php endif; ?>
+                            </td>
                             <td class="text-center">
-                            <?php
-                                    $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
-                                    switch ($type) {
-                                        case INFRA:
-                                            $badgeColor = '#328E6E';
-                                            break;
-                                        case SACC:
-                                            $badgeColor = '#123458';
-                                            break;
-                                        case GOODS:
-                                            $badgeColor = '#F75A5A';
-                                            break;
-                                        case EMP_CON:
-                                            $badgeColor = '#FAB12F';
-                                            break;
-                                        case PSC_LONG:
-                                            $badgeColor = '#007bff';
-                                            break;
-                                        case PSC_SHORT:
-                                            $badgeColor = '#28a745';
-                                            break;
-                                        case TRANS_RENT:
-                                            $badgeColor = '#003092';
-                                            break;
-                                        case TEMP_LIGHTING:
-                                            $badgeColor = '#03A791';
-                                            break;
-                                        default:
-                                            $badgeColor = '#FAB12F'; // Fallback color
-                                            break;
-                                    }
-                                    ?>
+                                <?php
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F'; // Fallback color
+                                        break;
+                                }
+                                ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
@@ -209,44 +203,44 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
                             <td class="text-center">
 
-                            <?php if($contract['contract_type'] === TRANS_RENT): ?>
-                                <?php
-                                    $rentStart = date('M-d-Y', strtotime($contract['rent_start']));    
-                                ?>
-                                <span class="badge text-secondary">
-                                    <?= $rentStart ?>
-                                </span>
-                                
-                            <?php else: ?>
+                                <?php if ($contract['contract_type'] === TRANS_RENT): ?>
+                                    <?php
+                                    $rentStart = date('M-d-Y', strtotime($contract['rent_start']));
+                                    ?>
+                                    <span class="badge text-secondary">
+                                        <?= $rentStart ?>
+                                    </span>
 
-                                
+                                <?php else: ?>
 
- <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
-                            <?php endif; ?>
 
-                               
-                            
-                                </td>
+
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                                <?php endif; ?>
+
+
+
+                            </td>
 
                             <td class="text-center">
 
 
-                                  <?php if($contract['contract_type'] === TRANS_RENT): ?>
-                                <?php
-                                    $rentStart = date('M-d-Y', strtotime($contract['rent_end']));    
-                                ?>
-                                <span class="badge text-secondary">
-                                    <?= $rentStart ?>
-                                </span>
-                                
-                            <?php else: ?>
+                                <?php if ($contract['contract_type'] === TRANS_RENT): ?>
+                                    <?php
+                                    $rentStart = date('M-d-Y', strtotime($contract['rent_end']));
+                                    ?>
+                                    <span class="badge text-secondary">
+                                        <?= $rentStart ?>
+                                    </span>
 
-                            <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
-                            </span>
-                            
-                            <?php endif; ?>
+                                <?php else: ?>
+
+                                    <span class="badge text-secondary">
+                                        <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                    </span>
+
+                                <?php endif; ?>
                             </td>
                             <td class="text-center">
                                 <span
@@ -366,10 +360,13 @@ include_once '../../../views/layouts/includes/header.php';
         width: 200px;
         /* Adjust width as needed */
     }
-    #attention, #review:hover{
+
+    #attention,
+    #review:hover {
         cursor: pointer;
     }
-            .account_number {
+
+    .account_number {
         color: #9BA4B5;
     }
 </style>

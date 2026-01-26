@@ -13,19 +13,19 @@ use App\Controllers\ContractController;
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
-$user_name = $_SESSION['firstname'].' '. $_SESSION['middlename'] .' '.$_SESSION['lastname'];
-$User = $_SESSION['firstname'].' '.$_SESSION['middlename'].' '.$_SESSION['lastname'];
+$user_name = $_SESSION['firstname'] . ' ' . $_SESSION['middlename'] . ' ' . $_SESSION['lastname'];
+$User = $_SESSION['firstname'] . ' ' . $_SESSION['middlename'] . ' ' . $_SESSION['lastname'];
 $department = $_SESSION['department'] ?? null;
 $userid = $_SESSION['id'] ?? null;
 
-if($userid){
+if ($userid) {
     $isLoggedIn = $userid;
 }
 
-if($department === IASD){
+if ($department === IASD) {
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
-}else{
+} else {
     $user_id = $_SESSION['id'];
     $user_department = $_SESSION['department'];
 }
@@ -68,50 +68,52 @@ include_once '../../../views/layouts/includes/header.php';
 <div class="main-layout ">
 
     <?php include_once '../menu/sidebar.php'; ?>
+
     <div class="content-area">
 
-<?php include_once __DIR__ . '/../view_header/view_header.php' ?>
+        <?php include_once __DIR__ . '/../view_header/view_header.php' ?>
 
-    <!-- Modal -->
-    <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Set Flag to this Document</h5>
-        </div>
-        <div class="modal-body">
-           <form action="flag/flag_contract.php" method="POST">
-            <div class="d-flex col-md-12">
-                <input type="hidden" name="contract_id" value="<?= $contractId ?>">
+        <!-- Modal -->
+        <div class="modal fade" id="flagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Set Flag to this Document</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form action="flag/flag_contract.php" method="POST">
+                            <div class="d-flex col-md-12">
+                                <input type="hidden" name="contract_id" value="<?= $contractId ?>">
 
-                <div class="col-md-6">
-                <div class="form-check">
+                                <div class="col-md-6">
+                                    <div class="form-check">
 
-                    <input class="form-check-input" type="checkbox" id="attention" name="attention">
-                    <img src="../../../public/images/withComment.svg" width="25px">
-                    <label class="form-check-label" for="attention">Needs Attention</label>
-                </div>
-                </div>
+                                        <input class="form-check-input" type="checkbox" id="attention" name="attention">
+                                        <img src="../../../public/images/withComment.svg" width="25px">
+                                        <label class="form-check-label" for="attention">Needs Attention</label>
+                                    </div>
+                                </div>
 
-                <div class="col-md-6">
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="review" name="review">
-                    <img src="../../../public/images/underReview.svg" width="25px">
-                    <label class="form-check-label" for="review">Under Review</label>
-                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="review" name="review">
+                                        <img src="../../../public/images/underReview.svg" width="25px">
+                                        <label class="form-check-label" for="review">Under Review</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Apply Flag</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Apply Flag</button>
-            </div>
-            </form>
         </div>
-        </div>
-    </div>
-    </div>
 
-            <script>
+        <script>
             document.addEventListener("DOMContentLoaded", function () {
                 document.querySelectorAll('.view-comment-trigger').forEach(function (img) {
                     img.addEventListener('click', function () {
@@ -134,14 +136,14 @@ include_once '../../../views/layouts/includes/header.php';
                     });
                 });
             });
-            </script>
+        </script>
 
-        </h2>           
-        
+        </h2>
+
         <hr>
         <?php
         $start = new DateTime($getContract['contract_start'] ?? $getContract['rent_start']);
-        $end = new DateTime($getContract['contract_end']  ?? $getContract['rent_end']);
+        $end = new DateTime($getContract['contract_end'] ?? $getContract['rent_end']);
         $today = new DateTime();
 
         $interval = $today->diff($end);
@@ -196,198 +198,198 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <?php if($getContract['contract_type']  ===  INFRA ) :?>
-            <div class="col-md-2 mt-3">
-                <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                    <?php 
-                    $start = date('Y-m-d',strtotime($getContract['contract_start']));
-                    ?>
-                    <input type="date" id="startDate" class="form-control"
-                        value="<?= $start; ?>" name="contract_start" readonly>
-                </div>
-            </div>
-          
-            
-            <div class="col-md-2 mt-3">
-                <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                <div class="input-group">
-                    <?php 
-                    $end = date('Y-m-d',strtotime($getContract['contract_end']));
-                    ?>
-                    <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                    <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                        name="contract_end" readonly>
-                </div>
-            </div>
-
-              <?php endif; ?>
-
-              <?php if($getContract['contract_type']  ===  SACC ) :?>
+            <?php if ($getContract['contract_type'] === INFRA): ?>
                 <div class="col-md-2 mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                        <?php 
-                        $start = date('Y-m-d',strtotime($getContract['contract_start']));
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['contract_start']));
                         ?>
-                        <input type="date" id="startDate" class="form-control"
-                            value="<?= $start; ?>" name="contract_start" readonly>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
                     </div>
                 </div>
-            
-                
+
+
                 <div class="col-md-2 mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">End date:</label>
                     <div class="input-group">
-                        <?php 
-                        $end = date('Y-m-d',strtotime($getContract['contract_end']));
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['contract_end']));
                         ?>
                         <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                            name="contract_end" readonly>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
                     </div>
                 </div>
 
-                <?php endif; ?>
+            <?php endif; ?>
 
-                <?php if($getContract['contract_type']  ===  GOODS ) :?>
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <?php 
-                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
-                            ?>
-                            <input type="date" id="startDate" class="form-control"
-                                value="<?= $start; ?>" name="contract_start" readonly>
-                        </div>
+            <?php if ($getContract['contract_type'] === SACC): ?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['contract_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
                     </div>
-                
-                    
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                        <div class="input-group">
-                            <?php 
-                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
-                            ?>
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                                name="contract_end" readonly>
-                        </div>
+                </div>
+
+
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['contract_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
                     </div>
+                </div>
 
-                    <?php endif; ?>
+            <?php endif; ?>
 
-                    <?php if($getContract['contract_type']  ===  PSC_LONG ) :?>
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <?php 
-                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
-                            ?>
-                            <input type="date" id="startDate" class="form-control"
-                                value="<?= $start; ?>" name="contract_start" readonly>
-                        </div>
+            <?php if ($getContract['contract_type'] === GOODS): ?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['contract_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
                     </div>
-                
-                    
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                        <div class="input-group">
-                            <?php 
-                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
-                            ?>
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                                name="contract_end" readonly>
-                        </div>
+                </div>
+
+
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['contract_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
                     </div>
+                </div>
 
-                    <?php endif; ?>
+            <?php endif; ?>
 
-                    <?php if($getContract['contract_type']  ===  EMP_CON ) :?>
-                        <div class="col-md-2 mt-3">
-                            <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                                <?php 
-                                $start = date('Y-m-d',strtotime($getContract['contract_start']));
-                                ?>
-                                <input type="date" id="startDate" class="form-control"
-                                    value="<?= $start; ?>" name="contract_start" readonly>
-                            </div>
-                        </div>
-                    
-                        
-                        <div class="col-md-2 mt-3">
-                            <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                            <div class="input-group">
-                                <?php 
-                                $end = date('Y-m-d',strtotime($getContract['contract_end']));
-                                ?>
-                                <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                                <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                                    name="contract_end" readonly>
-                            </div>
-                        </div>
-
-                        <?php endif; ?>
-
-                <?php if($getContract['contract_type']  ===  TEMP_LIGHTING ) :?>
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <?php 
-                            $start = date('Y-m-d',strtotime($getContract['contract_start']));
-                            ?>
-                            <input type="date" id="startDate" class="form-control"
-                                value="<?= $start; ?>" name="contract_start" readonly>
-                        </div>
+            <?php if ($getContract['contract_type'] === PSC_LONG): ?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['contract_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
                     </div>
-                
-                    
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                        <div class="input-group">
-                            <?php 
-                            $end = date('Y-m-d',strtotime($getContract['contract_end']));
-                            ?>
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                                name="contract_end" readonly>
-                        </div>
-                    </div>
+                </div>
 
-                    <?php endif; ?>
 
-                    <?php if($getContract['contract_type']  ===  TRANS_RENT ) :?>
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <?php 
-                            $start = date('Y-m-d',strtotime($getContract['rent_start']));
-                            ?>
-                            <input type="date" id="startDate" class="form-control"
-                                value="<?= $start; ?>" name="contract_start" readonly>
-                        </div>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['contract_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
                     </div>
-                    <div class="col-md-2 mt-3">
-                        <label class="badge text-muted" style="font-size: 15px;">End date:</label>
-                        <div class="input-group">
-                            <?php 
-                            $end = date('Y-m-d',strtotime($getContract['rent_end']));
-                            ?>
-                            <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
-                            <input type="date" id="endDate" class="form-control" value="<?= $end ?>"
-                                name="contract_end" readonly>
-                        </div>
+                </div>
+
+            <?php endif; ?>
+
+            <?php if ($getContract['contract_type'] === EMP_CON): ?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['contract_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
                     </div>
-                    <?php endif; ?>
+                </div>
+
+
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['contract_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+
+            <?php if ($getContract['contract_type'] === TEMP_LIGHTING): ?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['contract_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
+                    </div>
+                </div>
+
+
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['contract_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
+                    </div>
+                </div>
+
+            <?php endif; ?>
+
+            <?php if ($getContract['contract_type'] === TRANS_RENT): ?>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">Start date:</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <?php
+                        $start = date('Y-m-d', strtotime($getContract['rent_start']));
+                        ?>
+                        <input type="date" id="startDate" class="form-control" value="<?= $start; ?>" name="contract_start"
+                            readonly>
+                    </div>
+                </div>
+                <div class="col-md-2 mt-3">
+                    <label class="badge text-muted" style="font-size: 15px;">End date:</label>
+                    <div class="input-group">
+                        <?php
+                        $end = date('Y-m-d', strtotime($getContract['rent_end']));
+                        ?>
+                        <span class="input-group-text"><i class="fa fa-calendar" style="font-size: 18px;"></i></span>
+                        <input type="date" id="endDate" class="form-control" value="<?= $end ?>" name="contract_end"
+                            readonly>
+                    </div>
+                </div>
+            <?php endif; ?>
             <div class="row col-md-2">
                 <div class="mt-3">
                     <label class="badge text-muted" <?php
@@ -454,14 +456,14 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
 
-            <?php if( $getContract['address']): ?>
+            <?php if ($getContract['address']): ?>
                 <div class="row col-md-2">
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">Address:</label>
-                    <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
-                        value="<?= $getContract['address']; ?>" name="contract_type" readonly>
+                    <div class="mt-3">
+                        <label class="badge text-muted" style="font-size: 15px;">Address:</label>
+                        <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['address']; ?>" name="contract_type" readonly>
+                    </div>
                 </div>
-            </div>
             <?php endif; ?>
 
             <?php if (!$getContract['contractPrice']): ?>
@@ -476,8 +478,8 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             <?php endif; ?>
 
-            <?php if($getContract['procurementMode']): ?>
-                   <div class="row col-md-2">
+            <?php if ($getContract['procurementMode']): ?>
+                <div class="row col-md-2">
                     <div class="mt-3">
                         <label class="badge text-muted" style="font-size: 15px;">Procurement Mode</label>
                         <input type="text" id="contractInput" style="margin-left:9px;" class="form-control pl-5"
@@ -699,7 +701,7 @@ include_once '../../../views/layouts/includes/header.php';
 
 
 
-            <div>
+        <div>
             <div class="mt-5">
                 <h4>Contract History</h4>
             </div>
@@ -796,7 +798,7 @@ include_once '../../../views/layouts/includes/header.php';
                                             <?php $datestart = new DateTime($employement_data['date_start']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php else: ?>
-                                             <?php $datestart = new DateTime($employement_data['rent_start']); ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_start']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php endif; ?>
                                     </td>
@@ -805,7 +807,7 @@ include_once '../../../views/layouts/includes/header.php';
                                             <?php $datestart = new DateTime($employement_data['date_end']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php else: ?>
-                                              <?php $datestart = new DateTime($employement_data['rent_end']); ?>
+                                            <?php $datestart = new DateTime($employement_data['rent_end']); ?>
                                             <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
                                         <?php endif; ?>
 
@@ -842,7 +844,7 @@ include_once '../../../views/layouts/includes/header.php';
 </div>
 
 
- 
+
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -893,20 +895,21 @@ include_once '../../../views/layouts/includes/header.php';
 
 <!----- off canva for comments ------->
 
-<div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+<div class="offcanvas offcanvas-start w-25 p-2" tabindex="-1" id="offcanvasWithBothOptions"
+    aria-labelledby="offcanvasWithBothOptionsLabel">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Comments</h5>
         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <hr>
 
-<div class="offcanvas-body offcanvas-md">
-    <div id="comment-container">
+    <div class="offcanvas-body offcanvas-md">
+        <div id="comment-container">
 
-    </div>
+        </div>
         <script>
 
-        const loggedInUserId = <?= json_encode($isLoggedIn); ?>;
+            const loggedInUserId = <?= json_encode($isLoggedIn); ?>;
 
             function fetchNotificationCount() {
                 // const userId = 123; // Replace with dynamic value (e.g., from PHP)
@@ -920,7 +923,7 @@ include_once '../../../views/layouts/includes/header.php';
                     body: JSON.stringify({
                         contract_id: contractId
                     })
-                    })
+                })
                     .then(response => response.json())
 
 
@@ -936,8 +939,8 @@ include_once '../../../views/layouts/includes/header.php';
                                 div.className = 'comment-box';
 
                                 // Check if the comment belongs to the logged-in user
-                                const isMine = comment.user_id  == loggedInUserId || comment.audit_id  == loggedInUserId;
-                                
+                                const isMine = comment.user_id == loggedInUserId || comment.audit_id == loggedInUserId;
+
                                 div.style.textAlign = isMine ? 'right' : 'left'; // align text based on ownership
                                 div.style.backgroundColor = isMine ? '#d1ffd6' : '#f0f0f0'; // optional styling
                                 div.style.padding = '10px';
@@ -950,7 +953,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     <hr>
                                     <p><small>${comment.created_at}</small></p>
                                 `;
-                                
+
                                 container.appendChild(div);
                             });
 
@@ -959,7 +962,7 @@ include_once '../../../views/layouts/includes/header.php';
                         }
                     })
 
-                }
+            }
             // Call the function
             fetchNotificationCount();
 
@@ -968,7 +971,7 @@ include_once '../../../views/layouts/includes/header.php';
             setInterval(fetchNotificationCount, 10000);
         </script>
 
-</div>
+    </div>
 
 
     <form action="comments/comment.php" method="post">
@@ -1036,75 +1039,81 @@ include_once '../../../views/layouts/includes/header.php';
     #close:hover {
         cursor: pointer;
     }
-    #commentBtn{
-        
-                display: inline-block;
-                outline: 0;
-                cursor: pointer;
-                border: 1px solid #007a5a;
-                color: #007a5a;
-                border-color: ;
-                font-weight: 700;
-                background: #fff;
-                padding: 8px;
-                font-size: 15px;
-                border-radius: 4px;
-                height: 36px;
-                transition: all 80ms linear;
-                float: inline-end;
-                margin-top: -5em;
-    }
-    #commentBtn:hover{
-                    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 8%);
-                    background: rgba(248,248,248,1);
-                }
 
-    #submitComment{
-                    display: inline-block;
-                    outline: none;
-                    border-width: 0px;
-                    border-radius: 3px;
-                    box-sizing: border-box;
-                    font-size: inherit;
-                    font-weight: 500;
-                    max-width: 100%;
-                    text-align: center;
-                    text-decoration: none;
-                    transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
-                    background: rgb(0, 82, 204);
-                    cursor: pointer;
-                    height: 32px;
-                    line-height: 32px;
-                    padding: 0px 12px;
-                    vertical-align: middle;
-                    width: auto;
-                    font-size: 14px;
-                    color: rgb(255, 255, 255);
+    #commentBtn {
+
+        display: inline-block;
+        outline: 0;
+        cursor: pointer;
+        border: 1px solid #007a5a;
+        color: #007a5a;
+        border-color: ;
+        font-weight: 700;
+        background: #fff;
+        padding: 8px;
+        font-size: 15px;
+        border-radius: 4px;
+        height: 36px;
+        transition: all 80ms linear;
+        float: inline-end;
+        margin-top: -5em;
     }
+
+    #commentBtn:hover {
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 8%);
+        background: rgba(248, 248, 248, 1);
+    }
+
+    #submitComment {
+        display: inline-block;
+        outline: none;
+        border-width: 0px;
+        border-radius: 3px;
+        box-sizing: border-box;
+        font-size: inherit;
+        font-weight: 500;
+        max-width: 100%;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.1s ease-out 0s, box-shadow 0.15s cubic-bezier(0.47, 0.03, 0.49, 1.38) 0s;
+        background: rgb(0, 82, 204);
+        cursor: pointer;
+        height: 32px;
+        line-height: 32px;
+        padding: 0px 12px;
+        vertical-align: middle;
+        width: auto;
+        font-size: 14px;
+        color: rgb(255, 255, 255);
+    }
+
     #submitComment:hover {
-                        background: rgb(0, 101, 255);
-                        text-decoration: inherit;
-                        transition-duration: 0s, 0.15s;
-                        color: rgb(255, 255, 255);
-                    }
-    .dotMenu:hover{
+        background: rgb(0, 101, 255);
+        text-decoration: inherit;
+        transition-duration: 0s, 0.15s;
+        color: rgb(255, 255, 255);
+    }
+
+    .dotMenu:hover {
         cursor: pointer;
     }
-    #dropMenu{
-    text-align: left;
-    color: black;
-    position: absolute;
-    right: 43px;
-    background-color: #ffffff;
-    z-index: 1;
-    width: 13em;
-    padding: 15px 0px 0px 0px;
-    border-radius: 10px 0px 10px 10px;
-    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-    display:none;
-    font-weight: 500;
-    font-size: 16px;
-        a{
+
+    #dropMenu {
+        text-align: left;
+        color: black;
+        position: absolute;
+        right: 43px;
+        background-color: #ffffff;
+        z-index: 1;
+        width: 13em;
+        padding: 15px 0px 0px 0px;
+        border-radius: 10px 0px 10px 10px;
+        box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+        display: none;
+        font-weight: 500;
+        font-size: 16px;
+
+        a {
             text-decoration: none;
             color: #393E46;
             margin-bottom: 15px;
@@ -1256,13 +1265,13 @@ include_once '../../../views/layouts/includes/header.php';
         $('#contract_type').val(contractType);
     });
 
-    function toggleView(){
+    function toggleView() {
         var div = document.getElementById("dropMenu");
-        if(div.style.display === "block"){
+        if (div.style.display === "block") {
             div.style.display = "none";
-        }else{
-            div.style.display = "block"  
-            }
+        } else {
+            div.style.display = "block"
         }
+    }
 
 </script>
