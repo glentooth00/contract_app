@@ -118,6 +118,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <tr>
                             <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
                             <td class="text-center">
+
                                 <?php
                                 $type = $contract['contract_type'] ?? '';
                                 $badgeColor = match ($type) {
@@ -128,6 +129,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     default => '#FAB12F'
                                 };
                                 ?>
+                                
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
