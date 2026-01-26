@@ -46,30 +46,6 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <input type="text" class="form-control" name="contract_name" placeholder="">
                         </div>
                         <div class="col-md-4 mb-3">
-                            <!-- <?php if ($department === BAC): ?>
-
-                                <label class="badge text-muted">Contract Type</label>
-                                <select class="form-select" name="contract_type" id="contract_type">
-                                    <option value="" hidden>Select Type</option>
-                                    <?php foreach ($get_contract_types as $contract_type): ?>
-                                        <option value="<?= $contract_type['contract_type'] ?>">
-                                            <?= $contract_type['contract_type'] ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-
-                            <?php else: ?>
-
-                                <label class="badge text-muted">Contract Type</label>
-                                <select class="form-select" name="contract_type" id="contract_type">
-                                    <option value="" hidden>Select Type</option>
-                                    <option value="Infrastructure Contract">Infrastructure Contract</option>
-                                    <option value="Goods Contract">Goods Contract</option>
-                                    <option value="Service and Consultancy Contract">Service and Consultancy Contract
-                                    </option>
-                                </select>
-
-                            <?php endif; ?> -->
 
                         </div>
                     </div>
@@ -96,19 +72,19 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             </select>
                         </div>
 
-                        <?php if($department === 'BAC'): ?>
-                         <div class="col-md-6 p-2">
-                            <label class="badge text-muted">Assign To:</label>
-                            <select class="form-select" name="department_assigned" required>
-                                <option>--Select Department--</option>
-                                <option value="ISD">ISD</option>
-                                <option value="CITET">CITET</option>
-                                <option value="FSD">FSD</option>
-                                <option value="TSD">TSD</option>
-                                <option value="IASD">IASD</option>
-                                <option value="AOSD">AOSD</option>
-                            </select>
-                        </div>
+                        <?php if ($department === 'BAC'): ?>
+                            <div class="col-md-6 p-2">
+                                <label class="badge text-muted">Assign To:</label>
+                                <select class="form-select" name="department_assigned" required>
+                                    <option>--Select Department--</option>
+                                    <option value="ISD">ISD</option>
+                                    <option value="CITET">CITET</option>
+                                    <option value="FSD">FSD</option>
+                                    <option value="TSD">TSD</option>
+                                    <option value="IASD">IASD</option>
+                                    <option value="AOSD">AOSD</option>
+                                </select>
+                            </div>
                         <?php endif; ?>
 
                         <div class="col-md-4 mb-3" id="supplier_field" style="display: none;">
@@ -119,7 +95,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 
                     <div class="row p-3">
 
-                        <?php if ($department === BAC): ?>
+                        <?php if ($department === GM): ?>
                             <div class="col-md-4 mb-3">
                                 <label class="badge text-muted">Implementing Department</label>
                                 <select name="implementing_dept" class="form-select">
