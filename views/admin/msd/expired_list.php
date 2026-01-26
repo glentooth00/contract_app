@@ -48,32 +48,44 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'ISD-HRAD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'CITETD': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department; ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;">
+                            <?= $department; ?> user
+                        </span>
 
                         <?php break;
                     case '': ?>
@@ -136,21 +148,33 @@ include_once '../../../views/layouts/includes/header.php';
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                                 <?php if (isset($contract['account_no'])): ?>
                                     <span class="badge account_number">(
-                                        <?= $contract['account_no'] ?> )</span>
+                                        <?= $contract['account_no'] ?> )
+                                    </span>
                                 <?php endif; ?>
 
 
                             </td>
                             <td class="text-center">
                                 <?php
-                                $type = $contract['contract_type'] ?? '';
-                                $badgeColor = match ($type) {
-                                    TRANS_RENT => '#003092',
-                                    TEMP_LIGHTING => '#03A791',
-                                    'Power Suppliers Contract (LONG TERM)' => '#007bff',
-                                    'Power Suppliers Contract (SHORT TERM)' => '#28a745',
-                                    default => '#FAB12F'
-                                };
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+
+                                switch ($type) {
+                                    case 'TRANS_RENT':
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case 'TEMP_LIGHTING':
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case 'Power Suppliers Contract (LONG TERM)':
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case 'Power Suppliers Contract (SHORT TERM)':
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                }
                                 ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">

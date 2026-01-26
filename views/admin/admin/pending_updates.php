@@ -27,7 +27,7 @@ if ($getOneLatest) {
     //     echo '<script>alert("Latest data inserted")</script>';
 // } else {
     // Optional: echo nothing or a silent message
-    // echo "No contract data available to insert.";
+    // echo "No contract data available to insert."; 
 }
 
 include_once '../../../views/layouts/includes/header.php';

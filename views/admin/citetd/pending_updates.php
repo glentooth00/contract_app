@@ -159,18 +159,19 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
+                                <?= htmlspecialchars($contract['id'] ?? '') ?>
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                             </td>
 
                             <td class="text-center">
-                                <?php $dateStart = date('M-d-y', strtotime($contract['contract_start'] ?? $contract['rent_start'])) ?>
+                                <?php $dateStart = date('M d, Y', strtotime($contract['contract_start'] ?? $contract['rent_start'])) ?>
                                 <span class="badge text-muted">
                                     <?= $dateStart ?>
                                 </span>
 
                             </td>
                             <td class="text-center">
-                                <?php $dateEnd = date('M-d-y', strtotime($contract['contract_end'] ?? $contract['rent_end'])) ?>
+                                <?php $dateEnd = date('M d, Y', strtotime($contract['contract_end'] ?? $contract['rent_end'])) ?>
                                 <span class="badge text-muted">
                                     <?= $dateEnd ?>
                                 </span>
@@ -523,15 +524,15 @@ include_once '../../../views/layouts/includes/header.php';
                                         </div>
 
                                     <?php else: ?>
-
+                                        <?php $newModalId = 'newData_' . $contract['id']; ?>
                                         <a href="view_pending_updates.php?id=<?= $contract['id'] ?>" class="btn btn-success btn-sm"
-                                            data-toggle="modal" data-target="#newData">
+                                            data-toggle="modal" data-target="#<?= $newModalId ?>">
                                             <i class="fa fa-eye"></i> View New Data
                                         </a>
 
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="newData" tabindex="-1" role="dialog"
+                                        <div class="modal fade" id="<?= $newModalId ?>" tabindex="-1" role="dialog"
                                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-lg" role="document">
                                                 <div class="modal-content">
@@ -542,7 +543,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     </div>
                                                     <div class="modal-body">
                                                         <?php
-                                                        $id = $contract['id'];
+                                                        echo $id = $contract['id'];
 
                                                         $getPendingDatas = (new PendingDataController)->getNewData($id);
                                                         ?>
@@ -841,6 +842,8 @@ include_once '../../../views/layouts/includes/header.php';
             window.location.href = 'contracts/delete.php?id=' + selectedContractId;
         }
     });
+
+
 
     //----------------DAtatables
     $(document).ready(function () {
