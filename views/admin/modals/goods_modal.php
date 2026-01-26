@@ -50,7 +50,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
                             <input type="text" class="form-control" name="supplier" placeholder="">
                         </div>
                         <!-- <div class="col-md-4 mb-3">
-                            <?php if ($department === BAC): ?>
+                            <?php if ($department === GM): ?>
 
                                 <label class="badge text-muted">Contract Type</label>
                                 <select class="form-select" name="contract_type" id="contract_type">
@@ -105,7 +105,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 
                     <div class="row p-3">
 
-                        <?php if ($department === BAC): ?>
+                        <?php if ($department === GM): ?>
                             <div class="col-md-4 mb-3">
                                 <label class="badge text-muted">Implementing Department</label>
                                 <select name="implementing_dept" class="form-select">

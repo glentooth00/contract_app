@@ -106,7 +106,7 @@ $procurementModes = (new ProcurementController)->getAllProcMode();
 
             <div class="row p-3">
 
-                <?php if ($department === BAC): ?>
+                <?php if ($department === GM): ?>
                     <div class="col-md-4 mb-3">
                         <label class="badge text-muted">Implementing Department</label>
                         <select name="implementing_dept" class="form-select">
