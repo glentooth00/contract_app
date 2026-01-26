@@ -543,7 +543,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                     </div>
                                                     <div class="modal-body">
                                                         <?php
-                                                        echo $id = $contract['id'];
+                                                        $id = $contract['id'];
 
                                                         $getPendingDatas = (new PendingDataController)->getNewData($id);
                                                         ?>
