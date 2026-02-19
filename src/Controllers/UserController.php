@@ -61,6 +61,17 @@ class UserController
 
     }
 
+    public function searchUsers($searchTerm)
+    {
+        $sql = "SELECT * FROM users WHERE firstname LIKE :search1 OR lastname LIKE :search2 OR username LIKE :search3";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(':search1', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':search2', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':search3', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     public function getUserRolebyId($id)
     {
@@ -324,7 +335,8 @@ class UserController
     }
 
 
-    public function updateRequest($id,$status){
+    public function updateRequest($id, $status)
+    {
 
         $sql = "UPDATE change_password SET status = :status WHERE user_id = :id";
         $stmt = $this->db->prepare($sql);
