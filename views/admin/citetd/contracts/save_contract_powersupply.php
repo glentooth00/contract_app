@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'updated_at' => date('Y-m-d H:i:s'),
             'contract_status' => 'Active' ?? null,
             'uploader_id' => $_POST['uploader_id'],
-            'uploader_dep`artment' => $_POST['uploader_department'],
+            'uploader_department' => $_POST['uploader_department'],
             'uploader' => $_POST['uploader'],
             'approval_status' => 'Pending',
             'data_type' => 'New',
@@ -35,27 +35,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'updated_by' => null
         ];
 
-        var_dump($dataValidation);
+        // var_dump($dataValidation);
 
-        // $saveContract = (new PendingDataController)->savePendingData($dataValidation);
+        $saveContract = (new PendingDataController)->savePendingData($dataValidation);
 
 
-        // if ($saveContract) {
+        if ($saveContract) {
 
-        //     $_SESSION['notification'] = [
-        //         'message' => 'Power supply Contract successfully added waiting for approval!',
-        //         'type' => 'success'
-        //     ];
-        //     header("Location: " . $_SERVER['HTTP_REFERER']);
-        //     exit;
-        // }
+            $_SESSION['notification'] = [
+                'message' => 'Power supply Contract successfully added waiting for approval!',
+                'type' => 'success'
+            ];
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit;
+        }
 
-        // $_SESSION['notification'] = [
-        //     'message' => 'Power supply Contract successfully added waiting for approval!',
-        //     'type' => 'success'
-        // ];
-        // header("Location: " . $_SERVER['HTTP_REFERER']);
-        // exit;
+        $_SESSION['notification'] = [
+            'message' => 'Power supply Contract successfully added waiting for approval!',
+            'type' => 'success'
+        ];
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit;
 
 
     }

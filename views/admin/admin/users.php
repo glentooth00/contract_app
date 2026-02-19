@@ -171,9 +171,9 @@ include_once '../../../views/layouts/includes/header.php';
                         <div style="display:inline-block; flex-direction:row; gap:12px;">
                             <div class="mb-2">
                                 <small style="color:#6c757d;">Department</small><br>
-                                <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
-                                    <?= htmlspecialchars($result['department'] ?? '-') ?>
-                                </span>
+                                <h6><span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
+                                        <?= htmlspecialchars($result['department'] ?? '-') ?>
+                                    </span></h6>
                             </div>
 
                             <div class="mb-2">
