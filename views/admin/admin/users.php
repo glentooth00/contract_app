@@ -137,15 +137,18 @@ include_once '../../../views/layouts/includes/header.php';
 
                             <?php
                             $imageSrc = '';
+
+                            ?>
+
+                            <?php
                             if (!empty($result['user_image'])) {
-                                $imageSrc = "/contract_app/admin/user_image/{$result['user_image']}";
+                                $imgPath = "../../../admin/user_image/" . $result['user_image'];
                             } else {
-                                $imageSrc = "/contract_app/public/images/male.png";
+                                $imgPath = "/public/images/male.png";
                             }
                             ?>
 
-                            <img src="<?= $imageSrc ?>" width="90" height="90"
-                                style="border-radius: 50%; object-fit: cover;">
+                            <img src="<?= $imgPath ?>" width="90" height="90" style="border-radius:50%; object-fit:cover;">
                         </td>
                         <td style="text-align: center !important;padding:40px;">
                             <span class="mt-3"> <?= $result['firstname'] ?>     <?= $result['middlename'] ?>
@@ -155,48 +158,48 @@ include_once '../../../views/layouts/includes/header.php';
                         <td style="text-align: center !important;padding:40px;">
 
                             <?php
-                                $department = isset($result['department']) ? $result['department'] : '';
+                            $department = isset($result['department']) ? $result['department'] : '';
 
-                                switch ($department) {
-                                    case IT:
-                                        $badgeColor = '#0d6efd';
-                                        break;
-                                    case ISD:
-                                        $badgeColor = '#3F7D58';
-                                        break;
-                                    case CITET:
-                                        $badgeColor = '#FFB433';
-                                        break;
-                                    case IASD:
-                                        $badgeColor = '#EB5B00';
-                                        break;
-                                    case 'ISD-MSD':
-                                        $badgeColor = '#6A9C89';
-                                        break;
-                                    case 'PSPTD':
-                                        $badgeColor = '#83B582';
-                                        break;
-                                    case FSD:
-                                        $badgeColor = '#4E6688';
-                                        break;
-                                    case BAC:
-                                        $badgeColor = '#123458';
-                                        break;
-                                    case AOSD:
-                                        $badgeColor = '#03A791';
-                                        break;
-                                    case GM:
-                                        $badgeColor = '#A2D5C6';
-                                        break;
-                                    case '':
-                                        $badgeColor = '';
-                                        break;
-                                    default:
-                                        $badgeColor = '';
-                                        break;
-                                }
-                                
-                                ?>
+                            switch ($department) {
+                                case IT:
+                                    $badgeColor = '#0d6efd';
+                                    break;
+                                case ISD:
+                                    $badgeColor = '#3F7D58';
+                                    break;
+                                case CITET:
+                                    $badgeColor = '#FFB433';
+                                    break;
+                                case IASD:
+                                    $badgeColor = '#EB5B00';
+                                    break;
+                                case 'ISD-MSD':
+                                    $badgeColor = '#6A9C89';
+                                    break;
+                                case 'PSPTD':
+                                    $badgeColor = '#83B582';
+                                    break;
+                                case FSD:
+                                    $badgeColor = '#4E6688';
+                                    break;
+                                case BAC:
+                                    $badgeColor = '#123458';
+                                    break;
+                                case AOSD:
+                                    $badgeColor = '#03A791';
+                                    break;
+                                case GM:
+                                    $badgeColor = '#A2D5C6';
+                                    break;
+                                case '':
+                                    $badgeColor = '';
+                                    break;
+                                default:
+                                    $badgeColor = '';
+                                    break;
+                            }
+
+                            ?>
                             <?php if (!empty($department) && $badgeColor): ?>
                                 <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
                                     <?= htmlspecialchars($department) ?>
