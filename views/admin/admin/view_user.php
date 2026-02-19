@@ -87,9 +87,15 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
         <div class="d-flex col-md-12 gap-3 mb-2 p-2">
 
             <div class="col-md-3 card">
+                <?php
+                if (!empty($getUsers['user_image'])) {
+                    $imgPath = "../../../admin/user_image/" . $getUsers['user_image'];
+                } else {
+                    $imgPath = "/public/images/male.png";
+                }
+                ?>
                 <div class="d-flex justify-content-center" style="border-radius: 20px;padding:25px;">
-                    <img id="uploadBtn" data-toggle="modal" data-target="#imageModal"
-                        src="/contract_app/admin/user_image/<?= $img ?>" width="65%"
+                    <img id="uploadBtn" data-toggle="modal" data-target="#imageModal" src="<?= $imgPath ?>" width="65%"
                         style="background-color: #e4e4e4;border-radius: 200px;padding: 15px;" class="profile-pic">
                     <!-- 
                     <img width="30px" class="icons" id="uploadBtn" src="../../../public/images/upload.svg"
