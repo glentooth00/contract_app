@@ -16,7 +16,7 @@ use App\Controllers\UserRoleController;
 
 
 $getUser = new UserController();
-$results = $getUser->getAllUsers();
+
 
 $contracts = (new ContractController)->getContractsByDepartment($department);
 
@@ -34,12 +34,12 @@ include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<div id="loadingSpinner" class="text-center"
+<!-- <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div>
+</div> -->
 
 <div class="main-layout">
 
@@ -94,141 +94,104 @@ include_once '../../../views/layouts/includes/header.php';
             <?php } ?>
         </span>
         <hr>
-
-        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2 fw-bold"
-            style="width: 10em;" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            <img style="margin-left: 17px;" width="23px" src="../../../public/images/add_user.svg"></img> Add User
-        </a>
-
         <!-- Wrap both search and filter in a flex container -->
-        <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
+        <!-- Wrap both search and filter in a flex container -->
+        <div
+            style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
 
+            <!-- Add User Button (Left) -->
+            <a href="#!" class="btn btn-success text-white p-2 d-flex align-items-center gap-2 fw-bold"
+                style="width: 10em;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <img style="margin-left: 5px;" width="23px" src="../../../public/images/add_user.svg">
+                Add User
+            </a>
 
-            <!-- Contract Type Filter -->
-            <!-- <div style="text-align: right;">
-                <label>Filter :</label>
-                <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
-                    <option value="">Select All</option>
-                    <?php if (!empty($getAllContractType)): ?>
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>">
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </div> -->
+            <!-- Search Form (Right) -->
+            <form method="GET" style="display:flex; gap:10px; align-items:center;">
+                <input type="text" name="search"
+                    value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>"
+                    placeholder="Search by name, department, or role" class="form-control" style="width:300px;">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>
+
         </div>
 
-        <table id="table" class="table table-bordered table-striped display mt-2 hover">
-            <thead>
-                <tr>
-                    <th style="text-align: center !important;">Image</th>
-                    <th style="text-align: center !important;">Name</th>
-                    <th style="text-align: center !important;">Role</th>
-                    <th style="text-align: center !important;">Department</th>
-                    <th style="text-align: center !important;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($results as $result) { ?>
-                    <tr>
-                        <td style="text-align: center !important;">
+        <?php
+        $searchItem = $_GET['search'] ?? '';
+        $results = $getUser->searchUsers($searchItem); ?>
 
-                            <?php
-                            $imageSrc = '';
+        <?php foreach ($results as $result): ?>
+            <div style="
+                background:#ffffff;
+                width:360px;
+                display:inline-block;
+                padding:20px;
+                border-radius:10px;
+                box-shadow:0 4px 12px rgba(0,0,0,0.08);
+            " class="mb-4 me-4">
 
-                            ?>
+                <!-- Name -->
+                <h5 style="font-weight:600; margin-bottom:15px;">
+                    <?= $result['firstname'] . ' ' . $result['middlename'] . ' ' . $result['lastname'] ?>
+                </h5>
+                <hr>
+                <div style="display:flex; align-items:center; gap:20px;">
 
-                            <?php
-                            if (!empty($result['user_image'])) {
-                                $imgPath = "../../../admin/user_image/" . $result['user_image'];
-                            } else {
-                                $imgPath = "/public/images/male.png";
-                            }
-                            ?>
+                    <!-- Profile Image -->
+                    <div style="
+                        width:100px;
+                        height:100px;
+                        border-radius:50%;
+                        overflow:hidden;
+                        flex-shrink:0;
+                        border:3px solid #118B50;
+                    ">
+                        <?php
+                        if (!empty($result['user_image'])) {
+                            $imgPath = "../../../admin/user_image/" . $result['user_image'];
+                        } else {
+                            $imgPath = "/public/images/male.png";
+                        }
+                        ?>
 
-                            <img src="<?= $imgPath ?>" width="90" height="90" style="border-radius:50%; object-fit:cover;">
-                        </td>
-                        <td style="text-align: center !important;padding:40px;">
-                            <span class="mt-3"> <?= $result['firstname'] ?>     <?= $result['middlename'] ?>
-                                <?= $result['lastname'] ?></span>
-                        </td>
-                        <td style="text-align: center !important;padding:40px;"><?= $result['user_role'] ?> </td>
-                        <td style="text-align: center !important;padding:40px;">
+                        <img src="<?= $imgPath ?>" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
 
-                            <?php
-                            $department = isset($result['department']) ? $result['department'] : '';
+                    <!-- Details (ONE COLUMN) -->
+                    <div style="display:inline-block; flex-direction:row; gap:12px;">
+                        <div class="mb-2">
+                            <small style="color:#6c757d;">Department</small><br>
+                            <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
+                                <?= $result['department'] ?>
+                            </span>
+                        </div>
 
-                            switch ($department) {
-                                case IT:
-                                    $badgeColor = '#0d6efd';
-                                    break;
-                                case ISD:
-                                    $badgeColor = '#3F7D58';
-                                    break;
-                                case CITET:
-                                    $badgeColor = '#FFB433';
-                                    break;
-                                case IASD:
-                                    $badgeColor = '#EB5B00';
-                                    break;
-                                case 'ISD-MSD':
-                                    $badgeColor = '#6A9C89';
-                                    break;
-                                case 'PSPTD':
-                                    $badgeColor = '#83B582';
-                                    break;
-                                case FSD:
-                                    $badgeColor = '#4E6688';
-                                    break;
-                                case BAC:
-                                    $badgeColor = '#123458';
-                                    break;
-                                case AOSD:
-                                    $badgeColor = '#03A791';
-                                    break;
-                                case GM:
-                                    $badgeColor = '#A2D5C6';
-                                    break;
-                                case '':
-                                    $badgeColor = '';
-                                    break;
-                                default:
-                                    $badgeColor = '';
-                                    break;
-                            }
+                        <div class="mb-2">
+                            <small style="color:#6c757d;">User Role</small><br>
+                            <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
+                                <?= $result['user_role'] ?>
+                            </span>
+                        </div>
 
-                            ?>
-                            <?php if (!empty($department) && $badgeColor): ?>
-                                <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
-                                    <?= htmlspecialchars($department) ?>
-                                </span>
-                            <?php else: ?>
-                                <span class="badge text-muted">no department assigned</span>
-                            <?php endif; ?>
+                    </div>
 
+                </div>
+                <hr>
+                <div style="justify-content: right;display:flex; gap:10px;">
+                    <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i class="fa fa-pencil"
+                            aria-hidden="true"></i>
+                        View</a>
 
-                        </td>
-                        <td style="text-align: center !important;padding:40px;">
-                            <div class="d-flex gap-2" style="margin-left:5em;">
-                                <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i
-                                        class="fa fa-pencil" aria-hidden="true"></i>
-                                    View</a>
+                    <form action="users/delete.php" method="POST" style="display:inline;">
+                        <input type="hidden" name="id" value="<?= $result['id'] ?>">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
 
-                                <form action="users/delete.php" method="POST" style="display:inline;">
-                                    <input type="hidden" name="id" value="<?= $result['id'] ?>">
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                                    </button>
-                                </form>
-
-                            </div>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
+        <?php endforeach; ?>
     </div>
 </div>
 
