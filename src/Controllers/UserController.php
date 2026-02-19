@@ -61,16 +61,49 @@ class UserController
 
     }
 
-    public function searchUsers($searchTerm)
+    public function searchUsers($searchTerm, $page = 1, $limit = 8)
     {
-        $sql = "SELECT * FROM users WHERE firstname LIKE :search1 OR lastname LIKE :search2 OR username LIKE :search3";
+        // Calculate offset
+        $offset = ($page - 1) * $limit;
+
+        // Main query with pagination
+        $sql = "SELECT * FROM users
+            WHERE firstname LIKE :search1 
+               OR lastname LIKE :search2 
+               OR username LIKE :search3
+            ORDER BY firstname
+            OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY";
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(':search1', '%' . $searchTerm . '%', PDO::PARAM_STR);
         $stmt->bindValue(':search2', '%' . $searchTerm . '%', PDO::PARAM_STR);
         $stmt->bindValue(':search3', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Count total records for pagination
+        $countSql = "SELECT COUNT(*) FROM users
+                 WHERE firstname LIKE :search1 
+                    OR lastname LIKE :search2 
+                    OR username LIKE :search3";
+        $countStmt = $this->db->prepare($countSql);
+        $countStmt->bindValue(':search1', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $countStmt->bindValue(':search2', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $countStmt->bindValue(':search3', '%' . $searchTerm . '%', PDO::PARAM_STR);
+        $countStmt->execute();
+        $totalRecords = $countStmt->fetchColumn();
+        $totalPages = ceil($totalRecords / $limit);
+
+        return [
+            'results' => $results,
+            'totalPages' => $totalPages,
+            'currentPage' => $page
+        ];
     }
+
 
 
     public function getUserRolebyId($id)

@@ -25,6 +25,9 @@ $user_department = $getUsers['department'];
 $user_role = $getUsers['user_role'];
 $img = $getUsers['user_image'];
 
+
+
+
 include_once __DIR__ . '../../../../views/layouts/includes/header.php';
 ?>
 
@@ -97,11 +100,6 @@ include_once __DIR__ . '../../../../views/layouts/includes/header.php';
                 <div class="d-flex justify-content-center" style="border-radius: 20px;padding:25px;">
                     <img id="uploadBtn" data-toggle="modal" data-target="#imageModal" src="<?= $imgPath ?>" width="65%"
                         style="background-color: #e4e4e4;border-radius: 200px;padding: 15px;" class="profile-pic">
-                    <!-- 
-                    <img width="30px" class="icons" id="uploadBtn" src="../../../public/images/upload.svg"
-                        type=" button" id="modalBtn" data-toggle="modal" data-target="#imageModal"
-                        style="background-color: #ffffff;height: 31px;padding: 5px;border-radius: 20px;position: absolute;top: 13em;left: 16em;"> -->
-
                 </div>
                 <div class="p-1">
 
