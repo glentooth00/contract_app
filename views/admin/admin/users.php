@@ -117,81 +117,104 @@ include_once '../../../views/layouts/includes/header.php';
         </div>
 
         <?php
+
+
         $searchItem = $_GET['search'] ?? '';
-        $results = $getUser->searchUsers($searchItem); ?>
+        $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
-        <?php foreach ($results as $result): ?>
-            <div style="
-                background:#ffffff;
-                width:360px;
-                display:inline-block;
-                padding:20px;
-                border-radius:10px;
-                box-shadow:0 4px 12px rgba(0,0,0,0.08);
-            " class="mb-4 me-4">
+        // Get paginated results
+        $data = $getUser->searchUsers($searchItem, $page, 8);
 
-                <!-- Name -->
-                <h5 style="font-weight:600; margin-bottom:15px;">
-                    <?= $result['firstname'] . ' ' . $result['middlename'] . ' ' . $result['lastname'] ?>
-                </h5>
-                <hr>
-                <div style="display:flex; align-items:center; gap:20px;">
+        $results = $data['results'];
+        $totalPages = $data['totalPages'];
+        $currentPage = $data['currentPage'];
+        $search = $searchItem; // for pagination links
+        ?>
 
-                    <!-- Profile Image -->
-                    <div style="
-                        width:100px;
-                        height:100px;
-                        border-radius:50%;
-                        overflow:hidden;
-                        flex-shrink:0;
-                        border:3px solid #118B50;
-                    ">
-                        <?php
-                        if (!empty($result['user_image'])) {
-                            $imgPath = "../../../admin/user_image/" . $result['user_image'];
-                        } else {
-                            $imgPath = "/public/images/male.png";
-                        }
-                        ?>
+        <div style="margin-bottom: 20px; display:flex; flex-wrap:wrap; gap:20px; justify-content:flex-start;">
+            <?php foreach ($results as $result): ?>
+                <div style="
+            background:#ffffff;
+            width:360px;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.08);
+        " class="mb-4">
 
-                        <img src="<?= $imgPath ?>" style="width:100%; height:100%; object-fit:cover;">
-                    </div>
+                    <!-- Name -->
+                    <h5 style="font-weight:600; margin-bottom:15px;">
+                        <?= htmlspecialchars($result['firstname']) . ' ' . htmlspecialchars($result['middlename']) . ' ' . htmlspecialchars($result['lastname']) ?>
+                    </h5>
+                    <hr>
+                    <div style="display:flex; align-items:center; gap:20px;">
 
-                    <!-- Details (ONE COLUMN) -->
-                    <div style="display:inline-block; flex-direction:row; gap:12px;">
-                        <div class="mb-2">
-                            <small style="color:#6c757d;">Department</small><br>
-                            <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
-                                <?= $result['department'] ?>
-                            </span>
+                        <!-- Profile Image -->
+                        <div style="
+                    width:100px;
+                    height:100px;
+                    border-radius:50%;
+                    overflow:hidden;
+                    flex-shrink:0;
+                    border:3px solid #118B50;
+                ">
+                            <?php
+                            if (!empty($result['user_image'])) {
+                                $imgPath = "../../../admin/user_image/" . $result['user_image'];
+                            } else {
+                                $imgPath = "/public/images/male.png";
+                            }
+                            ?>
+                            <img src="<?= $imgPath ?>" style="width:100%; height:100%; object-fit:cover;">
                         </div>
 
-                        <div class="mb-2">
-                            <small style="color:#6c757d;">User Role</small><br>
-                            <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
-                                <?= $result['user_role'] ?>
-                            </span>
+                        <!-- Details (ONE COLUMN) -->
+                        <div style="display:inline-block; flex-direction:row; gap:12px;">
+                            <div class="mb-2">
+                                <small style="color:#6c757d;">Department</small><br>
+                                <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
+                                    <?= htmlspecialchars($result['department'] ?? '-') ?>
+                                </span>
+                            </div>
+
+                            <div class="mb-2">
+                                <small style="color:#6c757d;">User Role</small><br>
+                                <span class="badge text-white p-2" style="background-color:#118B50; font-weight:500;">
+                                    <?= htmlspecialchars($result['user_role'] ?? '-') ?>
+                                </span>
+                            </div>
                         </div>
-
                     </div>
+                    <hr>
+                    <div style="justify-content: right;display:flex; gap:10px;">
+                        <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i
+                                class="fa fa-pencil" aria-hidden="true"></i> View</a>
 
+                        <form action="users/delete.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $result['id'] ?>">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <hr>
-                <div style="justify-content: right;display:flex; gap:10px;">
-                    <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i class="fa fa-pencil"
-                            aria-hidden="true"></i>
-                        View</a>
+            <?php endforeach; ?>
+        </div>
 
-                    <form action="users/delete.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $result['id'] ?>">
-                        <button type="submit" class="btn btn-danger btn-sm">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <!-- Pagination Links -->
+        <div style="display:flex; justify-content:right; gap:5px; margin-top:20px;margin-right:110px;">
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <a href="?search=<?= urlencode($search) ?>&page=<?= $i ?>" style="
+            padding:5px 10px; 
+            border-radius:5px; 
+            background-color: <?= $i == $currentPage ? '#1548D5' : '#f1f1f1' ?>; 
+            color: <?= $i == $currentPage ? '#fff' : '#000' ?>; 
+            text-decoration:none;
+        ">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+        </div>
 
-        <?php endforeach; ?>
     </div>
 </div>
 
