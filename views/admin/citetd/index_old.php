@@ -13,6 +13,9 @@ use App\Controllers\ContractTypeController;
 use App\Controllers\CommentController;
 use App\Controllers\FlagController;
 
+
+$contracts = (new ContractController)->getContractsByDepartmentAll($department);
+
 // getting the contract types to be compared with the contracts for their expiration
 $contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
 foreach ($contractTypes as $row) {
@@ -23,11 +26,6 @@ foreach ($contractTypes as $row) {
 }
 include_once '../../../views/layouts/includes/header.php';
 ?>
-<style>
-    #attention {
-        padding: 0;
-    }
-</style>
 
 <!-- Loading Spinner - Initially visible -->
 <!-- <div id="loadingSpinner" class="text-center"
@@ -109,11 +107,11 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
         <!-- Wrap both search and filter in a flex container -->
-        <div id="filterItems" style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
+        <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
 
             <!-- Contract Type Filter -->
-            <!-- <div style="text-align: right;">
+            <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
@@ -125,179 +123,117 @@ include_once '../../../views/layouts/includes/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
-            </div> -->
-            <div id="searchContainer" style="display: flex; align-items: center; gap: 10px;">
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <input type="text" name="searchItem" id="searchInput" class="form-control"
-                        value="<?= htmlspecialchars($_GET['searchItem'] ?? '') ?>" placeholder="Search contracts..."
-                        style="width: 300px;">
-                </form>
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <select name="filterItem" class="form-select" onchange="this.form.submit()">
-                        <option value="">Select All</option>
-
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>" <?= (($_GET['filterItem'] ?? '') == $contract['contract_type']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-
-
-                <?php
-                $searchItem = $_GET['searchItem'] ?? '';
-                echo $filterItem = $_GET['filterItem'] ?? '';
-                $searchItem = $_GET['searchItem'] ?? '';
-                $filterItem = $_GET['filterItem'] ?? '';
-
-                $contracts = (new ContractController)
-                    ->getContractsByDepartmentAllSearch($department, $searchItem, $filterItem);
-
-                ?>
             </div>
-
         </div>
-        <?php if (!empty($contracts)): ?>
-            <div style="display:flex; flex-wrap:wrap; gap:20px;">
-                <?php foreach ($contracts as $contract): ?>
 
-                    <?php
-                    $type = $contract['contract_type'] ?? '';
+        <table id="table" class="table table-bordered table-striped display mt-2 hover">
+            <thead>
+                <tr>
+                    <th scope="col" style="border: 1px solid #A9A9A9;">Name</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Contract type</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Start</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">End</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Status</th>
+                    <th scope="col" style="text-align: center; border: 1px solid #A9A9A9;">Days Remaining</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($contracts)): ?>
+                    <?php foreach ($contracts as $contract): ?>
+                        <tr>
+                            <td>
+                                <a href="view.php?contract_id=<?= htmlspecialchars($contract['id']) ?>"
+                                    style="text-decoration: none; color: black;">
+                                    <!-- Use htmlspecialchars to prevent XSS -->
+                                <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                </a>
+                                <?php 
+                                    $contractId = $contract['id'];
 
-                    switch ($type) {
-                        case INFRA:
-                            $badgeColor = '#328E6E';
-                            break;
-                        case SACC:
-                            $badgeColor = '#123458';
-                            break;
-                        case GOODS:
-                            $badgeColor = '#F75A5A';
-                            break;
-                        case EMP_CON:
-                            $badgeColor = '#FAB12F';
-                            break;
-                        case PSC_LONG:
-                            $badgeColor = '#007bff';
-                            break;
-                        case PSC_SHORT:
-                            $badgeColor = '#28a745';
-                            break;
-                        case TRANS_RENT:
-                            $badgeColor = '#003092';
-                            break;
-                        case TEMP_LIGHTING:
-                            $badgeColor = '#03A791';
-                            break;
-                        default:
-                            $badgeColor = '#6c757d';
-                            break;
-                    }
-                    ?>
-
-                    <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                        style="text-decoration:none;">
-                        <div style="
-                    width:360px;
-                    background:#ffffff;
-                    border-radius:12px;
-                    padding:20px;
-                    box-shadow:0 6px 18px rgba(0,0,0,0.08);
-                    transition:0.2s ease-in-out" onmouseover="this.style.transform='translateY(-4px)'"
-                            onmouseout="this.style.transform='translateY(0)'">
-
-                            <!-- Contract Title -->
-                            <h5 style="font-weight:700; color:#212529; margin-bottom:10px;">
-                                <?= htmlspecialchars($contract['contract_name']) ?>
-                                <?php
-                                $contractId = $contract['id'];
-
-                                $hasComment = (new CommentController)->hasComment($contractId);
+                                    $hasComment = ( new CommentController )->hasComment($contractId);
                                 ?>
-                                <?php if ($hasComment == true): ?>
+                                <?php if($hasComment == true): ?>
                                     <span class="float-end">
-                                        <?php include_once 'message.php'; ?>
+                                        <?php include_once 'message.php'; ?> 
                                     </span>
                                 <?php endif; ?>
 
-                                <?php if (isset($contract['id'])): ?>
-                                    <span class="p-3">
-                                        <?php
+                                  <?php if(isset($contract['id'])): ?>
+                                <span class="p-3">
+                                    <?php
                                         $id = $contract['id'];
-                                        $getFlag = (new FlagController)->getFlag($id);
-                                        ?>
+                                        $getFlag = ( new FlagController )->getFlag($id);
+                                    ?>
 
-                                        <?php if ($getFlag['status'] ?? '' === 1): ?>
+                                    <?php if( $getFlag['status'] ?? '' === 1 ): ?>
+                                        
+                                         <?php if($getFlag['flag_type'] === UR): ?>
+                                                <img src="../../../public/images/underReview.svg" id="review" width="27px;" title="This Contract is Under review">
+                                            <?php endif;  ?>
 
-                                            <?php if ($getFlag['flag_type'] === UR): ?>
-                                                <img src="../../../public/images/underReview.svg" id="review" width="25px;"
-                                                    title="This Contract is Under review">
-                                            <?php endif; ?>
+                                            <?php if($getFlag['flag_type'] === NA): ?>
+                                                <img src="../../../public/images/withComment.svg" id="attention" width="27px;" title="This Contract Needs Attention">
+                                            <?php endif;  ?>
+                                        
+                                    <?php endif; ?>
+                                </span>
+                            <?php endif; ?>
+                            </td>
+                            <td class="text-center">
+                            <?php
+                            $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
-                                            <?php if ($getFlag['flag_type'] === NA): ?>
-                                                <img src="../../../public/images/withComment.svg" id="attention" width="25px;"
-                                                    title="This Contract Needs Attention">
-                                            <?php endif; ?>
+                            switch ($type) {
+                                case INFRA:
+                                    $badgeColor = '#328E6E';
+                                    break;
+                                case SACC:
+                                    $badgeColor = '#123458';
+                                    break;
+                                case GOODS:
+                                    $badgeColor = '#F75A5A';
+                                    break;
+                                case EMP_CON:
+                                    $badgeColor = '#FAB12F';
+                                    break;
+                                case PSC_LONG:
+                                    $badgeColor = '#007bff';
+                                    break;
+                                case PSC_SHORT:
+                                    $badgeColor = '#28a745';
+                                    break;
+                                case TRANS_RENT:
+                                    $badgeColor = '#003092';
+                                    break;
+                                case TEMP_LIGHTING:
+                                    $badgeColor = '#03A791';
+                                    break;
+                                default:
+                                    $badgeColor = '#FAB12F';
+                                    break;
+                            }
+                            ?>
 
-                                        <?php endif; ?>
-                                    </span>
-                                <?php endif; ?>
-                            </h5>
+                                <span class="p-2 text-white badge"
+                                    style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
+                                    <?= htmlspecialchars($type) ?>
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge text-secondary">
+                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge text-secondary">
+                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                            </td>
+                            <td class="text-center">
+                                <span
+                                    class="badge text-white <?= ($contract['contract_status'] ?? '') === 'Active' ? 'bg-success' : 'bg-danger' ?>">
+                                    <?= htmlspecialchars($contract['contract_status'] ?? '') ?>
+                                </span>
+                            </td>
 
-                            <!-- Contract Type Badge -->
-                            <span class="badge" style="
-                            background-color: <?= $badgeColor ?>;
-                            color:#fff;
-                            padding:5px;
-                            font-size:11px;
-                            border-radius:6px;
-                            letter-spacing:0.5px;
-                        ">
-                                <?= htmlspecialchars($type) ?>
-                            </span>
-
-
-
-                            <hr style="margin:15px 0;">
-
-                            <!-- Content Section -->
-                            <div style="display:flex; align-items:center; gap:20px;">
-
-                                <!-- Icon -->
-                                <div style="
-                            width:70px;
-                            height:70px;
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            background:#f8f9fa;
-                            border-radius:10px;
-                        ">
-                                    <img src="../../../public/images/doc.png" width="80" alt="Contract Icon">
-                                </div>
-
-                                <!-- Contract Dates -->
-                                <div style="font-size:14px; color:#6c757d;">
-                                    <div style="margin-bottom:6px;">
-                                        <strong style="color:#343a40;">From:</strong>
-                                        <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
-                                    </div>
-                                    <div style="margin-bottom:6px;">
-                                        <strong style="color:#343a40;">To:</strong>
-                                        <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
-                                    </div>
-                                    <div>
-                                        <strong style="color:#343a40;">Status</strong>
-                                        <span class="badge"
-                                            style="justify-content:center;background-color: #2FC762;padding:5px 10px;"
-                                            role="alert"><?= htmlspecialchars($contract['contract_status']) ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
                             <?php
                             $contractType = $contract['contract_type'];
 
@@ -340,18 +276,18 @@ include_once '../../../views/layouts/includes/header.php';
                                                 // $diff;
                         
                                                 if ($diff >= $ert) {
-                                                    echo '<div class="text-center text-danger ">
+                                                    echo '<td class="text-center table-success">
                                                             <span class="text-success fw-bold"> ' . $diff . ' days remaining </span>
-                                                        </div>';
+                                                        </td>';
                                                 } else {
                                                     echo '
-                                                    <div class="text-center bg-danger p-2">
+                                                    <td class="text-center table-danger p-2">
                                                         <span class="text-danger fw-bold"> 
                                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
                                                         <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
                                                         <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
                                                         </svg> ' . $expired . '</span>
-                                                    </div>';
+                                                    </td>';
 
                                                 }
 
@@ -393,9 +329,9 @@ include_once '../../../views/layouts/includes/header.php';
                                                     </td>';
                                                 } else {
                                                     echo '
-                                                    <div class=" p-0 mb-0" style="background-color:#f8d7da;border-radius:6px;">
+                                                    <td class="text-center table-danger">
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </div>';
+                                                    </td>';
                                                 }
 
                                             }
@@ -610,6 +546,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                         <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
                                                     </td>';
                                                 }
+
                                             }
                                         }
                                         ?>
@@ -619,24 +556,16 @@ include_once '../../../views/layouts/includes/header.php';
                                     <!-- Code if no match -->
                                     <p>Unknown Contract Type</p>
                             <?php endswitch; ?>
-                        </div>
-                    </a>
 
-                <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <div style="
-        width:100%;
-        padding:40px;
-        text-align:center;
-        background:#f8f9fa;
-        border-radius:10px;
-        color:#6c757d;
-        font-size:15px;
-    ">
-                No contracts found.
-            </div>
-        <?php endif; ?>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center">No contracts found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
 
     </div>
 </div>

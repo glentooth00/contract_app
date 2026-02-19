@@ -59,7 +59,7 @@ class ContractController
             ':uploader_department' => $data['uploader_department'],
             ':department_assigned' => $data['department_assigned'] ?? null,
             ':implementing_dept' => $data['implementing_dept'] ?? null,
-             ':contractPrice' => $data['contractPrice'] ?? null,
+            ':contractPrice' => $data['contractPrice'] ?? null,
 
         ]);
     }
@@ -142,7 +142,6 @@ class ContractController
                 unlink($filePath); // 🧹 Deletes the file
             }
         }
-
         // Step 4: Delete the database record
         $sql = "DELETE FROM contracts WHERE id = :id";
         $stmt = $this->db->prepare($sql);
@@ -560,18 +559,18 @@ class ContractController
 
     }
 
-        public function getContractByIdUpdated($id)
-        {
+    public function getContractByIdUpdated($id)
+    {
 
-            $sql = "SELECT * FROM contracts WHERE id = :id";
-            $stmt = $this->db->prepare($sql);
-            $stmt->bindParam('id', $id);
-            $stmt->execute();
-            $result = $stmt->fetch();
+        $sql = "SELECT * FROM contracts WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam('id', $id);
+        $stmt->execute();
+        $result = $stmt->fetch();
 
-            return $result;
+        return $result;
 
-        }
+    }
 
     public function getContractbyIdPending($contract_id)
     {
@@ -583,7 +582,7 @@ class ContractController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);  // return as array of rows
     }
 
-    
+
 
 
 
@@ -1110,7 +1109,7 @@ class ContractController
         return true;
     }
 
-    public function getContractsByDepartmentAll($department)
+    public function getContractsByDepartmentAll($department, $searchItem = null)
     {
         $query = "SELECT * FROM contracts 
               WHERE (uploader_department = :dept1 
@@ -1130,9 +1129,54 @@ class ContractController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-        public function getContractsForAudit($department)
+    public function getContractsByDepartmentAllSearch($department, $searchItem = null, $filterItem = null)
     {
-       $query = "SELECT * FROM contracts WHERE contract_status = 'Active' ORDER BY created_at DESC";
+        $query = "SELECT * FROM contracts 
+              WHERE 
+              (
+                  uploader_department = :dept1 
+                  OR implementing_dept = :dept2 
+                  OR department_assigned = :dept3
+              )
+              AND contract_status = 'Active'";
+
+        $params = [
+            ':dept1' => $department,
+            ':dept2' => $department,
+            ':dept3' => $department,
+        ];
+
+        // 🔍 Search filter (LIKE)
+        if (!empty($searchItem)) {
+            $query .= " AND (
+                        contract_name LIKE :search1
+                        OR contract_type LIKE :search2
+                    )";
+
+            $params[':search1'] = "%{$searchItem}%";
+            $params[':search2'] = "%{$searchItem}%";
+        }
+
+        // 🎯 Contract Type Filter (Exact match)
+        if (!empty($filterItem)) {
+            $query .= " AND contract_type = :filterType";
+            $params[':filterType'] = $filterItem;
+        }
+
+        $query .= " ORDER BY id DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+
+
+    public function getContractsForAudit($department)
+    {
+        $query = "SELECT * FROM contracts WHERE contract_status = 'Active' ORDER BY created_at DESC";
 
         $stmt = $this->db->prepare($query);
 
@@ -1147,7 +1191,7 @@ class ContractController
 
 
     //could be just temporary to show all contracts by department
-        public function getContractsAll()
+    public function getContractsAll()
     {
         $query = "SELECT * FROM contracts WHERE contract_status = 'Active' ORDER BY created_at DESC";
 
@@ -1173,7 +1217,7 @@ class ContractController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-        public function getContractsAllArchived()
+    public function getContractsAllArchived()
     {
         $query = "SELECT * FROM contracts WHERE contract_status = 'Suspended' ORDER BY created_at DESC";
 
@@ -1520,7 +1564,7 @@ class ContractController
     }
 
 
-        public function managerUpdateINFRA($data)
+    public function managerUpdateINFRA($data)
     {
         try {
             $sql = "UPDATE contracts SET 
@@ -1575,8 +1619,8 @@ class ContractController
             $stmt->bindParam(':address', $data['address']);
             $stmt->bindParam(':supplier', $data['supplier']);
             $stmt->bindParam(':contractPrice', $data['contractPrice']);
-            $stmt->bindParam(':contract_type',  $type);
-            $stmt->bindParam(':procurementMode',  $data['procurementMode']);
+            $stmt->bindParam(':contract_type', $type);
+            $stmt->bindParam(':procurementMode', $data['procurementMode']);
             return $stmt->execute(); // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
@@ -1584,10 +1628,10 @@ class ContractController
         }
     }
 
-            public function managerUpdateTempLight($data)
-{
-    try {
-        $sql = "UPDATE contracts SET 
+    public function managerUpdateTempLight($data)
+    {
+        try {
+            $sql = "UPDATE contracts SET 
             uploader_department = :uploader_department,
             contract_name = :contract_name,
             contract_start = :contract_start,
@@ -1600,28 +1644,28 @@ class ContractController
             account_no = :account_no
 
             WHERE id = :contract_id";
-        
-        $stmt = $this->db->prepare($sql);
 
-        $stmt->bindParam(':uploader_department', $data['uploader_department']);
-        $stmt->bindParam(':contract_name', $data['contract_name']);
-        $stmt->bindParam(':contract_start', $data['contract_start']);
-        $stmt->bindParam(':contract_end', $data['contract_end']);
-        $stmt->bindParam(':contract_id', $data['contract_id']);
-        $stmt->bindParam(':address', $data['address']);
-        $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
-        $stmt->bindParam(':supplier', $data['supplier']); // supplier mapped to party_of_second_party
-        $stmt->bindParam(':tc_no', $data['tc_no']);
-        $stmt->bindParam(':contract_type', $data['contract_type']);
-        $stmt->bindParam(':account_no', $data['account_no']);
-        $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
+            $stmt = $this->db->prepare($sql);
 
-        return $stmt->execute(); // returns true if successful
-    } catch (PDOException $e) {
-        echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
-        return false;
+            $stmt->bindParam(':uploader_department', $data['uploader_department']);
+            $stmt->bindParam(':contract_name', $data['contract_name']);
+            $stmt->bindParam(':contract_start', $data['contract_start']);
+            $stmt->bindParam(':contract_end', $data['contract_end']);
+            $stmt->bindParam(':contract_id', $data['contract_id']);
+            $stmt->bindParam(':address', $data['address']);
+            $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
+            $stmt->bindParam(':supplier', $data['supplier']); // supplier mapped to party_of_second_party
+            $stmt->bindParam(':tc_no', $data['tc_no']);
+            $stmt->bindParam(':contract_type', $data['contract_type']);
+            $stmt->bindParam(':account_no', $data['account_no']);
+            $stmt->bindParam(':party_of_second_part', $data['party_of_second_part']);
+
+            return $stmt->execute(); // returns true if successful
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
+            return false;
+        }
     }
-}
 
 
     public function managerUpdateTransRent($data)
@@ -1649,30 +1693,31 @@ class ContractController
             $stmt->bindParam(':account_no', $data['account_no']);
             $success = $stmt->execute();
 
-                if($success){
-                    $getLatestSql =  "SELECT * FROM contracts WHERE id = :contract_id";
-                    $selectStmt = $this->db->prepare($getLatestSql);
-                    $selectStmt->bindParam(':contract_id', $data['contract_id']);
-                    $selectStmt->execute();
+            if ($success) {
+                $getLatestSql = "SELECT * FROM contracts WHERE id = :contract_id";
+                $selectStmt = $this->db->prepare($getLatestSql);
+                $selectStmt->bindParam(':contract_id', $data['contract_id']);
+                $selectStmt->execute();
 
-                    return $selectStmt->fetch(PDO::FETCH_ASSOC);
-                }
+                return $selectStmt->fetch(PDO::FETCH_ASSOC);
+            }
 
-            return false ; // returns true if successful
+            return false; // returns true if successful
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage(); // helpful during dev
             return false;
         }
     }
 
-    public function updateEmpContract(){
+    public function updateEmpContract()
+    {
 
         $sql = "UPDATE contracts SET
                 contract_name = :contract_name,
                 contract_start = :contract_start,
                 contract_end = :contract_end
                 WHERE id = :contract_id";
-            
+
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_name', $data['contract_name']);
         $stmt->bindParam(':contract_start', $data['contract_start']);
@@ -1683,9 +1728,9 @@ class ContractController
 
 
     public function managerUpdateSACC($data)
-{
-    try {
-        $sql = "UPDATE contracts SET 
+    {
+        try {
+            $sql = "UPDATE contracts SET 
             uploader_department = :uploader_department,
             contract_name = :contract_name,
             contract_start = :contract_start,
@@ -1694,28 +1739,29 @@ class ContractController
             contractPrice = :contractPrice
             WHERE id = :contract_id";
 
-        $stmt = $this->db->prepare($sql);
+            $stmt = $this->db->prepare($sql);
 
-        return $stmt->execute([
-            ':uploader_department' => $data['uploader_department'],
-            ':contract_name' => $data['contract_name'],
-            ':contract_start' => $data['contract_start'],
-            ':contract_end' => $data['contract_end'],
-            ':contractPrice' => $data['contractPrice'],
-            ':contract_id' => $data['contract_id'],
-            ':contract_type' => $data['contract_type']
-        ]);
+            return $stmt->execute([
+                ':uploader_department' => $data['uploader_department'],
+                ':contract_name' => $data['contract_name'],
+                ':contract_start' => $data['contract_start'],
+                ':contract_end' => $data['contract_end'],
+                ':contractPrice' => $data['contractPrice'],
+                ':contract_id' => $data['contract_id'],
+                ':contract_type' => $data['contract_type']
+            ]);
 
-    } catch (PDOException $e) {
-        echo 'PDO Error: ' . $e->getMessage(); 
-        return false;
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+            return false;
+        }
     }
-}
 
 
-    public function updateStatusById($data){
+    public function updateStatusById($data)
+    {
 
-        echo  $data['contract_id'] .' '. $data['contract_status'];
+        echo $data['contract_id'] . ' ' . $data['contract_status'];
 
         $sql = "UPDATE contracts SET contract_status = :contract_status WHERE id = :contract_id";
         $stmt = $this->db->prepare($sql);
@@ -1724,13 +1770,14 @@ class ContractController
         return $stmt->execute();
     }
 
-    public function updateEndDate($data){
+    public function updateEndDate($data)
+    {
 
         $sql = "UPDATE contracts SET contract_end = :contract_end WHERE id = :id";
 
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':contract_end', $data['contract_end']);
-        $stmt->bindParam(':id',$data['contract_id']);
+        $stmt->bindParam(':id', $data['contract_id']);
 
         return $stmt->execute();
 
