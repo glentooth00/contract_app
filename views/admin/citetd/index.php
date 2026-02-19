@@ -149,12 +149,15 @@ include_once '../../../views/layouts/includes/header.php';
 
                 <?php
                 $searchItem = $_GET['searchItem'] ?? '';
-                echo $filterItem = $_GET['filterItem'] ?? '';
-                $searchItem = $_GET['searchItem'] ?? '';
                 $filterItem = $_GET['filterItem'] ?? '';
+                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
 
-                $contracts = (new ContractController)
-                    ->getContractsByDepartmentAllSearch($department, $searchItem, $filterItem);
+                $data = (new ContractController)
+                    ->getContractsByDepartmentAllSearch($department, $searchItem, $filterItem, $page, 8);
+
+                $contracts = $data['results'];
+                $totalPages = $data['totalPages'];
+                $currentPage = $data['currentPage'];
 
                 ?>
             </div>
@@ -624,6 +627,22 @@ include_once '../../../views/layouts/includes/header.php';
 
                 <?php endforeach; ?>
             </div>
+            <div style="display:flex; justify-content:right; gap:6px; margin-top:25px;margin-right:15px;">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <a href="?searchItem=<?= urlencode($searchItem) ?>
+             &filterItem=<?= urlencode($filterItem) ?>
+             &page=<?= $i ?>" style="
+            padding:6px 12px;
+            border-radius:6px;
+            text-decoration:none;
+            background: <?= $i == $currentPage ? '#11488B' : '#f1f1f1' ?>;
+            color: <?= $i == $currentPage ? '#fff' : '#000' ?>;
+       ">
+                        <?= $i ?>
+                    </a>
+                <?php endfor; ?>
+            </div>
+
         <?php else: ?>
             <div style="
         width:100%;
@@ -636,6 +655,7 @@ include_once '../../../views/layouts/includes/header.php';
     ">
                 No contracts found.
             </div>
+
         <?php endif; ?>
 
     </div>

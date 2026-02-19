@@ -1129,16 +1129,28 @@ class ContractController
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getContractsByDepartmentAllSearch($department, $searchItem = null, $filterItem = null)
-    {
-        $query = "SELECT * FROM contracts 
-              WHERE 
-              (
-                  uploader_department = :dept1 
-                  OR implementing_dept = :dept2 
-                  OR department_assigned = :dept3
-              )
-              AND contract_status = 'Active'";
+    public function getContractsByDepartmentAllSearch(
+        $department,
+        $searchItem = null,
+        $filterItem = null,
+        $page = 1,
+        $limit = 8
+    ) {
+        $offset = ($page - 1) * $limit;
+
+        // ---------------------------
+        // BASE WHERE CLAUSE
+        // ---------------------------
+        $baseQuery = "
+        FROM contracts 
+        WHERE 
+        (
+            uploader_department = :dept1 
+            OR implementing_dept = :dept2 
+            OR department_assigned = :dept3
+        )
+        AND contract_status = 'Active'
+    ";
 
         $params = [
             ':dept1' => $department,
@@ -1146,30 +1158,64 @@ class ContractController
             ':dept3' => $department,
         ];
 
-        // 🔍 Search filter (LIKE)
+        // 🔍 Search
         if (!empty($searchItem)) {
-            $query .= " AND (
-                        contract_name LIKE :search1
-                        OR contract_type LIKE :search2
-                    )";
+            $baseQuery .= " AND (
+                            contract_name LIKE :search1
+                            OR contract_type LIKE :search2
+                        )";
 
             $params[':search1'] = "%{$searchItem}%";
             $params[':search2'] = "%{$searchItem}%";
         }
 
-        // 🎯 Contract Type Filter (Exact match)
+        // 🎯 Filter
         if (!empty($filterItem)) {
-            $query .= " AND contract_type = :filterType";
+            $baseQuery .= " AND contract_type = :filterType";
             $params[':filterType'] = $filterItem;
         }
 
-        $query .= " ORDER BY id DESC";
+        // ---------------------------
+        // 1️⃣ GET TOTAL COUNT
+        // ---------------------------
+        $countSql = "SELECT COUNT(*) " . $baseQuery;
 
-        $stmt = $this->db->prepare($query);
-        $stmt->execute($params);
+        $countStmt = $this->db->prepare($countSql);
+        $countStmt->execute($params);
+        $totalRecords = $countStmt->fetchColumn();
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $totalPages = ceil($totalRecords / $limit);
+
+        // ---------------------------
+        // 2️⃣ GET PAGINATED DATA
+        // ---------------------------
+        $dataSql = "SELECT * " . $baseQuery . "
+                ORDER BY id DESC
+                OFFSET :offset ROWS 
+                FETCH NEXT :limit ROWS ONLY";
+
+        $stmt = $this->db->prepare($dataSql);
+
+        // Bind all previous params first
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
+
+        // Bind pagination integers separately
+        $stmt->bindValue(':offset', (int) $offset, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int) $limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return [
+            'results' => $results,
+            'totalPages' => $totalPages,
+            'currentPage' => $page,
+            'totalRecords' => $totalRecords
+        ];
     }
+
 
 
 
