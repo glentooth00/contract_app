@@ -186,39 +186,53 @@ use App\Controllers\FlagController;
                             <!-- Code for EMP_CON -->
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        $expired = 'Expired';
-                                        // $diff;
-                
-                                        if ($diff >= $ert) {
-                                            echo '<div class="text-center text-danger ">
-                                                            <span class="text-success fw-bold"> ' . $diff . ' days remaining </span>
-                                                        </div>';
-                                        } else {
-                                            echo '
-                                                    <div class="text-center p-2">
-                                                        <span class="text-danger fw-bold position-relative"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </div>';
-
-                                        }
-
+                                        break;
                                     }
                                 }
+
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
                                 ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
                             </span>
                             <?php break;
                         case PSC_LONG: ?>
@@ -226,42 +240,53 @@ use App\Controllers\FlagController;
                             <!-- Code for EMP_CON -->
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        $expired = 'Expired';
-
-                                        if ($diff >= $ert) {
-                                            echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                        } elseif ($contract['contract_status'] === 'Expired') {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                        } else {
-                                            echo '
-                                                    <div class=" p-0 mb-0" style="background-color:#f8d7da;border-radius:6px;">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </div>';
-                                        }
-
+                                        break;
                                     }
                                 }
+
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
                                 ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
                             </span>
                             <?php break;
                         case PSC_SHORT: ?>
@@ -269,128 +294,159 @@ use App\Controllers\FlagController;
                             <!-- Code for EMP_CON -->
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        // $diff;
-                
-                                        if ($diff >= $ert) {
-                                            echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                        } elseif ($contract['contract_status'] === 'Expired') {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                        } else {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </td>';
-                                        }
-
+                                        break;
                                     }
                                 }
-                                ?>
-                            </span>
 
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
+                                ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
+                            </span>
                             <?php break;
                         case GOODS: ?>
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        // $diff;
-                
-                                        if ($diff >= $ert) {
-                                            echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                        } elseif ($contract['contract_status'] === 'Expired') {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                        } else {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </td>';
-                                        }
-
+                                        break;
                                     }
                                 }
-                                ?>
-                            </span>
 
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
+                                ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
+                            </span>
                             <?php break;
                         case INFRA: ?>
                             <!-- Code for PSC_SHORT -->
                             <!-- Code for EMP_CON -->
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        // $diff;
-                
-                                        if ($diff >= $ert) {
-                                            echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                        } elseif ($contract['contract_status'] === 'Expired') {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                        } else {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </td>';
-                                        }
-
+                                        break;
                                     }
                                 }
+
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
                                 ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
                             </span>
                             <?php break;
                         case SACC: ?>
@@ -398,82 +454,104 @@ use App\Controllers\FlagController;
                             <!-- Code for EMP_CON -->
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        // $diff;
-                
-                                        if ($diff >= $ert) {
-                                            echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                        } elseif ($contract['contract_status'] === 'Expired') {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                        } else {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </td>';
-                                        }
-
+                                        break;
                                     }
                                 }
+
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
                                 ?>
-                            </span>
-                            <?php break;
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
+                            </span> <?php break;
                         case TEMP_LIGHTING: ?>
                             <span>
                                 <?php
-                                $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                                $contractType = $contract['contract_type'];
 
-                                foreach ($getFromContractType as $row) {
-                                    if ($contractType === $row['contract_type']) {
-                                        $end = new DateTime($contract['contract_end']);
-                                        $now = new DateTime();
+                                // Get contract type config ONCE
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
                                         $ert = $row['contract_ert'];
-
-                                        $interval = $now->diff($end);
-                                        $diff = $interval->days;
-
-                                        // $diff;
-                
-                                        if ($diff >= $ert) {
-                                            echo '<td class="text-center table-success">
-                                                            <span class="text-success fw-bold">' . $diff . ' days remaining </span>
-                                                        </td>';
-                                        } elseif ($contract['contract_status'] === 'Expired') {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold"> 
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" fill="currentColor" class="bi bi-exclamation-octagon" viewBox="0 0 16 16">
-                                                        <path d="M4.54.146A.5.5 0 0 1 4.893 0h6.214a.5.5 0 0 1 .353.146l4.394 4.394a.5.5 0 0 1 .146.353v6.214a.5.5 0 0 1-.146.353l-4.394 4.394a.5.5 0 0 1-.353.146H4.893a.5.5 0 0 1-.353-.146L.146 11.46A.5.5 0 0 1 0 11.107V4.893a.5.5 0 0 1 .146-.353zM5.1 1 1 5.1v5.8L5.1 15h5.8l4.1-4.1V5.1L10.9 1z"/>
-                                                        <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
-                                                        </svg> ' . $expired . '</span>
-                                                    </td>';
-                                        } else {
-                                            echo '
-                                                    <td class="text-center table-danger">
-                                                        <span class="text-danger fw-bold">' . $diff . ' days remaining </span>
-                                                    </td>';
-                                        }
+                                        break;
                                     }
                                 }
+
+                                // Date logic
+                                $end = new DateTime($contract['contract_end']);
+                                $now = new DateTime();
+
+                                $interval = $now->diff($end);
+                                $days = $interval->days;
+                                $isExpired = $interval->invert; // 1 if expired
                                 ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired == 1): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+
+                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+
+                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php endif; ?>
+
+                                </div>
                             </span>
                             <?php break;
                         default: ?>
