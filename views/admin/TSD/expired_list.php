@@ -143,7 +143,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                             </td>
                             <td class="text-center">
-                                  <?php
+                                <?php
                                 $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
                                 switch ($type) {
