@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $department = $_SESSION['department'] ?? null;
 $role = $_SESSION['user_role'] ?? null;
 $page_title = "List - $department";
