@@ -1298,7 +1298,7 @@ class ContractController
     {
         // Corrected SQL query using a single WHERE clause
         $query = "SELECT * FROM contracts 
-                  WHERE (uploader_department = ? OR department_assigned = ?) 
+                  WHERE (uploader_department = ? OR department_assigned = ?  OR implementing_dept = ?) 
                   AND contract_status = 'Expired' 
                   ORDER BY created_at DESC";
 
@@ -1307,6 +1307,7 @@ class ContractController
         // Bind parameters
         $stmt->bindValue(1, $department, PDO::PARAM_STR);
         $stmt->bindValue(2, $department, PDO::PARAM_STR);
+        $stmt->bindValue(3, $department, PDO::PARAM_STR);
 
         $stmt->execute();
 
