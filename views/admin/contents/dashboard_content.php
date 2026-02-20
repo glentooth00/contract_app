@@ -49,10 +49,10 @@ use App\Controllers\FlagController;
                     break;
             }
             ?>
-
+            <?php $contractName = '<strong>' . $contract['contract_name'] . '</strong>'; ?>
             <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                style="text-decoration:none;" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top"
-                data-bs-content="<?= $contract['contract_name'] ?>">
+                style="text-decoration:none;" data-bs-html="true" data-bs-toggle="popover" data-bs-trigger="hover focus"
+                data-bs-placement="top" class="text-muted" data-bs-content="<?= $contractName ?>">
                 <div style="
                     width:360px;
                     background:#ffffff;
