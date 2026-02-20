@@ -51,7 +51,8 @@ use App\Controllers\FlagController;
             ?>
 
             <a href="view.php?contract_id=<?= $contract['id'] ?>&type=<?= $contract['contract_type'] ?>"
-                style="text-decoration:none;">
+                style="text-decoration:none;" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-placement="top"
+                data-bs-content="<?= $contract['contract_name'] ?>">
                 <div style="
                     width:360px;
                     background:#ffffff;
@@ -514,3 +515,11 @@ use App\Controllers\FlagController;
     </div>
 
 <?php endif; ?>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+        popoverTriggerList.forEach(function (popoverTriggerEl) {
+            new bootstrap.Popover(popoverTriggerEl);
+        });
+    });
+</script>
