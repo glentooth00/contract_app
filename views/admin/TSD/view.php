@@ -273,8 +273,9 @@ include_once '../../../views/layouts/includes/header.php';
                                 aria-hidden="true"></i><?php if ($getContract['contract_type'] === EMP_CON): ?>
                                 <?php
                                 $rentstart = date('Y-m-d', strtotime($getContract['contract_start']));
-                                ?> <input type="date" id="empConStart" style="margin-left:px;" class="form-control pl-5"
-                                    value="<?= $rentstart ?>" id="" name="rent_start" readonly><?php endif; ?>
+                                ?> <input type="date" id="empConStart" style="margin-left:px;"
+                                    class="form-control pl-5" value="<?= $rentstart ?>" id="" name="rent_start"
+                                    readonly><?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -416,7 +417,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php
                     $dept = $_SESSION['department'];
 
-                    if ($dept === 'ISD-HRAD' || $dept === 'CITET' || $dept === 'HRAD' || $dept === 'ISD' || $dept === 'BAC' || $dept === 'GSD' || $dept === 'IT') {
+                    if ($dept === 'TSD' || $dept === 'ISD-HRAD' || $dept === 'CITET' || $dept === 'HRAD' || $dept === 'ISD' || $dept === 'BAC' || $dept === 'GSD' || $dept === 'IT') {
 
                         $end = new DateTime($getContract['contract_end']);
                         $today = new DateTime();
