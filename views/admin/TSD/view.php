@@ -638,7 +638,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php
                     $dept = $_SESSION['department'];
 
-                    if ($dept === 'ISD-HRAD' || $dept === 'CITET' || $dept === 'HRAD' || $dept === 'ISD' || $dept === 'BAC' || $dept === 'GSD' || $dept === 'IT') {
+                    if ($dept === 'OGM' || $dept === 'TSD' || $dept === 'ISD-HRAD' || $dept === 'CITET' || $dept === 'HRAD' || $dept === 'ISD' || $dept === 'BAC' || $dept === 'GSD' || $dept === 'IT') {
 
                         $end = new DateTime($getContract['contract_end']);
                         $today = new DateTime();
