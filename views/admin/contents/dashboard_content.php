@@ -66,7 +66,7 @@ use App\Controllers\FlagController;
 
                         <?php
                         $contractName = $contract['contract_name'] ?? '';
-                        $displayName = strlen($contractName) > 30 ? substr($contractName, 0, 30) . '...' : $contractName;
+                        $displayName = strlen($contractName) > 25 ? substr($contractName, 0, 25) . '...' : $contractName;
 
                         ?>
 
