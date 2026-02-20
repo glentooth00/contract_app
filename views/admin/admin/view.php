@@ -758,21 +758,23 @@ include_once '../../../views/layouts/includes/header.php';
 
             <div class="row col-md-3 mt-4 float-end">
                 <div class="mt-3 float-end" style="margin-left: 90%;">
+
                     <?php
                     $dept = $_SESSION['department'];
-                    ?>
-                    <?php if ($dept === 'ISD-HRAD'): ?>
-                        <?php
-                        $start = new DateTime($getContract['contract_start']);
+
+                    if ($dept === 'ISD-HRAD' || $dept === 'CITET' || $dept === 'HRAD' || $dept === 'ISD' || $dept === 'BAC' || $dept === 'GSD' || $dept === 'IT') {
+
                         $end = new DateTime($getContract['contract_end']);
                         $today = new DateTime();
-
-                        // Calculate remaining days (positive if end date is in the future)
                         $interval = $today->diff($end);
-                        $remainingDays = $interval->invert ? -$interval->days : $interval->days;
-                        ?>
 
-                        <?php if ($remainingDays <= 15 && $remainingDays >= 0): ?>
+                        // Clamp at 0
+                        $remainingDays = $interval->invert ? 0 : $interval->days;
+
+                        // Show button when 15 days or less (including 0)
+                        if ($remainingDays <= 15):
+                            ?>
+
                             <div class="d-flex gap-2">
                                 <button class="btn btn-primary" data-id="<?= $getContract['id'] ?>"
                                     data-contractname="<?= $getContract['contract_name'] ?>"
@@ -783,13 +785,20 @@ include_once '../../../views/layouts/includes/header.php';
                                     data-bs-target="#extendModal">
                                     Extend
                                 </button>
+
                                 <form action="contracts/end_contract.php" method="post">
                                     <input type="hidden" name="contract_id" value="<?= $getContract['id'] ?>">
-                                    <button type="submit" class="btn btn-warning">End Contract</button>
+                                    <button type="submit" class="btn btn-warning">
+                                        End Contract
+                                    </button>
                                 </form>
                             </div>
-                        <?php endif; ?>
-                    <?php endif; ?>
+
+                            <?php
+                        endif;
+                    }
+                    ?>
+
                 </div>
             </div>
 
