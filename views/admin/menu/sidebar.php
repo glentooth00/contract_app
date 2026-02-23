@@ -1,4 +1,4 @@
-<?PHP 
+<?PHP
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
 
@@ -7,7 +7,8 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
 <nav class="sideBar">
   <div class="logo mb-3 p-2 d-flex align-items-center justify-content-center">
     <div class="me-2">
-      <img src="../../../public/images/logo.png" alt="Logo" class="img-fluid" style="max-height: 40px;">
+      <img src="<?= image_source ?>../../../public/images/logo.png" alt="Logo" class="img-fluid"
+        style="max-height: 40px;">
     </div>
     <div>
       <h2 class="m-0 text-dark" style="font-family:Arial, sans-serif;font-weight:600;">CMS</h2>
@@ -19,33 +20,33 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
   <ul class="nav flex-column">
     <li class="nav-item">
       <a class="nav-link" id="dashboardLink" href="index.php">
-        <img width="25px" src="../../../public/images/dashboard.svg">
+        <img width="25px" src="<?= image_source ?>../../../public/images/dashboard.svg">
         <span>Dashboard</span>
       </a>
     </li>
 
     <li class="nav-item">
       <a class="nav-link" href="#" id="contractsDropdown">
-        <img width="25px" src="../../../public/images/contracts.svg">
+        <img width="25px" src="<?= image_source ?>../../../public/images/contracts.svg">
         <span>Contracts</span>
         <i class="fa fa-chevron-down ms-auto small toggle-icon"></i>
       </a>
       <ul class="collapse" id="contractsMenu">
         <li class="nav-item">
           <a class="nav-link" id="contractsLink" href="list.php">
-            <img width="25px" src="../../../public/images/active_contracts.svg">
+            <img width="25px" src="<?= image_source ?>../../../public/images/active_contracts.svg">
             <span>Active Contracts</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" id="expiredLink" href="expired_list.php">
-            <img width="25px" src="../../../public/images/expired.svg">
+            <img width="25px" src="<?= image_source ?>../../../public/images/expired.svg">
             <span>Expired Contracts</span>
           </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="archived_list.php">
-            <img width="25px" src="../../../public/images/archived.svg">
+            <img width="25px" src="<?= image_source ?>../../../public/images/archived.svg">
             <span>Archived Contracts</span>
           </a>
         </li>
@@ -77,7 +78,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
     <?php if ($logged_user === 'Admin'): ?>
       <li class="nav-item">
         <a class="nav-link" id="users" href="<?php echo $usersLink; ?>">
-          <img width="27px" src="../../../public/images/user.svg">
+          <img width="27px" src="<?= image_source ?>../../../public/images/user.svg">
           <span>Users</span>
         </a>
       </li>
@@ -88,7 +89,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
 
     <li class="nav-item">
       <a class="nav-link" href="#" id="settingsDropdown">
-        <img width="27px" src="../../../public/images/settings.svg">
+        <img width="27px" src="<?= image_source ?>../../../public/images/settings.svg">
         <span>Settings</span>
         <i class="fa fa-chevron-down ms-auto small toggle-icon"></i>
       </a>
@@ -102,7 +103,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php if ($department === 'BAC'): ?>
           <li class="nav-item">
             <a class="nav-link" id="mop" href="procurement.php">
-              <img width="27px" src="../../../public/images/mop.svg">
+              <img width="27px" src="<?= image_source ?>../../../public/images/mop.svg">
               <span>Mode Of Procurement</span>
             </a>
           </li>
@@ -111,7 +112,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
             <a class="nav-link" id="userRoles" href="<?php echo $usersRoles; ?>">
-              <img width="27px" src="../../../public/images/userRole.svg">
+              <img width="27px" src="<?= image_source ?>../../../public/images/userRole.svg">
               <span>User Roles</span>
             </a>
           </li>
@@ -119,17 +120,17 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
             <a class="nav-link" id="userTypes" href="<?php echo $usersTypes; ?>">
-              <img width="27px" src="../../../public/images/userTypes.svg">
+              <img width="27px" src="<?= image_source ?>../../../public/images/userTypes.svg">
               <span>User Types</span>
             </a>
           </li>
         <?php endif; ?>
 
-        <?php if ($department === ISD ): ?>
+        <?php if ($department === ISD): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
-                <img width="27px" src="../../../public/images/bell.svg">
+                <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
                 <span>Notifications
                   <span>
                     <?php
@@ -148,11 +149,11 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($department === 'FSD' ): ?>
+        <?php if ($department === 'FSD'): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
-                <img width="27px" src="../../../public/images/bell.svg">
+                <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
                 <span>Notifications
                   <span>
                     <?php
@@ -171,11 +172,11 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($department === TSD ): ?>
+        <?php if ($department === TSD): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
-                <img width="27px" src="../../../public/images/bell.svg">
+                <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
                 <span>Notifications
                   <span>
                     <?php
@@ -194,11 +195,11 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($department === AOSD ): ?>
+        <?php if ($department === AOSD): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
-                <img width="27px" src="../../../public/images/bell.svg">
+                <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
                 <span>Notifications
                   <span>
                     <?php
@@ -217,11 +218,11 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($department === CITET ): ?>
+        <?php if ($department === CITET): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
-                <img width="27px" src="../../../public/images/bell.svg">
+                <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
                 <span>Notifications
                   <span>
                     <?php
@@ -240,11 +241,11 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           <?php endif; ?>
         <?php endif; ?>
 
-        <?php if ($department === CITET ): ?>
+        <?php if ($department === CITET): ?>
           <?php if ($role === CHIEF): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
-                <img width="27px" src="../../../public/images/bell.svg">
+                <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
                 <span>Pending
                   <span>
                     <?php
@@ -266,7 +267,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
             <a class="nav-link" id="changepass" href="reset_password.php">
-              <img width="27px" src="../../../public/images/managePassword.svg">
+              <img width="27px" src="<?= image_source ?>../../../public/images/managePassword.svg">
               <span>Change Password</span>
             </a>
           </li>
@@ -275,13 +276,14 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
             <a class="nav-link" id="department" href="department.php">
-              <img width="27px" src="../../../public/images/departments.svg"></i>
+              <img width="27px" src="<?= image_source ?>../../../public/images/departments.svg"></i>
               <span>Departments</span>
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="types" href="contract_types.php">
-              <img width="27px" src="../../../public/images/contract-types.svg"></i></i><span>Contract Types</span>
+              <img width="27px" src="<?= image_source ?>../../../public/images/contract-types.svg"></i></i><span>Contract
+                Types</span>
             </a>
           </li>
         <?php endif; ?>
@@ -296,7 +298,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         </li> -->
         <li class="nav-item">
           <a class="nav-link" href="../logout.php">
-            <img width="28px" src="../../../public/images/logout.svg">
+            <img width="28px" src="<?= image_source ?>../../../public/images/logout.svg">
             <span>Logout</span>
           </a>
         </li>
