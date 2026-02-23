@@ -93,12 +93,12 @@ use App\Controllers\FlagController;
                                 <?php if ($getFlag['status'] ?? '' === 1): ?>
 
                                     <?php if ($getFlag['flag_type'] === UR): ?>
-                                        <img src="../../../public/images/underReview.svg" id="review" width="25px;"
+                                        <img src="<?= image_source ?>../../../public/images/underReview.svg" id="review" width="25px;"
                                             title="This Contract is Under review">
                                     <?php endif; ?>
 
                                     <?php if ($getFlag['flag_type'] === NA): ?>
-                                        <img src="../../../public/images/withComment.svg" id="attention" width="25px;"
+                                        <img src="<?= image_source ?>../../../public/images/withComment.svg" id="attention" width="25px;"
                                             title="This Contract Needs Attention">
                                     <?php endif; ?>
 
@@ -136,7 +136,7 @@ use App\Controllers\FlagController;
                             background:#f8f9fa;
                             border-radius:10px;
                         ">
-                            <img src="../../../public/images/doc.png" width="80" alt="Contract Icon">
+                            <img src="<?= image_source ?>../../../public/images/doc.png" width="80" alt="Contract Icon">
                         </div>
 
                         <!-- Contract Dates -->

@@ -25,107 +25,109 @@
 
 
     <!-- Custom Styles -->
-<style>
-     body {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        background-color: #1D546D;
-        background-image:url('gb.jpg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        
-    }
+    <style>
+        body {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #1D546D;
+            background-image: url('gb.jpg');
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
 
-    .pageContent {
-        display: flex;
-        min-height: 100vh;
-        flex-direction: column;
-    }
+        }
 
-    .mainContent {
-        background-color: #FFF;
-        width: 100%;
-        padding: 20px;
-    }
-
-    .headerDiv {
-        background-color: #FBFBFB;
-        padding: 20px;
-    }
-
-    .main-layout {
-        display: flex;
-        flex-wrap: wrap;
-        min-height: 100vh;
-    }
-
-    .sideBar {
-        width: 220px;
-        background-color: #343a40;
-        padding: 20px;
-        color: white;
-    }
-
-    .content-area {
-        flex: 1;
-        padding: 30px;
-        background-color: #f8f9fa;
-    }
-
-    #statusFilter {
-        width: 100%;
-        max-width: 250px;
-        display: inline-block;
-        margin-left: 10px;
-    }
-
-    /* DataTable spacing */
-    .dataTables_wrapper {
-        margin-top: 20px;
-    }
-
-    label {
-        display: inline-block;
-        margin-bottom: 20px;
-    }
-
-    a.paginate_button.current {
-        padding: 1px !important;
-    }
-
-    /* ✅ RESPONSIVENESS */
-    @media (max-width: 992px) {
-        .main-layout {
+        .pageContent {
+            display: flex;
+            min-height: 100vh;
             flex-direction: column;
         }
 
-        .sideBar {
+        .mainContent {
+            background-color: #FFF;
             width: 100%;
-            text-align: center;
+            padding: 20px;
+        }
+
+        .headerDiv {
+            background-color: #FBFBFB;
+            padding: 20px;
+        }
+
+        .main-layout {
+            display: flex;
+            flex-wrap: wrap;
+            min-height: 100vh;
+        }
+
+        .sideBar {
+            width: 220px;
+            background-color: #343a40;
+            padding: 20px;
+            color: white;
         }
 
         .content-area {
-            padding: 15px;
+            flex: 1;
+            padding: 30px;
+            background-color: #f8f9fa;
         }
 
         #statusFilter {
-            margin-left: 0;
-            margin-top: 10px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .headerDiv, .mainContent {
-            padding: 10px;
+            width: 100%;
+            max-width: 250px;
+            display: inline-block;
+            margin-left: 10px;
         }
 
-        .content-area {
-            padding: 10px;
+        /* DataTable spacing */
+        .dataTables_wrapper {
+            margin-top: 20px;
         }
-    }
-</style>
+
+        label {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        a.paginate_button.current {
+            padding: 1px !important;
+        }
+
+        /* ✅ RESPONSIVENESS */
+        @media (max-width: 992px) {
+            .main-layout {
+                flex-direction: column;
+            }
+
+            .sideBar {
+                width: 100%;
+                text-align: center;
+            }
+
+            .content-area {
+                padding: 15px;
+            }
+
+            #statusFilter {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .headerDiv,
+            .mainContent {
+                padding: 10px;
+            }
+
+            .content-area {
+                padding: 10px;
+            }
+        }
+    </style>
 
 </head>
 
