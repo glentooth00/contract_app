@@ -59,7 +59,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
     use App\Controllers\UserController;
 
     $logged_user = null;
-    $usersLink = 'admin/users.php';
+    $usersLink = 'users.php';
     $role = $_SESSION['user_role'] ?? null;
 
     if (isset($_SESSION['data']['id'])) {
