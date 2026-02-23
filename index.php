@@ -1,5 +1,5 @@
 <?php
-
+include_once 'src/Config/constants.php';
 use App\Controllers\SampleController;
 $session = session_start();
 // unset($_SESSION['login_attempts']); // TEMPORARY RESET
@@ -34,7 +34,7 @@ $page_title = 'Login';
     <div class="formHolder card col-md-3 bg-white p-4 rounded mt-5">
         <div class="d-flex justify-content-center mb-2">
             <div>
-                <img width="30px" src="public/images/login.svg">
+                <img width="30px" src="<?= image_source ?>public/images/login.svg">
             </div>
             <div>
                 <h4 class="text-dark">Login</h4>
@@ -43,7 +43,8 @@ $page_title = 'Login';
         <form action="authenticate.php" method="post">
             <div class="col-12">
                 <div class="input-group">
-                    <span class="input-group-text"><img width="25px;" src="public/images/username.svg"></span>
+                    <span class="input-group-text"><img width="25px;"
+                            src="<?= image_source ?>public/images/username.svg"></span>
                     <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
                 </div>
 
@@ -52,7 +53,7 @@ $page_title = 'Login';
                 <div class="input-group mb-1 position-relative">
                     <!-- Left-side Icon -->
                     <span class="input-group-text">
-                        <img width="25px;" src="public/images/password.svg">
+                        <img width="25px;" src="<?= image_source ?>public/images/password.svg">
                     </span>
 
                     <!-- Password Field -->
