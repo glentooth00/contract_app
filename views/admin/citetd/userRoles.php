@@ -1,45 +1,56 @@
 <?php
 session_start();
 
-$department = $_SESSION['department'] ?? null;
-$page_title = "List - $department";
-$expired = 'Expired';
+$department = $_SESSION['department'];
+$page_title = "Users List";
+
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractTypeController;
+use App\Controllers\ContractHistoryController;
+use App\Controllers\DepartmentController;
+use App\Controllers\UserController;
+use App\Controllers\UserRoleController;
 
-$contractTypes = $_SESSION['contract_types'];
+$getUser = new UserController();
+$results = $getUser->getAllUsers();
 
-$contracts = (new ContractController)->getContractsByDepartmentAll($department);
+$getRoles = (new UserRoleController)->getRoles();
 
-// getting the contract types to be compared with the contracts for their expiration
-$contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
-foreach ($contractTypes as $row) {
 
-    $contractType = $row['contract_type'];
-    $EmpErt = $row['contract_ert'];
+$contracts = (new ContractController)->getContractsByDepartment($department);
 
+$getAllContractTypes = (new ContractTypeController)->getContractTypes();
+
+$getOneLatest = (new ContractHistoryController)->insertLatestData();
+if ($getOneLatest) {
+    // echo '<script>alert("Latest data inserted")</script>';
+} else {
+    // Optional: echo nothing or a silent message
+    // echo "No contract data available to insert.";
 }
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
 <!-- Loading Spinner - Initially visible -->
-<!-- <div id="loadingSpinner" class="text-center"
+<div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
     <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
         <span class="sr-only">Loading...</span>
     </div>
-</div> -->
+</div>
 
 <div class="main-layout">
+
     <?php include_once '../menu/sidebar.php'; ?>
+
 
     <div class="content-area">
 
-        <h1>Contracts Overview</h1>
+        <h1>Users</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -56,7 +67,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case 'CITETD': ?>
+                    case 'CITET': ?>
 
                         <span class="badge p-2" style="background-color: #FFB433;"><?= $department; ?> user</span>
 
@@ -77,19 +88,22 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <?php break;
                     case '': ?>
-
                     <?php default: ?>
                         <!-- <span class="badge text-muted">no department assigned</span> -->
                 <?php } ?>
-
             <?php } else { ?>
-
                 <!-- <span class="badge text-muted">no department assigned</span> -->
-
             <?php } ?>
         </span>
         <hr>
-        <div id="filterItems" style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
+
+        <a href="#!" class="btn btn-success text-white p-2 mb-3 d-flex align-items-center gap-2 fw-bold"
+            style="width: 10em;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <img style="margin-left: 17px;" width="23px" src="../../../public/images/add_user.svg"></img> Add User
+        </a>
+
+        <!-- Wrap both search and filter in a flex container -->
+        <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
 
             <!-- Contract Type Filter -->
@@ -106,49 +120,101 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php endif; ?>
                 </select>
             </div> -->
-            <div id="searchContainer" style="display: flex; align-items: center; gap: 10px;">
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <input type="text" name="searchItem" id="searchInput" class="form-control"
-                        value="<?= htmlspecialchars($_GET['searchItem'] ?? '') ?>" placeholder="Search contracts..."
-                        style="width: 300px;">
-                </form>
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <select name="filterItem" class="form-select" onchange="this.form.submit()">
-                        <option value="">Select All</option>
-
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>" <?= (($_GET['filterItem'] ?? '') == $contract['contract_type']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-
-                <?php
-                $searchItem = $_GET['searchItem'] ?? '';
-                $filterItem = $_GET['filterItem'] ?? '';
-                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-
-                $data = (new ContractController)
-                    ->getContractsByDepartmentAllSearch($department, $searchItem, $filterItem, $page, 8);
-
-                $contracts = $data['results'];
-                $totalPages = $data['totalPages'];
-                $currentPage = $data['currentPage'];
-
-                ?>
-            </div>
-
         </div>
-        <?php include_once '../contents/dashboard_content.php'; ?>
 
+        <table id="table" class="table table-bordered table-striped display mt-2 hover">
+            <thead>
+                <tr>
+                    <th style="text-align: center !important;">Role</th>
 
+                    <th style="text-align: center !important;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($getRoles as $result) { ?>
+                    <tr>
+
+                        <td style="text-align: center !important;padding:40px;">
+                            <span><?= $result['user_role'] ?></span>
+                        </td>
+                      <!-- <td style="text-align: center !important;padding:40px;">
+
+                        <?php
+                        $department = isset($result['department']) ? $result['department'] : '';
+
+                        switch ($department) {
+                            case 'IT':
+                                $badgeColor = '#0d6efd';
+                                break;
+                            case 'ISD-HRAD':
+                                $badgeColor = '#3F7D58';
+                                break;
+                            case 'CITET':
+                                $badgeColor = '#FFB433';
+                                break;
+                            case 'IASD':
+                                $badgeColor = '#EB5B00';
+                                break;
+                            case 'ISD-MSD':
+                                $badgeColor = '#6A9C89';
+                                break;
+                            case 'PSPTD':
+                                $badgeColor = '#83B582';
+                                break;
+                            case 'FSD':
+                                $badgeColor = '#4E6688';
+                                break;
+                            case 'BAC':
+                                $badgeColor = '#123458';
+                                break;
+                            case 'AOSD':
+                                $badgeColor = '#03A791';
+                                break;
+                            case '':
+                                $badgeColor = '';
+                                break;
+                            default:
+                                $badgeColor = '';
+                                break;
+                        }
+                        ?>
+
+                        <?php if (!empty($department) && $badgeColor): ?>
+                            <span class="badge p-2 text-white" style="background-color: <?= $badgeColor ?>;">
+                                <?= htmlspecialchars($department) ?>
+                            </span>
+                        <?php else: ?>
+                            <span class="badge text-muted">no department assigned</span>
+                        <?php endif; ?>
+
+                        </td> -->
+
+                        <td style="text-align: center !important;padding:40px;">
+                            <div class="d-flex gap-2" style="margin-left:5em;">
+                                <a href="view_user.php?id=<?= $result['id'] ?>" class="btn btn-success btn-sm"><i
+                                        class="fa fa-pencil" aria-hidden="true"></i>
+                                    View</a>
+
+                                <form action="users/deleteRole.php" method="POST" style="display:inline;">
+                                    <input type="hidden" name="id" value="<?= $result['id'] ?>">
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i> Delete
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
     </div>
 </div>
 
+
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
+
+
 
 
 <!-- Bootstrap Modal for confirmation -->
@@ -172,7 +238,31 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+<!-- Add New Contract Modal --->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add User Role</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="users/save_role.php" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label>User Role</label>
+                        <input type="text" name="user_role" class="form-control" required>
+                    </div>
 
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Add
+                            Role</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- popup notification ---->
 
@@ -195,12 +285,13 @@ include_once '../../../views/layouts/includes/header.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
             <use
-                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
+                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : '#exclamation-triangle-fill'; ?>" />
+
         </svg>
         <!-- Message -->
         <div>
@@ -300,8 +391,16 @@ include_once '../../../views/layouts/includes/header.php';
             });
         }
     });
-
-
-
     //----------------DAtatables
+
+
+    document.getElementById('department').addEventListener('change', function () {
+        const roleSelect = document.getElementById('user_role');
+        if (this.value === 'FSD') {
+            roleSelect.value = 'Manager';
+        } else {
+            roleSelect.value = '';
+        }
+    });
+
 </script>
