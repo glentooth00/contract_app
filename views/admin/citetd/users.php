@@ -138,8 +138,9 @@ include_once '../../../views/layouts/includes/header.php';
             width:360px;
             padding:20px;
             border-radius:10px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.08);
-        " class="mb-4">
+            box-shadow:0 6px 18px rgba(0,0,0,0.08);
+             transition:0.2s ease-in-out" onmouseover=" this.style.transform='translateY(-4px)'"
+                    onmouseout=" this.style.transform='translateY(0)'" " class=" mb-4">
 
                     <!-- Name -->
                     <h5 style="font-weight:600; margin-bottom:15px;">
