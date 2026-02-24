@@ -71,7 +71,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
       if ($currentDir === 'admin') {
         $usersLink = 'users.php';
         $usersTypes = 'userTypes.php';
-        $usersRoles = 'userRoles.php';
+        $usersRoles = 'citetd/userRoles.php';
       }
     }
     ?>
