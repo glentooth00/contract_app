@@ -37,37 +37,53 @@ include_once '../../../views/layouts/includes/header.php';
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
+            <a href="pending_updates.php" style="text-decoration: none;">
+                <div style="position: relative; display: inline-block; margin-right: 30px;">
+                    <?php if (!empty($getLatestActivities)): ?>
+                        <span class="badge bg-danger" style="position: absolute; top: -10px; right: -10px;
+                display: inline-flex; justify-content: center; align-items: center;
+                border-radius: 50%; width: 20px; height: 20px; font-size: 12px;">
+                            <?= $getLatestActivities ?>
+                        </span>
+                    <?php endif; ?>
+                    <img width="25px" src="../../../../../public/images/bell.svg" alt="Activities need attention">
+                </div>
+            </a>
+
+
+
             <?php if (isset($department)) { ?>
+
 
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $department . ' ' . $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'ISD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $department . ' ' . $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $role ?> user</span>
 
                         <?php break;
-                    case 'CITETD': ?>
+                    case 'CITET': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $department . ' ' . $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $department . ' ' . $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $department . ' ' . $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $department . ' ' . $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;"><?= $role ?> user</span>
 
                         <?php break;
                     case '': ?>
@@ -81,8 +97,6 @@ include_once '../../../views/layouts/includes/header.php';
                 <!-- <span class="badge text-muted">no department assigned</span> -->
 
             <?php } ?>
-
-            <?php include_once 'bell.php' ?>
         </span>
 
         <hr>
