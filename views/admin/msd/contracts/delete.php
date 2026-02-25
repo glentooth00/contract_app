@@ -1,32 +1,28 @@
 <?php
-
-use App\Controllers\ContractController;
 session_start();
 
-require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-
+use App\Controllers\ContractController;
 
 if (isset($_GET['id'])) {
 
-    $id = $_GET['id'];
+   $id = $_GET['id']; // Make sure this is just an integer ID
 
-    $delete = (new ContractController)->deleteContract($id);
+   (new ContractController)->deleteContract($id);
 
-    if ($delete) {
+   $_SESSION['notification'] = [
+      'type' => 'success',
+      'message' => 'Contract deleted successfully',
+      'title' => 'Contract Deletion',
+      'icon' => 'check-circle',
+   ];
 
-        $_SESSION['notification'] = [
-            'message' => 'Contract Deleted',
-            'type' => 'success'
-        ];
+   header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
 
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-
-    }
-
-    header("Location: " . $_SERVER['HTTP_REFERER']);
-
+} else {
+   echo 'data id is missing';
 }
+header("Location: " . (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/'));
 
-header("Location: " . $_SERVER['HTTP_REFERER']);
+// echo $deleteId = $_GET['id'];

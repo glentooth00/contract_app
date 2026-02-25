@@ -481,28 +481,38 @@ include_once '../../../views/layouts/includes/header.php';
 
 
             <div class="row col-md-2">
-
                 <?php
-                $end = new DateTime($getContract['contract_end']);
-                $today = new DateTime();
+                // Determine the correct end date
+                $endDateValue = ($getContract['contract_type'] === 'TRANS_RENT')
+                    ? ($getContract['rent_end'] ?? null)
+                    : ($getContract['contract_end'] ?? null);
 
-                $interval = $today->diff($end);
+                $remainingDays = 0;
+                $isExpired = false;
 
-                // Clamp to 0 if expired
-                if ($interval->invert == 1) {
-                    $remainingDays = 0;
-                } else {
+                if ($endDateValue) {
+                    $end = new DateTime($endDateValue);
+                    $end->setTime(0, 0, 0); // Start of end day
+                    $today = new DateTime();
+                    $today->setTime(0, 0, 0); // Start of today
+                
+                    $interval = $today->diff($end);
                     $remainingDays = $interval->days;
-                }
 
-                // Update status if expired
-                if ($remainingDays == 0 && $getContract['contract_status'] !== 'Expired') {
-                    $data = [
-                        'id' => $getContract['id'],
-                        'contract_status' => 'Expired',
-                    ];
+                    // If the contract already ended
+                    if ($today > $end) {
+                        $remainingDays = 0;
+                        $isExpired = true;
+                    }
 
-                    (new ContractController)->updateStatusExpired($data);
+                    // Update status if expired
+                    if ($isExpired && strtoupper($getContract['contract_status']) !== 'EXPIRED') {
+                        $data = [
+                            'id' => $getContract['id'],
+                            'contract_status' => 'Expired',
+                        ];
+                        (new ContractController)->updateStatusExpired($data);
+                    }
                 }
                 ?>
 
@@ -516,7 +526,6 @@ include_once '../../../views/layouts/includes/header.php';
                             value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
                     </div>
                 </div>
-
             </div>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Status</label>

@@ -4,10 +4,6 @@ use App\Controllers\ContractController;
 
 session_start();
 
-date_default_timezone_set('Asia/Manila');
-
-date('Y-m-d H:i:s');
-
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
@@ -34,12 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'contract_file' => $filePath,
             'department_assigned' => 'ISD-MSD',
             'contrasct_status' => 'Active',
-            'address' => $_POST['address'],
-            'account_no' => $_POST['account_no'],
+            // 'contract_status' => $data['contract_status'] ?? null,
 
         ];
 
-        // var_dump($contractDetails);
+        var_dump($contractDetails);
 
         $saveContract = (new ContractController)->createTempLightingContract($contractDetails);
 

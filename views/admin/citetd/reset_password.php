@@ -26,8 +26,13 @@ foreach ($contractTypes as $row) {
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-
-
+<!-- Loading Spinner - Initially visible -->
+<!-- <div id="loadingSpinner" class="text-center"
+    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div> -->
 
 <div class="main-layout">
     <?php include_once '../menu/sidebar.php'; ?>
@@ -106,21 +111,11 @@ include_once '../../../views/layouts/includes/header.php';
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Username</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Status</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Created At</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Updated At</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Action</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Username</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Status</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Created At</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Updated At</th>
+                    <th scope="col" style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -130,12 +125,12 @@ include_once '../../../views/layouts/includes/header.php';
                             <?= htmlspecialchars($request['username']) ?>
                         </td>
                         <td style="text-align: center; border: 1px solid #030303FF;">
-                            <?php if ($request['status'] === 'completed'): ?>
+                            <?php if($request['status'] === 'completed'): ?>
                                 <span class="badge bg-success text-light p-2"><?= htmlspecialchars($request['status']) ?></span>
                             <?php else: ?>
-                                <span class="badge bg-danger text-white p-2"><?= htmlspecialchars($request['status']) ?></span>
+                                 <span class="badge bg-danger text-white p-2"><?= htmlspecialchars($request['status']) ?></span>
                             <?php endif; ?>
-
+                            
                         </td>
                         <td style="text-align: center; border: 1px solid #030303FF;">
                             <?= date('d F Y', strtotime($request['created_at'])) ?>
@@ -145,9 +140,9 @@ include_once '../../../views/layouts/includes/header.php';
                         </td>
                         <td style="text-align: center; border: 1px solid #030303FF;">
 
-                            <?php if ($request['status'] === 'completed'): ?>
+                        <?php if ($request['status'] === 'completed') : ?>
 
-                                <!-- <div class="d-flex justify-content-center align-items-center gap-2">
+                            <!-- <div class="d-flex justify-content-center align-items-center gap-2">
                             <button
                                     type="button"
                                     class="btn btn-sm btn-primary"
@@ -162,18 +157,23 @@ include_once '../../../views/layouts/includes/header.php';
                                     Reset Password
                                 </button>
                             </div> -->
-                            <?php else: ?>
-                                <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#resetModal" data-id="<?= htmlspecialchars($request['user_id']) ?>"
+                        <?php else: ?>
+                            <div class="d-flex justify-content-center align-items-center gap-2">
+                                <button
+                                        type="button"
+                                        class="btn btn-sm btn-primary"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#resetModal"
+                                        data-id="<?= htmlspecialchars($request['user_id']) ?>"
                                         data-username="<?= htmlspecialchars($request['username']) ?>"
                                         data-status="<?= htmlspecialchars($request['status']) ?>"
                                         data-created="<?= date('d F Y', strtotime($request['created_at'])) ?>"
-                                        data-updated="<?= date('d F Y', strtotime($request['updated_at'])) ?>">
+                                        data-updated="<?= date('d F Y', strtotime($request['updated_at'])) ?>"
+                                    >
                                         Reset Password
                                     </button>
-                                </div>
-                            <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -196,25 +196,31 @@ include_once '../../../views/layouts/includes/header.php';
                         <p><strong>Updated At:</strong> <span id="m_updated"></span></p>
                         <hr>
                         <form method="POST" action="reset_password_action.php">
-                            <div class="mb-3">
-                                <label for="new_password" class="form-label">
-                                    New Password
-                                </label>
-                                <input type="text" class="form-control" id="new_password" name="new_password"
-                                    placeholder="Enter new password" required>
-                            </div>
-                            <p class="text-danger mb-0">
-                                Are you sure you want to reset this account’s password?
-                            </p>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label">
+                                New Password
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="new_password"
+                                name="new_password"
+                                placeholder="Enter new password"
+                                required
+                            >
+                        </div>
+                        <p class="text-danger mb-0">
+                            Are you sure you want to reset this account’s password?
+                        </p>
                     </div>
                     <div class="modal-footer">
-                        <input type="hidden" name="id" id="m_id">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button type="submit" class="btn btn-danger">
-                            Confirm Reset
-                        </button>
+                            <input type="hidden" name="id" id="m_id">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-danger">
+                                Confirm Reset
+                            </button>
                         </form>
                     </div>
                 </div>

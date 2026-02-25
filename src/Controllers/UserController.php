@@ -383,6 +383,15 @@ class UserController
     }
 
 
+    public function getUserpassword($id)
+    {
+        $sql = "SELECT password FROM users WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+
+        return $result = $stmt->fetch();
+    }
 
 
 }
