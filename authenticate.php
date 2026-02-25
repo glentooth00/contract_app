@@ -61,6 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     case "ISD-MSD":
                         header("Location: views/admin/msd/index.php");
                         break;
+                    case "ISD-HRAD":
+                        header("Location: views/admin/msd/index.php");
+                        break;
                     case "CITET":
                         header("Location: views/admin/citetd/index.php");
                         break;
@@ -90,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         break;
                     case "TSD":
                         header("Location: views/admin/TSD/index.php");
-                        break;  
+                        break;
                     default:
                         $_SESSION['username'] = 'Department not recognized.';
                         header('Location: index.php');

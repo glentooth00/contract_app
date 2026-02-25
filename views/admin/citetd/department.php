@@ -1,40 +1,38 @@
 <?php
-
-use App\Controllers\ChangePasswordController;
 session_start();
 
-$department = $_SESSION['department'] ?? null;
+$department = $_SESSION['department'];
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../vendor/autoload.php';
 
-use App\Controllers\ContractController;
-use App\Controllers\ContractTypeController;
+use App\Controllers\DepartmentController;
 
-$contracts = (new ChangePasswordController())->getChangePasswordRequests();
+$page_title = 'Departments';
 
-// getting the contract types to be compared with the contracts for their expiration
-$contractTypes = $getAllContractType = (new ContractTypeController)->getContractTypes();
-foreach ($contractTypes as $row) {
-
-    $contractType = $row['contract_type'];
-    $EmpErt = $row['contract_ert'];
-
-}
+$fetchDepts = new DepartmentController();
+$departments = $fetchDepts->getAllDepartments();
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
 
-
-
+<!-- Loading Spinner - Initially visible -->
+<div id="loadingSpinner" class="text-center"
+    style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="spinner-border" style="width: 3rem; height: 3rem;margin-top:15em;" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+</div>
 
 <div class="main-layout">
+
     <?php include_once '../menu/sidebar.php'; ?>
+
 
     <div class="content-area">
 
-        <h1>Change Password Requests</h1>
+        <h1>Departments</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -72,24 +70,27 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <?php break;
                     case '': ?>
-
                     <?php default: ?>
                         <!-- <span class="badge text-muted">no department assigned</span> -->
                 <?php } ?>
-
             <?php } else { ?>
-
                 <!-- <span class="badge text-muted">no department assigned</span> -->
-
             <?php } ?>
         </span>
         <hr>
+
+        <a class="btn text-white btn-success p-2 mb-3" data-mdb-ripple-init style="width:15%;padding-right:10px;"
+            href="#!" role="button" data-bs-toggle="modal" data-bs-target="#departmentModal">
+            <i class="fa fa-building-o" aria-hidden="true"></i>
+            Add Department
+        </a>
+
         <!-- Wrap both search and filter in a flex container -->
         <div style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
 
 
             <!-- Contract Type Filter -->
-            <!-- <div style="text-align: right;">
+            <div style="text-align: right;">
                 <label>Filter :</label>
                 <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
                     <option value="">Select All</option>
@@ -101,127 +102,41 @@ include_once '../../../views/layouts/includes/header.php';
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </select>
-            </div> -->
+            </div>
         </div>
+
         <table id="table" class="table table-bordered table-striped display mt-2 hover">
             <thead>
                 <tr>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Username</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Status</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Created At</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Updated At</th>
-                    <th scope="col"
-                        style="color:white;text-align: center; border: 1px solid #030303FF;background-color:black;">
-                        Action</th>
+                    <th style="text-align: center !important;">Deprtment </th>
+                    <!-- <th style="text-align: center !important;">Name</th>
+            <th style="text-align: center !important;">Role</th>
+            <th style="text-align: center !important;">Department</th> -->
+                    <th style="text-align: center !important;">Action</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($contracts as $request): ?>
+                <?php foreach ($departments as $department) { ?>
                     <tr>
-                        <td style="text-align: center; border: 1px solid #030303FF;">
-                            <?= htmlspecialchars($request['username']) ?>
-                        </td>
-                        <td style="text-align: center; border: 1px solid #030303FF;">
-                            <?php if ($request['status'] === 'completed'): ?>
-                                <span class="badge bg-success text-light p-2"><?= htmlspecialchars($request['status']) ?></span>
-                            <?php else: ?>
-                                <span class="badge bg-danger text-white p-2"><?= htmlspecialchars($request['status']) ?></span>
-                            <?php endif; ?>
-
-                        </td>
-                        <td style="text-align: center; border: 1px solid #030303FF;">
-                            <?= date('d F Y', strtotime($request['created_at'])) ?>
-                        </td>
-                        <td style="text-align: center; border: 1px solid #030303FF;">
-                            <?= date('d F Y', strtotime($request['updated_at'])) ?>
-                        </td>
-                        <td style="text-align: center; border: 1px solid #030303FF;">
-
-                            <?php if ($request['status'] === 'completed'): ?>
-
-                                <!-- <div class="d-flex justify-content-center align-items-center gap-2">
-                            <button
-                                    type="button"
-                                    class="btn btn-sm btn-primary"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#resetModal"
-                                    data-id="<?= htmlspecialchars($request['user_id']) ?>"
-                                    data-username="<?= htmlspecialchars($request['username']) ?>"
-                                    data-status="<?= htmlspecialchars($request['status']) ?>"
-                                    data-created="<?= date('d F Y', strtotime($request['created_at'])) ?>"
-                                    data-updated="<?= date('d F Y', strtotime($request['updated_at'])) ?>"
-                                >
-                                    Reset Password
-                                </button>
-                            </div> -->
-                            <?php else: ?>
-                                <div class="d-flex justify-content-center align-items-center gap-2">
-                                    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#resetModal" data-id="<?= htmlspecialchars($request['user_id']) ?>"
-                                        data-username="<?= htmlspecialchars($request['username']) ?>"
-                                        data-status="<?= htmlspecialchars($request['status']) ?>"
-                                        data-created="<?= date('d F Y', strtotime($request['created_at'])) ?>"
-                                        data-updated="<?= date('d F Y', strtotime($request['updated_at'])) ?>">
-                                        Reset Password
-                                    </button>
-                                </div>
-                            <?php endif; ?>
+                        <td style="text-align: center !important;"><?= $department['department_name'] ?></td>
+                        <td class="d-flex justify-content-center gap-2 w-100">
+                            <button class="btn btn-success btn-sm">View</button>
+                            <a href="departments/delete_department.php?id=<?= $department['id'] ?>"
+                                class="btn btn-danger btn-sm">Delete</a>
                         </td>
                     </tr>
-                <?php endforeach; ?>
+                <?php } ?>
             </tbody>
         </table>
 
-        <div class="modal fade" id="resetModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Reset Password</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p><strong>Username:</strong> <span id="m_username"></span></p>
-                        <p><strong>Status:</strong>
-                            <span class="badge bg-danger p-2" id="m_status"></span>
-                        </p>
-                        <p><strong>Created At:</strong> <span id="m_created"></span></p>
-                        <p><strong>Updated At:</strong> <span id="m_updated"></span></p>
-                        <hr>
-                        <form method="POST" action="reset_password_action.php">
-                            <div class="mb-3">
-                                <label for="new_password" class="form-label">
-                                    New Password
-                                </label>
-                                <input type="text" class="form-control" id="new_password" name="new_password"
-                                    placeholder="Enter new password" required>
-                            </div>
-                            <p class="text-danger mb-0">
-                                Are you sure you want to reset this account’s password?
-                            </p>
-                    </div>
-                    <div class="modal-footer">
-                        <input type="hidden" name="id" id="m_id">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button type="submit" class="btn btn-danger">
-                            Confirm Reset
-                        </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+
+
+
     </div>
 </div>
+
+<?php include '../modals/power_supply.php'; ?>
 
 <?php include_once '../../../views/layouts/includes/footer.php'; ?>
 
@@ -247,6 +162,30 @@ include_once '../../../views/layouts/includes/header.php';
     </div>
 </div>
 
+<!-- Add New Contract Modal --->
+<div class="modal fade" id="departmentModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Department</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="departments/save_department.php" method="post" enctype="multipart/form-data">
+                    <div class="p-2">
+                        <label class="badge text-muted mb-1" style="margin-left: -1%;">Department Name:<span
+                                class="text-danger">*</span></label>
+                        <input class="form-control" name="department_name" required>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Add Department</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 <!-- popup notification ---->
@@ -270,7 +209,7 @@ include_once '../../../views/layouts/includes/header.php';
 <?php if (isset($_SESSION['notification'])): ?>
     <div id="notification"
         class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-        role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
         <!-- Icon -->
         <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
             aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
@@ -344,7 +283,6 @@ include_once '../../../views/layouts/includes/header.php';
     });
 
     //----------------DAtatables
-    //----------------DAtatables
     $(document).ready(function () {
         var rowCount = $('#table tbody tr').length;
 
@@ -380,19 +318,4 @@ include_once '../../../views/layouts/includes/header.php';
 
 
     //----------------DAtatables
-
-
-
-    var resetModal = document.getElementById('resetModal');
-
-    resetModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-
-        document.getElementById('m_id').value = button.getAttribute('data-id');
-        document.getElementById('m_username').textContent = button.getAttribute('data-username');
-        document.getElementById('m_status').textContent = button.getAttribute('data-status');
-        document.getElementById('m_created').textContent = button.getAttribute('data-created');
-        document.getElementById('m_updated').textContent = button.getAttribute('data-updated');
-    });
-
 </script>
