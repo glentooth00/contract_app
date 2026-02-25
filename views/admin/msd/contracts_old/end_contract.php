@@ -1,6 +1,7 @@
 <?php
 
 use App\Controllers\ContractController;
+use App\Controllers\ContractHistoryController;
 use App\Controllers\EmploymentContractController;
 
 require_once __DIR__ . '../../../../../vendor/autoload.php';
@@ -11,27 +12,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $updateData = [
         'id' => $_POST['contract_id'],
-        'status' => 'Employment contract ended',
+        'status' => 'Expired',
     ];
 
-    $updateExpiredEmploymentContract = (new EmploymentContractController)->udpateExpiredEmploymentContract($updateData);
+    var_dump($updateData);
+
+    $updateExpiredEmploymentContract = (new ContractHistoryController)->udpateExpiredRentalContract($updateData);
 
     if ($updateExpiredEmploymentContract) {
 
-        $updateContractData = [
-            'id' => $_POST['contract_id'],
-            'contract_status' => 'Expired',
-        ];
+        $id = $updateData['id'];
 
-        $udpateContractStatus = (new ContractController)->updateStatus($updateContractData);
+        $setExpire = (new ContractController)->setExpired($id);
 
         $_SESSION['notification'] = [
-            'message' => 'Employment contract ended!',
+            'message' => 'Temporary lighting contract ended!',
             'type' => 'success'
         ];
 
         header("Location: " . $_SERVER['HTTP_REFERER']);
-
 
     } else {
 
@@ -44,11 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     }
 
-    header("Location: " . $_SERVER['HTTP_REFERER']);
+    // header("Location: " . $_SERVER['HTTP_REFERER']);
 
 }
 
-header("Location: " . $_SERVER['HTTP_REFERER']);
+// header("Location: " . $_SERVER['HTTP_REFERER']);
 
 
 

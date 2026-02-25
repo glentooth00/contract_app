@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'uploader_department' => $_POST['uploader_department'],
         'uploader_id' => $_POST['uploader_id'],
         'account_no' => $_POST['account_no'],
-        'address' => $_POST['address'],
 
     ];
 

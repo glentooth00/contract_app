@@ -2,153 +2,435 @@
 
 use App\Controllers\ContractController;
 use App\Controllers\ContractHistoryController;
+use App\Controllers\PendingDataController;
+
 session_start();
+
 
 require_once __DIR__ . '../../../../../src/Config/constants.php';
 require_once __DIR__ . '../../../../../vendor/autoload.php';
 
-if (isset($_GET['id'])) {
+var_dump($_GET);  
+echo  "<br>";
+echo  "<br>";
 
-    // Retrieve the parameters from the query string
-    $data = [
-        'id' => $_GET['id'],
+if ($_GET['type'] === TRANS_RENT) {
+
+    $transRentData = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
         'contract_name' => $_GET['name'],
-        'rent_start' => $_GET['start'], // 'start' corresponds to rent_start in PHP
-        'rent_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP
-        'updated_at' => date('Y-m-d H:i:s'), // Add this to match bindParam
+        'contract_start' => $_GET['transRentStart'],
+        'contract_end' => $_GET['transRentEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
         'contract_status' => 'Active',
-        'daysRemaining' => $_GET['daysRemaining'],
+        'status' => 1,
         'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+        'address' => $_GET['address'],
+        'tc_no' => $_GET['tcNo'],
+        'account_no' => $_GET['account_no'],
     ];
 
-    $daysRemaining = $_GET['daysRemaining'];
-
-    // var_dump($data);
-
-    // // Get contract type by ID
-    $id = $data['id'];
-    $getContractType = (new ContractController)->getContractbyId($id);
-
-    $type = $getContractType['contract_type'];
-
-    if ($getContractType['contract_type'] === TRANS_RENT) {
-
-        $data1 = [
-            'id' => $_GET['id'],
-            'contract_status' => 'Active',
-            'contract_name' => $_GET['name'],
-            'rent_start' => $_GET['start'], // 'start' corresponds to rent_start in PHP
-            'rent_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP
-            'updated_at' => date('Y-m-d H:i:s') // Add this to match bindParam
-
-        ];
+    var_dump($transRentData);
 
 
-        $updateTransRent = (new ContractController)->updateTransRent($data1);
+    $contractUpdate = (new PendingDataController )->PendingInsertTR($transRentData);
 
-        if ($updateTransRent) {
 
-            $daysRemaining;
+        if ($contractUpdate) {
 
-            if ($daysRemaining > 0) {
+            $id = $transRentData['contract_id'];
 
-                $i = [
-                    'id' => $data['id'],
-                    'status' => 'Active',
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['rent_start'],
+                    'date_end' => $getCurrenData['rent_end'],
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'contractPrice' =>  $price ?? ''
                 ];
 
-                $r = (new ContractHistoryController)->updatedExpired($i);
+                $updateContractHistory = ( new ContractHistoryController )->updateHistoryTransRent($currentData);
+
+                if($updateContractHistory){
+
 
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                    'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
+
                 header("Location: " . $_SERVER['HTTP_REFERER']);
 
-            } else {
-
-
-                $i = [
-                    'id' => $data['id'],
-                    'status' => 'Expire',
-                ];
-
-                $r = (new ContractHistoryController)->updatedExpired($i);
+                }
 
                 $_SESSION['notification'] = [
-                    'message' => $data['contract_name'] . ' updated!',
+                      'message' => 'Update successful. This record is now pending further review.',
                     'type' => 'success'
                 ];
+
                 header("Location: " . $_SERVER['HTTP_REFERER']);
 
             }
-        }
 
-    } elseif ($getContractType['contract_type'] === TEMP_LIGHTING) {
-
-        $daysRemaining;
-
-        if ($daysRemaining > 0) {
-
-            $i = [
-                'id' => $data['id'],
-                'status' => 'Active',
-            ];
-
-            $r = (new ContractHistoryController)->updatedExpired($i);
-
-            $_SESSION['notification'] = [
-                'message' => $data['contract_name'] . ' updated!',
-                'type' => 'success'
-            ];
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-
-        } else {
-
-
-            $i = [
-                'id' => $data['id'],
-                'status' => 'Expire',
-            ];
-
-            $r = (new ContractHistoryController)->updatedExpired($i);
-
-            $_SESSION['notification'] = [
-                'message' => $data['contract_name'] . ' updated!',
-                'type' => 'success'
-            ];
-            header("Location: " . $_SERVER['HTTP_REFERER']);
 
         }
 
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-    }
 
-    if ($getContractType['contract_type'] === GOODS) {
-
-        $data = [
-            'id' => $_GET['id'],
-            'contract_name' => $_GET['name'],
-            'contract_start' => $_GET['start'], // 'start' corresponds to rent_start in PHP
-            'contract_end' => $_GET['end'],     // 'end' corresponds to contract_end in PHP
-            'updated_at' => date('Y-m-d H:i:s'), // Add this to match bindParam
-            'contract_status' => 'Active',
-            'daysRemaining' => $_GET['daysRemaining'],
-            'contract_type' => $_GET['type'],
-        ];
-
-        var_dump($data);
-
-        $id = $data['id'];
-        $updateTransRent = (new ContractController)->updateGoodsContract($data);
-
-        $_SESSION['notification'] = [
-            'message' => $data['contract_name'] . ' updated!',
-            'type' => 'success'
-        ];
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-    }
-
-    // header("Location: " . $_SERVER['HTTP_REFERER']);
 }
-// header("Location: " . $_SERVER['HTTP_REFERER']);
+
+if ($_GET['type'] === TEMP_LIGHTING) {
+
+    $EmpUpdate = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
+        'contract_name' => $_GET['name'],
+        'contract_start' => $_GET['templightingStart'],
+        'contract_end' => $_GET['templightingEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+        'address' => $_GET['address'],
+        'tc_no' => $_GET['tcNo'],
+        'account_no' => $_GET['account_no'],
+        'second_party' => $_GET['second_party']
+    ];
+
+    // var_dump($EmpUpdate);
+
+    $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+
+    if ($contractUpdate) {
+
+            $id = $EmpUpdate['contract_id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                    'message' => 'Update for r.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+            }
+        }
+
+}
+
+if($_GET['type'] === EMP_CON){
+
+    $EmpUpdate = [
+        'id' => $_GET['id'],
+        'contract_name' => $_GET['name'],
+        'start' => $_GET['EmpStart'],
+        'end' => $_GET['ConEmpEnd'],
+        'updated_at' => date('Y-m-d H:i:s'),// Include current timestamp
+        'created_at' => date('Y-m-d H:i:s'),
+        'contract_status' => 'Active',
+        'contract_type' => $_GET['contractType'],
+        'status' => 1,
+        'uploader_department' => 'ISD'
+    ];
+
+
+        $contractUpdate = (new PendingDataController )->employmentInsert($EmpUpdate);
+
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                var_dump($updateContractHistory);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+
+    
+}
+//update done
+if($_GET['type'] === INFRA){
+
+    $price = str_replace('₱', '',$_GET['ttc']);
+
+    $EmpUpdate = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
+        'contract_name' => $_GET['name'],
+        'contract_start' => $_GET['infra_start'],
+        'contract_end' => $_GET['infra_end'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'] ?? $_GET['contractType'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+        'implementing_dept' => $_GET['implementingDept'],
+        'total_cost' => $price
+
+    ];
+
+
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['contract_id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'contractPrice' =>  $price
+                    
+                ];
+
+                var_dump($currentData);
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                    'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                    'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+
+    
+}
+//update done
+if($_GET['type'] === GOODS){
+
+    $price = str_replace('₱', '',$_GET['ttc']);
+
+    $EmpUpdate = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
+        'contract_name' => $_GET['name'],
+        'contract_start' => $_GET['goodsStart'],
+        'contract_end' => $_GET['goodsEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+        'supplier' => $_GET['goodsSupplier']
+    ];
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['contract_id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                     'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+}
+//update done
+if($_GET['type'] === SACC){
+
+    $price = str_replace('₱', '',$_GET['ttc']);
+
+    $EmpUpdate = [
+        'contract_id' => $_GET['id'], // Correct key for contract ID
+        'contract_name' => $_GET['name'],
+        'contract_start' => $_GET['saccDateStart'],
+        'contract_end' => $_GET['saccDateEnd'],
+        'created_at' => date('Y-m-d'),
+        'updated_at' => date('Y-m-d'),
+        'contract_status' => 'Active',
+        'status' => 1,
+        'contract_type' => $_GET['type'],
+        'uploader' => $_GET['uploadedBy'],
+        'uploader_id' => $_GET['uploadId'],
+        'uploader_department' => $_GET['uploader_dept'],
+        'data_type' => 'Update',
+        'updated_by' => $_GET['updatedBy'],
+        'total_cost' => $_GET['ttc']
+    ];
+
+
+        $contractUpdate = (new PendingDataController )->PendingInsert($EmpUpdate);
+
+        if ($contractUpdate) {
+
+            $id = $EmpUpdate['contract_id'];
+
+            $getCurrenData = ( new ContractController  )->getContractByIdUpdated($id);
+
+            if(!empty($getCurrenData)){
+
+                $currentData = [
+                    'id' => $getCurrenData['id'],
+                    'contract_name' => $getCurrenData['contract_name'],
+                    'date_start' => $getCurrenData['contract_start'],
+                    'date_end' => $getCurrenData['contract_end'],
+                    'updated_at' => date('Y-m-d H:i:s')
+                ];
+
+                $updateContractHistory = ( new ContractHistoryController )->updateContractHistory($currentData);
+
+                if($updateContractHistory){
+
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+                }
+
+                $_SESSION['notification'] = [
+                      'message' => 'Update successful. This record is now pending further review.',
+                    'type' => 'success'
+                ];
+
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+
+            }
+
+
+        }
+
+    
+}

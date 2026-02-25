@@ -68,10 +68,10 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
       $logged_user = $getUser->getUserRolebyId($id);
 
       $currentDir = basename(dirname($_SERVER['PHP_SELF']));
-      if ($currentDir === 'admin') {
+      if ($currentDir === 'citetd') {
         $usersLink = 'users.php';
         $usersTypes = 'userTypes.php';
-        $usersRoles = 'citetd/userRoles.php';
+        $usersRoles = 'userRoles.php';
       }
     }
     ?>
@@ -100,6 +100,12 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
             <span>General</span>
           </a>
         </li> -->
+        <li class="nav-item">
+          <a class="nav-link" id="mop" href="manage_password.php">
+            <img width="27px" src="<?= image_source ?>../../../public/images/changepass2.svg">
+            <span>Manage password</span>
+          </a>
+        </li>
         <?php if ($department === 'BAC'): ?>
           <li class="nav-item">
             <a class="nav-link" id="mop" href="procurement.php">
@@ -111,7 +117,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
 
         <?php if ($logged_user === 'Admin'): ?>
           <li class="nav-item">
-            <a class="nav-link" id="userRoles" href="<?php echo $usersRoles; ?>">
+            <a class="nav-link" id="userRoles" href="<?= $usersRoles; ?>">
               <img width="27px" src="<?= image_source ?>../../../public/images/userRole.svg">
               <span>User Roles</span>
             </a>

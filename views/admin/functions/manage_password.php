@@ -1,7 +1,10 @@
 <?php
+
+use App\Controllers\UserController;
 session_start();
 $department = $_SESSION['department'] ?? null;
 $role = $_SESSION['user_role'] ?? null;
+$user_id = $_SESSION['id'] ?? null;
 $page_title = "List - $department";
 $userid = $_SESSION['id'] ?? null;
 require_once __DIR__ . '../../../../src/Config/constants.php';
@@ -41,7 +44,7 @@ include_once '../../../views/layouts/includes/header.php';
 
     <div class="content-area">
 
-        <h1>Contracts Overview</h1>
+        <h1>Manage Password</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
 
@@ -66,36 +69,44 @@ include_once '../../../views/layouts/includes/header.php';
                 <?php switch ($department) {
                     case 'IT': ?>
 
-                        <span class="badge p-2" style="background-color: #0d6efd;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #0d6efd;">
+                            <?= $role ?> user
+                        </span>
 
                         <?php break;
                     case 'ISD': ?>
 
-                        <span class="badge p-2" style="background-color: #3F7D58;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3F7D58;">
+                            <?= $role ?> user
+                        </span>
 
                         <?php break;
                     case 'CITET': ?>
 
-                        <span class="badge p-2" style="background-color: #FFB433;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #FFB433;">
+                            <?= $role ?> user
+                        </span>
 
                         <?php break;
                     case 'IASD': ?>
 
-                        <span class="badge p-2" style="background-color: #EB5B00;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #EB5B00;">
+                            <?= $role ?> user
+                        </span>
 
                         <?php break;
                     case 'ISD-MSD': ?>
 
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
-
-                        <?php break;
-                    case 'ISD-HRAD': ?>
-                        <span class="badge p-2" style="background-color: #6A9C89;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #6A9C89;">
+                            <?= $role ?> user
+                        </span>
 
                         <?php break;
                     case 'BAC': ?>
 
-                        <span class="badge p-2" style="background-color: #3B6790;"><?= $role ?> user</span>
+                        <span class="badge p-2" style="background-color: #3B6790;">
+                            <?= $role ?> user
+                        </span>
 
                         <?php break;
                     case '': ?>
@@ -112,60 +123,34 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
         <!-- Wrap both search and filter in a flex container -->
-        <div id="filterItems" style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
+        <div class="d-flex gap-3 col-md-5">
+            <?php
+            $getPassword = (new UserController())->getUserpassword($id);
+            ?>
 
-
-            <!-- Contract Type Filter -->
-            <!-- <div style="text-align: right;">
-                <label>Filter :</label>
-                <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
-                    <option value="">Select All</option>
-                    <?php if (!empty($getAllContractType)): ?>
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>">
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </div> -->
-            <div id="searchContainer" style="display: flex; align-items: center; gap: 10px;">
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <input type="text" name="searchItem" id="searchInput" class="form-control"
-                        value="<?= htmlspecialchars($_GET['searchItem'] ?? '') ?>" placeholder="Search contracts..."
-                        style="width: 300px;">
-                </form>
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <select name="filterItem" class="form-select" onchange="this.form.submit()">
-                        <option value="">Select All</option>
-
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>" <?= (($_GET['filterItem'] ?? '') == $contract['contract_type']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-
-                <?php
-                $searchItem = $_GET['searchItem'] ?? '';
-                $filterItem = $_GET['filterItem'] ?? '';
-                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-
-                $data = (new ContractController)
-                    ->getContractsByDepartmentAllSearch($department, $searchItem, $filterItem, $page, 8);
-
-                $contracts = $data['results'];
-                $totalPages = $data['totalPages'];
-                $currentPage = $data['currentPage'];
-
-                ?>
+            <!-- Current Password -->
+            <div class="flex-fill">
+                <label for="currentPassword1" class="form-label">Current Password</label>
+                <input type="text" id="currentPassword1" class="form-control" value="<?= $getPassword['password'] ?>"
+                    readonly>
             </div>
 
+            <!-- New Password + Button -->
+            <div class="flex-fill">
+                <form>
+                    <label for="currentPassword2" class="form-label">New Password</label>
+
+                    <div class="d-flex gap-2">
+                        <input type="password" name="newPassword" id="current-Password2" class="form-control"
+                            placeholder="Enter new password">
+
+                        <button type="submit" id="btnChangePassword" class="btn btn-primary btn-sm">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <?php include_once '../contents/dashboard_content.php'; ?>
 
     </div>
 </div>
@@ -199,18 +184,18 @@ include_once '../../../views/layouts/includes/header.php';
 <!-- popup notification ---->
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path
+    <sym bol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <pat h
             d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-    </symbol>
-    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path
+    </sym>
+    <sym bol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <pat h
             d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-    </symbol>
-    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-        <path
+    </sym>
+    <sym bol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <pat h
             d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-    </symbol>
+    </sym>
 </svg>
 
 
@@ -290,40 +275,13 @@ include_once '../../../views/layouts/includes/header.php';
         }
     });
 
-    //----------------DAtatables
-    $(document).ready(function () {
-        var rowCount = $('#table tbody tr').length;
 
-        // Check if the table has at least one data row (excluding the "No contracts found" message)
-        if (rowCount > 0 && $('#table tbody tr td').first().attr('colspan') !== '6') {
-            // Initialize DataTable
-            var table = $('#table').DataTable({
-                "paging": true,
-                "searching": true,
-                "lengthChange": true,
-                "pageLength": 10,
-                "ordering": false,
-                "info": true
-            });
+    function updatePassword() {
+        var id = document.getElementById(currentPassword2).value
 
-            // Append the contract type filter next to the search input
-            var searchInput = $('#table_filter input'); // DataTables search input field
-            var filterDiv = $('#statusFilter').closest('div'); // The contract filter container
-            searchInput.closest('div').append(filterDiv); // Move the filter next to the search input
-
-            // Apply filter based on contract type selection
-            $('#statusFilter').change(function () {
-                var filterValue = $(this).val();
-                if (filterValue) {
-                    table.column(1).search(filterValue).draw(); // Column 1 is for contract type
-                } else {
-                    table.column(1).search('').draw(); // Reset filter
-                }
-            });
-        }
-    });
+        console.log(id);
 
 
+    }
 
-    //----------------DAtatables
 </script>

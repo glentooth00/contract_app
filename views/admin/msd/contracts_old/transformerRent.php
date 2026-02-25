@@ -9,7 +9,7 @@ require_once __DIR__ . '../../../../../vendor/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $filePath = (new ContractController)->uploadRentalFile($_FILES["contract_file"] ?? null);
+    $filePath = (new ContractController)->uploadRentalFileTR($_FILES["contract_file"] ?? null);
 
     $rentalData = [
 
@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'uploader_department' => $_POST['uploader_department'],
         'uploader_id' => $_POST['uploader_id'],
         'account_no' => $_POST['account_no'],
-        'address' => $_POST['address'],
 
     ];
 
@@ -40,11 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             'type' => 'success'
         ];
 
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+        header("location:../list.php");
 
     }
 
-    header("Location: " . $_SERVER['HTTP_REFERER']);
+    $_SESSION['notification'] = [
+        'message' => 'Contract successfully saved!',
+        'type' => 'success'
+    ];
+
+    header("location:../list.php");
 
 }
 

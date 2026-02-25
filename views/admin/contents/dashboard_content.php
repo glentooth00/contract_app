@@ -143,11 +143,19 @@ use App\Controllers\FlagController;
                         <div style="font-size:14px; color:#6c757d;">
                             <div style="margin-bottom:6px;">
                                 <strong style="color:#343a40;">From:</strong>
-                                <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?>
+                                <?=
+                                    ($date = $contract['contract_start'] ?? $contract['rent_start'] ?? null)
+                                    ? date('F-d-Y', strtotime($date))
+                                    : ''
+                                    ?>
                             </div>
                             <div style="margin-bottom:6px;">
                                 <strong style="color:#343a40;">To:</strong>
-                                <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?>
+                                <?=
+                                    ($date = $contract['contract_end'] ?? $contract['rent_end'] ?? null)
+                                    ? date('F-d-Y', strtotime($date))
+                                    : ''
+                                    ?>
                             </div>
                             <div>
                                 <strong style="color:#343a40;">Status</strong>
@@ -160,24 +168,38 @@ use App\Controllers\FlagController;
                     </div>
                     <hr>
                     <?php
-                    $contractType = $contract['contract_type'];
+                    $contractType = $contract['contract_type'] ?? '';
 
-                    $getFromContractType = (new ContractTypeController)->getContractTypeByDepartment($contractType);
+                    // Determine correct end field
+                    $endDateValue = $contract['contract_end'] ?? $contract['rent_end'] ?? null;
 
-                    foreach ($getFromContractType as $row) {
+                    $isExpired = false;
+                    $days = 0;
 
-                        if ($contractType === $row['contract_type']) {
+                    if (!empty($endDateValue)) {
+                        $end = new DateTime($endDateValue);
+                        $end->setTime(23, 59, 59); // expire at end of day
+            
+                        $now = new DateTime();
 
-                            $end = new DateTime($contract['contract_end']);
-                            $now = new DateTime();
-
-                            $interval = $now->diff($end);
-                            $diff = $interval->days;
-
-                            $diff;
-
+                        if ($now > $end) {
+                            $isExpired = true;
+                        } else {
+                            $days = $now->diff($end)->days;
                         }
+                    }
 
+                    // Get ERT once
+                    $typeConfig = (new ContractTypeController)
+                        ->getContractTypeByDepartment($contractType);
+
+                    $ert = 0;
+
+                    foreach ($typeConfig as $row) {
+                        if ($row['contract_type'] === $contractType) {
+                            $ert = $row['contract_ert'];
+                            break;
+                        }
                     }
                     ?>
 
@@ -188,7 +210,7 @@ use App\Controllers\FlagController;
                                 <?php
                                 $contractType = $contract['contract_type'];
 
-                                // Get contract type config ONCE
+                                // Get ERT
                                 $typeConfig = (new ContractTypeController)
                                     ->getContractTypeByDepartment($contractType);
 
@@ -201,13 +223,26 @@ use App\Controllers\FlagController;
                                     }
                                 }
 
-                                // Date logic
-                                $end = new DateTime($contract['contract_end']);
-                                $now = new DateTime();
+                                // Calculate remaining days
+                                // Calculate remaining days
+                                $days = 0;
 
-                                $interval = $now->diff($end);
-                                $days = $interval->days;
-                                $isExpired = $interval->invert; // 1 if expired
+                                if (!empty($contract['contract_end'])) {
+
+                                    $end = new DateTime($contract['contract_end']);
+                                    $end->setTime(23, 59, 59);
+
+                                    $now = new DateTime();
+
+                                    if ($now <= $end) {
+                                        $days = $now->diff($end)->days + 1; // 👈 ADD 1 HERE
+                                    }
+                                }
+
+                                // 🔥 Expiration rule
+                                $isExpired =
+                                    strtoupper($contract['status']) === 'EXPIRED'
+                                    || $days === 0;
                                 ?>
 
                                 <div class="text-center mt-2">
@@ -242,7 +277,7 @@ use App\Controllers\FlagController;
                                 <?php
                                 $contractType = $contract['contract_type'];
 
-                                // Get contract type config ONCE
+                                // Get contract type config
                                 $typeConfig = (new ContractTypeController)
                                     ->getContractTypeByDepartment($contractType);
 
@@ -255,32 +290,46 @@ use App\Controllers\FlagController;
                                     }
                                 }
 
-                                // Date logic
-                                $end = new DateTime($contract['contract_end']);
-                                $now = new DateTime();
+                                $days = 0;
+                                $isExpired = false;
 
-                                $interval = $now->diff($end);
-                                $days = $interval->days;
-                                $isExpired = $interval->invert; // 1 if expired
+                                if (!empty($contract['contract_end'])) {
+
+                                    $end = new DateTime($contract['contract_end']);
+                                    $end->setTime(23, 59, 59); // expire end of day
+                
+                                    $now = new DateTime();
+
+                                    if ($now > $end) {
+                                        $isExpired = true;
+                                    } else {
+                                        $days = $now->diff($end)->days + 1; // inclusive counting
+                                    }
+                                }
+
+                                // Expire if status is manually set
+                                if (strtoupper($contract['status']) === 'EXPIRED') {
+                                    $isExpired = true;
+                                }
                                 ?>
 
                                 <div class="text-center mt-2">
 
-                                    <?php if ($isExpired == 1): ?>
+                                    <?php if ($isExpired): ?>
 
-                                        <div class="p-2 text-white rounded fw-bold" style="background: #EB191998;">
+                                        <div class="p-2 text-white rounded fw-bold" style="background:#EB191998;">
                                             Expired
                                         </div>
 
                                     <?php elseif ($days >= $ert): ?>
 
-                                        <div class="p-2 text-white rounded fw-bold" style="background: #58B94F;">
+                                        <div class="p-2 text-white rounded fw-bold" style="background:#58B94F;">
                                             <?= $days ?> days remaining
                                         </div>
 
                                     <?php else: ?>
 
-                                        <div class="p-2 bg-warning rounded fw-bold" style="background-color: #FF9760;">
+                                        <div class="p-2 text-white rounded fw-bold" style="background:#FF9760;">
                                             <?= $days ?> days remaining
                                         </div>
 
@@ -449,9 +498,69 @@ use App\Controllers\FlagController;
                                 </div>
                             </span>
                             <?php break;
-                        case SACC: ?>
-                            <!-- Code for PSC_SHORT -->
-                            <!-- Code for EMP_CON -->
+                        case SACC:
+                            ?>
+                            <span>
+                                <?php
+                                $contractType = $contract['contract_type'];
+
+                                // Get contract type config
+                                $typeConfig = (new ContractTypeController)
+                                    ->getContractTypeByDepartment($contractType);
+
+                                $ert = 0;
+
+                                foreach ($typeConfig as $row) {
+                                    if ($row['contract_type'] === $contractType) {
+                                        $ert = $row['contract_ert'];
+                                        break;
+                                    }
+                                }
+
+                                // Date logic
+                                $days = 0;
+                                $isExpired = false;
+
+                                $endDateValue = $contract['contract_end'] ?? null; // make sure you use the correct field
+                
+                                if (!empty($endDateValue)) {
+                                    $end = new DateTime($endDateValue);
+                                    $end->setTime(23, 59, 59);
+
+                                    $now = new DateTime();
+
+                                    // Expired if date passed OR status is EXPIRED
+                                    if ($now > $end || strtoupper($contract['contract_status'] ?? '') === 'EXPIRED') {
+                                        $isExpired = true;
+                                    } else {
+                                        $days = $now->diff($end)->days + 1; // inclusive counting
+                                    }
+                                }
+                                ?>
+
+                                <div class="text-center mt-2">
+
+                                    <?php if ($isExpired): ?>
+                                        <div class="p-2 text-white rounded fw-bold" style="background:#EB191998;">
+                                            Expired
+                                        </div>
+
+                                    <?php elseif ($days >= $ert): ?>
+                                        <div class="p-2 text-white rounded fw-bold" style="background:#58B94F;">
+                                            <?= $days ?> days remaining
+                                        </div>
+
+                                    <?php else: ?>
+                                        <div class="p-2 text-white rounded fw-bold" style="background:#FF9760;">
+                                            <?= $days ?> days remaining
+                                        </div>
+                                    <?php endif; ?>
+
+                                </div>
+                            </span>
+                            <?php
+                            break; // 🔥 THIS BREAK IS CRUCIAL
+                        case TRANS_RENT: ?>
                             <span>
                                 <?php
                                 $contractType = $contract['contract_type'];
@@ -470,7 +579,7 @@ use App\Controllers\FlagController;
                                 }
 
                                 // Date logic
-                                $end = new DateTime($contract['contract_end']);
+                                $end = new DateTime($contract['rent_end']);
                                 $now = new DateTime();
 
                                 $interval = $now->diff($end);
@@ -501,7 +610,7 @@ use App\Controllers\FlagController;
                                     <?php endif; ?>
 
                                 </div>
-                            </span> <?php break;
+                            </span><?php break;
                         case TEMP_LIGHTING: ?>
                             <span>
                                 <?php
@@ -554,6 +663,7 @@ use App\Controllers\FlagController;
                                 </div>
                             </span>
                             <?php break;
+
                         default: ?>
                             <!-- Code if no match -->
                             <p>Unknown Contract Type</p>
