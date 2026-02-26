@@ -37,4 +37,4 @@ define('UR', 'Under Review');
 define('NA', 'Needs Attention');
 
 define('BASE_URL', 'http://192.168.4.67/contract_app/');
-define('image_source', '../../../../../');
+define('image_source', '');

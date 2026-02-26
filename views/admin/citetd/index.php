@@ -54,7 +54,7 @@ include_once '../../../views/layouts/includes/header.php';
                             <?= $getLatestActivities ?>
                         </span>
                     <?php endif; ?>
-                    <img width="25px" src="../../../../../public/images/bell.svg" alt="Activities need attention">
+                    <img width="25px" src="../../../public/images/bell.svg" alt="Activities need attention">
                 </div>
             </a>
 
