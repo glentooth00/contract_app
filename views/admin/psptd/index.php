@@ -48,7 +48,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #0d6efd;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case ISD-HRAD: ?>
+                    case ISD - HRAD: ?>
 
                         <span class="badge p-2" style="background-color: #3F7D58;"><?= $department; ?> user</span>
 
@@ -63,7 +63,7 @@ include_once '../../../views/layouts/includes/header.php';
                         <span class="badge p-2" style="background-color: #EB5B00;"><?= $department; ?> user</span>
 
                         <?php break;
-                    case ISD-MSD: ?>
+                    case ISD - MSD: ?>
 
                         <span class="badge p-2" style="background-color: #6A9C89;"><?= $department; ?> user</span>
 
@@ -124,36 +124,36 @@ include_once '../../../views/layouts/includes/header.php';
                             <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
                             <td class="text-center">
                                 <?php
-                                    $type = $contract['contract_type'] ?? '';
-                                    $badgeColor = '#FAB12F'; // default
-
-                                    switch ($type) {
-                                        case INFRA:
-                                            $badgeColor = '#328E6E';
-                                            break;
-                                        case SACC:
-                                            $badgeColor = '#123458';
-                                            break;
-                                        case GOODS:
-                                            $badgeColor = '#F75A5A';
-                                            break;
-                                        case EMP_CON:
-                                            $badgeColor = '#FAB12F';
-                                            break;
-                                        case PSC_LONG:
-                                            $badgeColor = '#007bff';
-                                            break;
-                                        case PSC_SHORT:
-                                            $badgeColor = '#28a745';
-                                            break;
-                                        case TRANS_RENT:
-                                            $badgeColor = '#003092';
-                                            break;
-                                        case TEMP_LIGHTING:
-                                            $badgeColor = '#03A791';
-                                            break;
-                                    }
-                                    ?>
+                                $type = $contract['contract_type'] ?? '';
+                                $badgeColor = '#FAB12F'; // default
+                        
+                                switch ($type) {
+                                    case INFRA:
+                                        $badgeColor = '#328E6E';
+                                        break;
+                                    case SACC:
+                                        $badgeColor = '#123458';
+                                        break;
+                                    case GOODS:
+                                        $badgeColor = '#F75A5A';
+                                        break;
+                                    case EMP_CON:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                    case PSC_LONG:
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case PSC_SHORT:
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    case TRANS_RENT:
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case TEMP_LIGHTING:
+                                        $badgeColor = '#03A791';
+                                        break;
+                                }
+                                ?>
                                 <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
