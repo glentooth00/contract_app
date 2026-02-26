@@ -40,7 +40,8 @@ include_once '../../../views/layouts/includes/header.php';
         <h1>Contracts</h1>
         <span class="p-1 d-flex float-end" style="margin-top: -2.5em;">
             <!-- <?= $department = $_SESSION['department'] ?? null; ?> Account -->
-            <a href="view_pending_updates.php" style="text-decoration: none;">
+
+            <!-- <a href="view_pending_updates.php" style="text-decoration: none;">
                 <div style="position: relative; display: inline-block; margin-right: 30px;">
                     <?php if (!empty($getLatestActivities)): ?>
                         <span class="badge bg-danger" style="position: absolute; top: -10px; right: -10px;
@@ -51,7 +52,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php endif; ?>
                     <img width="25px" src="../../../public/images/bell.svg" alt="Activities need attention">
                 </div>
-            </a>
+            </a> -->
 
 
             <?php switch ($department) {

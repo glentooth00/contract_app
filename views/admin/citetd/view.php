@@ -906,35 +906,35 @@ include_once '../../../views/layouts/includes/header.php';
 
 
 <?php if (isset($_SESSION['notification'])): ?>
-        <div id="notification"
-            class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-            role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
-            <!-- Icon -->
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
-                aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
-                <use
-                    xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
-            </svg>
-            <!-- Message -->
-            <div>
-                <?php echo $_SESSION['notification']['message']; ?>
-            </div>
-            <!-- Close Button -->
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <div id="notification"
+        class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
+        role="alert" style="position: fixed; bottom: 1.5em; right: 1em; z-index: 1000;">
+        <!-- Icon -->
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
+            aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
+            <use
+                xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
+        </svg>
+        <!-- Message -->
+        <div>
+            <?php echo $_SESSION['notification']['message']; ?>
         </div>
-        <?php unset($_SESSION['notification']); // Clear notification after displaying ?>
+        <!-- Close Button -->
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php unset($_SESSION['notification']); // Clear notification after displaying ?>
 
-        <script>
-            // Automatically fade the notification out after 6 seconds
-            setTimeout(function () {
-                let notification = document.getElementById('notification');
-                if (notification) {
-                    notification.classList.remove('show');
-                    notification.classList.add('fade');
-                    notification.style.transition = 'opacity 1s ease';
-                }
-            }, 7000); // 6 seconds
-        </script>
+    <script>
+        // Automatically fade the notification out after 6 seconds
+        setTimeout(function () {
+            let notification = document.getElementById('notification');
+            if (notification) {
+                notification.classList.remove('show');
+                notification.classList.add('fade');
+                notification.style.transition = 'opacity 1s ease';
+            }
+        }, 7000); // 6 seconds
+    </script>
 <?php endif; ?>
 
 <script>
