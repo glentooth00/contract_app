@@ -30,7 +30,7 @@ $account_no = $getContract['account_no'];
         ?>
         <div class="d-flex align-items-center gap-2">
 
-            <?php if (isset($department)) { ?>
+               <?php if (isset($department)) { ?>
 
                 <?php switch ($department) {
                     case 'IT': ?>
@@ -71,7 +71,7 @@ $account_no = $getContract['account_no'];
 
             <?php } else { ?>
 
-            <?php } ?>
+                <?php } ?>
 
             <!-- <?php include_once 'bell.php'; ?> -->
             <!-- Comment icon with badge -->
@@ -91,24 +91,23 @@ $account_no = $getContract['account_no'];
                         <?php include_once 'no_message.php'; ?>
                     </span>
                 <?php endif; ?>
+                    <span class="p-3">
+                        <?php
+                        $id = $contractId;
+                        $getFlag = (new FlagController)->getFlag($id);
+                        ?>
+                        <?php if ($getFlag['status'] ?? '' === 1): ?>
 
-                <span class="p-3">
-                    <?php
-                    $id = $contractId;
-                    $getFlag = (new FlagController)->getFlag($id);
-                    ?>
-                    <?php if ($getFlag['status'] ?? '' === 1): ?>
-
-                        <?php if ($getFlag['flag_type'] === UR): ?>
-                            <img src="../../../public/images/underReview.svg" id="review" width="27px;"
-                                title="This Contract is Under review">
+                                <?php if ($getFlag['flag_type'] === UR): ?>
+                                        <img src="../../../public/images/underReview.svg" id="review" width="27px;"
+                                            title="This Contract is Under review">
+                                <?php endif; ?>
+                                <?php if ($getFlag['flag_type'] === NA): ?>
+                                        <img src="../../../public/images/withComment.svg" id="attention" width="27px;"
+                                            title="This Contract Needs Attention">
+                                <?php endif; ?>
                         <?php endif; ?>
-                        <?php if ($getFlag['flag_type'] === NA): ?>
-                            <img src="../../../public/images/withComment.svg" id="attention" width="27px;"
-                                title="This Contract Needs Attention">
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </span>
+                    </span>
             <?php endif; ?>
             <!-- Three-dot dropdown -->
             <div class="dotMenu" onclick="toggleView()" id="dotMenu">
@@ -125,11 +124,11 @@ $account_no = $getContract['account_no'];
                                     id="" class="p-2 mb-5">Notification</small></a>
                         </li>
                         <?php if ($department === IASD): ?>
-                            <li>
-                                <span><img src="../../../public/images/flagContract.svg" width="25px"><small
-                                        data-toggle="modal" data-target="#flagModal" id="flagContract">Flag
-                                        Contract</small></span>
-                            </li>
+                                <li>
+                                    <span><img src="../../../public/images/flagContract.svg" width="25px"><small
+                                            data-toggle="modal" data-target="#flagModal" id="flagContract">Flag
+                                            Contract</small></span>
+                                </li>
                         <?php endif; ?>
                     </ul>
                 </div>
