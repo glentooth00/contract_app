@@ -25,7 +25,6 @@ if ($getOneLatest) {
 
 include_once '../../../views/layouts/includes/header.php';
 ?>
-
 <!-- Loading Spinner - Initially visible -->
 <div id="loadingSpinner" class="text-center"
     style="z-index:9999999;padding:100px;height:100%;width:100%;background-color: rgb(203 199 199 / 82%);position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
