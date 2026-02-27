@@ -159,7 +159,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
-                                
+
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                             </td>
 

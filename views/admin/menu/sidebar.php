@@ -317,97 +317,127 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
   .sideBar {
     width: 260px;
     height: 100vh;
-    background-color: #F7F7F7;
-    color: white;
-    padding: 1rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #334155;
+    padding: 1.2rem 1rem;
     position: fixed;
-    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.06);
     overflow-y: auto;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
 
+  /* Logo Section */
   .logo {
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    text-align: center;
+    background: rgba(15, 23, 42, 0.03);
+    border-radius: 10px;
+    padding: 12px;
   }
 
+  .logo h2 {
+    color: #0f172a;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  /* Divider */
+  hr {
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    margin: 1.2rem 0;
+  }
+
+  /* Navigation */
   .nav-link {
-    font-weight: 700;
-    color: #393E46;
-    font-size: 15px;
+    font-weight: 500;
+    color: #475569;
+    font-size: 14.5px;
     display: flex;
     align-items: center;
-    padding: 10px 9px;
-    border-radius: 5px;
-    margin-bottom: 5px;
-    transition: all 0.1s ease;
-  }
-
-  .nav-link:hover {
-    background-color: #34495e;
-    color: white;
-    text-decoration: none;
+    padding: 10px 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    transition: all 0.2s ease;
   }
 
   .nav-link span {
-    margin-left: 10px;
+    margin-left: 12px;
   }
 
-  .nav .nav-item .nav-link.active,
-  .nav .nav-item .disabled-link {
-    background-color: #1abc9c !important;
-    color: white !important;
-    font-weight: bold;
+  /* Hover */
+  .nav-link:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+    transform: translateX(3px);
   }
 
+  /* Active State */
+  .nav .nav-item .nav-link.active {
+    background: #2563eb;
+    color: #ffffff !important;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+  }
+
+  /* Submenu */
   .collapse {
     display: none;
-    margin-left: 1px;
+    margin-left: 8px;
+    border-left: 2px solid rgba(15, 23, 42, 0.08);
+    padding-left: 10px;
   }
 
+  /* Dropdown icon */
   .toggle-icon {
     margin-left: auto;
     transition: transform 0.3s ease;
+    font-size: 12px;
+    color: #64748b;
   }
 
   .expanded .toggle-icon {
     transform: rotate(180deg);
   }
 
-  hr {
-    border-top: 1px solid #7f8c8d;
-    margin: 1rem 0;
+  /* Icons */
+  .nav-link img {
+    width: 20px;
+    opacity: 0.75;
+    transition: all 0.3s ease;
   }
 
-  ul.nav {
-    padding-left: 0;
+  .nav-link:hover img {
+    opacity: 1;
   }
 
-  ul li {
-    list-style: none;
+  /* Badge refinement */
+  .badge {
+    font-size: 11px;
+    padding: 4px 6px;
+    border-radius: 6px;
   }
 
+  /* Scrollbar */
+  .sideBar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sideBar::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.15);
+    border-radius: 4px;
+  }
+
+  /* Layout adjustment */
   .main-layout {
     display: flex;
     min-height: 100vh;
   }
 
   .content-area {
-    margin-left: 270px;
-    /* Same as sidebar width */
-    width: calc(100% - 240px);
-    background-color: #f8f9fa;
-    padding: 20px;
-    height: 100em;
-  }
-
-  .nav-link:hover img {
-    filter: brightness(0) invert(1);
-  }
-
-  .nav-link img {
-    transition: filter 0.3s ease;
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    background-color: #f8fafc;
+    padding: 28px;
+    min-height: 100vh;
   }
 </style>
 

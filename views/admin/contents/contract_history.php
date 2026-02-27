@@ -1,142 +1,142 @@
 <?php
 use App\Controllers\ContractHistoryController;
+
+$id = $getContract['account_no'] ?? $getContract['id'];
+$status = $getContract['contract_status'];
+$contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+// Update status if expired
+if ($status === 'Expired') {
+    (new ContractHistoryController)->updateStatus(['id' => $id, 'status' => 'Expired']);
+}
 ?>
 
-<div>
-    <div class="mt-5">
-        <h4>Contract History </h4>
-    </div>
+<div class="contract-history-container mt-5">
+    <h4>Contract History</h4>
     <hr>
-    <div>
-        <table class="table table-stripped table-hover">
-            <thead>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle text-center">
+            <thead class="table-light">
                 <tr>
-                    <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
-                    <th style="text-align: center !important;"><span class="badge text-muted">Contract
-                            File</span></th>
-                    <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
-                    </th>
-                    <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
-                    </th>
-                    <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span></th> -->
+                    <th>Status</th>
+                    <th>Contract File</th>
+                    <th>Date Start</th>
+                    <th>Date End</th>
                 </tr>
             </thead>
-            <?php
-            $id = $getContract['account_no'] ?? $getContract['id'];
-            $status = $getContract['contract_status'];
-            $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
-
-            if ($status == 'Expired') {
-
-                $stat = [
-                    'id' => $id,
-                    'status' => 'Expired',
-                ];
-
-                $updateStatus = (new ContractHistoryController)->updateStatus($stat);
-
-
-            }
-
-            // var_dump($contractHist_datas);
-            ?>
-            <tbody class="">
+            <tbody>
                 <?php if (!empty($contractHist_datas)): ?>
-                    <?php foreach ($contractHist_datas as $employement_data): ?>
+                    <?php foreach ($contractHist_datas as $data): ?>
                         <tr>
-                            <td style="text-align: center !important;">
-
-                                <?php if ($employement_data['status'] == 'Active'): ?>
-                                    <span class="badge bg-success p-2"><?= $employement_data['status']; ?></span>
-                                <?php elseif ($employement_data['status'] == 'Expired'): ?>
-                                    <span class="badge bg-danger p-2">Rental Contract Ended</span>
-                                <?php else: ?>
-                                    <span class="badge text-dark bg-warning p-2">Employment Contract ended</span>
-                                <?php endif; ?>
+                            <!-- Status -->
+                            <td>
+                                <?php
+                                $status = $data['status'] ?? '';
+                                switch ($status) {
+                                    case 'Active':
+                                        $badgeClass = 'bg-success';
+                                        $badgeText = 'Active';
+                                        break;
+                                    case 'Expired':
+                                        $badgeClass = 'bg-danger';
+                                        $badgeText = 'Rental Contract Ended';
+                                        break;
+                                    default:
+                                        $badgeClass = 'bg-warning text-dark';
+                                        $badgeText = 'Employment Contract Ended';
+                                }
+                                ?>
+                                <span class="badge <?= $badgeClass ?> p-2"><?= $badgeText ?></span>
                             </td>
-                            <td style="text-align: center !important;">
 
-
-                                <?php if (!empty($employement_data['contract_file'])): ?>
-                                    <!-- Trigger the modal with this button -->
-                                    <button class="btn btn-primary badge p-2" data-bs-toggle="modal"
-                                        data-bs-target="#fileModal<?= $employement_data['id'] ?>"
-                                        style="text-align: center !important;">
-                                        View file
+                            <!-- Contract File -->
+                            <td>
+                                <?php if (!empty($data['contract_file'])): ?>
+                                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#fileModal<?= $data['id'] ?>">View File
                                     </button>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="fileModal<?= $employement_data['id'] ?>" tabindex="-1"
-                                        aria-labelledby="fileModalLabel<?= $employement_data['id'] ?>" aria-hidden="true">
-                                        <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
-                                            <div class="modal-content">
+                                    <div class="modal fade" id="fileModal<?= $data['id'] ?>" tabindex="-1"
+                                        aria-labelledby="fileModalLabel<?= $data['id'] ?>" aria-hidden="true">
+                                        <div class="modal-dialog modal-xl modal-dialog-centered" style="max-height: 95vh;">
+                                            <div class="modal-content" style="height: 95vh;">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="fileModalLabel<?= $employement_data['id'] ?>">
-                                                        <?= $employement_data['contract_name'] ?> -
-                                                        <?= $employement_data['contract_type'] ?>
+                                                    <h5 class="modal-title" id="fileModalLabel<?= $data['id'] ?>">
+                                                        <?= htmlspecialchars($data['contract_name']) ?> -
+                                                        <?= htmlspecialchars($data['contract_type']) ?>
                                                     </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
-                                                <div class="modal-body" style="padding: 0; overflow-y: auto;">
-                                                    <!-- Display the contract file inside the modal -->
-                                                    <iframe
-                                                        src="<?= htmlspecialchars("../../../" . $employement_data['contract_file']) ?>"
-                                                        width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                                                <div class="modal-body p-0" style="height: calc(95vh - 60px); overflow-y: auto;">
+                                                    <iframe src="<?= htmlspecialchars("../../../" . $data['contract_file']) ?>"
+                                                        width="100%" height="100%" style="border:none;"></iframe>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                 <?php else: ?>
-                                    No file
+                                    <span class="text-muted">No file</span>
                                 <?php endif; ?>
                             </td>
-                            <td style="text-align: center !important;">
 
-                                <?php if (!empty($employement_data['date_start'])): ?>
-                                    <?php $datestart = new DateTime($employement_data['date_start']); ?>
-                                    <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+                            <!-- Date Start -->
+                            <td>
+                                <?php if (!empty($data['date_start'])): ?>
+                                    <span class="badge bg-light text-dark">
+                                        <?= date('M d, Y', strtotime($data['date_start'])) ?>
+                                    </span>
                                 <?php else: ?>
-                                    <span class="badge text-danger">No Start Date</span>
+                                    <span class="badge bg-danger">No Start Date</span>
                                 <?php endif; ?>
                             </td>
-                            <td style="text-align: center !important;">
-                                <?php if (!empty($employement_data['date_end'])): ?>
-                                    <?php $datestart = new DateTime($employement_data['date_end']); ?>
-                                    <span class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span>
+
+                            <!-- Date End -->
+                            <td>
+                                <?php if (!empty($data['date_end'])): ?>
+                                    <span class="badge bg-light text-dark">
+                                        <?= date('M d, Y', strtotime($data['date_end'])) ?>
+                                    </span>
                                 <?php else: ?>
-                                    <span class="badge text-danger">No Start Date</span>
+                                    <span class="badge bg-danger">No End Date</span>
                                 <?php endif; ?>
-
                             </td>
-
-                            <!-- <td style="text-align: center !important;">
-
-                                        <button class="btn btn-danger btn-sm" title="Delete">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                        </button>
-
-
-                                        <button class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal"
-                                            data-bs-target="#editModal">
-                                            <i class="fa fa-pencil" aria-hidden="true"></i>
-                                        </button>
-                                    </td> -->
-
-
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="4">No contract data found.</td>
+                        <td colspan="4" class="text-center text-muted">No contract data found.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
-
         </table>
     </div>
 </div>
+
+<style>
+    .contract-history-container h4 {
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+
+    .table th,
+    .table td {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .table td .badge {
+        font-size: 13px;
+    }
+
+    .modal-xl {
+        max-width: 90% !important;
+    }
+</style>
