@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $filePath = (new ContractController)->uploadFile($_FILES["contract_file"] ?? null);
 
-    echo $role = $_SESSION['user_role'] ?? null;
+    $role = $_SESSION['user_role'] ?? null;
 
     if ($role === CHIEF) {
 
@@ -104,12 +104,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     }
-    // $_SESSION['notification'] = [
-    //     'message' => 'Power supply Contract successfully added waiting for approval!',
-    //     'type' => 'success'
-    // ];
-    // header("Location: " . $_SERVER['HTTP_REFERER']);
-    // exit;
+    $_SESSION['notification'] = [
+        'message' => 'Power supply Contract successfully added waiting for approval!',
+        'type' => 'success'
+    ];
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit;
 
 
 

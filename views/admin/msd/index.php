@@ -112,59 +112,7 @@ include_once '../../../views/layouts/includes/header.php';
         </span>
         <hr>
         <!-- Wrap both search and filter in a flex container -->
-        <div id="filterItems" style="margin-bottom: 20px; display: flex; justify-content: flex-start; gap: 10px;">
-
-
-            <!-- Contract Type Filter -->
-            <!-- <div style="text-align: right;">
-                <label>Filter :</label>
-                <select id="statusFilter" class="form-select" style="width: 340px;margin-top:-1em">
-                    <option value="">Select All</option>
-                    <?php if (!empty($getAllContractType)): ?>
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>">
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-            </div> -->
-            <div id="searchContainer" style="display: flex; align-items: center; gap: 10px;">
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <input type="text" name="searchItem" id="searchInput" class="form-control"
-                        value="<?= htmlspecialchars($_GET['searchItem'] ?? '') ?>" placeholder="Search contracts..."
-                        style="width: 300px;">
-                </form>
-                <form method="GET">
-                    <small style="color:#6c757d;">Filter by Contract Type:</small>
-                    <select name="filterItem" class="form-select" onchange="this.form.submit()">
-                        <option value="">Select All</option>
-
-                        <?php foreach ($getAllContractType as $contract): ?>
-                            <option value="<?= htmlspecialchars($contract['contract_type']) ?>" <?= (($_GET['filterItem'] ?? '') == $contract['contract_type']) ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($contract['contract_type']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-
-                <?php
-                $searchItem = $_GET['searchItem'] ?? '';
-                $filterItem = $_GET['filterItem'] ?? '';
-                $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-
-                $data = (new ContractController)
-                    ->getContractsByDepartmentAllSearch($department, $searchItem, $filterItem, $page, 8);
-
-                $contracts = $data['results'];
-                $totalPages = $data['totalPages'];
-                $currentPage = $data['currentPage'];
-
-                ?>
-            </div>
-
-        </div>
+        <?php include_once '../contents/filter.php'; ?>
         <?php include_once '../contents/dashboard_content.php'; ?>
 
     </div>
