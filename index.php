@@ -1,229 +1,213 @@
 <?php
 include_once 'src/Config/constants.php';
-use App\Controllers\SampleController;
-$session = session_start();
-// unset($_SESSION['login_attempts']); // TEMPORARY RESET
-$page_title = 'Login';
-
+session_start();
+$page_title = 'Contract Management System - Login';
 ?>
-<?php include_once 'views/layouts/includes/header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<?php if (isset($_SESSION['username'])): ?>
-    <span class="notification" id="notification">
-        <?= $_SESSION['username']; ?>
-        <?php if (isset($_SESSION['login_attempts']) && $_SESSION['login_attempts'] < 5): ?>
-            <br>You have <?= 5 - $_SESSION['login_attempts']; ?> attempt(s) left.
-        <?php endif; ?>
-        <button type="button" onclick="this.parentElement.style.display='none'"
-            style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button>
-    </span>
-    <?php unset($_SESSION['username']); ?>
-<?php endif; ?>
+<head>
+    <meta charset="UTF-8">
+    <title><?= $page_title ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
-<?php if (isset($_SESSION['username'])): ?>
-    <span id="notification" class="notification"><?= $_SESSION['username']; ?>
-        <button type="button" onclick="this.parentElement.style.display='none'"
-            style="position: absolute; right: 10px; background: transparent; border: none; font-size: 20px; line-height: 1; color: #FEFDED; cursor: pointer;">×</button>
-    </span>
-    <?php unset($_SESSION['username']); ?>
-<?php endif; ?>
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+        }
 
+        .min-vh-100 {
+            min-height: 100vh;
+        }
 
-<div class="container d-flex justify-content-center" style="margin-top: 11em;margin-bottom:22em;">
-    <div class="formHolder card col-md-3 bg-white p-4 rounded mt-5">
-        <div class="d-flex justify-content-center mb-2">
-            <div>
-                <img width="30px" src="<?= image_source ?>public/images/login.svg">
-            </div>
-            <div>
-                <h4 class="text-dark">Login</h4>
-            </div>
+        /* LEFT PANEL */
+        .login-panel {
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* RIGHT PANEL */
+        .info-panel {
+            background: url("https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.75);
+        }
+
+        .info-content {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            text-align: left;
+            max-width: 500px;
+        }
+
+        .system-title {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .button-primary {
+            width: 100%;
+            padding: 10px;
+            background: #0d6efd;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .button-primary:hover {
+            background: #0b5ed7;
+        }
+
+        #notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #dc3545;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 6px;
+            z-index: 999;
+        }
+
+        @media (max-width: 768px) {
+            .info-panel {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <?php if (isset($_SESSION['username'])): ?>
+        <div id="notification">
+            <?= $_SESSION['username']; ?>
         </div>
-        <form action="authenticate.php" method="post">
-            <div class="col-12">
-                <div class="input-group">
-                    <span class="input-group-text"><img width="25px;"
-                            src="<?= image_source ?>public/images/username.svg"></span>
-                    <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+        <?php unset($_SESSION['username']); ?>
+    <?php endif; ?>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0 min-vh-100">
+
+            <!-- LEFT: LOGIN (FLAT STYLE) -->
+            <div class="col-md-6 login-panel">
+
+                <div style="width: 420px;">
+
+                    <div class="mb-5">
+                        <h2 class="system-title mb-2">Contract Management System</h2>
+                        <p class="text-muted">
+                            Monitor contract expiration and lifecycle management securely.
+                        </p>
+                    </div>
+
+                    <form action="authenticate.php" method="post">
+
+                        <div class="mb-4">
+                            <label class="form-label text-uppercase small fw-semibold">
+                                Username
+                            </label>
+                            <input type="text" class="form-control form-control-lg border-0 border-bottom rounded-0"
+                                name="username" required autofocus>
+                        </div>
+
+                        <div class="mb-4 position-relative">
+                            <label class="form-label text-uppercase small fw-semibold">
+                                Password
+                            </label>
+
+                            <input type="password" id="password"
+                                class="form-control form-control-lg border-0 border-bottom rounded-0" name="password"
+                                required>
+
+                            <span onclick="togglePassword()"
+                                style="position:absolute; top:45px; right:5px; cursor:pointer;">
+                                <i id="togglePasswordIcon" class="fas fa-eye text-muted"></i>
+                            </span>
+                        </div>
+
+                        <div class="mt-4">
+                            <button type="submit" class="button-primary">
+                                Sign In
+                            </button>
+                        </div>
+
+                    </form>
+
+                    <div class="mt-3">
+                        <a href="password/index.php" class="text-decoration-none">
+                            Forgot password?
+                        </a>
+                    </div>
+
                 </div>
 
             </div>
-            <div class="password col-12 mt-2">
-                <div class="input-group mb-1 position-relative">
-                    <!-- Left-side Icon -->
-                    <span class="input-group-text">
-                        <img width="25px;" src="<?= image_source ?>public/images/password.svg">
-                    </span>
 
-                    <!-- Password Field -->
-                    <input type="password" id="password" class="form-control" name="password" placeholder="Password"
-                        required>
+            <!-- RIGHT: SYSTEM INFO -->
+            <div class="col-md-6 info-panel">
 
-                    <!-- Eye Icon -->
-                    <span class="position-absolute" onclick="togglePassword()"
-                        style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;">
-                        <i id="togglePasswordIcon" class="fas fa-eye text-muted"></i>
-                    </span>
+                <div class="info-overlay"></div>
+
+                <div class="info-content">
+                    <h1 class="fw-bold mb-4">Monitor. Track. Renew.</h1>
+
+                    <p class="lead">
+                        Centralized platform for managing contract lifecycles,
+                        monitoring expiration dates, and ensuring compliance.
+                    </p>
+
+                    <ul class="mt-4">
+                        <li>✔ Expiration Alerts</li>
+                        <li>✔ Department-Based Contract Tracking</li>
+                        <li>✔ Status Monitoring & Reporting</li>
+                        <li>✔ Secure Document Management</li>
+                    </ul>
                 </div>
-                <!-- <p class="notifMsg p-1">
-                    <?php if (isset($_SESSION['password'])): ?>
-                        <?= $_SESSION['password']; ?>
-                        <?php unset($_SESSION['password']); ?>
-                    <?php endif; ?>
-                </p> -->
+
             </div>
-            <div class="col-12 mb-1 mt-4">
-                <!-- <label class="badge text-muted">Password</label> -->
-                <button type="submit" class="button-3" name="submit">Login</button>
-            </div>
-        </form>
-        <div class="mt-3 forgotPassword p-1">
-            <a href="password/index.php">Forgot password?</a>
+
         </div>
     </div>
-</div>
 
-<?php include_once 'views/layouts/includes/footer.php'; ?>
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.getElementById('togglePasswordIcon');
 
-<style>
-    /* CSS */
-    .button-3 {
-        width: 100%;
-        padding: 8px;
-        appearance: none;
-        background-color: #2ea44f;
-        border: 1px solid rgba(27, 31, 35, .15);
-        border-radius: 6px;
-        box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
-        box-sizing: border-box;
-        color: #fff;
-        cursor: pointer;
-        display: inline-block;
-        font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-        font-size: 14px;
-        font-weight: 600;
-        line-height: 20px;
-        padding: 6px 16px;
-        position: relative;
-        text-align: center;
-        text-decoration: none;
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-        vertical-align: middle;
-        white-space: nowrap;
-    }
-
-    .button-3:focus:not(:focus-visible):not(.focus-visible) {
-        box-shadow: none;
-        outline: none;
-    }
-
-    .button-3:hover {
-        background-color: #2c974b;
-    }
-
-    .button-3:focus {
-        box-shadow: rgba(46, 164, 79, .4) 0 0 0 3px;
-        outline: none;
-    }
-
-    .button-3:disabled {
-        background-color: #94d3a2;
-        border-color: rgba(27, 31, 35, .1);
-        color: rgba(255, 255, 255, .8);
-        cursor: default;
-    }
-
-    .button-3:active {
-        background-color: #298e46;
-        box-shadow: rgba(20, 70, 32, .2) 0 1px 0 inset;
-    }
-
-    .formHolder {
-        box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    }
-
-    .notifMsg {
-        position: absolute;
-        font-size: 13px;
-        color: red;
-        font-weight: 500;
-    }
-
-    #notification {
-        background-color: #DD5746;
-        position: absolute;
-        width: 30%;
-        text-align: center;
-        padding: 15px;
-        border-radius: 4px;
-        margin-left: 35%;
-        box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
-        z-index: 1;
-        color: white;
-    }
-
-    .notification {
-        opacity: 0;
-        transform: translateY(-20px);
-        transition: opacity 0.6s ease, transform 0.6s ease;
-        display: inline-block;
-        position: relative;
-        background: #333;
-        color: #FEFDED;
-        padding: 10px 40px 10px 10px;
-        border-radius: 4px;
-        margin: 10px 0;
-    }
-
-    .notification.show {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-
-
-    .password {
-        margin-top: -6%;
-    }
-
-    .forgotPassword {
-        margin-top: 4%;
-        font-size: 15px;
-    }
-
-    .forgotPassword a {
-        text-decoration: none;
-    }
-
-    @media screen and (max-width: 479px) {}
-</style>
-<script>
-    function togglePassword() {
-        const passwordInput = document.getElementById('password');
-        const icon = document.getElementById('togglePasswordIcon');
-
-        if (passwordInput.type === 'password') {
-            passwordInput.type = 'text';
-            icon.classList.remove('fa-eye');
-            icon.classList.add('fa-eye-slash');
-        } else {
-            passwordInput.type = 'password';
-            icon.classList.remove('fa-eye-slash');
-            icon.classList.add('fa-eye');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
         }
-    }
+    </script>
 
+</body>
 
-    window.addEventListener('DOMContentLoaded', () => {
-        const notif = document.getElementById('notification');
-        if (notif) {
-            // Add 'show' class to trigger animation
-            setTimeout(() => {
-                notif.classList.add('show');
-            }, 100); // slight delay to ensure DOM is ready
-        }
-    });
-</script>
+</html>
