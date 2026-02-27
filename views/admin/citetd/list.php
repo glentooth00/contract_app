@@ -3,6 +3,7 @@ session_start();
 
 $department = $_SESSION['department'] ?? null;
 $role = $_SESSION['user_role'] ?? null;
+$userid = $_SESSION['id'] ?? null;
 $page_title = "List - $department";
 
 require_once __DIR__ . '../../../../src/Config/constants.php';
