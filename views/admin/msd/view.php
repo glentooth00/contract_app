@@ -805,7 +805,7 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
         </div>
-         <?php include_once '../contents/contract_history.php'; ?>
+        <?php include_once '../contents/contract_history.php'; ?>
     </div>
 </div>
 <?php
