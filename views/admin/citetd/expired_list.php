@@ -134,36 +134,36 @@ include_once '../../../views/layouts/includes/header.php';
                         <tr>
                             <td><?= htmlspecialchars($contract['contract_name'] ?? '') ?></td>
                             <td class="text-center">
-                                        <?php
-                                        $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
+                                <?php
+                                $type = isset($contract['contract_type']) ? $contract['contract_type'] : '';
 
-                                        switch ($type) {
-                                            case 'TRANS_RENT':
-                                                $badgeColor = '#003092';
-                                                break;
-                                            case 'TEMP_LIGHTING':
-                                                $badgeColor = '#03A791';
-                                                break;
-                                            case 'Power Suppliers Contract (LONG TERM)':
-                                                $badgeColor = '#007bff';
-                                                break;
-                                            case 'Power Suppliers Contract (SHORT TERM)':
-                                                $badgeColor = '#28a745';
-                                                break;
-                                            default:
-                                                $badgeColor = '#FAB12F';
-                                                break;
-                                        }
-                                        ?>
+                                switch ($type) {
+                                    case 'TRANS_RENT':
+                                        $badgeColor = '#003092';
+                                        break;
+                                    case 'TEMP_LIGHTING':
+                                        $badgeColor = '#03A791';
+                                        break;
+                                    case 'Power Suppliers Contract (LONG TERM)':
+                                        $badgeColor = '#007bff';
+                                        break;
+                                    case 'Power Suppliers Contract (SHORT TERM)':
+                                        $badgeColor = '#28a745';
+                                        break;
+                                    default:
+                                        $badgeColor = '#FAB12F';
+                                        break;
+                                }
+                                ?>
 
-                                        <span class="p-2 text-white badge"
+                                <span class="p-2 text-white badge"
                                     style="background-color: <?= $badgeColor ?>; border-radius: 5px;">
                                     <?= htmlspecialchars($type) ?>
                                 </span>
                             </td>
                             <td class="text-center">
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'] || $contract['contract_start'])) : '' ?></span>
                             </td>
                             <td class="text-center">
                                 <span class="badge text-secondary">
