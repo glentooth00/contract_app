@@ -19,10 +19,10 @@ if ($status === 'Expired') {
         <table class="table table-striped table-hover align-middle text-center">
             <thead class="table-light">
                 <tr>
-                    <th>Status</th>
-                    <th>Contract File</th>
-                    <th>Date Start</th>
-                    <th>Date End</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: center;">Contract File</th>
+                    <th style="text-align: center;">Date Start</th>
+                    <th style="text-align: center;">Date End</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,7 +91,7 @@ if ($status === 'Expired') {
                             <td>
                                 <?php if (!empty($data['date_start'])): ?>
                                     <span class="badge bg-light text-dark">
-                                        <?= date('M d, Y', strtotime($data['date_start'])) ?>
+                                        <?= date('M d, Y', strtotime($data['date_start'] ?? $data['rent_start'])) ?>
                                     </span>
                                 <?php else: ?>
                                     <span class="badge bg-danger">No Start Date</span>
@@ -102,7 +102,7 @@ if ($status === 'Expired') {
                             <td>
                                 <?php if (!empty($data['date_end'])): ?>
                                     <span class="badge bg-light text-dark">
-                                        <?= date('M d, Y', strtotime($data['date_end'])) ?>
+                                        <?= date('M d, Y', strtotime($data['date_end'] ?? $data['rent_end'])) ?>
                                     </span>
                                 <?php else: ?>
                                     <span class="badge bg-danger">No End Date</span>

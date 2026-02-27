@@ -11,103 +11,181 @@ $getUserInfo = (new UserController)->getUserByDept($department);
 
 echo $uploader = $getUserInfo['firstname'];
 ?>
-<!---- ISD-RAD MODAL ---->
-<div class="modal fade" id="hradModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-white badge" style="font-size:20px;background-color:#FAB12F"
-                    id="exampleModalLabel">Add Employment Contract</h5>
+<!-- ISD-RAD MODAL - Material Design Style -->
+<div class="modal fade" id="hradModal" tabindex="-1" aria-labelledby="hradModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content flat-modal">
+            <!-- Modal Header -->
+            <div class="modal-header flat-header">
+                <h5 class="modal-title" id="hradModalLabel">Add Employment Contract</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <!-- Modal Body -->
             <div class="modal-body">
                 <form action="contracts/save_contract.php" method="post" enctype="multipart/form-data">
-                    <div class="col-md-12 d-flex gap-2 p-3">
-                        <div class="col-md-6 p-2">
-                            <div class="mb-3">
-                                <label class="badge text-muted">Contract</label>
-                                <input type="file" name="contract_file" class="form-control">
-
+                    <div class="row g-3">
+                        <!-- Left Column -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Contract File</label>
+                                <input type="file" name="contract_file" class="form-control flat-input" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">Starting Date</label>
-                                <input type="date" class="form-control" name="contract_start" id="floatingInput"
-                                    placeholder="name@example.com">
-
+                            <div class="form-group">
+                                <label class="form-label">Starting Date</label>
+                                <input type="date" class="form-control flat-input" name="contract_start" required>
                             </div>
-
-                            <!-- <div class="mb-3">
-
-                                <label class="badge text-muted">Contract Type</label>
-                                <select class="form-select form-select-md mb-3" name="contract_type"
-                                    aria-label=".form-select-lg example">
-                                    <option selected hidden>Select contract type</option>
-                                    <?php
-                                    $contract_types = (new ContractTypeController)->getContractTypes();
-                                    ?>
-                                    <?php if ($department == 'ISD-HRAD' | $department == 'IASD'): ?>
-                                        <?php foreach ($contract_types as $contract_type): ?>
-
-                                            <?php if ($contract_type['contract_type'] === 'Employment Contract' | $contract_type['contract_type'] === 'Rental Contract'): ?>
-                                                <option value="<?= $contract_type['contract_type'] ?>">
-                                                    <?= $contract_type['contract_type'] ?>
-                                                </option>
-                                            <?php else: ?>
-
-                                            <?php endif; ?>
-
-                                        <?php endforeach; ?>
-
-                                    <?php else: ?>
-                                        <option disabled> no contract available</option>
-                                    <?php endif; ?>
-                                </select>
-                            </div> -->
                         </div>
 
-                        <div class="col-md-6 p-2">
-                            <div class="mb-3">
-                                <label class="badge text-muted">Contract Name</label>
-                                <input type="text" class="form-control" name="contract_name" id="floatingInput"
-                                    placeholder="">
+                        <!-- Right Column -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Contract Name</label>
+                                <input type="text" class="form-control flat-input" name="contract_name"
+                                    placeholder="Enter contract name" required>
                             </div>
-                            <div class="mb-3">
-                                <label class="badge text-muted">End Date</label>
-                                <input type="date" class="form-control" name="contract_end" id="floatingInput"
-                                    placeholder="">
+                            <div class="form-group">
+                                <label class="form-label">End Date</label>
+                                <input type="date" class="form-control flat-input" name="contract_end" required>
                             </div>
-
-                            <div class="mb-3">
-                                <label class="badge text-muted">Department Assigned</label>
-                                <select name="department_assigned" class="form-select" id="" required>
+                            <div class="form-group">
+                                <label class="form-label">Department Assigned</label>
+                                <select name="department_assigned" class="form-select flat-input" required>
+                                    <option selected disabled>Select Department</option>
                                     <?php foreach ($departments as $department): ?>
-                                        <option hidden>Select Department</option>
                                         <option value="<?= $department['department_name'] ?>">
                                             <?= $department['department_name'] ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div>
-                                <input type="hidden" name="contract_type" value="Employment Contract">
-                            </div>
-                            <div>
-                                <input type="hidden" name="uploader"
-                                    value="<?= $getUserInfo['firstname'] . ' ' . $getUserInfo['middlename'] . ' ' . $getUserInfo['lastname'] ?>">
-                                <input type="hidden" name="uploader_id" value="<?= $getUserInfo['id'] ?>">
-                                <input type="hidden" name="uploader_department"
-                                    value="<?= $getUserInfo['department'] ?>">
-                            </div>
                         </div>
                     </div>
-            </div>
-            <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
 
-                <button type="submit" class="btn btn-primary" style="background-color: #118B50;">Save
-                    Contract</button>
+                    <!-- Hidden Inputs -->
+                    <input type="hidden" name="contract_type" value="Employment Contract">
+                    <input type="hidden" name="uploader"
+                        value="<?= $getUserInfo['firstname'] . ' ' . $getUserInfo['middlename'] . ' ' . $getUserInfo['lastname'] ?>">
+                    <input type="hidden" name="uploader_id" value="<?= $getUserInfo['id'] ?>">
+                    <input type="hidden" name="uploader_department" value="<?= $getUserInfo['department'] ?>">
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer flat-footer">
+                        <button type="button" class="btn flat-btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn flat-btn-save">Save Contract</button>
+                    </div>
+                </form>
             </div>
-            </form>
         </div>
     </div>
 </div>
+
+<style>
+    /* Flat Material UI modal */
+    .flat-modal {
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        box-shadow: none;
+        /* Flat style, no shadow */
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .flat-header {
+        background-color: #f5f5f5;
+        color: #333;
+        font-weight: 500;
+        font-size: 18px;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 1rem 1.5rem;
+    }
+
+    .flat-header .btn-close {
+        filter: none;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+    }
+
+    .form-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 0.25rem;
+    }
+
+    .flat-input {
+        border-radius: 4px;
+        border: 1px solid #cfcfcf;
+        padding: 0.5rem 0.75rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        font-size: 0.875rem;
+        background-color: #fff;
+    }
+
+    .flat-input:focus {
+        border-color: #3f51b5;
+        box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+        outline: none;
+    }
+
+    .flat-footer {
+        border-top: 1px solid #e0e0e0;
+        padding: 0.75rem 1.5rem;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .flat-btn-save {
+        background-color: #3f51b5;
+        color: #fff;
+        font-weight: 500;
+        border-radius: 4px;
+        border: none;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.2s;
+    }
+
+    .flat-btn-save:hover {
+        background-color: #303f9f;
+    }
+
+    .flat-btn-cancel {
+        background-color: transparent;
+        color: #555;
+        font-weight: 500;
+        border: 1px solid #cfcfcf;
+        border-radius: 4px;
+        padding: 0.5rem 1rem;
+    }
+
+    .flat-btn-cancel:hover {
+        background-color: #f0f0f0;
+    }
+
+    /* Add spacing between inputs */
+    .flat-modal .form-group {
+        margin-bottom: 1rem;
+        /* space between each input field */
+    }
+
+    .flat-modal .flat-input,
+    .flat-modal .form-select {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Existing flat input focus style */
+    .flat-input:focus,
+    .form-select:focus {
+        border-color: #3f51b5;
+        box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.2);
+        outline: none;
+    }
+
+    @media (max-width: 768px) {
+        .modal-dialog {
+            max-width: 95%;
+        }
+    }
+</style>
