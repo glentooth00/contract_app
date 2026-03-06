@@ -22,14 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         'contract_status' => 'Active',
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s'),
-        'uploader_department' => $_POST['uploader_department'],
+        'uploader_department' => $_POST['uploader_dept'],
         'uploader_id' => $_POST['uploader_id'],
         'account_no' => $_POST['account_no'],
         'address' => $_POST['address'],
 
     ];
-
-    // var_dump($rentalData);
 
     $saveContract = (new ContractController)->storeTransFormerRental($rentalData);
 
