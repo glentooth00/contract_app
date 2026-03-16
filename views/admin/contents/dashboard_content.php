@@ -87,35 +87,36 @@ $badgeColors = [
                 data-bs-content="<?= $popoverContent ?>">
                 <div class="contract-card">
                     <!-- Header -->
-                    <div class="contract-header">
-                        <h4 class="contract-title">
-                            <?php
-                            $displayName = $contract['contract_name'] ?? '';
-                            $displayName = strlen($displayName) > 20 ? substr($displayName, 0, 20) . '...' : $displayName;
-                            ?>
-                            <?= htmlspecialchars($displayName) ?>
-                            <?php if ($hasComment): ?>
-                                <span class="float-end">
-                                    <?php include_once 'message.php'; ?>
-                                </span>
-                            <?php endif; ?>
+<div class="contract-header">
+    <div class="contract-title">
+        <?php
+        $displayName = $contract['contract_name'] ?? '';
+        $displayName = strlen($displayName) > 25 ? substr($displayName, 0, 45) . '...' : $displayName;
+        ?>
+        <?= htmlspecialchars($displayName) ?>
+    </div>
 
-                            <?php if (($flagData['status'] ?? '') === 1): ?>
-                                <span class="float-end ms-1">
-                                    <?php if ($flagData['flag_type'] === UR): ?>
-                                        <img src="<?= image_source ?>../../../public/images/underReview.svg" width="20"
-                                            title="Under Review">
-                                    <?php elseif ($flagData['flag_type'] === NA): ?>
-                                        <img src="<?= image_source ?>../../../public/images/withComment.svg" width="20"
-                                            title="Needs Attention">
-                                    <?php endif; ?>
-                                </span>
-                            <?php endif; ?>
-                            </h6>
-                            <span class="badge contract-type-badge" style="background-color: <?= $badgeColor ?>;">
-                                <?= htmlspecialchars($type) ?>
-                            </span>
-                    </div>
+    <!-- Contract Type below the name -->
+    <span class="badge contract-type-badge" style="background-color: <?= $badgeColor ?>;">
+        <?= htmlspecialchars($type) ?>
+    </span>
+
+    <?php if ($hasComment): ?>
+        <span class="float-end ms-1">
+            <?php include_once 'message.php'; ?>
+        </span>
+    <?php endif; ?>
+
+    <?php if (($flagData['status'] ?? '') === 1): ?>
+        <span class="float-end ms-1">
+            <?php if ($flagData['flag_type'] === UR): ?>
+                <img src="<?= image_source ?>../../../public/images/underReview.svg" width="20" title="Under Review">
+            <?php elseif ($flagData['flag_type'] === NA): ?>
+                <img src="<?= image_source ?>../../../public/images/withComment.svg" width="20" title="Needs Attention">
+            <?php endif; ?>
+        </span>
+    <?php endif; ?>
+</div>
 
                     <hr>
 
@@ -136,8 +137,8 @@ $badgeColors = [
                                     : '-' ?>
                             </div>
                             <div><strong>Status:</strong>
-                                <span class="badge contract-status-badge <?= $isExpired ? 'expired' : '' ?>">
-                                    <?= htmlspecialchars($contract['contract_status']) ?>
+                                <span class="badge contract-status-badge <?= $isExpired ? 'expired' : 'active' ?>">
+                                    <?= $isExpired ? 'EXPIRED' : ($contract['contract_status'] ?? 'ACTIVE') ?>
                                 </span>
                             </div>
                         </div>
@@ -187,215 +188,169 @@ $badgeColors = [
 </script>
 
 <style>
-    /* Grid layout */
-    .contract-grid {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-        justify-content: start;
-    }
+ /* GRID */
+.contract-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+    gap:18px;
+}
 
-    /* Card link */
-    .contract-card-link {
-        text-decoration: none;
-        color: inherit;
-    }
+/* LINK */
+.contract-card-link{
+    text-decoration:none;
+    color:inherit;
+}
 
-    /* Contract card */
-    .contract-card {
-        width: 280px;
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 16px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-        transition: all 0.2s ease;
-        border: 1px solid #f1f5f9;
-    }
+/* FILE CARD */
+.contract-card{
+    background:#fff;
+    border:1px solid #e4e9f0;
+    border-radius:10px;
+    overflow:hidden;
+    transition:all .15s ease;
+    box-shadow:0 2px 6px rgba(0,0,0,0.04);
+}
 
-    .contract-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.1);
-    }
+.contract-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.08);
+}
 
-    /* Header */
-    .contract-header .contract-title {
-        font-weight: 600;
-        font-size: 14px;
-        margin-bottom: 8px;
-    }
+/* FILE HEADER (like folder tab) */
+/* Contract Header */
+.contract-header {
+    padding: 10px 14px;
+    border-bottom: 1px solid #eef2f6;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column; /* stack items vertically */
+    gap: 6px;
+}
 
-    .contract-type-badge {
-        color: #fff;
-        padding: 3px 6px;
-        font-size: 10px;
-        border-radius: 5px;
-        letter-spacing: 0.4px;
-    }
+.contract-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2f3a4a;
+}
 
-    /* Content */
-    .contract-content {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-    }
+/* FILE BODY */
+.contract-content{
+    display:flex;
+    gap:14px;
+    padding:14px;
+    align-items:flex-start;
+}
 
-    .contract-icon {
-        width: 55px;
-        height: 55px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #f8f9fa;
-        border-radius: 8px;
-    }
+/* DOCUMENT ICON */
+.contract-icon{
+    width:42px;
+    height:52px;
+    background:#ffffff;
+    border:1px solid #dfe5ec;
+    border-radius:4px;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
 
-    .contract-icon img {
-        width: 32px;
-    }
+.contract-icon:before{
+    content:"";
+    position:absolute;
+    top:-1px;
+    right:-1px;
+    width:10px;
+    height:10px;
+    background:#e9edf3;
+    border-left:1px solid #dfe5ec;
+    border-bottom:1px solid #dfe5ec;
+    transform:rotate(45deg);
+}
 
-    .contract-dates div {
-        font-size: 13px;
-        color: #6c757d;
-        margin-bottom: 4px;
-    }
+.contract-icon img{
+    width:22px;
+}
 
-    .contract-dates strong {
-        color: #343a40;
-    }
+/* FILE META */
+.contract-dates{
+    font-size:12px;
+    color:#667085;
+    line-height:1.5;
+}
 
-    .contract-status-badge {
-        padding: 4px 8px;
-        border-radius: 5px;
-        display: inline-block;
-    }
+.contract-dates strong{
+    color:#344054;
+}
 
-    .contract-status-badge.expired {
-        background-color: #EB1919;
-        color: #fff;
-    }
+/* BADGES */
+.contract-type-badge {
+    font-size: 14px;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
-    /* Remaining days boxes */
-    .contract-days .expired-box,
-    .contract-days .success-box,
-    .contract-days .warning-box {
-        padding: 6px 8px;
-        border-radius: 5px;
-        font-weight: bold;
-        font-size: 13px;
-        margin-top: 4px;
-    }
+.contract-status-badge{
+    font-size:11px;
+    padding:3px 6px;
+    border-radius:4px;
+}
 
-    .contract-days .expired-box {
-        background-color: #EB1919;
-        color: #fff;
-    }
+/* FOOTER STRIP */
+.contract-days{
+    padding:10px;
+    border-top:1px solid #eef2f6;
+    text-align:center;
+    font-size:12px;
+    font-weight:600;
+}
 
-    .contract-days .success-box {
-        background-color: #58B94F;
-        color: #fff;
-    }
+/* STATUS COLORS */
+.success-box{
+    color:#2f7d32;
+}
 
-    .contract-days .warning-box {
-        background-color: #FF9760;
-        color: #fff;
-    }
+.warning-box{
+    color:#c27a00;
+}
 
-    /* Pagination */
-    .pagination {
-        display: flex;
-        justify-content: right;
-        gap: 6px;
-        margin-top: 20px;
-    }
+.expired-box{
+    color:#c0392b;
+}
 
-    .pagination a {
-        padding: 5px 10px;
-        border-radius: 5px;
-        text-decoration: none;
-        background: #f1f1f1;
-        color: #000;
-        font-size: 13px;
-    }
+/* PAGINATION */
+.pagination{
+    display:flex;
+    justify-content:flex-end;
+    gap:6px;
+    margin-top:20px;
+}
 
-    .pagination a.active {
-        background: #11488B;
-        color: #fff;
-    }
+.pagination a{
+    font-size:12px;
+    padding:6px 10px;
+    border-radius:6px;
+    border:1px solid #d8dee6;
+    background:#fff;
+}
 
-    .pagination a:hover {
-        opacity: 0.8;
-    }
+.pagination a.active{
+    background:#1f3a5f;
+    color:#fff;
+}
 
-    /* No contracts */
-    .no-contracts {
-        width: 100%;
-        padding: 30px;
-        text-align: center;
-        background: #f8f9fa;
-        border-radius: 10px;
-        color: #6c757d;
-        font-size: 14px;
-    }
+.contract-status-badge.expired {
+    background-color:#EB1919;
+    color:#fff;
+}
 
-    /* Contract type badge inside header */
-    .contract-type-badge {
-        color: #fff;
-        padding: 0.25em 0.5em;
-        /* use em units relative to font-size */
-        font-size: 0.8rem;
-        /* relative font-size */
-        border-radius: 0.35rem;
-        letter-spacing: 0.3px;
-        display: inline-block;
-        max-width: 100%;
-        /* ensure it wraps inside card */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        /* truncate long types */
-    }
-
-    /* Contract status badge */
-    .contract-status-badge {
-        padding: 0.25em 0.5em;
-        font-size: 0.75rem;
-        /* slightly smaller, scales */
-        border-radius: 0.35rem;
-        display: inline-block;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    /* Remaining days boxes dynamically scale */
-    .contract-days .expired-box,
-    .contract-days .success-box,
-    .contract-days .warning-box {
-        padding: 0.4em 0.6em;
-        /* relative padding */
-        border-radius: 0.35rem;
-        font-weight: 600;
-        font-size: 0.8rem;
-        line-height: 1.2;
-        display: inline-block;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-align: center;
-    }
-
-    /* Make badges shrink on smaller cards */
-    @media (max-width: 320px) {
-
-        .contract-type-badge,
-        .contract-status-badge,
-        .contract-days .expired-box,
-        .contract-days .success-box,
-        .contract-days .warning-box {
-            font-size: 0.7rem;
-            padding: 0.2em 0.4em;
-        }
-    }
+.contract-status-badge.active {
+    background-color:#58B94F;
+    color:#fff;
+}
 </style>
