@@ -91,7 +91,7 @@ $badgeColors = [
     <div class="contract-title">
         <?php
         $displayName = $contract['contract_name'] ?? '';
-        $displayName = strlen($displayName) > 25 ? substr($displayName, 0, 45) . '...' : $displayName;
+        $displayName = strlen($displayName) > 20 ? substr($displayName, 0, 35) . '...' : $displayName;
         ?>
         <?= htmlspecialchars($displayName) ?>
     </div>
