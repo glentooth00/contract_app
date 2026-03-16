@@ -131,8 +131,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
             </a>
           </li>
         <?php endif; ?>
-
-        <?php if ($department === ISD): ?>
+        <?php if ($department === ISD || $department === 'ISD-MSD'): ?>
           <?php if ($role === 'Manager'): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
@@ -202,7 +201,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
         <?php endif; ?>
 
         <?php if ($department === AOSD): ?>
-          <?php if ($role === 'Manager'): ?>
+          <?php if ($role === 'Manager' ): ?>
             <li class="nav-item">
               <a class="nav-link" id="changepass" href="pending_updates.php">
                 <img width="27px" src="<?= image_source ?>../../../public/images/bell.svg">
