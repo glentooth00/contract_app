@@ -144,6 +144,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                     <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                    <small style="font-size: 12px;color:#A9A9A9">Tc no: ( <?= htmlspecialchars($contract['tc_no'] ?? '') ?> ) </small>
                                 </a>
 
                                 <?php
