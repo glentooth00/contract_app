@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     var_dump($_POST) ;
 
-    if($_POST['contract_type'] === TEMP_LIGHTING){
+    if($_POST['contract_type_update'] === TEMP_LIGHTING){
 
         $updateData = [
             'contract_id' => $_POST['contract_id'],
@@ -26,14 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'tc_no' => $_POST['tc_no'],
             'account_no' => $_POST['account_no'],
             'party_of_second_part' => $_POST['party_of_second_part'],
-            'contract_type' => $_POST['contract_type'],
+            'contract_type_update' => $_POST['contract_type_update'],
         ];
 
         echo "<br>";
         echo "<br>";
         echo "<br>";
 
-        var_dump( $updateData);
+        // var_dump( $updateData);
 
         $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
 
@@ -64,21 +64,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     }
 
-    if($_POST['contract_type'] === TRANS_RENT){
+    if($_POST['contract_type_update'] === TRANS_RENT){
 
         $updateData = [
             'contract_id' => $_POST['contract_id'],
             'uploader_department' => $_POST['uploader_department'],
             'contract_name' => $_POST['contract_name'],
-            'rent_start' => $_POST['rent_start'],
-            'rent_end' => $_POST['rent_end'],
+            'rent_start' => $_POST['rent_start'] ?? $_POST['contract_start'] ,
+            'rent_end' => $_POST['rent_end'] ?? $_POST['contract_end'] ,
             'contract_status' => 'Active',
             'address' => $_POST['address'],
             'tc_no' => $_POST['tc_no'],
-            'account_no' => $_POST['account_no']
+            'account_no' => $_POST['account_no'],
+            'contract_type_update' => $_POST['contract_type_update'],
         ];
 
-
+var_dump($updateData);
             $updateSuccessful = (new ContractController)->managerUpdateTransRent($updateData);
 
 
@@ -123,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
     }
 
-    if($_POST['contract_type'] === GOODS){
+    if($_POST['contract_type_update'] === GOODS){
 
         $updateData = [
             'contract_id' => $_POST['contract_id'],
@@ -168,7 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     }
 
-    if($_POST['contract_type'] === INFRA){
+    if($_POST['contract_type_update'] === INFRA){
 
         $startDate = date('Y-m-d', strtotime($_POST['contract_start']));
         $endDate = date('Y-m-d', strtotime($_POST['contract_end']));
@@ -216,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     }
 
-    if($_POST['contract_type'] === EMP_CON){
+    if($_POST['contract_type_update'] === EMP_CON){
 
         $updateData = [
             'contract_id' => $_POST['contract_id'],
@@ -260,7 +261,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     }
 
-    if($_POST['contract_type'] === SACC){
+    if($_POST['contract_type_update'] === SACC){
 
         $startDate = date('Y-m-d', strtotime($_POST['contract_start']));
         $endDate = date('Y-m-d', strtotime($_POST['contract_end']));

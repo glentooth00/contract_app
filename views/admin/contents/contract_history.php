@@ -89,7 +89,7 @@ if ($status === 'Expired') {
 
                             <!-- Date Start -->
                             <td>
-                                <?php if (!empty($data['date_start'])): ?>
+                                <?php if (!empty($data['date_start'] ?? $data['rent_start'] )): ?>
                                     <span class="badge bg-light text-dark">
                                         <?= date('M d, Y', strtotime($data['date_start'] ?? $data['rent_start'])) ?>
                                     </span>
@@ -100,7 +100,7 @@ if ($status === 'Expired') {
 
                             <!-- Date End -->
                             <td>
-                                <?php if (!empty($data['date_end'])): ?>
+                                <?php if (!empty($data['date_end'] ?? $data['rent_end'])): ?>
                                     <span class="badge bg-light text-dark">
                                         <?= date('M d, Y', strtotime($data['date_end'] ?? $data['rent_end'])) ?>
                                     </span>

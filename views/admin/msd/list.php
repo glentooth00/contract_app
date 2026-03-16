@@ -144,6 +144,7 @@ include_once '../../../views/layouts/includes/header.php';
                                     style="text-decoration: none; color: black;">
                                     <!-- Use htmlspecialchars to prevent XSS -->
                                     <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
+                                    <small style="font-size: 12px;color:#A9A9A9">Tc no: ( <?= htmlspecialchars($contract['tc_no'] ?? '') ?> ) </small>
                                 </a>
 
                                 <?php
@@ -226,11 +227,11 @@ include_once '../../../views/layouts/includes/header.php';
                             </td>
                             <td class="text-center">
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_start']) ? date('F-d-Y', strtotime($contract['contract_start'])) : '' ?></span>
+                                    <?= !empty($contract['contract_start'] ?? $contract['rent_start']) ? date('F-d-Y', strtotime($contract['contract_start'] ?? $contract['rent_start'])) : '' ?></span>
                             </td>
                             <td class="text-center">
                                 <span class="badge text-secondary">
-                                    <?= !empty($contract['contract_end']) ? date('F-d-Y', strtotime($contract['contract_end'])) : '' ?></span>
+                                    <?= !empty($contract['contract_end']?? $contract['rent_end']) ? date('F-d-Y', strtotime($contract['contract_end'] ?? $contract['rent_end'])) : '' ?></span>
                             </td>
                             <td class="text-center">
                                 <span

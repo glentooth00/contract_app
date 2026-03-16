@@ -219,7 +219,7 @@ include_once '../../../views/layouts/includes/header.php';
             <?php endif; ?>
         <?php endif; ?>
 
-        <?php if (in_array($user_role, ['MSD', 'HRAD'])): ?>
+        <?php if (in_array($user_role, ['MSD', 'HRAD', 'Staff','Manager'])): ?>
 
             <?php if ($department === $getContract['uploader_department'] || $department === $getContract['department_assigned'] || $department === $getContract['implementing_dept']) { ?>
                 <div class="gap-1"><?php if ($getContract['contract_status'] === 'Expired') { ?>
@@ -480,46 +480,56 @@ include_once '../../../views/layouts/includes/header.php';
             <?php endif; ?>
 
 
-            <div class="row col-md-2">
-                <?php
-                // Determine the end date for this contract
-                $endDateValue = $getContract['rent_end'] ?? $getContract['contract_end'] ?? null;
+<div class="row col-md-2">
+<?php
 
-                $remainingDays = 0;
+$endDateValue = ($getContract['contract_type'] === TRANS_RENT)
+    ? ($getContract['rent_end'] ?? '')
+    : ($getContract['contract_end'] ?? '');
 
-                if ($endDateValue) {
-                    // Compare only dates
-                    $today = new DateTime('today'); // sets time to 00:00
-                    $end = new DateTime($endDateValue);
-                    $end->setTime(0, 0, 0); // compare only the date
-                
-                    $interval = $today->diff($end);
+$remainingDays = 0;
+$isExpired = false;
 
-                    // Subtract 1 to make the counting match “days remaining until end date”
-                    $remainingDays = ($interval->invert == 1) ? 0 : max(0, $interval->days - 1);
+if (!empty($endDateValue) && $endDateValue !== '0000-00-00') {
 
-                    // Update status if expired
-                    if ($remainingDays === 0 && strtoupper($getContract['contract_status']) !== 'EXPIRED') {
-                        $data = [
-                            'id' => $getContract['id'],
-                            'contract_status' => 'Expired',
-                        ];
-                        (new ContractController)->updateStatusExpired($data);
-                    }
-                }
-                ?>
+    $end = new DateTime($endDateValue);
+    $end->setTime(0,0,0);
 
-                <div class="mt-3">
-                    <label class="badge text-muted" style="font-size: 15px;">
-                        Days Remaining:
-                    </label>
+    $today = new DateTime();
+    $today->setTime(0,0,0);
 
-                    <div class="d-flex">
-                        <input type="text" style="margin-left:7px;" class="form-control"
-                            value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
-                    </div>
-                </div>
-            </div>
+    $interval = $today->diff($end);
+    $remainingDays = $interval->days;
+
+    if ($today > $end) {
+        $remainingDays = 0;
+        $isExpired = true;
+    }
+
+    if ($isExpired && strtoupper($getContract['contract_status']) !== 'EXPIRED') {
+        $data = [
+            'id' => $getContract['id'],
+            'contract_status' => 'Expired'
+        ];
+
+        (new ContractController)->updateStatusExpired($data);
+    }
+}
+
+?>
+
+<div class="mt-3">
+<label class="badge text-muted" style="font-size:15px;">
+Days Remaining:
+</label>
+
+<div class="d-flex">
+<input type="text" style="margin-left:7px;" class="form-control"
+value="<?= $remainingDays ?> day<?= $remainingDays != 1 ? 's' : '' ?>" readonly>
+</div>
+</div>
+
+</div>
             <div class="row col-md-2">
                 <div class="mt-3"><label class="badge text-muted" style="font-size: 15px;">Status</label>
                     <div class="d-flex">
@@ -805,7 +815,225 @@ include_once '../../../views/layouts/includes/header.php';
                 </div>
             </div>
         </div>
-        <?php include_once '../contents/contract_history.php'; ?>
+        <div>
+            <div class="mt-5">
+                <h4>Contract History</h4>
+            </div>
+            <hr>
+            <div>
+                <table class="table table-stripped table-hover">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Status</span></th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Contract
+                                    File</span>
+                            </th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date Start</span>
+                            </th>
+                            <th style="text-align: center !important;"><span class="badge text-muted">Date End</span>
+                            </th>
+                            <!-- <th style="text-align: center !important;"><span class="badge text-muted">Action</span>
+                            </th>-->
+                        </tr>
+                    </thead>
+                    <?php
+                    // $id = $getContract['account_no'];
+                    // $status = $getContract['contract_status'];
+                    // $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    
+                    if ($getContract['contract_type'] === EMP_CON) {
+                        $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+
+                    }
+
+                    if ($getContract['contract_type'] === TRANS_RENT) {
+                        $id = $getContract['account_no'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if ($getContract['contract_type'] === TEMP_LIGHTING) {
+                        $id = $getContract['account_no'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if ($getContract['contract_type'] === INFRA) {
+                        $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if ($getContract['contract_type'] === GOODS) {
+                        $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+                    if ($getContract['contract_type'] === SACC) {
+                        $id = $getContract['id'];
+                        $status = $getContract['contract_status'];
+                        $contractHist_datas = (new ContractHistoryController)->getByContractId($id);
+                    }
+
+
+
+                    if ($status === 'Expired') {
+
+                        $stat = [
+                            'id' => $getContract['account_no'],
+                            'status' => 'Expired',
+                        ];
+
+                        $updateStatus = (new ContractHistoryController)->updateStatus($stat);
+
+                    }
+
+                    // var_dump($contractHist_datas);
+                    
+                    ?>
+                    <tbody class=""><?php if (!empty($contractHist_datas)): ?>
+                            <?php foreach ($contractHist_datas as $employement_data): ?>
+                                <tr>
+                                    <td style="text-align: center !important;">
+                                        <?php if ($employement_data['status'] == 'Active'): ?> <span
+                                                class="badge bg-success p-2"><?= $employement_data['status']; ?></span><?php elseif ($employement_data['status'] == 'Expired'): ?>
+                                            <span class="badge bg-danger p-2">Rental Contract Ended</span><?php else: ?> <span
+                                                class="badge text-dark bg-warning p-2">Employment Contract
+                                                ended</span><?php endif; ?>
+                                    </td>
+                                    <td style="text-align: center !important;">
+                                        <?php if (!empty($employement_data['contract_file'])): ?>
+                                            <!-- Trigger the modal with this button --><button class="btn btn-primary badge p-2"
+                                                data-bs-toggle="modal" data-bs-target="#fileModal<?= $employement_data['id'] ?>"
+                                                style="text-align: center !important;">View file </button>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="fileModal<?= $employement_data['id'] ?>" tabindex="-1"
+                                                aria-labelledby="fileModalLabel<?= $employement_data['id'] ?>" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl" style="min-height: 100vh; max-height: 300vh;">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"
+                                                                id="fileModalLabel<?= $employement_data['id'] ?>">
+                                                                <?= $employement_data['contract_name'] ?> -
+                                                                <?= $employement_data['contract_type'] ?>
+                                                            </h5><button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body" style="padding: 0; overflow-y: auto;">
+                                                            <!-- Display the contract file inside the modal --><iframe
+                                                                src="<?= htmlspecialchars("../../../" . $employement_data['contract_file']) ?>"
+                                                                width="100%" style="height: 80vh;" frameborder="0"></iframe>
+                                                        </div>
+                                                        <div class="modal-footer"><button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><?php else: ?> No file <?php endif; ?>
+                                    </td>
+
+                                    <?php if ($employement_data['contract_type'] === EMP_CON): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                    <?php endif; ?>
+
+                                    <?php if ($employement_data['contract_type'] === TRANS_RENT): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['rent_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['rent_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['rent_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['rent_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+                                    <?php if ($employement_data['contract_type'] === TEMP_LIGHTING): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+
+                                    <?php if ($employement_data['contract_type'] === INFRA): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+                                    <?php if ($employement_data['contract_type'] === GOODS): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+
+                                    <?php if ($employement_data['contract_type'] === SACC): ?>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_start'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_start']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td>
+                                        <td style="text-align: center !important;">
+                                            <?php if (!empty($employement_data['date_end'])): ?>
+                                                <?php $datestart = new DateTime($employement_data['date_end']); ?> <span
+                                                    class="badge text-dark"><?= date_format($datestart, "M-d-Y"); ?></span><?php else: ?>
+                                                <span class="badge text-danger">No Start Date</span><?php endif; ?>
+                                        </td><?php endif; ?>
+                                    <!-- <td style="text-align: center !important;"><button class="btn btn-danger btn-sm"
+                                        title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button><button
+                                        class="btn btn-primary btn-sm" title="Edit" data-bs-toggle="modal"
+                                        data-bs-target="#editModal"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                    </td>-->
+                                </tr><?php endforeach; ?> <?php else: ?>
+                            <tr>
+                                <td colspan="4">No contract data found.</td>
+                            </tr><?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 <?php
