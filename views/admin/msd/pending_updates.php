@@ -159,7 +159,7 @@ include_once '../../../views/layouts/includes/header.php';
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
                             <td>
-                                
+
                                 <?= htmlspecialchars($contract['contract_name'] ?? '') ?>
                             </td>
 
@@ -243,7 +243,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             </svg>
                                                                         </span>
                                                                         <?php
-                                                                        $dateStart = date('M-d-Y', strtotime($getContractFromContracts['contract_start']));
+                                                                        $dateStart = date('M-d-Y', strtotime($getContractFromContracts['contract_start'] ?? $getContractFromContracts['rent_start'] ));
                                                                         ?>
                                                                         <input type="text" value="<?= $dateStart ?>"
                                                                             class="form-control" readonly>
@@ -265,7 +265,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             </svg>
                                                                         </span>
                                                                         <?php
-                                                                        $dateEnd = date('M-d-Y', strtotime($getContractFromContracts['contract_end']));
+                                                                        $dateEnd = date('M-d-Y', strtotime($getContractFromContracts['contract_end'] ?? $getContractFromContracts['rent_end']));
                                                                         ?>
                                                                         <input type="text" value="<?= $dateEnd ?>"
                                                                             class="form-control" readonly>
@@ -275,8 +275,8 @@ include_once '../../../views/layouts/includes/header.php';
                                                             <div class="mt-3">
                                                             </div>
                                                             <?php
-                                                            $start = new DateTime($getContractFromContracts['contract_start']);
-                                                            $end = new DateTime($getContractFromContracts['contract_end']);
+                                                            $start = new DateTime($getContractFromContracts['contract_start'] ?? $getContractFromContracts['rent_start'] );
+                                                            $end = new DateTime($getContractFromContracts['contract_end'] ?? $getContractFromContracts['rent_end']);
                                                             $today = new DateTime();
 
                                                             $interval = $today->diff($end);
@@ -358,6 +358,12 @@ include_once '../../../views/layouts/includes/header.php';
                                                                         value="<?= $getPendingUpdate['contract_name'] ?>"
                                                                         class="form-control">
                                                                 </div>
+                                                                 <div class="mb-3">
+                                                                    <label class="badge text-muted float-start">Account Number</label>
+                                                                    <input type="text" name="account_no"
+                                                                        value="<?= $getPendingUpdate['account_no'] ?>"
+                                                                        class="form-control">
+                                                                </div>
                                                                 <div class="d-flex gap-2">
                                                                     <div class="col-md-6">
                                                                         <label class="badge text-muted float-start">Date
@@ -403,7 +409,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             </span>
 
 
-                                                                            <?php if ($getPendingUpdate['rent_end'] === '1900-01-01' ?? $getPendingUpdate['rent_end']): ?>
+                                                                            <?php if ($getPendingUpdate['rent_end'] === '1900-01-01' ?? $getPendingUpdate['rent_end'] ?? ''): ?>
                                                                             <input type="text" name="contract_end"
                                                                                 value="<?= $getPendingUpdate['rent_end'] ?? '' ?>"
                                                                                 class="form-control">
@@ -444,7 +450,7 @@ include_once '../../../views/layouts/includes/header.php';
                                                                     $remainingDays = $interval->invert ? -$interval->days : $interval->days;
                                                                     ?>
 
-                                                                    <div class="mb-3">
+                                                                    <div class="mb-1">
                                                                         <label
                                                                             class="badge text-muted float-start mt-2">Remaining
                                                                             days</label>
@@ -453,8 +459,8 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             class="form-control" readonly>
                                                                     </div>
 
-                                                                    <?php if ($getPendingUpdate['contract_type_update']): ?>
-                                                                    <div class="mb-2">
+                                                            
+                                                                    <div class="mb-1">
                                                                         <label
                                                                             class="badge text-muted float-start mt-2">Contract
                                                                             Price</label>
@@ -463,22 +469,22 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             name="contractPrice" class="form-control"
                                                                             readonly>
                                                                     </div>
-                                                                    <?php endif; ?>
+                                                                    
 
-                                                                    <?php if ($getPendingUpdate['contract_type_update']): ?>
-                                                                    <div class="mb-2">
+                                                                    <?php if ($getPendingUpdate['contract_type']): ?>
+                                                                    <div class="mb-1">
                                                                         <label
                                                                             class="badge text-muted float-start mt-2">Contract
-                                                                            name</label>
+                                                                            Type</label>
                                                                         <input type="text"
-                                                                            value="<?= $getPendingUpdate['contract_type_update'] ?>"
+                                                                            value="<?= $getPendingUpdate['contract_type'] ?>"
                                                                             name="contract_type_update"
                                                                             class="form-control" readonly>
                                                                     </div>
                                                                     <?php endif; ?>
 
                                                                     <?php if ($getPendingUpdate['contract_type_update']): ?>
-                                                                    <div class="mb-2">
+                                                                    <div class="mb-1">
                                                                         <label
                                                                             class="badge text-muted float-start mt-2">Procurement
                                                                             Mode</label>
@@ -488,7 +494,26 @@ include_once '../../../views/layouts/includes/header.php';
                                                                             readonly>
                                                                     </div>
                                                                     <?php endif; ?>
-
+                                                                     <?php if ($getPendingUpdate['tc_no']): ?>
+                                                                    <div class="mb-1">
+                                                                        <label
+                                                                            class="badge text-muted float-start mt-2">Tc no</label>
+                                                                        <input type="text"
+                                                                            value="<?= $getPendingUpdate['tc_no'] ?>"
+                                                                            name="tc_no" class="form-control"
+                                                                            readonly>
+                                                                    </div>
+                                                                    <?php endif; ?>
+                                                                     <?php if ($getPendingUpdate['address']): ?>
+                                                                    <div class="mb-1">
+                                                                        <label
+                                                                            class="badge text-muted float-start mt-2">Address</label>
+                                                                        <input type="text"
+                                                                            value="<?= $getPendingUpdate['address'] ?>"
+                                                                            name="address" class="form-control"
+                                                                            readonly>
+                                                                    </div>
+                                                                    <?php endif; ?>
                                                                     <?php if ($getPendingUpdate['contract_type_update']): ?>
                                                                     <div class="mb-2">
                                                                         <label
