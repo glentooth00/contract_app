@@ -1,43 +1,48 @@
 <div class="me-2">
-    <a class="btn flat-material-btn text-white fw-bold" href="#!" role="button" data-bs-toggle="modal"
+    <a class="corporate-btn" href="#!" role="button" data-bs-toggle="modal"
         data-bs-target="#hradModal">
-        <i class="fa fa-file-text-o me-1" aria-hidden="true"></i>
+        <i class="fa fa-file-text-o"></i>
         Employment Contract
     </a>
 </div>
 
 <style>
-    /* Flat Material Button */
-    .flat-material-btn {
-        font-size: 13px;
-        background-color: #FAB12F;
-        border-radius: 4px;
-        padding: 6px 12px;
-        transition: background-color 0.2s ease, transform 0.1s ease;
-        display: inline-flex;
-        align-items: center;
-        text-decoration: none;
-        border: none;
-    }
+.corporate-btn {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1f2d3d;
+    background: #ffffff;
+    border: 1px solid #d5dbe1;
+    padding: 7px 14px;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
 
-    .flat-material-btn i {
-        vertical-align: middle;
-    }
+/* icon */
+.corporate-btn i {
+    font-size: 14px;
+    color: #4a6fa5;
+}
 
-    /* Hover effect: slightly darker */
-    .flat-material-btn:hover {
-        background-color: #e5a71f;
-        text-decoration: none;
-    }
+/* hover */
+.corporate-btn:hover {
+    background: #f5f7fa;
+    border-color: #c8d0d9;
+    color: #1f2d3d;
+}
 
-    /* Pressed effect */
-    .flat-material-btn:active {
-        transform: translateY(1px);
-    }
+/* click */
+.corporate-btn:active {
+    background: #eef2f6;
+}
 
-    /* Focus effect */
-    .flat-material-btn:focus {
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.25);
-    }
+/* focus */
+.corporate-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74,111,165,0.15);
+}
 </style>
