@@ -1,168 +1,187 @@
 <?php
-$session = session_start();
-
-$page_title = 'Login';
-// require_once __DIR__ . '/vendor/autoload.php';
-
-// use App\Controllers\UserController;
-
-// $userController = new UserController();
-// $users = $userController->getUsers();
-
-// echo "<pre>";
-// print_r($users);
-// echo "</pre>";
-
+session_start();
+$page_title = 'Contract Management System - Request Password Change';
 ?>
-<?php include_once '../views/layouts/includes/header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<body class="">
-    <div class="container d-flex justify-content-center" style="margin-top:11em;margin-bottom:20em;">
-        <div class="formHolder card col-md-5 bg-white p-4 rounded mt-5">
-            <div class="d-flex justify-content-center mb-1">
-                <div>
-                    <img width="60px" src="../public/images/changepass.svg">
-                </div>
-                <div>
-                    <h1 class="text-dark p-2">Change Password</h1>
-                </div>
+<head>
+    <meta charset="UTF-8">
+    <title><?= $page_title ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-            </div>
-            <form action="changeRequest.php" method="post" class="d-flex justify-content-center">
-                <div class="w-50">
-                    <div class="mb-1 mt-4 text-center">
-                        <input type="text" class="form-control" name="username" placeholder="Enter username" required
-                            autofocus>
-                        <p class="notifMsg p-1 text-danger">
-                            <?php if (isset($_SESSION['username'])): ?>
-                                <?= $_SESSION['username']; ?>
-                                <?php unset($_SESSION['username']); ?>
-                            <?php endif; ?>
-                        </p>
-                    </div>
-
-                    <div class="mb-3 text-center">
-                        <!-- <input type="password" id="password" class="form-control" name="password"
-                            placeholder="Enter password" required> -->
-                        <!-- <div class="form-check mt-2 text-start">
-                            <input type="checkbox" class="form-check-input" onclick="checkPassword()" id="showPassword">
-                            <label class="form-check-label text-muted" for="showPassword">Show password</label>
-                        </div> -->
-                        <p class="notifMsg p-1 text-danger">
-                            <?php if (isset($_SESSION['password'])): ?>
-                                <?= $_SESSION['password']; ?>
-                                <?php unset($_SESSION['password']); ?>
-                            <?php endif; ?>
-                        </p>
-                    </div>
-
-                    <div class="mb-1">
-                        <button type="submit" class="btn btn-success w-100" name="submit">Request Change
-                            password</button>
-                    </div>
-                </div>
-            </form>
-            <div class="mt-3 forgotPassword p-1">
-                <a href="../index.php" class="button">Login</a>
-            </div>
-        </div>
-    </div>
-
-    <?php include_once '../views/layouts/includes/footer.php'; ?>
-
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path
-                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-        </symbol>
-        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path
-                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
-        </symbol>
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path
-                d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </symbol>
-    </svg>
-
-
-    <?php if (isset($_SESSION['notification'])): ?>
-        <div id="notification"
-            class="alert <?php echo ($_SESSION['notification']['type'] == 'success') ? 'alert-success border-success' : ($_SESSION['notification']['type'] == 'warning' ? 'alert-warning border-warning' : 'alert-danger border-danger'); ?> d-flex align-items-center float-end alert-dismissible fade show"
-            role="alert" style="position: absolute; bottom: 5em; right: 10px; z-index: 1000; margin-bottom: -4em;">
-            <!-- Icon -->
-            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img"
-                aria-label="<?php echo ($_SESSION['notification']['type'] == 'success') ? 'Success' : ($_SESSION['notification']['type'] == 'warning' ? 'Warning' : 'Error'); ?>:">
-                <use
-                    xlink:href="<?php echo ($_SESSION['notification']['type'] == 'success') ? '#check-circle-fill' : ($_SESSION['notification']['type'] == 'warning' ? '#exclamation-triangle-fill' : '#exclamation-circle-fill'); ?>" />
-            </svg>
-            <!-- Message -->
-            <div>
-                <?php echo $_SESSION['notification']['message']; ?>
-            </div>
-            <!-- Close Button -->
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        <?php unset($_SESSION['notification']); // Clear notification after displaying ?>
-
-        <script>
-            // Automatically fade the notification out after 6 seconds
-            setTimeout(function () {
-                let notification = document.getElementById('notification');
-                if (notification) {
-                    notification.classList.remove('show');
-                    notification.classList.add('fade');
-                    notification.style.transition = 'opacity 1s ease';
-                }
-            }, 7000); // 6 seconds
-        </script>
-    <?php endif; ?>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
     <style>
-        body {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        background-color: #1D546D;
-        background-image:url('../gb.jpg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        
-    }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        .min-vh-100 {
+            min-height: 100vh;
+        }
+
+        /* LEFT PANEL: FORM */
+        .login-panel {
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-card {
+            width: 420px;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: rgba(0,0,0,0.08) 0px 4px 20px;
+        }
+
+        .system-title {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .form-control {
+            border: 0;
+            border-bottom: 2px solid #dfe3e8;
+            border-radius: 0;
+            padding: 0.5rem;
+            font-size: 14px;
+        }
+
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: none;
+        }
+
+        .button-primary {
+            width: 100%;
+            padding: 10px;
+            background: #0d6efd;
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .button-primary:hover {
+            background: #0b5ed7;
+        }
+
         .notifMsg {
             font-size: 13px;
             color: red;
             font-weight: 500;
+            margin-top: 4px;
         }
 
-        .password {
-            margin-top: -6%;
+        /* RIGHT PANEL: INFO */
+        .info-panel {
+            background: url("https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .forgotPassword {
-            margin-top: 4%;
-            font-size: 15px;
+        .info-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10, 25, 47, 0.75);
         }
 
-        .forgotPassword a {
-            text-decoration: none;
+        .info-content {
+            position: relative;
+            z-index: 2;
+            color: #ffffff;
+            text-align: left;
+            max-width: 500px;
         }
 
-        .formHolder {
-            box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+        .info-content h1 {
+            font-weight: 700;
         }
 
-        @media screen and (max-width: 479px) {}
-    </style>
-    <script>
-        function checkPassword() {
-            var x = document.getElementById("password");
-
-            if (x.type === "password") {
-                x.type = "text";
-            } else {
-                x.type = "password";
+        @media (max-width: 768px) {
+            .info-panel {
+                display: none;
             }
         }
+    </style>
+</head>
+
+<body>
+
+    <?php if (isset($_SESSION['username'])): ?>
+        <div id="notification" class="alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-index-999">
+            <?= $_SESSION['username']; unset($_SESSION['username']); ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="container-fluid p-0">
+        <div class="row g-0 min-vh-100">
+
+            <!-- LEFT PANEL: FORM -->
+            <div class="col-md-6 login-panel">
+                <div class="login-card">
+                    <div class="mb-4 text-center">
+                        <h2 class="system-title mb-2">Request Password Change</h2>
+                        <p class="text-muted">Enter your username to request a password reset securely.</p>
+                    </div>
+
+                    <form action="changeRequest.php" method="post">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Username</label>
+                            <input type="text" class="form-control" name="username" required autofocus>
+                            <?php if (isset($_SESSION['username'])): ?>
+                                <div class="notifMsg"><?= $_SESSION['username']; unset($_SESSION['username']); ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <button type="submit" class="button-primary mt-3">Request Password Change</button>
+                    </form>
+
+                    <div class="mt-3 text-center">
+                        <a href="../index.php" class="text-decoration-none">Back to Login</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT PANEL: INFO -->
+            <div class="col-md-6 info-panel">
+                <div class="info-overlay"></div>
+                <div class="info-content">
+                    <h1>Secure. Fast. Simple.</h1>
+                    <p class="lead mt-3">
+                        Use the Contract Management System to safely manage your password and maintain access to your account.
+                    </p>
+                    <ul class="mt-3">
+                        <li>✔ Quick Password Reset Requests</li>
+                        <li>✔ Secure Verification</li>
+                        <li>✔ Access Recovery Notifications</li>
+                        <li>✔ Centralized Account Management</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // Optional: fade out notification
+        setTimeout(() => {
+            const notif = document.getElementById('notification');
+            if (notif) notif.style.display = 'none';
+        }, 5000);
     </script>
+
+</body>
+
+</html>
