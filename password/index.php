@@ -10,177 +10,115 @@ $page_title = 'Contract Management System - Request Password Change';
     <title><?= $page_title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            font-family: "Segoe UI", sans-serif;
-        }
-
-        .min-vh-100 {
-            min-height: 100vh;
-        }
-
-        /* LEFT PANEL: FORM */
-        .login-panel {
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-card {
-            width: 420px;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: rgba(0,0,0,0.08) 0px 4px 20px;
-        }
-
-        .system-title {
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .form-control {
-            border: 0;
-            border-bottom: 2px solid #dfe3e8;
-            border-radius: 0;
-            padding: 0.5rem;
-            font-size: 14px;
-        }
-
-        .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: none;
-        }
-
-        .button-primary {
-            width: 100%;
-            padding: 10px;
-            background: #0d6efd;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-weight: 600;
-            transition: 0.3s ease;
-        }
-
-        .button-primary:hover {
-            background: #0b5ed7;
-        }
-
-        .notifMsg {
-            font-size: 13px;
-            color: red;
-            font-weight: 500;
-            margin-top: 4px;
-        }
-
-        /* RIGHT PANEL: INFO */
-        .info-panel {
-            background: url("https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
-            background-size: cover;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .info-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(10, 25, 47, 0.75);
-        }
-
-        .info-content {
-            position: relative;
-            z-index: 2;
-            color: #ffffff;
-            text-align: left;
-            max-width: 500px;
-        }
-
-        .info-content h1 {
-            font-weight: 700;
-        }
-
-        @media (max-width: 768px) {
-            .info-panel {
-                display: none;
-            }
-        }
-    </style>
 </head>
 
-<body>
+<body class="h-screen bg-gray-100 font-sans">
 
-    <?php if (isset($_SESSION['username'])): ?>
-        <div id="notification" class="alert alert-danger position-fixed top-0 start-50 translate-middle-x mt-3 z-index-999">
-            <?= $_SESSION['username']; unset($_SESSION['username']); ?>
-        </div>
-    <?php endif; ?>
+<?php if (isset($_SESSION['username'])): ?>
+    <div id="notification" class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+        <?= $_SESSION['username']; unset($_SESSION['username']); ?>
+    </div>
+<?php endif; ?>
 
-    <div class="container-fluid p-0">
-        <div class="row g-0 min-vh-100">
+<div class="flex h-full">
 
-            <!-- LEFT PANEL: FORM -->
-            <div class="col-md-6 login-panel">
-                <div class="login-card">
-                    <div class="mb-4 text-center">
-                        <h2 class="system-title mb-2">Request Password Change</h2>
-                        <p class="text-muted">Enter your username to request a password reset securely.</p>
-                    </div>
+    <!-- LEFT: FORM -->
+    <div class="w-full md:w-1/2 bg-white flex items-center justify-center px-6">
 
-                    <form action="changeRequest.php" method="post">
-                        <div class="mb-3">
-                            <label class="form-label small fw-semibold">Username</label>
-                            <input type="text" class="form-control" name="username" required autofocus>
-                            <?php if (isset($_SESSION['username'])): ?>
-                                <div class="notifMsg"><?= $_SESSION['username']; unset($_SESSION['username']); ?></div>
-                            <?php endif; ?>
-                        </div>
+        <div class="w-full max-w-md">
 
-                        <button type="submit" class="button-primary mt-3">Request Password Change</button>
-                    </form>
-
-                    <div class="mt-3 text-center">
-                        <a href="../index.php" class="text-decoration-none">Back to Login</a>
-                    </div>
-                </div>
+            <!-- Title -->
+            <div class="mb-10 text-center">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                    Request Password Change
+                </h2>
+                <p class="text-gray-500">
+                    Enter your username to request a password reset securely.
+                </p>
             </div>
 
-            <!-- RIGHT PANEL: INFO -->
-            <div class="col-md-6 info-panel">
-                <div class="info-overlay"></div>
-                <div class="info-content">
-                    <h1>Secure. Fast. Simple.</h1>
-                    <p class="lead mt-3">
-                        Use the Contract Management System to safely manage your password and maintain access to your account.
-                    </p>
-                    <ul class="mt-3">
-                        <li>✔ Quick Password Reset Requests</li>
-                        <li>✔ Secure Verification</li>
-                        <li>✔ Access Recovery Notifications</li>
-                        <li>✔ Centralized Account Management</li>
-                    </ul>
+            <!-- Form -->
+            <form action="changeRequest.php" method="post" class="space-y-6">
+
+                <div>
+                    <label class="text-xs uppercase font-semibold text-gray-500">
+                        Username
+                    </label>
+
+                    <input type="text" name="username" required autofocus
+                        class="w-full border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none py-2 bg-transparent">
+
+                    <?php if (isset($_SESSION['username'])): ?>
+                        <p class="text-red-500 text-sm mt-2">
+                            <?= $_SESSION['username']; unset($_SESSION['username']); ?>
+                        </p>
+                    <?php endif; ?>
                 </div>
+
+                <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md">
+                    Request Password Change
+                </button>
+
+            </form>
+
+            <!-- Back -->
+            <div class="mt-4 text-center">
+                <a href="../index.php" class="text-sm text-indigo-600 hover:underline">
+                    ← Back to Login
+                </a>
             </div>
 
         </div>
     </div>
 
-    <script>
-        // Optional: fade out notification
-        setTimeout(() => {
-            const notif = document.getElementById('notification');
-            if (notif) notif.style.display = 'none';
-        }, 5000);
-    </script>
+    <!-- RIGHT: INFO -->
+    <div class="hidden md:flex w-1/2 relative items-center justify-center">
+
+        <!-- Background -->
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1173&auto=format&fit=crop"
+                 class="w-full h-full object-cover">
+        </div>
+
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-black/70"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 text-white max-w-lg px-10">
+
+            <h1 class="text-4xl font-bold mb-6">
+                Secure. Fast. Simple.
+            </h1>
+
+            <p class="text-lg text-gray-200">
+                Use the Contract Management System to safely manage your password
+                and maintain access to your account.
+            </p>
+
+            <ul class="mt-6 space-y-2 text-gray-200">
+                <li>✔ Quick Password Reset Requests</li>
+                <li>✔ Secure Verification</li>
+                <li>✔ Access Recovery Notifications</li>
+                <li>✔ Centralized Account Management</li>
+            </ul>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+setTimeout(() => {
+    const notif = document.getElementById('notification');
+    if (notif) notif.style.display = 'none';
+}, 5000);
+</script>
 
 </body>
 
