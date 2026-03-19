@@ -49,17 +49,17 @@ $getUser = (new UserController)->getUserById($userid);
 
                         <!-- Dates -->
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Installation Date</label>
+                            <label class="form-label">Installation Date <small>( optional )</small></label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                <input type="date" id="rent_start" class="form-control" name="rent_start" required>
+                                <input type="date" id="rent_start" class="form-control" name="rent_start">
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label class="form-label">Retirement Date</label>
+                            <label class="form-label">Retirement Date <small>( optional )</small></label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                                <input type="date" id="rent_end" class="form-control" name="rent_end" required>
+                                <input type="date" id="rent_end" class="form-control" name="rent_end">
                             </div>
                         </div>
 
