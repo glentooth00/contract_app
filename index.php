@@ -11,203 +11,134 @@ $page_title = 'Contract Management System - Login';
     <title><?= $page_title ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-
-    <style>
-        html,
-        body {
-            height: 100%;
-            margin: 0;
-            font-family: "Segoe UI", sans-serif;
-        }
-
-        .min-vh-100 {
-            min-height: 100vh;
-        }
-
-        /* LEFT PANEL */
-        .login-panel {
-            background: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* RIGHT PANEL */
-        .info-panel {
-            background: url("https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1173&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center;
-            background-size: cover;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .info-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(10, 25, 47, 0.75);
-        }
-
-        .info-content {
-            position: relative;
-            z-index: 2;
-            color: #ffffff;
-            text-align: left;
-            max-width: 500px;
-        }
-
-        .system-title {
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .button-primary {
-            width: 100%;
-            padding: 10px;
-            background: #0d6efd;
-            border: none;
-            border-radius: 6px;
-            color: #fff;
-            font-weight: 600;
-            transition: 0.3s ease;
-        }
-
-        .button-primary:hover {
-            background: #0b5ed7;
-        }
-
-        #notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #dc3545;
-            color: #fff;
-            padding: 12px 20px;
-            border-radius: 6px;
-            z-index: 999;
-        }
-
-        @media (max-width: 768px) {
-            .info-panel {
-                display: none;
-            }
-        }
-    </style>
 </head>
 
-<body>
+<body class="h-screen bg-gray-100 font-sans">
 
-    <?php if (isset($_SESSION['username'])): ?>
-        <div id="notification">
-            <?= $_SESSION['username']; ?>
-        </div>
-        <?php unset($_SESSION['username']); ?>
-    <?php endif; ?>
+<?php if (isset($_SESSION['username'])): ?>
+    <div class="fixed top-5 left-1/2 -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50">
+        <?= $_SESSION['username']; ?>
+    </div>
+    <?php unset($_SESSION['username']); ?>
+<?php endif; ?>
 
-    <div class="container-fluid p-0">
-        <div class="row g-0 min-vh-100">
+<div class="flex h-full">
 
-            <!-- LEFT: LOGIN (FLAT STYLE) -->
-            <div class="col-md-6 login-panel">
+    <!-- LEFT: LOGIN -->
+    <div class="w-full md:w-1/2 bg-white flex items-center justify-center px-6">
 
-                <div style="width: 420px;">
+        <div class="w-full max-w-md">
 
-                    <div class="mb-5">
-                        <h2 class="system-title mb-2">Contract Management System</h2>
-                        <p class="text-muted">
-                            Monitor contract expiration and lifecycle management securely.
-                        </p>
-                    </div>
-
-                    <form action="authenticate.php" method="post">
-
-                        <div class="mb-4">
-                            <label class="form-label text-uppercase small fw-semibold">
-                                Username
-                            </label>
-                            <input type="text" class="form-control form-control-lg border-0 border-bottom rounded-0"
-                                name="username" required autofocus>
-                        </div>
-
-                        <div class="mb-4 position-relative">
-                            <label class="form-label text-uppercase small fw-semibold">
-                                Password
-                            </label>
-
-                            <input type="password" id="password"
-                                class="form-control form-control-lg border-0 border-bottom rounded-0" name="password"
-                                required>
-
-                            <span onclick="togglePassword()"
-                                style="position:absolute; top:45px; right:5px; cursor:pointer;">
-                                <i id="togglePasswordIcon" class="fas fa-eye text-muted"></i>
-                            </span>
-                        </div>
-
-                        <div class="mt-4">
-                            <button type="submit" class="button-primary">
-                                Sign In
-                            </button>
-                        </div>
-
-                    </form>
-
-                    <div class="mt-3">
-                        <a href="password/index.php" class="text-decoration-none">
-                            Forgot password?
-                        </a>
-                    </div>
-
-                </div>
-
+            <!-- Title -->
+            <div class="mb-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">
+                    Contract Management System
+                </h2>
+                <p class="text-gray-500">
+                    Monitor contract expiration and lifecycle management securely.
+                </p>
             </div>
 
-            <!-- RIGHT: SYSTEM INFO -->
-            <div class="col-md-6 info-panel">
+            <!-- Form -->
+            <form action="authenticate.php" method="post" class="space-y-6">
 
-                <div class="info-overlay"></div>
-
-                <div class="info-content">
-                    <h1 class="fw-bold mb-4">Monitor. Track. Renew.</h1>
-
-                    <p class="lead">
-                        Centralized platform for managing contract lifecycles,
-                        monitoring expiration dates, and ensuring compliance.
-                    </p>
-
-                    <ul class="mt-4">
-                        <li>✔ Expiration Alerts</li>
-                        <li>✔ Department-Based Contract Tracking</li>
-                        <li>✔ Status Monitoring & Reporting</li>
-                        <li>✔ Secure Document Management</li>
-                    </ul>
+                <!-- Username -->
+                <div>
+                    <label class="text-xs uppercase font-semibold text-gray-500">
+                        Username
+                    </label>
+                    <input type="text" name="username" required autofocus
+                        class="w-full border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none py-2 bg-transparent">
                 </div>
 
+                <!-- Password -->
+                <div class="relative">
+                    <label class="text-xs uppercase font-semibold text-gray-500">
+                        Password
+                    </label>
+
+                    <input type="password" id="password" name="password" required
+                        class="w-full border-b-2 border-gray-300 focus:border-indigo-600 focus:outline-none py-2 bg-transparent">
+
+                    <span onclick="togglePassword()"
+                        class="absolute right-0 top-8 cursor-pointer text-gray-400 hover:text-gray-600">
+                        <i id="togglePasswordIcon" class="fas fa-eye"></i>
+                    </span>
+                </div>
+
+                <!-- Button -->
+                <button type="submit"
+                    class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 shadow-md">
+                    Sign In
+                </button>
+
+            </form>
+
+            <!-- Forgot -->
+            <div class="mt-4">
+                <a href="password/index.php" class="text-sm text-indigo-600 hover:underline">
+                    Forgot password?
+                </a>
             </div>
 
         </div>
     </div>
 
-    <script>
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            const icon = document.getElementById('togglePasswordIcon');
+    <!-- RIGHT: INFO -->
+    <div class="hidden md:flex w-1/2 relative items-center justify-center">
 
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
-        }
-    </script>
+        <!-- Background -->
+        <div class="absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1173&auto=format&fit=crop"
+                 class="w-full h-full object-cover">
+        </div>
+
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-black/70"></div>
+
+        <!-- Content -->
+        <div class="relative z-10 text-white max-w-lg px-10">
+
+            <h1 class="text-4xl font-bold mb-6">
+                Monitor. Track. Renew.
+            </h1>
+
+            <p class="text-lg text-gray-200">
+                Centralized platform for managing contract lifecycles,
+                monitoring expiration dates, and ensuring compliance.
+            </p>
+
+            <ul class="mt-6 space-y-2 text-gray-200">
+                <li>✔ Expiration Alerts</li>
+                <li>✔ Department-Based Contract Tracking</li>
+                <li>✔ Status Monitoring & Reporting</li>
+                <li>✔ Secure Document Management</li>
+            </ul>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const icon = document.getElementById('togglePasswordIcon');
+
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
+}
+</script>
 
 </body>
-
 </html>
