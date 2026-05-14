@@ -217,6 +217,15 @@ if (isset($_POST['contract_id'])) {
                             <input type="text" name="contract_start" value="<?= date('M d, Y', strtotime($pending['contract_start'])) ?>" class="form-control" readonly>
                             <span class="input-group-text"><i class="bi bi-calendar"></i></span>
                         </div>
+                        
+                    <?php endif; ?>
+
+                    <?php if($pending['contract_type'] === EMP_CON ): ?> 
+                        <div class="input-group">
+                            <input type="hidden" name="contract_type" value="<?= $pending['contract_type'] ?>" class="form-control" readonly>
+                            <!-- <span class="input-group-text"><i class="bi bi-calendar"></i></span> -->
+                        </div>
+                        
                     <?php endif; ?>
 
                     <?php if($pending['contract_type'] === TRANS_RENT ): ?> 
