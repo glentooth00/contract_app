@@ -1756,7 +1756,7 @@ class ContractController
         }
     }
 
-    public function updateEmpContract()
+    public function updateEmpContract($data)
     {
 
         $sql = "UPDATE contracts SET
