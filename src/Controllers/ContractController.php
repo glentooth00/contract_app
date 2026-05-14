@@ -40,8 +40,8 @@ class ContractController
     public function saveContract($data)
     {
 
-        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id,supplier, procurementMode ,uploader_department, department_assigned, implementing_dept, uploader, contractPrice) 
-                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :supplier, :procurementMode , :uploader_department, :department_assigned, :implementing_dept, :uploader, :contractPrice)";
+        $query = "INSERT INTO contracts (contract_name, contract_type, contract_start, contract_end, contract_file, contract_status, uploader_id,supplier, procurementMode ,uploader_department, department_assigned, implementing_dept, uploader, contractPrice, position) 
+                  VALUES (:contract_name, :contract_type, :contract_start, :contract_end, :contract_file, :contract_status, :uploader_id, :supplier, :procurementMode , :uploader_department, :department_assigned, :implementing_dept, :uploader, :contractPrice, :position)";
 
         $stmt = $this->db->prepare($query);
 
@@ -60,6 +60,7 @@ class ContractController
             ':department_assigned' => $data['department_assigned'] ?? null,
             ':implementing_dept' => $data['implementing_dept'] ?? null,
             ':contractPrice' => $data['contractPrice'] ?? null,
+            'position' => $data['position'] ?? null
 
         ]);
     }

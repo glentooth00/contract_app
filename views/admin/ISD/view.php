@@ -684,6 +684,18 @@ include_once '../../../views/layouts/includes/header.php';
                     </div>
                 </div>
             <?php endif; ?>
+            <?php if ($getContract['contract_type'] === EMP_CON): ?>
+                <div class="row col-md-4">
+                    <div class="mt-3">
+
+                        <label class="badge text-muted" style="font-size: 15px;">Position</label>
+                        <input type="text" id="position" style="margin-left:9px;" class="form-control pl-5"
+                            value="<?= $getContract['position']; ?>" name="contract_type" readonly>
+
+
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <div class="row col-md-3">
                 <div class="mt-3">

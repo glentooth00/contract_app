@@ -33,10 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'department_assigned' => $_POST["department_assigned"] ?? 'Missing department_assigned',
             'uploader_id' => $_POST['uploader_id'] ?? 'Missing uploader_id',
             'uploader_department' => $_POST['uploader_department'] ?? 'Missing uploader_department',
-            'uploader' => $_POST['uploader']
+            'uploader' => $_POST['uploader'],
+            'position' => $_POST['position']
         ];
 
-        // var_dump($contractData);
+        var_dump($contractData);
 
         echo "<pre>Contract Data:\n" . print_r($contractData, true) . "</pre>";
 
