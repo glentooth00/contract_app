@@ -690,7 +690,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                         <label class="badge text-muted" style="font-size: 15px;">Position</label>
                         <input type="text" id="position" style="margin-left:9px;" class="form-control pl-5"
-                            value="<?= $getContract['position']; ?>" name="contract_type" readonly>
+                            value="<?= $getContract['position'] ?? 'Not indicated'; ?>" name="position" readonly>
 
 
                     </div>
