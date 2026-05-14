@@ -225,12 +225,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'contract_start' => $_POST['contract_start'],
             'contract_end' => $_POST['contract_end'],
             'contract_status' => 'Active', 
-            'contract_type_update' => $_POST['contract_type_update']
+            'contract_type_update' => $_POST['contract_type_update']?? null
         ];
 
-        $updateSuccessful = (new ContractController)->managerUpdateTempLight($updateData);
 
-        var_dump($updateSuccessful);
+        $updateSuccessful = (new ContractController)->updateEmpContract($updateData);
 
             if( $updateSuccessful ){
             
