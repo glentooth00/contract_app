@@ -35,6 +35,10 @@ echo $uploader = $getUserInfo['firstname'];
                                 <label class="form-label">Starting Date</label>
                                 <input type="date" class="form-control flat-input" name="contract_start" required>
                             </div>
+                            <div class="form-group">
+                                <label class="form-label">Position</label>
+                                <input type="text" class="form-control flat-input" name="position" required>
+                            </div>
                         </div>
 
                         <!-- Right Column -->
