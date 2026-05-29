@@ -18,6 +18,8 @@ $userid = $_SESSION['id'] ?? null;
 
 $user_role = $_SESSION['user_role'];
 
+$status = $_SESSION['contract_status'] ?? null;
+
 $user_name = $_SESSION['firstname'] . ' ' . $_SESSION['firstname'] . ' ' . $_SESSION['lastname'];
 
 if ($userid) {
@@ -518,7 +520,7 @@ include_once '../../../views/layouts/includes/header.php';
 
                 <div class="mt-3">
                     <label class="badge text-muted" style="font-size: 15px;">
-                        Days Remaining:
+                        Days Remaining: 
                     </label>
 
                     <div class="d-flex">
@@ -744,7 +746,10 @@ include_once '../../../views/layouts/includes/header.php';
                 <div class="mt-3 float-end" style="margin-left: 90%;">
                     <?php
                     $dept = $_SESSION['department'];
-                    ?> <?php if ($dept === 'ISD-HRAD'): ?>
+                    ?>
+
+                    <?php $getContract['contract_status'] === 'Expired'?>
+                        <?php if ($dept === 'ISD'): ?>
                         <?php
                         $start = new DateTime($getContract['contract_start']);
                         $end = new DateTime($getContract['contract_end']);
@@ -765,7 +770,25 @@ include_once '../../../views/layouts/includes/header.php';
                                 <form action="contracts/end_contract.php" method="post"><input type="hidden" name="contract_id"
                                         value="<?= $getContract['id'] ?>"><button type="submit" class="btn btn-warning">End
                                         Contract</button></form>
-                            </div><?php endif; ?> <?php endif; ?>
+                            </div>
+                            <?php endif; ?> 
+                        <?php endif; ?>
+
+                        <?php if ($getContract['contract_status'] === 'Expired'): ?>
+                            <div class="d-flex gap-2"><button class="btn btn-primary" data-id="<?= $getContract['id'] ?>"
+                                    data-contractname="<?= $getContract['contract_name'] ?>"
+                                    data-startdate="<?= $getContract['contract_start'] ?>"
+                                    data-enddate="<?= $getContract['contract_end'] ?>"
+                                    data-departmentassigned="<?= $getContract['department_assigned'] ?>"
+                                    data-type="<?= $getContract['contract_type'] ?>" data-bs-toggle="modal"
+                                    data-bs-target="#extendModal">Extend </button>
+                                <form action="contracts/end_contract.php" method="post"><input type="hidden" name="contract_id"
+                                        value="<?= $getContract['id'] ?>"><button type="submit" class="btn btn-warning">End
+                                        Contract</button></form>
+                            </div>
+                            <?php endif; ?> 
+                    <?php ?>
+                    
                 </div>
             </div>
             <!-- Extend Modal -->
@@ -1270,7 +1293,7 @@ $getUser = (new UserController)->getUserById($getContract['uploader_id']);
                             </div>
                             <div class="col-md-4 p-2" style="width: 15em;">
                                 <div>
-                                    <lable class="badge text-muted">Retirement Date/lable><div class="d-flex"><i
+                                    <lable class="badge text-muted">Retirement Date</lable><div class="d-flex"><i
                                                 class="fa fa-calendar p-2" style="font-size: 20px;"
                                                 aria-hidden="true"></i><input type="date" id="rent_end"
                                                 class="form-control" name="date_end" required></div>
