@@ -41,7 +41,8 @@ class UserController
                 'department' => $user['department'],
                 'contract_types' => $user['contract_types'],
                 'user_role' => $user['user_role'],
-                'user_type' => $user['user_type']
+                'user_type' => $user['user_type'],
+                'contract_status'   => $user['contract_status']
             ];
 
         } else {

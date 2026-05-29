@@ -117,6 +117,18 @@ include_once '../../layouts/includes/header.php';
                                             <span class="badge p-2"
                                                 style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
 
+                                            <?php break;
+                                        case 'Office Order (Temporary Transfer)': ?>
+
+                                            <span class="badge p-2"
+                                                style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
+                                        
+                                            <?php break;
+                                        case 'Payroll Authorization (Promotion)': ?>
+
+                                            <span class="badge p-2"
+                                                style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
+
                                         <?php default: ?>
                                             <!-- <span class="badge text-muted">no department assigned</span> -->
                                     <?php } ?>
