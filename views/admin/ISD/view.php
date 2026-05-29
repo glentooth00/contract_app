@@ -781,10 +781,10 @@ include_once '../../../views/layouts/includes/header.php';
                                     data-enddate="<?= $getContract['contract_end'] ?>"
                                     data-departmentassigned="<?= $getContract['department_assigned'] ?>"
                                     data-type="<?= $getContract['contract_type'] ?>" data-bs-toggle="modal"
-                                    data-bs-target="#extendModal">Extend </button>
-                                <form action="contracts/end_contract.php" method="post"><input type="hidden" name="contract_id"
+                                    data-bs-target="#extendModal">  Renew </button>
+                                <!-- <form action="contracts/end_contract.php" method="post"><input type="hidden" name="contract_id"
                                         value="<?= $getContract['id'] ?>"><button type="submit" class="btn btn-warning">End
-                                        Contract</button></form>
+                                        Contract</button></form> -->
                             </div>
                             <?php endif; ?> 
                     <?php ?>
