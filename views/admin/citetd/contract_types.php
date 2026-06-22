@@ -27,7 +27,7 @@ include_once '../../layouts/includes/header.php';
 
     <div class="content-area">
         <!-- Content that will be shown after loading -->
-        <div class="mt-3" id="content">
+        <div class="mt-3" id="">
             <h2>Contract Types</h2>
             <hr>
 
@@ -113,18 +113,6 @@ include_once '../../layouts/includes/header.php';
 
                                             <?php break;
                                         case 'Temporary Lighting Contract': ?>
-
-                                            <span class="badge p-2"
-                                                style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
-
-                                            <?php break;
-                                        case 'Office Order (Temporary Transfer)': ?>
-
-                                            <span class="badge p-2"
-                                                style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
-                                        
-                                            <?php break;
-                                        case 'Payroll Authorization (Promotion)': ?>
 
                                             <span class="badge p-2"
                                                 style="background-color: #3B6790;"><?= $contractType['contract_type'] ?></span>
