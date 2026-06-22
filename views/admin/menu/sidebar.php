@@ -101,7 +101,7 @@ require_once __DIR__ . '../../../../src/Config/constants.php';
           </a>
         </li> -->
         <li class="nav-item">
-          <a class="nav-link" id="mop" href="manage_password.php">
+          <a class="nav-link" id="mop" href="../password/manage_password.php">
             <img width="27px" src="<?= image_source ?>../../../public/images/changepass2.svg">
             <span>Manage password</span>
           </a>
