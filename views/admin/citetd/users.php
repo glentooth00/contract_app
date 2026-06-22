@@ -133,6 +133,7 @@ include_once '../../../views/layouts/includes/header.php';
 
         <div style="margin-bottom: 20px; display:flex; flex-wrap:wrap; gap:20px; justify-content:flex-start;">
             <?php foreach ($results as $result): ?>
+                
                 <div style="
             background:#ffffff;
             width:360px;
@@ -158,18 +159,59 @@ include_once '../../../views/layouts/includes/header.php';
                     flex-shrink:0;
                     border:3px solid #118B50;
                 ">
-                            <?php
+                
+                           
+                           <?php
+
+                            $fullName = trim(
+                                ($result['firstname'] ?? '') . ' ' .
+                                ($result['middlename'] ?? '') . ' ' .
+                                ($result['lastname'] ?? '')
+                            );
 
                             if (!empty($result['user_image'])) {
-                                $imgPath = "/../../admin/user_image/" . $result['user_image'];
+                                $imgPath = "../../admin/user_image/" . $result['user_image'];
                             } else {
-                                $imgPath = "/public/images/male.png";
-                            }
-                            $imgPath
-                                ?>
-                            <img src="<?= $imgPath ?>" style="width:100%; height:100%; object-fit:cover;">
 
-                        </div>
+                                $firstInitial = !empty($result['firstname'])
+                                    ? strtoupper(substr($result['firstname'], 0, 1))
+                                    : '';
+
+                                $lastInitial = !empty($result['lastname'])
+                                    ? strtoupper(substr($result['lastname'], 0, 1))
+                                    : '';
+
+                                $initials = $firstInitial . $lastInitial;
+
+                                if (empty($initials)) {
+                                    $initials = 'U';
+                                }
+                            }
+                            ?>
+
+                            <div style="width:80px;height:80px;">
+                                <?php if (!empty($result['user_image'])): ?>
+                            <img src="<?= htmlspecialchars($imgPath) ?>"
+                                style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                        <?php else: ?>
+                            <div style="
+                                width:100%;
+                                height:100%;
+                                border-radius:50%;
+                                background:#118B50;
+                                color:#fff;
+                                display:flex;
+                                align-items:center;
+                                justify-content:center;
+                                font-size:30px;
+                                font-weight:700;
+                            ">
+                                <?= htmlspecialchars($initials) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                </div>
 
                         <!-- Details (ONE COLUMN) -->
                         <div style="display:inline-block; flex-direction:row; gap:12px;">
